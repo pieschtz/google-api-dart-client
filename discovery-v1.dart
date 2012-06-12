@@ -178,6 +178,9 @@ class DirectoryList extends IdentityHash {
   /** The individual directory entries. One entry per api/version pair. */
   List<DirectoryListItems> items;
 
+  /** Indicate the version of the Discovery API used to generate this doc. */
+  String discoveryVersion;
+
   /** The kind for this response. */
   String kind;
 
@@ -186,6 +189,7 @@ class DirectoryList extends IdentityHash {
     if (json == null) return null;
     final result = new DirectoryList();
     result.items = map(DirectoryListItems.parse)(json["items"]);
+    result.discoveryVersion = identity(json["discoveryVersion"]);
     result.kind = identity(json["kind"]);
     return result;
   }
@@ -194,6 +198,7 @@ class DirectoryList extends IdentityHash {
     if (value == null) return null;
     Map<String, Object> result = {};
     result["items"] = map(DirectoryListItems.serialize)(value.items);
+    result["discoveryVersion"] = identity(value.discoveryVersion);
     result["kind"] = identity(value.kind);
     return result;
   }
@@ -205,14 +210,17 @@ class DirectoryListItems extends IdentityHash {
   /** The kind for this response. */
   String kind;
 
+  /** Labels for the status of this API, such as labs or deprecated. */
+  List<String> labels;
+
   /** The description of this API. */
   String description;
 
   /** Links to 16x16 and 32x32 icons representing the API. */
   DirectoryListItemsIcons icons;
 
-  /** Labels for the status of this API, such as labs or deprecated. */
-  List<String> labels;
+  /** The url for the discovery REST document. */
+  String discoveryRestUrl;
 
   /** True if this version is the preferred version to use. */
   bool preferred;
@@ -240,9 +248,10 @@ class DirectoryListItems extends IdentityHash {
     if (json == null) return null;
     final result = new DirectoryListItems();
     result.kind = identity(json["kind"]);
+    result.labels = map(identity)(json["labels"]);
     result.description = identity(json["description"]);
     result.icons = DirectoryListItemsIcons.parse(json["icons"]);
-    result.labels = map(identity)(json["labels"]);
+    result.discoveryRestUrl = identity(json["discoveryRestUrl"]);
     result.preferred = identity(json["preferred"]);
     result.name = identity(json["name"]);
     result.discoveryLink = identity(json["discoveryLink"]);
@@ -257,9 +266,10 @@ class DirectoryListItems extends IdentityHash {
     if (value == null) return null;
     Map<String, Object> result = {};
     result["kind"] = identity(value.kind);
+    result["labels"] = map(identity)(value.labels);
     result["description"] = identity(value.description);
     result["icons"] = DirectoryListItemsIcons.serialize(value.icons);
-    result["labels"] = map(identity)(value.labels);
+    result["discoveryRestUrl"] = identity(value.discoveryRestUrl);
     result["preferred"] = identity(value.preferred);
     result["name"] = identity(value.name);
     result["discoveryLink"] = identity(value.discoveryLink);
@@ -301,6 +311,9 @@ class DirectoryListItemsIcons extends IdentityHash {
 
 // Schema .JsonSchema
 class JsonSchema extends IdentityHash {
+  /** If this is a schema for an object, list the schema for each property of this object. */
+  Map<String, JsonSchema> properties;
+
   /** Whether the parameter is required. */
   bool required;
 
@@ -331,8 +344,8 @@ class JsonSchema extends IdentityHash {
   /** The maximum value of this parameter. */
   String maximum;
 
-  /** If this is a schema for an object, list the schema for each property of this object. */
-  Map<String, JsonSchema> properties;
+  /** Unique identifier for this schema. */
+  String id;
 
   /**
  * The descriptions for the enums. Each position maps to the corresponding value in the "enum"
@@ -358,8 +371,8 @@ class JsonSchema extends IdentityHash {
   /** Whether this parameter may appear multiple times. */
   bool repeated;
 
-  /** Unique identifier for this schema. */
-  String id;
+  /** Additional information about this property. */
+  JsonSchemaAnnotations annotations;
 
   /** A reference to another schema. The value of this property is the "id" of another schema. */
   String $ref;
@@ -368,6 +381,7 @@ class JsonSchema extends IdentityHash {
   static JsonSchema parse(Map<String, Object> json) {
     if (json == null) return null;
     final result = new JsonSchema();
+    result.properties = mapValues(JsonSchema.parse)(json["properties"]);
     result.required = identity(json["required"]);
     result.type = identity(json["type"]);
     result.description = identity(json["description"]);
@@ -376,14 +390,14 @@ class JsonSchema extends IdentityHash {
     result.items = JsonSchema.parse(json["items"]);
     result.enum = map(identity)(json["enum"]);
     result.maximum = identity(json["maximum"]);
-    result.properties = mapValues(JsonSchema.parse)(json["properties"]);
+    result.id = identity(json["id"]);
     result.enumDescriptions = map(identity)(json["enumDescriptions"]);
     result.minimum = identity(json["minimum"]);
     result.location = identity(json["location"]);
     result.pattern = identity(json["pattern"]);
     result.additionalProperties = JsonSchema.parse(json["additionalProperties"]);
     result.repeated = identity(json["repeated"]);
-    result.id = identity(json["id"]);
+    result.annotations = JsonSchemaAnnotations.parse(json["annotations"]);
     result.$ref = identity(json["\$ref"]);
     return result;
   }
@@ -391,6 +405,7 @@ class JsonSchema extends IdentityHash {
   static Object serialize(JsonSchema value) {
     if (value == null) return null;
     Map<String, Object> result = {};
+    result["properties"] = mapValues(JsonSchema.serialize)(value.properties);
     result["required"] = identity(value.required);
     result["type"] = identity(value.type);
     result["description"] = identity(value.description);
@@ -399,15 +414,37 @@ class JsonSchema extends IdentityHash {
     result["items"] = JsonSchema.serialize(value.items);
     result["enum"] = map(identity)(value.enum);
     result["maximum"] = identity(value.maximum);
-    result["properties"] = mapValues(JsonSchema.serialize)(value.properties);
+    result["id"] = identity(value.id);
     result["enumDescriptions"] = map(identity)(value.enumDescriptions);
     result["minimum"] = identity(value.minimum);
     result["location"] = identity(value.location);
     result["pattern"] = identity(value.pattern);
     result["additionalProperties"] = JsonSchema.serialize(value.additionalProperties);
     result["repeated"] = identity(value.repeated);
-    result["id"] = identity(value.id);
+    result["annotations"] = JsonSchemaAnnotations.serialize(value.annotations);
     result["\$ref"] = identity(value.$ref);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema JsonSchema.JsonSchemaAnnotations
+class JsonSchemaAnnotations extends IdentityHash {
+  /** A list of methods for which this property is required on requests. */
+  List<String> required;
+
+  /** Parses an instance from its JSON representation. */
+  static JsonSchemaAnnotations parse(Map<String, Object> json) {
+    if (json == null) return null;
+    final result = new JsonSchemaAnnotations();
+    result.required = map(identity)(json["required"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static Object serialize(JsonSchemaAnnotations value) {
+    if (value == null) return null;
+    Map<String, Object> result = {};
+    result["required"] = map(identity)(value.required);
     return result;
   }
   toString() => serialize(this).toString();
@@ -415,14 +452,26 @@ class JsonSchema extends IdentityHash {
 
 // Schema .RestDescription
 class RestDescription extends IdentityHash {
-  /** The kind for this response. */
-  String kind;
-
   /** The protocol described by this document. */
   String protocol;
 
-  /** A list of supported features for this API. */
-  List<String> features;
+  /** API-level methods for this API. */
+  Map<String, RestMethod> methods;
+
+  /** Labels for the status of this API, such as labs or deprecated. */
+  List<String> labels;
+
+  /** The path for REST batch requests. */
+  String batchPath;
+
+  /** The id of this API. */
+  String id;
+
+  /** The schemas for this API. */
+  Map<String, JsonSchema> schemas;
+
+  /** The root url under which all API services live. */
+  String rootUrl;
 
   /** Common parameters that apply across all apis. */
   Map<String, JsonSchema> parameters;
@@ -430,86 +479,104 @@ class RestDescription extends IdentityHash {
   /** Links to 16x16 and 32x32 icons representing the API. */
   RestDescriptionIcons icons;
 
-  /** The base URI path for REST requests. */
-  String basePath;
-
-  /** Labels for the status of this API, such as labs or deprecated. */
-  List<String> labels;
-
-  /** Authentication information. */
-  RestDescriptionAuth auth;
-
-  /** The name of this API. */
-  String name;
-
-  /** API-level methods for this API. */
-  Map<String, RestMethod> methods;
+  /** [DEPRECATED] The base URL for REST requests. */
+  String baseUrl;
 
   /** The version of this API. */
   String version;
 
-  /** The schemas for this API. */
-  Map<String, JsonSchema> schemas;
+  /** A list of supported features for this API. */
+  List<String> features;
 
-  /** The title of this API. */
-  String title;
-
-  /** A link to human readable documentation for the API. */
-  String documentationLink;
-
-  /** The id of this API. */
-  String id;
+  /** The base path for all REST requests. */
+  String servicePath;
 
   /** The resources in this API. */
   Map<String, RestResource> resources;
 
+  /** The version of this API. */
+  String revision;
+
   /** The description of this API. */
   String description;
+
+  /** Authentication information. */
+  RestDescriptionAuth auth;
+
+  /** The kind for this response. */
+  String kind;
+
+  /** The name of this API. */
+  String name;
+
+  /** [DEPRECATED] The base path for REST requests. */
+  String basePath;
+
+  /** The title of this API. */
+  String title;
+
+  /** Indicate the version of the Discovery API used to generate this doc. */
+  String discoveryVersion;
+
+  /** A link to human readable documentation for the API. */
+  String documentationLink;
 
   /** Parses an instance from its JSON representation. */
   static RestDescription parse(Map<String, Object> json) {
     if (json == null) return null;
     final result = new RestDescription();
-    result.kind = identity(json["kind"]);
     result.protocol = identity(json["protocol"]);
-    result.features = map(identity)(json["features"]);
+    result.methods = mapValues(RestMethod.parse)(json["methods"]);
+    result.labels = map(identity)(json["labels"]);
+    result.batchPath = identity(json["batchPath"]);
+    result.id = identity(json["id"]);
+    result.schemas = mapValues(JsonSchema.parse)(json["schemas"]);
+    result.rootUrl = identity(json["rootUrl"]);
     result.parameters = mapValues(JsonSchema.parse)(json["parameters"]);
     result.icons = RestDescriptionIcons.parse(json["icons"]);
-    result.basePath = identity(json["basePath"]);
-    result.labels = map(identity)(json["labels"]);
-    result.auth = RestDescriptionAuth.parse(json["auth"]);
-    result.name = identity(json["name"]);
-    result.methods = mapValues(RestMethod.parse)(json["methods"]);
+    result.baseUrl = identity(json["baseUrl"]);
     result.version = identity(json["version"]);
-    result.schemas = mapValues(JsonSchema.parse)(json["schemas"]);
-    result.title = identity(json["title"]);
-    result.documentationLink = identity(json["documentationLink"]);
-    result.id = identity(json["id"]);
+    result.features = map(identity)(json["features"]);
+    result.servicePath = identity(json["servicePath"]);
     result.resources = mapValues(RestResource.parse)(json["resources"]);
+    result.revision = identity(json["revision"]);
     result.description = identity(json["description"]);
+    result.auth = RestDescriptionAuth.parse(json["auth"]);
+    result.kind = identity(json["kind"]);
+    result.name = identity(json["name"]);
+    result.basePath = identity(json["basePath"]);
+    result.title = identity(json["title"]);
+    result.discoveryVersion = identity(json["discoveryVersion"]);
+    result.documentationLink = identity(json["documentationLink"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
   static Object serialize(RestDescription value) {
     if (value == null) return null;
     Map<String, Object> result = {};
-    result["kind"] = identity(value.kind);
     result["protocol"] = identity(value.protocol);
-    result["features"] = map(identity)(value.features);
+    result["methods"] = mapValues(RestMethod.serialize)(value.methods);
+    result["labels"] = map(identity)(value.labels);
+    result["batchPath"] = identity(value.batchPath);
+    result["id"] = identity(value.id);
+    result["schemas"] = mapValues(JsonSchema.serialize)(value.schemas);
+    result["rootUrl"] = identity(value.rootUrl);
     result["parameters"] = mapValues(JsonSchema.serialize)(value.parameters);
     result["icons"] = RestDescriptionIcons.serialize(value.icons);
-    result["basePath"] = identity(value.basePath);
-    result["labels"] = map(identity)(value.labels);
-    result["auth"] = RestDescriptionAuth.serialize(value.auth);
-    result["name"] = identity(value.name);
-    result["methods"] = mapValues(RestMethod.serialize)(value.methods);
+    result["baseUrl"] = identity(value.baseUrl);
     result["version"] = identity(value.version);
-    result["schemas"] = mapValues(JsonSchema.serialize)(value.schemas);
-    result["title"] = identity(value.title);
-    result["documentationLink"] = identity(value.documentationLink);
-    result["id"] = identity(value.id);
+    result["features"] = map(identity)(value.features);
+    result["servicePath"] = identity(value.servicePath);
     result["resources"] = mapValues(RestResource.serialize)(value.resources);
+    result["revision"] = identity(value.revision);
     result["description"] = identity(value.description);
+    result["auth"] = RestDescriptionAuth.serialize(value.auth);
+    result["kind"] = identity(value.kind);
+    result["name"] = identity(value.name);
+    result["basePath"] = identity(value.basePath);
+    result["title"] = identity(value.title);
+    result["discoveryVersion"] = identity(value.discoveryVersion);
+    result["documentationLink"] = identity(value.documentationLink);
     return result;
   }
   toString() => serialize(this).toString();
@@ -611,13 +678,16 @@ class RestDescriptionIcons extends IdentityHash {
 // Schema .RestMethod
 class RestMethod extends IdentityHash {
   /** OAuth 2.0 scopes applicable to this method. */
-  List<String> scopes;
+  List<Object> scopes;
 
   /** Description of this method. */
   String description;
 
   /** Details for all parameters in this method. */
   Map<String, JsonSchema> parameters;
+
+  /** Whether this method supports media uploads. */
+  bool supportsMediaUpload;
 
   /** The schema for the request. */
   RestMethodRequest request;
@@ -630,6 +700,9 @@ class RestMethod extends IdentityHash {
 
   /** HTTP method used by this method. */
   String httpMethod;
+
+  /** Whether this method supports subscriptions. */
+  bool supportsSubscription;
 
   /**
  * Ordered list of required parameters, serves as a hint to clients on how to structure their method
@@ -649,6 +722,9 @@ class RestMethod extends IdentityHash {
  */
   String id;
 
+  /** Whether this method supports media downloads. */
+  bool supportsMediaDownload;
+
   /** Parses an instance from its JSON representation. */
   static RestMethod parse(Map<String, Object> json) {
     if (json == null) return null;
@@ -656,13 +732,16 @@ class RestMethod extends IdentityHash {
     result.scopes = map(identity)(json["scopes"]);
     result.description = identity(json["description"]);
     result.parameters = mapValues(JsonSchema.parse)(json["parameters"]);
+    result.supportsMediaUpload = identity(json["supportsMediaUpload"]);
     result.request = RestMethodRequest.parse(json["request"]);
     result.mediaUpload = RestMethodMediaUpload.parse(json["mediaUpload"]);
     result.response = RestMethodResponse.parse(json["response"]);
     result.httpMethod = identity(json["httpMethod"]);
+    result.supportsSubscription = identity(json["supportsSubscription"]);
     result.parameterOrder = map(identity)(json["parameterOrder"]);
     result.path = identity(json["path"]);
     result.id = identity(json["id"]);
+    result.supportsMediaDownload = identity(json["supportsMediaDownload"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
@@ -672,13 +751,16 @@ class RestMethod extends IdentityHash {
     result["scopes"] = map(identity)(value.scopes);
     result["description"] = identity(value.description);
     result["parameters"] = mapValues(JsonSchema.serialize)(value.parameters);
+    result["supportsMediaUpload"] = identity(value.supportsMediaUpload);
     result["request"] = RestMethodRequest.serialize(value.request);
     result["mediaUpload"] = RestMethodMediaUpload.serialize(value.mediaUpload);
     result["response"] = RestMethodResponse.serialize(value.response);
     result["httpMethod"] = identity(value.httpMethod);
+    result["supportsSubscription"] = identity(value.supportsSubscription);
     result["parameterOrder"] = map(identity)(value.parameterOrder);
     result["path"] = identity(value.path);
     result["id"] = identity(value.id);
+    result["supportsMediaDownload"] = identity(value.supportsMediaDownload);
     return result;
   }
   toString() => serialize(this).toString();
