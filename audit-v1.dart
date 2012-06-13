@@ -1,4 +1,5 @@
 #library("audit");
+#import('dart:core', prefix: 'core');
 #import('dart:json');
 
 #import('utils.dart');
@@ -8,59 +9,61 @@
 /**
  * Lets you access user activities in your enterprise made through various applications.
  */
-class AuditApi {
+class AuditApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
-  final String baseUrl;
+  final core.String baseUrl;
+  /** How we should identify ourselves to the service. */
+  Authenticator authenticator;
   /** The client library version */
-  final String clientVersion = "0.1";
+  final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
-  final String applicationName;
+  final core.String applicationName;
   AuditApi get _$service() => this;
   ActivitiesResource _activities;
   ActivitiesResource get activities() => _activities;
   
   /** Returns response with indentations and line breaks. */
-  bool prettyPrint;
+  core.bool prettyPrint;
 
   /** Selector specifying which fields to include in a partial response. */
-  String fields;
+  core.String fields;
 
   /**
    * Available to use for quota purposes for server-side applications. Can be any arbitrary string
    * assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.
    */
-  String quotaUser;
+  core.String quotaUser;
 
   /** OAuth 2.0 token for the current user. */
-  String oauthToken;
+  core.String oauthToken;
 
   /**
    * API key. Your API key identifies your project and provides you with API access, quota, and
    * reports. Required unless you provide an OAuth 2.0 token.
    */
-  String key;
+  core.String key;
 
   /**
    * IP address of the site where the request originates. Use this if you want to enforce per-user
    * limits.
    */
-  String userIp;
+  core.String userIp;
 
   /** Data format for the response. */
   AuditApiAlt alt;
 
 
-  AuditApi([this.baseUrl = "https://www.googleapis.com/apps/reporting/audit/v1/", this.applicationName]) { 
+  AuditApi([this.baseUrl = "https://www.googleapis.com/apps/reporting/audit/v1/", this.applicationName, this.authenticator]) { 
     _activities = new ActivitiesResource._internal(this);
   }
-  String get userAgent() {
+  core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}audit/v1/20111110 google-api-dart-client/${clientVersion}";
   }
 }
 
 // Resource .ActivitiesResource
-class ActivitiesResource {
+class ActivitiesResource extends core.Object {
   final AuditApi _$service;
   
   ActivitiesResource._internal(AuditApi $service) : _$service = $service;
@@ -71,7 +74,7 @@ class ActivitiesResource {
    * [customerId] Represents the customer who is the owner of target object on which action was performed.
    * [applicationId] Application ID of the application on which the event was performed.
    */
-  Future<Activities> list(String customerId, String applicationId, [String actorEmail = UNSPECIFIED, String actorApplicationId = UNSPECIFIED, String actorIpAddress = UNSPECIFIED, ActivitiesResourceListCaller caller = UNSPECIFIED, int maxResults = UNSPECIFIED, String eventName = UNSPECIFIED, String parameters = UNSPECIFIED, String startTime = UNSPECIFIED, String endTime = UNSPECIFIED, String continuationToken = UNSPECIFIED]) {
+  core.Future<Activities> list(core.String customerId, core.String applicationId, [core.String actorEmail = UNSPECIFIED, core.String actorApplicationId = UNSPECIFIED, core.String actorIpAddress = UNSPECIFIED, ActivitiesResourceListCaller caller = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String eventName = UNSPECIFIED, core.String parameters = UNSPECIFIED, core.String startTime = UNSPECIFIED, core.String endTime = UNSPECIFIED, core.String continuationToken = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -96,31 +99,25 @@ class ActivitiesResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "{customerId}/{applicationId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Activities>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Activities.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Activities.parse(JSON.parse($text)));
   }
 }
 
 // Enum ActivitiesResource.List.Caller
-class ActivitiesResourceListCaller implements Hashable {
+class ActivitiesResourceListCaller extends core.Object implements core.Hashable {
   /** Caller is an application owner. */
   static final ActivitiesResourceListCaller APPLICATION_OWNER = const ActivitiesResourceListCaller._internal("application_owner", 0);
   /** Caller is a customer. */
   static final ActivitiesResourceListCaller CUSTOMER = const ActivitiesResourceListCaller._internal("customer", 1);
 
   /** All values of this enumeration */
-  static final List<ActivitiesResourceListCaller> values = const <ActivitiesResourceListCaller>[
+  static final core.List<ActivitiesResourceListCaller> values = const <ActivitiesResourceListCaller>[
     APPLICATION_OWNER,
     CUSTOMER,
   ];
@@ -132,30 +129,30 @@ class ActivitiesResourceListCaller implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static ActivitiesResourceListCaller valueOf(String item) => _valuesMap[item];
+  static ActivitiesResourceListCaller valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const ActivitiesResourceListCaller._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const ActivitiesResourceListCaller._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Caller".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Caller".hashCode();
 }
 
 // Schema .Activities
 class Activities extends IdentityHash {
   /** Each record in read response. */
-  List<Activity> items;
+  core.List<Activity> items;
 
   /** Kind of list response this is. */
-  String kind;
+  core.String kind;
 
   /** Next page URL. */
-  String next;
+  core.String next;
 
   /** Parses an instance from its JSON representation. */
-  static Activities parse(Map<String, Object> json) {
+  static Activities parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Activities();
     result.items = map(Activity.parse)(json["items"]);
@@ -164,9 +161,9 @@ class Activities extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Activities value) {
+  static core.Object serialize(Activities value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["items"] = map(Activity.serialize)(value.items);
     result["kind"] = identity(value.kind);
     result["next"] = identity(value.next);
@@ -178,10 +175,10 @@ class Activities extends IdentityHash {
 // Schema .Activity
 class Activity extends IdentityHash {
   /** Kind of resource this is. */
-  String kind;
+  core.String kind;
 
   /** Domain of source customer. */
-  String ownerDomain;
+  core.String ownerDomain;
 
   /** User doing the action. */
   ActivityActor actor;
@@ -190,13 +187,13 @@ class Activity extends IdentityHash {
   ActivityId id;
 
   /** IP Address of the user doing the action. */
-  String ipAddress;
+  core.String ipAddress;
 
   /** Activity events. */
-  List<ActivityEvents> events;
+  core.List<ActivityEvents> events;
 
   /** Parses an instance from its JSON representation. */
-  static Activity parse(Map<String, Object> json) {
+  static Activity parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Activity();
     result.kind = identity(json["kind"]);
@@ -208,9 +205,9 @@ class Activity extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Activity value) {
+  static core.Object serialize(Activity value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["kind"] = identity(value.kind);
     result["ownerDomain"] = identity(value.ownerDomain);
     result["actor"] = ActivityActor.serialize(value.actor);
@@ -225,19 +222,19 @@ class Activity extends IdentityHash {
 // Schema Activity.ActivityActor
 class ActivityActor extends IdentityHash {
   /** ID of application which interacted on behalf of the user. */
-  String applicationId;
+  core.String applicationId;
 
   /** Email address of the user. */
-  String email;
+  core.String email;
 
   /** For OAuth 2LO API requests, consumer_key of the requestor. */
-  String key;
+  core.String key;
 
   /** User or OAuth 2LO request. */
-  String callerType;
+  core.String callerType;
 
   /** Parses an instance from its JSON representation. */
-  static ActivityActor parse(Map<String, Object> json) {
+  static ActivityActor parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ActivityActor();
     result.applicationId = identity(json["applicationId"]);
@@ -247,9 +244,9 @@ class ActivityActor extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ActivityActor value) {
+  static core.Object serialize(ActivityActor value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["applicationId"] = identity(value.applicationId);
     result["email"] = identity(value.email);
     result["key"] = identity(value.key);
@@ -262,16 +259,16 @@ class ActivityActor extends IdentityHash {
 // Schema Activity.ActivityEvents
 class ActivityEvents extends IdentityHash {
   /** Type of event. */
-  String eventType;
+  core.String eventType;
 
   /** Name of event. */
-  String name;
+  core.String name;
 
   /** Event parameters. */
-  List<ActivityEventsParameters> parameters;
+  core.List<ActivityEventsParameters> parameters;
 
   /** Parses an instance from its JSON representation. */
-  static ActivityEvents parse(Map<String, Object> json) {
+  static ActivityEvents parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ActivityEvents();
     result.eventType = identity(json["eventType"]);
@@ -280,9 +277,9 @@ class ActivityEvents extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ActivityEvents value) {
+  static core.Object serialize(ActivityEvents value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["eventType"] = identity(value.eventType);
     result["name"] = identity(value.name);
     result["parameters"] = map(ActivityEventsParameters.serialize)(value.parameters);
@@ -294,13 +291,13 @@ class ActivityEvents extends IdentityHash {
 // Schema Activity.ActivityEvents.ActivityEventsParameters
 class ActivityEventsParameters extends IdentityHash {
   /** Name of the parameter. */
-  String name;
+  core.String name;
 
   /** Value of the parameter. */
-  String value;
+  core.String value;
 
   /** Parses an instance from its JSON representation. */
-  static ActivityEventsParameters parse(Map<String, Object> json) {
+  static ActivityEventsParameters parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ActivityEventsParameters();
     result.name = identity(json["name"]);
@@ -308,9 +305,9 @@ class ActivityEventsParameters extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ActivityEventsParameters value) {
+  static core.Object serialize(ActivityEventsParameters value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["name"] = identity(value.name);
     result["value"] = identity(value.value);
     return result;
@@ -321,19 +318,19 @@ class ActivityEventsParameters extends IdentityHash {
 // Schema Activity.ActivityId
 class ActivityId extends IdentityHash {
   /** Unique qualifier if multiple events have the same time. */
-  String uniqQualifier;
+  core.String uniqQualifier;
 
   /** Application ID of the source application. */
-  String applicationId;
+  core.String applicationId;
 
   /** Obfuscated customer ID of the source customer. */
-  String customerId;
+  core.String customerId;
 
   /** Time of occurrence of the activity. */
-  String time;
+  core.String time;
 
   /** Parses an instance from its JSON representation. */
-  static ActivityId parse(Map<String, Object> json) {
+  static ActivityId parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ActivityId();
     result.uniqQualifier = identity(json["uniqQualifier"]);
@@ -343,9 +340,9 @@ class ActivityId extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ActivityId value) {
+  static core.Object serialize(ActivityId value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["uniqQualifier"] = identity(value.uniqQualifier);
     result["applicationId"] = identity(value.applicationId);
     result["customerId"] = identity(value.customerId);
@@ -356,14 +353,14 @@ class ActivityId extends IdentityHash {
 }
 
 // Enum AuditApi.Alt
-class AuditApiAlt implements Hashable {
+class AuditApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/atom+xml */
   static final AuditApiAlt ATOM = const AuditApiAlt._internal("atom", 0);
   /** Responses with Content-Type of application/json */
   static final AuditApiAlt JSON = const AuditApiAlt._internal("json", 1);
 
   /** All values of this enumeration */
-  static final List<AuditApiAlt> values = const <AuditApiAlt>[
+  static final core.List<AuditApiAlt> values = const <AuditApiAlt>[
     ATOM,
     JSON,
   ];
@@ -375,14 +372,14 @@ class AuditApiAlt implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static AuditApiAlt valueOf(String item) => _valuesMap[item];
+  static AuditApiAlt valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const AuditApiAlt._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const AuditApiAlt._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Alt".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Alt".hashCode();
 }
 

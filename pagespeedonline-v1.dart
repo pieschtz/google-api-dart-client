@@ -1,4 +1,5 @@
 #library("pagespeedonline");
+#import('dart:core', prefix: 'core');
 #import('dart:json');
 
 #import('utils.dart');
@@ -9,59 +10,61 @@
  * Lets you analyze the performance of a web page and get tailored suggestions to make that page
  * faster.
  */
-class PagespeedonlineApi {
+class PagespeedonlineApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
-  final String baseUrl;
+  final core.String baseUrl;
+  /** How we should identify ourselves to the service. */
+  Authenticator authenticator;
   /** The client library version */
-  final String clientVersion = "0.1";
+  final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
-  final String applicationName;
+  final core.String applicationName;
   PagespeedonlineApi get _$service() => this;
   PagespeedapiResource _pagespeedapi;
   PagespeedapiResource get pagespeedapi() => _pagespeedapi;
   
   /** Returns response with indentations and line breaks. */
-  bool prettyPrint;
+  core.bool prettyPrint;
 
   /** Selector specifying which fields to include in a partial response. */
-  String fields;
+  core.String fields;
 
   /**
    * Available to use for quota purposes for server-side applications. Can be any arbitrary string
    * assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.
    */
-  String quotaUser;
+  core.String quotaUser;
 
   /** OAuth 2.0 token for the current user. */
-  String oauthToken;
+  core.String oauthToken;
 
   /**
    * API key. Your API key identifies your project and provides you with API access, quota, and
    * reports. Required unless you provide an OAuth 2.0 token.
    */
-  String key;
+  core.String key;
 
   /**
    * IP address of the site where the request originates. Use this if you want to enforce per-user
    * limits.
    */
-  String userIp;
+  core.String userIp;
 
   /** Data format for the response. */
   PagespeedonlineApiAlt alt;
 
 
-  PagespeedonlineApi([this.baseUrl = "https://www.googleapis.com/pagespeedonline/v1/", this.applicationName]) { 
+  PagespeedonlineApi([this.baseUrl = "https://www.googleapis.com/pagespeedonline/v1/", this.applicationName, this.authenticator]) { 
     _pagespeedapi = new PagespeedapiResource._internal(this);
   }
-  String get userAgent() {
+  core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}pagespeedonline/v1/20120214 google-api-dart-client/${clientVersion}";
   }
 }
 
 // Resource .PagespeedapiResource
-class PagespeedapiResource {
+class PagespeedapiResource extends core.Object {
   final PagespeedonlineApi _$service;
   
   PagespeedapiResource._internal(PagespeedonlineApi $service) : _$service = $service;
@@ -72,7 +75,7 @@ class PagespeedapiResource {
    * of suggestions to make that page faster, and other information.
    * [url] The URL to fetch and analyze
    */
-  Future<Result> runpagespeed(String url, [String locale = UNSPECIFIED, List<String> rule = UNSPECIFIED, PagespeedapiResourceRunpagespeedStrategy strategy = UNSPECIFIED]) {
+  core.Future<Result> runpagespeed(core.String url, [core.String locale = UNSPECIFIED, core.List<core.String> rule = UNSPECIFIED, PagespeedapiResourceRunpagespeedStrategy strategy = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -89,31 +92,25 @@ class PagespeedapiResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "runPagespeed").generate($pathParams, $queryParams);
-    final $completer = new Completer<Result>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Result.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Result.parse(JSON.parse($text)));
   }
 }
 
 // Enum PagespeedapiResource.Runpagespeed.Strategy
-class PagespeedapiResourceRunpagespeedStrategy implements Hashable {
+class PagespeedapiResourceRunpagespeedStrategy extends core.Object implements core.Hashable {
   /** Fetch and analyze the URL for desktop browsers */
   static final PagespeedapiResourceRunpagespeedStrategy DESKTOP = const PagespeedapiResourceRunpagespeedStrategy._internal("desktop", 0);
   /** Fetch and analyze the URL for mobile devices */
   static final PagespeedapiResourceRunpagespeedStrategy MOBILE = const PagespeedapiResourceRunpagespeedStrategy._internal("mobile", 1);
 
   /** All values of this enumeration */
-  static final List<PagespeedapiResourceRunpagespeedStrategy> values = const <PagespeedapiResourceRunpagespeedStrategy>[
+  static final core.List<PagespeedapiResourceRunpagespeedStrategy> values = const <PagespeedapiResourceRunpagespeedStrategy>[
     DESKTOP,
     MOBILE,
   ];
@@ -125,21 +122,21 @@ class PagespeedapiResourceRunpagespeedStrategy implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static PagespeedapiResourceRunpagespeedStrategy valueOf(String item) => _valuesMap[item];
+  static PagespeedapiResourceRunpagespeedStrategy valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const PagespeedapiResourceRunpagespeedStrategy._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const PagespeedapiResourceRunpagespeedStrategy._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Strategy".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Strategy".hashCode();
 }
 
 // Schema .Result
 class Result extends IdentityHash {
   /** Kind of result. */
-  String kind;
+  core.String kind;
 
   /**
  * Localized Page Speed results. Contains a ruleResults entry for each Page Speed rule instantiated
@@ -148,7 +145,7 @@ class Result extends IdentityHash {
   ResultFormattedResults formattedResults;
 
   /** Title of the page, as displayed in the browser's title bar. */
-  String title;
+  core.String title;
 
   /** The version of the Page Speed SDK used to generate these results. */
   ResultVersion version;
@@ -157,18 +154,18 @@ class Result extends IdentityHash {
  * The Page Speed Score (0-100), which indicates how much faster a page could be. A high score
  * indicates little room for improvement, while a lower score indicates more room for improvement.
  */
-  int score;
+  core.int score;
 
   /**
  * Response code for the document. 200 indicates a normal page load. 4xx/5xx indicates an error.
  */
-  int responseCode;
+  core.int responseCode;
 
   /**
  * List of rules that were specified in the request, but which the server did not know how to
  * instantiate.
  */
-  List<String> invalidRules;
+  core.List<core.String> invalidRules;
 
   /**
  * Summary statistics for the page, such as number of JavaScript bytes, number of HTML bytes, etc.
@@ -176,10 +173,10 @@ class Result extends IdentityHash {
   ResultPageStats pageStats;
 
   /** Canonicalized and final URL for the document, after following page redirects (if any). */
-  String id;
+  core.String id;
 
   /** Parses an instance from its JSON representation. */
-  static Result parse(Map<String, Object> json) {
+  static Result parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Result();
     result.kind = identity(json["kind"]);
@@ -194,9 +191,9 @@ class Result extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Result value) {
+  static core.Object serialize(Result value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["kind"] = identity(value.kind);
     result["formattedResults"] = ResultFormattedResults.serialize(value.formattedResults);
     result["title"] = identity(value.title);
@@ -214,16 +211,16 @@ class Result extends IdentityHash {
 // Schema Result.ResultFormattedResults
 class ResultFormattedResults extends IdentityHash {
   /** The locale of the formattedResults, e.g. "en_US". */
-  String locale;
+  core.String locale;
 
   /**
  * Dictionary of formatted rule results, with one entry for each Page Speed rule instantiated and
  * run by the server.
  */
-  Map<String, ResultFormattedResultsRuleResults> ruleResults;
+  core.Map<String, ResultFormattedResultsRuleResults> ruleResults;
 
   /** Parses an instance from its JSON representation. */
-  static ResultFormattedResults parse(Map<String, Object> json) {
+  static ResultFormattedResults parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ResultFormattedResults();
     result.locale = identity(json["locale"]);
@@ -231,9 +228,9 @@ class ResultFormattedResults extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ResultFormattedResults value) {
+  static core.Object serialize(ResultFormattedResults value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["locale"] = identity(value.locale);
     result["ruleResults"] = mapValues(ResultFormattedResultsRuleResults.serialize)(value.ruleResults);
     return result;
@@ -244,13 +241,13 @@ class ResultFormattedResults extends IdentityHash {
 // Schema Result.ResultFormattedResults.ResultFormattedResultsRuleResults
 class ResultFormattedResultsRuleResults extends IdentityHash {
   /** Localized name of the rule, intended for presentation to a user. */
-  String localizedRuleName;
+  core.String localizedRuleName;
 
   /**
  * List of blocks of URLs. Each block may contain a heading and a list of URLs. Each URL may
  * optionally include additional details.
  */
-  List<ResultFormattedResultsRuleResultsUrlBlocks> urlBlocks;
+  core.List<ResultFormattedResultsRuleResultsUrlBlocks> urlBlocks;
 
   /**
  * The score (0-100) for this rule. The rule score indicates how well a page implements the
@@ -258,7 +255,7 @@ class ResultFormattedResultsRuleResults extends IdentityHash {
  * are compressed, the rule score would be 0, while if all of the compressible resources on a page
  * are compressed, the rule score would be 100.
  */
-  int ruleScore;
+  core.int ruleScore;
 
   /**
  * The impact (unbounded floating point value) that implementing the suggestions for this rule would
@@ -268,10 +265,10 @@ class ResultFormattedResultsRuleResults extends IdentityHash {
  * compression rule would have 2x the impact of the image optimization rule, all other things being
  * equal.
  */
-  double ruleImpact;
+  core.double ruleImpact;
 
   /** Parses an instance from its JSON representation. */
-  static ResultFormattedResultsRuleResults parse(Map<String, Object> json) {
+  static ResultFormattedResultsRuleResults parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ResultFormattedResultsRuleResults();
     result.localizedRuleName = identity(json["localizedRuleName"]);
@@ -281,9 +278,9 @@ class ResultFormattedResultsRuleResults extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ResultFormattedResultsRuleResults value) {
+  static core.Object serialize(ResultFormattedResultsRuleResults value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["localizedRuleName"] = identity(value.localizedRuleName);
     result["urlBlocks"] = map(ResultFormattedResultsRuleResultsUrlBlocks.serialize)(value.urlBlocks);
     result["ruleScore"] = identity(value.ruleScore);
@@ -299,10 +296,10 @@ class ResultFormattedResultsRuleResultsUrlBlocks extends IdentityHash {
   ResultFormattedResultsRuleResultsUrlBlocksHeader header;
 
   /** List of entries that provide information about URLs in the url block. Optional. */
-  List<ResultFormattedResultsRuleResultsUrlBlocksUrls> urls;
+  core.List<ResultFormattedResultsRuleResultsUrlBlocksUrls> urls;
 
   /** Parses an instance from its JSON representation. */
-  static ResultFormattedResultsRuleResultsUrlBlocks parse(Map<String, Object> json) {
+  static ResultFormattedResultsRuleResultsUrlBlocks parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ResultFormattedResultsRuleResultsUrlBlocks();
     result.header = ResultFormattedResultsRuleResultsUrlBlocksHeader.parse(json["header"]);
@@ -310,9 +307,9 @@ class ResultFormattedResultsRuleResultsUrlBlocks extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ResultFormattedResultsRuleResultsUrlBlocks value) {
+  static core.Object serialize(ResultFormattedResultsRuleResultsUrlBlocks value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["header"] = ResultFormattedResultsRuleResultsUrlBlocksHeader.serialize(value.header);
     result["urls"] = map(ResultFormattedResultsRuleResultsUrlBlocksUrls.serialize)(value.urls);
     return result;
@@ -323,16 +320,16 @@ class ResultFormattedResultsRuleResultsUrlBlocks extends IdentityHash {
 // Schema Result.ResultFormattedResults.ResultFormattedResultsRuleResults.ResultFormattedResultsRuleResultsUrlBlocks.ResultFormattedResultsRuleResultsUrlBlocksHeader
 class ResultFormattedResultsRuleResultsUrlBlocksHeader extends IdentityHash {
   /** List of arguments for the format string. */
-  List<ResultFormattedResultsRuleResultsUrlBlocksHeaderArgs> args;
+  core.List<ResultFormattedResultsRuleResultsUrlBlocksHeaderArgs> args;
 
   /**
  * A localized format string with $N placeholders, where N is the 1-indexed argument number, e.g.
  * 'Minifying the following $1 resources would save a total of $2 bytes'.
  */
-  String format;
+  core.String format;
 
   /** Parses an instance from its JSON representation. */
-  static ResultFormattedResultsRuleResultsUrlBlocksHeader parse(Map<String, Object> json) {
+  static ResultFormattedResultsRuleResultsUrlBlocksHeader parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ResultFormattedResultsRuleResultsUrlBlocksHeader();
     result.args = map(ResultFormattedResultsRuleResultsUrlBlocksHeaderArgs.parse)(json["args"]);
@@ -340,9 +337,9 @@ class ResultFormattedResultsRuleResultsUrlBlocksHeader extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ResultFormattedResultsRuleResultsUrlBlocksHeader value) {
+  static core.Object serialize(ResultFormattedResultsRuleResultsUrlBlocksHeader value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["args"] = map(ResultFormattedResultsRuleResultsUrlBlocksHeaderArgs.serialize)(value.args);
     result["format"] = identity(value.format);
     return result;
@@ -353,13 +350,13 @@ class ResultFormattedResultsRuleResultsUrlBlocksHeader extends IdentityHash {
 // Schema Result.ResultFormattedResults.ResultFormattedResultsRuleResults.ResultFormattedResultsRuleResultsUrlBlocks.ResultFormattedResultsRuleResultsUrlBlocksHeader.ResultFormattedResultsRuleResultsUrlBlocksHeaderArgs
 class ResultFormattedResultsRuleResultsUrlBlocksHeaderArgs extends IdentityHash {
   /** Type of argument. One of URL, STRING_LITERAL, INT_LITERAL, BYTES, or DURATION. */
-  String type;
+  core.String type;
 
   /** Argument value, as a localized string. */
-  String value;
+  core.String value;
 
   /** Parses an instance from its JSON representation. */
-  static ResultFormattedResultsRuleResultsUrlBlocksHeaderArgs parse(Map<String, Object> json) {
+  static ResultFormattedResultsRuleResultsUrlBlocksHeaderArgs parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ResultFormattedResultsRuleResultsUrlBlocksHeaderArgs();
     result.type = identity(json["type"]);
@@ -367,9 +364,9 @@ class ResultFormattedResultsRuleResultsUrlBlocksHeaderArgs extends IdentityHash 
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ResultFormattedResultsRuleResultsUrlBlocksHeaderArgs value) {
+  static core.Object serialize(ResultFormattedResultsRuleResultsUrlBlocksHeaderArgs value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["type"] = identity(value.type);
     result["value"] = identity(value.value);
     return result;
@@ -380,7 +377,7 @@ class ResultFormattedResultsRuleResultsUrlBlocksHeaderArgs extends IdentityHash 
 // Schema Result.ResultFormattedResults.ResultFormattedResultsRuleResults.ResultFormattedResultsRuleResultsUrlBlocks.ResultFormattedResultsRuleResultsUrlBlocksUrls
 class ResultFormattedResultsRuleResultsUrlBlocksUrls extends IdentityHash {
   /** List of entries that provide additional details about a single URL. Optional. */
-  List<ResultFormattedResultsRuleResultsUrlBlocksUrlsDetails> details;
+  core.List<ResultFormattedResultsRuleResultsUrlBlocksUrlsDetails> details;
 
   /**
  * A format string that gives information about the URL, and a list of arguments for that format
@@ -389,7 +386,7 @@ class ResultFormattedResultsRuleResultsUrlBlocksUrls extends IdentityHash {
   ResultFormattedResultsRuleResultsUrlBlocksUrlsResult result;
 
   /** Parses an instance from its JSON representation. */
-  static ResultFormattedResultsRuleResultsUrlBlocksUrls parse(Map<String, Object> json) {
+  static ResultFormattedResultsRuleResultsUrlBlocksUrls parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ResultFormattedResultsRuleResultsUrlBlocksUrls();
     result.details = map(ResultFormattedResultsRuleResultsUrlBlocksUrlsDetails.parse)(json["details"]);
@@ -397,9 +394,9 @@ class ResultFormattedResultsRuleResultsUrlBlocksUrls extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ResultFormattedResultsRuleResultsUrlBlocksUrls value) {
+  static core.Object serialize(ResultFormattedResultsRuleResultsUrlBlocksUrls value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["details"] = map(ResultFormattedResultsRuleResultsUrlBlocksUrlsDetails.serialize)(value.details);
     result["result"] = ResultFormattedResultsRuleResultsUrlBlocksUrlsResult.serialize(value.result);
     return result;
@@ -410,16 +407,16 @@ class ResultFormattedResultsRuleResultsUrlBlocksUrls extends IdentityHash {
 // Schema Result.ResultFormattedResults.ResultFormattedResultsRuleResults.ResultFormattedResultsRuleResultsUrlBlocks.ResultFormattedResultsRuleResultsUrlBlocksUrls.ResultFormattedResultsRuleResultsUrlBlocksUrlsDetails
 class ResultFormattedResultsRuleResultsUrlBlocksUrlsDetails extends IdentityHash {
   /** List of arguments for the format string. */
-  List<ResultFormattedResultsRuleResultsUrlBlocksUrlsDetailsArgs> args;
+  core.List<ResultFormattedResultsRuleResultsUrlBlocksUrlsDetailsArgs> args;
 
   /**
  * A localized format string with $N placeholders, where N is the 1-indexed argument number, e.g.
  * 'Unnecessary metadata for this resource adds an additional $1 bytes to its download size'.
  */
-  String format;
+  core.String format;
 
   /** Parses an instance from its JSON representation. */
-  static ResultFormattedResultsRuleResultsUrlBlocksUrlsDetails parse(Map<String, Object> json) {
+  static ResultFormattedResultsRuleResultsUrlBlocksUrlsDetails parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ResultFormattedResultsRuleResultsUrlBlocksUrlsDetails();
     result.args = map(ResultFormattedResultsRuleResultsUrlBlocksUrlsDetailsArgs.parse)(json["args"]);
@@ -427,9 +424,9 @@ class ResultFormattedResultsRuleResultsUrlBlocksUrlsDetails extends IdentityHash
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ResultFormattedResultsRuleResultsUrlBlocksUrlsDetails value) {
+  static core.Object serialize(ResultFormattedResultsRuleResultsUrlBlocksUrlsDetails value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["args"] = map(ResultFormattedResultsRuleResultsUrlBlocksUrlsDetailsArgs.serialize)(value.args);
     result["format"] = identity(value.format);
     return result;
@@ -440,13 +437,13 @@ class ResultFormattedResultsRuleResultsUrlBlocksUrlsDetails extends IdentityHash
 // Schema Result.ResultFormattedResults.ResultFormattedResultsRuleResults.ResultFormattedResultsRuleResultsUrlBlocks.ResultFormattedResultsRuleResultsUrlBlocksUrls.ResultFormattedResultsRuleResultsUrlBlocksUrlsDetails.ResultFormattedResultsRuleResultsUrlBlocksUrlsDetailsArgs
 class ResultFormattedResultsRuleResultsUrlBlocksUrlsDetailsArgs extends IdentityHash {
   /** Type of argument. One of URL, STRING_LITERAL, INT_LITERAL, BYTES, or DURATION. */
-  String type;
+  core.String type;
 
   /** Argument value, as a localized string. */
-  String value;
+  core.String value;
 
   /** Parses an instance from its JSON representation. */
-  static ResultFormattedResultsRuleResultsUrlBlocksUrlsDetailsArgs parse(Map<String, Object> json) {
+  static ResultFormattedResultsRuleResultsUrlBlocksUrlsDetailsArgs parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ResultFormattedResultsRuleResultsUrlBlocksUrlsDetailsArgs();
     result.type = identity(json["type"]);
@@ -454,9 +451,9 @@ class ResultFormattedResultsRuleResultsUrlBlocksUrlsDetailsArgs extends Identity
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ResultFormattedResultsRuleResultsUrlBlocksUrlsDetailsArgs value) {
+  static core.Object serialize(ResultFormattedResultsRuleResultsUrlBlocksUrlsDetailsArgs value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["type"] = identity(value.type);
     result["value"] = identity(value.value);
     return result;
@@ -467,16 +464,16 @@ class ResultFormattedResultsRuleResultsUrlBlocksUrlsDetailsArgs extends Identity
 // Schema Result.ResultFormattedResults.ResultFormattedResultsRuleResults.ResultFormattedResultsRuleResultsUrlBlocks.ResultFormattedResultsRuleResultsUrlBlocksUrls.ResultFormattedResultsRuleResultsUrlBlocksUrlsResult
 class ResultFormattedResultsRuleResultsUrlBlocksUrlsResult extends IdentityHash {
   /** List of arguments for the format string. */
-  List<ResultFormattedResultsRuleResultsUrlBlocksUrlsResultArgs> args;
+  core.List<ResultFormattedResultsRuleResultsUrlBlocksUrlsResultArgs> args;
 
   /**
  * A localized format string with $N placeholders, where N is the 1-indexed argument number, e.g.
  * 'Minifying the resource at URL $1 can save $2 bytes'.
  */
-  String format;
+  core.String format;
 
   /** Parses an instance from its JSON representation. */
-  static ResultFormattedResultsRuleResultsUrlBlocksUrlsResult parse(Map<String, Object> json) {
+  static ResultFormattedResultsRuleResultsUrlBlocksUrlsResult parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ResultFormattedResultsRuleResultsUrlBlocksUrlsResult();
     result.args = map(ResultFormattedResultsRuleResultsUrlBlocksUrlsResultArgs.parse)(json["args"]);
@@ -484,9 +481,9 @@ class ResultFormattedResultsRuleResultsUrlBlocksUrlsResult extends IdentityHash 
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ResultFormattedResultsRuleResultsUrlBlocksUrlsResult value) {
+  static core.Object serialize(ResultFormattedResultsRuleResultsUrlBlocksUrlsResult value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["args"] = map(ResultFormattedResultsRuleResultsUrlBlocksUrlsResultArgs.serialize)(value.args);
     result["format"] = identity(value.format);
     return result;
@@ -497,13 +494,13 @@ class ResultFormattedResultsRuleResultsUrlBlocksUrlsResult extends IdentityHash 
 // Schema Result.ResultFormattedResults.ResultFormattedResultsRuleResults.ResultFormattedResultsRuleResultsUrlBlocks.ResultFormattedResultsRuleResultsUrlBlocksUrls.ResultFormattedResultsRuleResultsUrlBlocksUrlsResult.ResultFormattedResultsRuleResultsUrlBlocksUrlsResultArgs
 class ResultFormattedResultsRuleResultsUrlBlocksUrlsResultArgs extends IdentityHash {
   /** Type of argument. One of URL, STRING_LITERAL, INT_LITERAL, BYTES, or DURATION. */
-  String type;
+  core.String type;
 
   /** Argument value, as a localized string. */
-  String value;
+  core.String value;
 
   /** Parses an instance from its JSON representation. */
-  static ResultFormattedResultsRuleResultsUrlBlocksUrlsResultArgs parse(Map<String, Object> json) {
+  static ResultFormattedResultsRuleResultsUrlBlocksUrlsResultArgs parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ResultFormattedResultsRuleResultsUrlBlocksUrlsResultArgs();
     result.type = identity(json["type"]);
@@ -511,9 +508,9 @@ class ResultFormattedResultsRuleResultsUrlBlocksUrlsResultArgs extends IdentityH
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ResultFormattedResultsRuleResultsUrlBlocksUrlsResultArgs value) {
+  static core.Object serialize(ResultFormattedResultsRuleResultsUrlBlocksUrlsResultArgs value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["type"] = identity(value.type);
     result["value"] = identity(value.value);
     return result;
@@ -524,51 +521,51 @@ class ResultFormattedResultsRuleResultsUrlBlocksUrlsResultArgs extends IdentityH
 // Schema Result.ResultPageStats
 class ResultPageStats extends IdentityHash {
   /** Number of response bytes for other resources on the page. */
-  String otherResponseBytes;
+  core.String otherResponseBytes;
 
   /** Number of response bytes for flash resources on the page. */
-  String flashResponseBytes;
+  core.String flashResponseBytes;
 
   /** Total size of all request bytes sent by the page. */
-  String totalRequestBytes;
+  core.String totalRequestBytes;
 
   /** Number of CSS resources referenced by the page. */
-  int numberCssResources;
+  core.int numberCssResources;
 
   /** Number of HTTP resources loaded by the page. */
-  int numberResources;
+  core.int numberResources;
 
   /** Number of uncompressed response bytes for CSS resources on the page. */
-  String cssResponseBytes;
+  core.String cssResponseBytes;
 
   /** Number of uncompressed response bytes for JS resources on the page. */
-  String javascriptResponseBytes;
+  core.String javascriptResponseBytes;
 
   /** Number of response bytes for image resources on the page. */
-  String imageResponseBytes;
+  core.String imageResponseBytes;
 
   /** Number of unique hosts referenced by the page. */
-  int numberHosts;
+  core.int numberHosts;
 
   /** Number of static (i.e. cacheable) resources on the page. */
-  int numberStaticResources;
+  core.int numberStaticResources;
 
   /**
  * Number of uncompressed response bytes for the main HTML document and all iframes on the page.
  */
-  String htmlResponseBytes;
+  core.String htmlResponseBytes;
 
   /** Number of JavaScript resources referenced by the page. */
-  int numberJsResources;
+  core.int numberJsResources;
 
   /**
  * Number of uncompressed response bytes for text resources not covered by other statistics (i.e
  * non-HTML, non-script, non-CSS resources) on the page.
  */
-  String textResponseBytes;
+  core.String textResponseBytes;
 
   /** Parses an instance from its JSON representation. */
-  static ResultPageStats parse(Map<String, Object> json) {
+  static ResultPageStats parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ResultPageStats();
     result.otherResponseBytes = identity(json["otherResponseBytes"]);
@@ -587,9 +584,9 @@ class ResultPageStats extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ResultPageStats value) {
+  static core.Object serialize(ResultPageStats value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["otherResponseBytes"] = identity(value.otherResponseBytes);
     result["flashResponseBytes"] = identity(value.flashResponseBytes);
     result["totalRequestBytes"] = identity(value.totalRequestBytes);
@@ -611,13 +608,13 @@ class ResultPageStats extends IdentityHash {
 // Schema Result.ResultVersion
 class ResultVersion extends IdentityHash {
   /** The major version number of the Page Speed SDK used to generate these results. */
-  int major;
+  core.int major;
 
   /** The minor version number of the Page Speed SDK used to generate these results. */
-  int minor;
+  core.int minor;
 
   /** Parses an instance from its JSON representation. */
-  static ResultVersion parse(Map<String, Object> json) {
+  static ResultVersion parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ResultVersion();
     result.major = identity(json["major"]);
@@ -625,9 +622,9 @@ class ResultVersion extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ResultVersion value) {
+  static core.Object serialize(ResultVersion value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["major"] = identity(value.major);
     result["minor"] = identity(value.minor);
     return result;
@@ -636,12 +633,12 @@ class ResultVersion extends IdentityHash {
 }
 
 // Enum PagespeedonlineApi.Alt
-class PagespeedonlineApiAlt implements Hashable {
+class PagespeedonlineApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/json */
   static final PagespeedonlineApiAlt JSON = const PagespeedonlineApiAlt._internal("json", 0);
 
   /** All values of this enumeration */
-  static final List<PagespeedonlineApiAlt> values = const <PagespeedonlineApiAlt>[
+  static final core.List<PagespeedonlineApiAlt> values = const <PagespeedonlineApiAlt>[
     JSON,
   ];
 
@@ -651,14 +648,14 @@ class PagespeedonlineApiAlt implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static PagespeedonlineApiAlt valueOf(String item) => _valuesMap[item];
+  static PagespeedonlineApiAlt valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const PagespeedonlineApiAlt._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const PagespeedonlineApiAlt._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Alt".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Alt".hashCode();
 }
 

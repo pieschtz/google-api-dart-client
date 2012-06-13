@@ -1,4 +1,5 @@
 #library("oauth2");
+#import('dart:core', prefix: 'core');
 #import('dart:json');
 
 #import('utils.dart');
@@ -8,52 +9,54 @@
 /**
  * OAuth2 API
  */
-class Oauth2Api {
+class Oauth2Api extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
-  final String baseUrl;
+  final core.String baseUrl;
+  /** How we should identify ourselves to the service. */
+  Authenticator authenticator;
   /** The client library version */
-  final String clientVersion = "0.1";
+  final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
-  final String applicationName;
+  final core.String applicationName;
   Oauth2Api get _$service() => this;
   UserinfoResource _userinfo;
   UserinfoResource get userinfo() => _userinfo;
   
   /** Returns response with indentations and line breaks. */
-  bool prettyPrint;
+  core.bool prettyPrint;
 
   /** Selector specifying which fields to include in a partial response. */
-  String fields;
+  core.String fields;
 
   /**
    * Available to use for quota purposes for server-side applications. Can be any arbitrary string
    * assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.
    */
-  String quotaUser;
+  core.String quotaUser;
 
   /** OAuth 2.0 token for the current user. */
-  String oauthToken;
+  core.String oauthToken;
 
   /**
    * API key. Your API key identifies your project and provides you with API access, quota, and
    * reports. Required unless you provide an OAuth 2.0 token.
    */
-  String key;
+  core.String key;
 
   /**
    * IP address of the site where the request originates. Use this if you want to enforce per-user
    * limits.
    */
-  String userIp;
+  core.String userIp;
 
   /** Data format for the response. */
   Oauth2ApiAlt alt;
 
 
-  Oauth2Api([this.baseUrl = "https://www.googleapis.com//", this.applicationName]) { 
+  Oauth2Api([this.baseUrl = "https://www.googleapis.com//", this.applicationName, this.authenticator]) { 
     _userinfo = new UserinfoResource._internal(this);
   }
-  String get userAgent() {
+  core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}oauth2/v2/20120523 google-api-dart-client/${clientVersion}";
   }
@@ -61,7 +64,7 @@ class Oauth2Api {
   /**
 
    */
-  Future<Tokeninfo> tokeninfo([String accessToken = UNSPECIFIED, String idToken = UNSPECIFIED]) {
+  core.Future<Tokeninfo> tokeninfo([core.String accessToken = UNSPECIFIED, core.String idToken = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -76,23 +79,17 @@ class Oauth2Api {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "oauth2/v2/tokeninfo").generate($pathParams, $queryParams);
-    final $completer = new Completer<Tokeninfo>();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Tokeninfo.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Tokeninfo.parse(JSON.parse($text)));
   }}
 
 // Resource .UserinfoResource
-class UserinfoResource {
+class UserinfoResource extends core.Object {
   final Oauth2Api _$service;
   final UserinfoV2ResourceResource v2;
   
@@ -103,7 +100,7 @@ class UserinfoResource {
   /**
 
    */
-  Future<Userinfo> get() {
+  core.Future<Userinfo> get() {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -116,25 +113,19 @@ class UserinfoResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "oauth2/v2/userinfo").generate($pathParams, $queryParams);
-    final $completer = new Completer<Userinfo>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Userinfo.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Userinfo.parse(JSON.parse($text)));
   }
 }
 
 
 // Resource UserinfoResource.UserinfoV2ResourceResource
-class UserinfoV2ResourceResource {
+class UserinfoV2ResourceResource extends core.Object {
   final Oauth2Api _$service;
   final UserinfoV2ResourceUserinfoV2MeResourceResourceResourceResource me;
   
@@ -144,7 +135,7 @@ class UserinfoV2ResourceResource {
 
 
 // Resource UserinfoResource.UserinfoV2ResourceResource.UserinfoV2ResourceUserinfoV2MeResourceResourceResourceResource
-class UserinfoV2ResourceUserinfoV2MeResourceResourceResourceResource {
+class UserinfoV2ResourceUserinfoV2MeResourceResourceResourceResource extends core.Object {
   final Oauth2Api _$service;
   
   UserinfoV2ResourceUserinfoV2MeResourceResourceResourceResource._internal(Oauth2Api $service) : _$service = $service;
@@ -153,7 +144,7 @@ class UserinfoV2ResourceUserinfoV2MeResourceResourceResourceResource {
   /**
 
    */
-  Future<Userinfo> get() {
+  core.Future<Userinfo> get() {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -166,53 +157,47 @@ class UserinfoV2ResourceUserinfoV2MeResourceResourceResourceResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "userinfo/v2/me").generate($pathParams, $queryParams);
-    final $completer = new Completer<Userinfo>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Userinfo.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Userinfo.parse(JSON.parse($text)));
   }
 }
 
 // Schema .Tokeninfo
 class Tokeninfo extends IdentityHash {
   /** To whom was the token issued to. In general the same as audience. */
-  String issuedTo;
+  core.String issuedTo;
 
   /** The Gaia obfuscated user id. */
-  String userId;
+  core.String userId;
 
   /** The expiry time of the token, as number of seconds left until expiry. */
-  int expiresIn;
+  core.int expiresIn;
 
   /** The access type granted with this token. It can be offline or online. */
-  String accessType;
+  core.String accessType;
 
   /** Who is the intended audience for this token. In general the same as issued_to. */
-  String audience;
+  core.String audience;
 
   /** The space separated list of scopes granted to this token. */
-  String scope;
+  core.String scope;
 
   /** The email address of the user. Present only if the email scope is present in the request. */
-  String email;
+  core.String email;
 
   /**
  * Boolean flag which is true if the email address is verified. Present only if the email scope is
  * present in the request.
  */
-  bool verifiedEmail;
+  core.bool verifiedEmail;
 
   /** Parses an instance from its JSON representation. */
-  static Tokeninfo parse(Map<String, Object> json) {
+  static Tokeninfo parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Tokeninfo();
     result.issuedTo = identity(json["issued_to"]);
@@ -226,9 +211,9 @@ class Tokeninfo extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Tokeninfo value) {
+  static core.Object serialize(Tokeninfo value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["issued_to"] = identity(value.issuedTo);
     result["user_id"] = identity(value.userId);
     result["expires_in"] = identity(value.expiresIn);
@@ -245,43 +230,43 @@ class Tokeninfo extends IdentityHash {
 // Schema .Userinfo
 class Userinfo extends IdentityHash {
   /** The user's last name. */
-  String familyName;
+  core.String familyName;
 
   /** The user's full name. */
-  String name;
+  core.String name;
 
   /** URL of the user's picture image. */
-  String picture;
+  core.String picture;
 
   /** The user's default locale. */
-  String locale;
+  core.String locale;
 
   /** The user's gender. */
-  String gender;
+  core.String gender;
 
   /** The user's email address. */
-  String email;
+  core.String email;
 
   /** The user's birthday. The year is not present. */
-  String birthday;
+  core.String birthday;
 
   /** URL of the profile page. */
-  String link;
+  core.String link;
 
   /** The user's first name. */
-  String givenName;
+  core.String givenName;
 
   /** The user's default timezone. */
-  String timezone;
+  core.String timezone;
 
   /** The focus obfuscated gaia id of the user. */
-  String id;
+  core.String id;
 
   /** Boolean flag which is true if the email address is verified. */
-  bool verifiedEmail;
+  core.bool verifiedEmail;
 
   /** Parses an instance from its JSON representation. */
-  static Userinfo parse(Map<String, Object> json) {
+  static Userinfo parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Userinfo();
     result.familyName = identity(json["family_name"]);
@@ -299,9 +284,9 @@ class Userinfo extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Userinfo value) {
+  static core.Object serialize(Userinfo value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["family_name"] = identity(value.familyName);
     result["name"] = identity(value.name);
     result["picture"] = identity(value.picture);
@@ -320,12 +305,12 @@ class Userinfo extends IdentityHash {
 }
 
 // Enum Oauth2Api.Alt
-class Oauth2ApiAlt implements Hashable {
+class Oauth2ApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/json */
   static final Oauth2ApiAlt JSON = const Oauth2ApiAlt._internal("json", 0);
 
   /** All values of this enumeration */
-  static final List<Oauth2ApiAlt> values = const <Oauth2ApiAlt>[
+  static final core.List<Oauth2ApiAlt> values = const <Oauth2ApiAlt>[
     JSON,
   ];
 
@@ -335,14 +320,14 @@ class Oauth2ApiAlt implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static Oauth2ApiAlt valueOf(String item) => _valuesMap[item];
+  static Oauth2ApiAlt valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const Oauth2ApiAlt._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const Oauth2ApiAlt._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Alt".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Alt".hashCode();
 }
 

@@ -1,4 +1,5 @@
 #library("urlshortener");
+#import('dart:core', prefix: 'core');
 #import('dart:json');
 
 #import('utils.dart');
@@ -8,59 +9,61 @@
 /**
  * Lets you create, inspect, and manage goo.gl short URLs
  */
-class UrlshortenerApi {
+class UrlshortenerApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
-  final String baseUrl;
+  final core.String baseUrl;
+  /** How we should identify ourselves to the service. */
+  Authenticator authenticator;
   /** The client library version */
-  final String clientVersion = "0.1";
+  final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
-  final String applicationName;
+  final core.String applicationName;
   UrlshortenerApi get _$service() => this;
   UrlResource _url;
   UrlResource get url() => _url;
   
   /** Returns response with indentations and line breaks. */
-  bool prettyPrint;
+  core.bool prettyPrint;
 
   /** Selector specifying which fields to include in a partial response. */
-  String fields;
+  core.String fields;
 
   /**
    * Available to use for quota purposes for server-side applications. Can be any arbitrary string
    * assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.
    */
-  String quotaUser;
+  core.String quotaUser;
 
   /** OAuth 2.0 token for the current user. */
-  String oauthToken;
+  core.String oauthToken;
 
   /**
    * API key. Your API key identifies your project and provides you with API access, quota, and
    * reports. Required unless you provide an OAuth 2.0 token.
    */
-  String key;
+  core.String key;
 
   /**
    * IP address of the site where the request originates. Use this if you want to enforce per-user
    * limits.
    */
-  String userIp;
+  core.String userIp;
 
   /** Data format for the response. */
   UrlshortenerApiAlt alt;
 
 
-  UrlshortenerApi([this.baseUrl = "https://www.googleapis.com/urlshortener/v1/", this.applicationName]) { 
+  UrlshortenerApi([this.baseUrl = "https://www.googleapis.com/urlshortener/v1/", this.applicationName, this.authenticator]) { 
     _url = new UrlResource._internal(this);
   }
-  String get userAgent() {
+  core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}urlshortener/v1/snapshot google-api-dart-client/${clientVersion}";
   }
 }
 
 // Resource .UrlResource
-class UrlResource {
+class UrlResource extends core.Object {
   final UrlshortenerApi _$service;
   
   UrlResource._internal(UrlshortenerApi $service) : _$service = $service;
@@ -70,7 +73,7 @@ class UrlResource {
    * Creates a new short URL.
    * [content] the Url
    */
-  Future<Url> insert(Url content) {
+  core.Future<Url> insert(Url content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -85,26 +88,20 @@ class UrlResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Url.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "url").generate($pathParams, $queryParams);
-    final $completer = new Completer<Url>();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Url.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Url.parse(JSON.parse($text)));
   }
 
   // Method UrlResource.List
   /**
    * Retrieves a list of URLs shortened by a user.
    */
-  Future<UrlHistory> list([String startToken = UNSPECIFIED, UrlResourceListProjection projection = UNSPECIFIED]) {
+  core.Future<UrlHistory> list([core.String startToken = UNSPECIFIED, UrlResourceListProjection projection = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -119,19 +116,13 @@ class UrlResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "url/history").generate($pathParams, $queryParams);
-    final $completer = new Completer<UrlHistory>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = UrlHistory.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => UrlHistory.parse(JSON.parse($text)));
   }
 
   // Method UrlResource.Get
@@ -139,7 +130,7 @@ class UrlResource {
    * Expands a short URL or gets creation time and analytics.
    * [shortUrl] The short URL, including the protocol.
    */
-  Future<Url> get(String shortUrl, [UrlResourceGetProjection projection = UNSPECIFIED]) {
+  core.Future<Url> get(core.String shortUrl, [UrlResourceGetProjection projection = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -154,31 +145,25 @@ class UrlResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "url").generate($pathParams, $queryParams);
-    final $completer = new Completer<Url>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Url.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Url.parse(JSON.parse($text)));
   }
 }
 
 // Enum UrlResource.List.Projection
-class UrlResourceListProjection implements Hashable {
+class UrlResourceListProjection extends core.Object implements core.Hashable {
   /** Returns short URL click counts. */
   static final UrlResourceListProjection ANALYTICS_CLICKS = const UrlResourceListProjection._internal("ANALYTICS_CLICKS", 0);
   /** Returns short URL click counts. */
   static final UrlResourceListProjection FULL = const UrlResourceListProjection._internal("FULL", 1);
 
   /** All values of this enumeration */
-  static final List<UrlResourceListProjection> values = const <UrlResourceListProjection>[
+  static final core.List<UrlResourceListProjection> values = const <UrlResourceListProjection>[
     ANALYTICS_CLICKS,
     FULL,
   ];
@@ -190,19 +175,19 @@ class UrlResourceListProjection implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static UrlResourceListProjection valueOf(String item) => _valuesMap[item];
+  static UrlResourceListProjection valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const UrlResourceListProjection._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const UrlResourceListProjection._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Projection".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Projection".hashCode();
 }
 
 // Enum UrlResource.Get.Projection
-class UrlResourceGetProjection implements Hashable {
+class UrlResourceGetProjection extends core.Object implements core.Hashable {
   /** Returns only click counts. */
   static final UrlResourceGetProjection ANALYTICS_CLICKS = const UrlResourceGetProjection._internal("ANALYTICS_CLICKS", 0);
   /** Returns only top string counts. */
@@ -211,7 +196,7 @@ class UrlResourceGetProjection implements Hashable {
   static final UrlResourceGetProjection FULL = const UrlResourceGetProjection._internal("FULL", 2);
 
   /** All values of this enumeration */
-  static final List<UrlResourceGetProjection> values = const <UrlResourceGetProjection>[
+  static final core.List<UrlResourceGetProjection> values = const <UrlResourceGetProjection>[
     ANALYTICS_CLICKS,
     ANALYTICS_TOP_STRINGS,
     FULL,
@@ -225,51 +210,51 @@ class UrlResourceGetProjection implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static UrlResourceGetProjection valueOf(String item) => _valuesMap[item];
+  static UrlResourceGetProjection valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const UrlResourceGetProjection._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const UrlResourceGetProjection._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Projection".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Projection".hashCode();
 }
 
 // Schema .AnalyticsSnapshot
 class AnalyticsSnapshot extends IdentityHash {
   /** Number of clicks on this short URL. */
-  String shortUrlClicks;
+  core.String shortUrlClicks;
 
   /**
  * Top countries (expressed as country codes), e.g. "US" or "DE"; sorted by (descending) click
  * counts. Only present if this data is available.
  */
-  List<StringCount> countries;
+  core.List<StringCount> countries;
 
   /**
  * Top platforms or OSes, e.g. "Windows"; sorted by (descending) click counts. Only present if this
  * data is available.
  */
-  List<StringCount> platforms;
+  core.List<StringCount> platforms;
 
   /**
  * Top browsers, e.g. "Chrome"; sorted by (descending) click counts. Only present if this data is
  * available.
  */
-  List<StringCount> browsers;
+  core.List<StringCount> browsers;
 
   /**
  * Top referring hosts, e.g. "www.google.com"; sorted by (descending) click counts. Only present if
  * this data is available.
  */
-  List<StringCount> referrers;
+  core.List<StringCount> referrers;
 
   /** Number of clicks on all goo.gl short URLs pointing to this long URL. */
-  String longUrlClicks;
+  core.String longUrlClicks;
 
   /** Parses an instance from its JSON representation. */
-  static AnalyticsSnapshot parse(Map<String, Object> json) {
+  static AnalyticsSnapshot parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new AnalyticsSnapshot();
     result.shortUrlClicks = identity(json["shortUrlClicks"]);
@@ -281,9 +266,9 @@ class AnalyticsSnapshot extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(AnalyticsSnapshot value) {
+  static core.Object serialize(AnalyticsSnapshot value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["shortUrlClicks"] = identity(value.shortUrlClicks);
     result["countries"] = map(StringCount.serialize)(value.countries);
     result["platforms"] = map(StringCount.serialize)(value.platforms);
@@ -313,7 +298,7 @@ class AnalyticsSummary extends IdentityHash {
   AnalyticsSnapshot month;
 
   /** Parses an instance from its JSON representation. */
-  static AnalyticsSummary parse(Map<String, Object> json) {
+  static AnalyticsSummary parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new AnalyticsSummary();
     result.week = AnalyticsSnapshot.parse(json["week"]);
@@ -324,9 +309,9 @@ class AnalyticsSummary extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(AnalyticsSummary value) {
+  static core.Object serialize(AnalyticsSummary value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["week"] = AnalyticsSnapshot.serialize(value.week);
     result["allTime"] = AnalyticsSnapshot.serialize(value.allTime);
     result["twoHours"] = AnalyticsSnapshot.serialize(value.twoHours);
@@ -340,13 +325,13 @@ class AnalyticsSummary extends IdentityHash {
 // Schema .StringCount
 class StringCount extends IdentityHash {
   /** Number of clicks for this top entry, e.g. for this particular country or browser. */
-  String count;
+  core.String count;
 
   /** Label assigned to this top entry, e.g. "US" or "Chrome". */
-  String id;
+  core.String id;
 
   /** Parses an instance from its JSON representation. */
-  static StringCount parse(Map<String, Object> json) {
+  static StringCount parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new StringCount();
     result.count = identity(json["count"]);
@@ -354,9 +339,9 @@ class StringCount extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(StringCount value) {
+  static core.Object serialize(StringCount value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["count"] = identity(value.count);
     result["id"] = identity(value.id);
     return result;
@@ -370,16 +355,16 @@ class Url extends IdentityHash {
  * Status of the target URL. Possible values: "OK", "MALWARE", "PHISHING", or "REMOVED". A URL might
  * be marked "REMOVED" if it was flagged as spam, for example.
  */
-  String status;
+  core.String status;
 
   /** The fixed string "urlshortener#url". */
-  String kind;
+  core.String kind;
 
   /**
  * Time the short URL was created; ISO 8601 representation using the yyyy-MM-dd'T'HH:mm:ss.SSSZZ
  * format, e.g. "2010-10-14T19:01:24.944+00:00".
  */
-  String created;
+  core.String created;
 
   /**
  * A summary of the click analytics for the short and long URL. Might not be present if not
@@ -388,13 +373,13 @@ class Url extends IdentityHash {
   AnalyticsSummary analytics;
 
   /** Long URL, e.g. "http://www.google.com/". Might not be present if the status is "REMOVED". */
-  String longUrl;
+  core.String longUrl;
 
   /** Short URL, e.g. "http://goo.gl/l6MS". */
-  String id;
+  core.String id;
 
   /** Parses an instance from its JSON representation. */
-  static Url parse(Map<String, Object> json) {
+  static Url parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Url();
     result.status = identity(json["status"]);
@@ -406,9 +391,9 @@ class Url extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Url value) {
+  static core.Object serialize(Url value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["status"] = identity(value.status);
     result["kind"] = identity(value.kind);
     result["created"] = identity(value.created);
@@ -423,25 +408,25 @@ class Url extends IdentityHash {
 // Schema .UrlHistory
 class UrlHistory extends IdentityHash {
   /** A token to provide to get the next page of results. */
-  String nextPageToken;
+  core.String nextPageToken;
 
   /** A list of URL resources. */
-  List<Url> items;
+  core.List<Url> items;
 
   /** The fixed string "urlshortener#urlHistory". */
-  String kind;
+  core.String kind;
 
   /**
  * Number of items returned with each full "page" of results. Note that the last page could have
  * fewer items than the "itemsPerPage" value.
  */
-  int itemsPerPage;
+  core.int itemsPerPage;
 
   /** Total number of short URLs associated with this user (may be approximate). */
-  int totalItems;
+  core.int totalItems;
 
   /** Parses an instance from its JSON representation. */
-  static UrlHistory parse(Map<String, Object> json) {
+  static UrlHistory parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new UrlHistory();
     result.nextPageToken = identity(json["nextPageToken"]);
@@ -452,9 +437,9 @@ class UrlHistory extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(UrlHistory value) {
+  static core.Object serialize(UrlHistory value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["nextPageToken"] = identity(value.nextPageToken);
     result["items"] = map(Url.serialize)(value.items);
     result["kind"] = identity(value.kind);
@@ -466,12 +451,12 @@ class UrlHistory extends IdentityHash {
 }
 
 // Enum UrlshortenerApi.Alt
-class UrlshortenerApiAlt implements Hashable {
+class UrlshortenerApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/json */
   static final UrlshortenerApiAlt JSON = const UrlshortenerApiAlt._internal("json", 0);
 
   /** All values of this enumeration */
-  static final List<UrlshortenerApiAlt> values = const <UrlshortenerApiAlt>[
+  static final core.List<UrlshortenerApiAlt> values = const <UrlshortenerApiAlt>[
     JSON,
   ];
 
@@ -481,14 +466,14 @@ class UrlshortenerApiAlt implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static UrlshortenerApiAlt valueOf(String item) => _valuesMap[item];
+  static UrlshortenerApiAlt valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const UrlshortenerApiAlt._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const UrlshortenerApiAlt._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Alt".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Alt".hashCode();
 }
 

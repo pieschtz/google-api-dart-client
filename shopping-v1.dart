@@ -1,4 +1,5 @@
 #library("shopping");
+#import('dart:core', prefix: 'core');
 #import('dart:json');
 
 #import('utils.dart');
@@ -8,59 +9,61 @@
 /**
  * Lets you search over product data.
  */
-class ShoppingApi {
+class ShoppingApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
-  final String baseUrl;
+  final core.String baseUrl;
+  /** How we should identify ourselves to the service. */
+  Authenticator authenticator;
   /** The client library version */
-  final String clientVersion = "0.1";
+  final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
-  final String applicationName;
+  final core.String applicationName;
   ShoppingApi get _$service() => this;
   ProductsResource _products;
   ProductsResource get products() => _products;
   
   /** Returns response with indentations and line breaks. */
-  bool prettyPrint;
+  core.bool prettyPrint;
 
   /** Selector specifying which fields to include in a partial response. */
-  String fields;
+  core.String fields;
 
   /**
    * Available to use for quota purposes for server-side applications. Can be any arbitrary string
    * assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.
    */
-  String quotaUser;
+  core.String quotaUser;
 
   /** OAuth 2.0 token for the current user. */
-  String oauthToken;
+  core.String oauthToken;
 
   /**
    * API key. Your API key identifies your project and provides you with API access, quota, and
    * reports. Required unless you provide an OAuth 2.0 token.
    */
-  String key;
+  core.String key;
 
   /**
    * IP address of the site where the request originates. Use this if you want to enforce per-user
    * limits.
    */
-  String userIp;
+  core.String userIp;
 
   /** Data format for the response. */
   ShoppingApiAlt alt;
 
 
-  ShoppingApi([this.baseUrl = "https://www.googleapis.com/shopping/search/v1/", this.applicationName]) { 
+  ShoppingApi([this.baseUrl = "https://www.googleapis.com/shopping/search/v1/", this.applicationName, this.authenticator]) { 
     _products = new ProductsResource._internal(this);
   }
-  String get userAgent() {
+  core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}shopping/v1/20120530 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}shopping/v1/20120607 google-api-dart-client/${clientVersion}";
   }
 }
 
 // Resource .ProductsResource
-class ProductsResource {
+class ProductsResource extends core.Object {
   final ShoppingApi _$service;
   
   ProductsResource._internal(ShoppingApi $service) : _$service = $service;
@@ -70,7 +73,7 @@ class ProductsResource {
    * Returns a list of products and content modules
    * [source] Query source
    */
-  Future<Products> list(String source, [String facetsInclude = UNSPECIFIED, bool plusOneEnabled = UNSPECIFIED, bool plusOneUseGcsConfig = UNSPECIFIED, bool facetsEnabled = UNSPECIFIED, bool relatedQueriesUseGcsConfig = UNSPECIFIED, bool promotionsEnabled = UNSPECIFIED, String channels = UNSPECIFIED, String currency = UNSPECIFIED, bool categoryRecommendationsEnabled = UNSPECIFIED, String facetsDiscover = UNSPECIFIED, String categoryRecommendationsCategory = UNSPECIFIED, int startIndex = UNSPECIFIED, String availability = UNSPECIFIED, String crowdBy = UNSPECIFIED, bool spellingEnabled = UNSPECIFIED, String taxonomy = UNSPECIFIED, bool spellingUseGcsConfig = UNSPECIFIED, String useCase = UNSPECIFIED, String location = UNSPECIFIED, int maxVariants = UNSPECIFIED, String plusOneOptions = UNSPECIFIED, String categoriesInclude = UNSPECIFIED, String boostBy = UNSPECIFIED, bool safe = UNSPECIFIED, bool categoriesUseGcsConfig = UNSPECIFIED, int maxResults = UNSPECIFIED, bool facetsUseGcsConfig = UNSPECIFIED, bool categoriesEnabled = UNSPECIFIED, String attributeFilter = UNSPECIFIED, bool clickTracking = UNSPECIFIED, String thumbnails = UNSPECIFIED, String language = UNSPECIFIED, String categoryRecommendationsInclude = UNSPECIFIED, String country = UNSPECIFIED, String rankBy = UNSPECIFIED, String restrictBy = UNSPECIFIED, String q = UNSPECIFIED, bool redirectsEnabled = UNSPECIFIED, bool redirectsUseGcsConfig = UNSPECIFIED, bool relatedQueriesEnabled = UNSPECIFIED, bool categoryRecommendationsUseGcsConfig = UNSPECIFIED, bool promotionsUseGcsConfig = UNSPECIFIED]) {
+  core.Future<Products> list(core.String source, [core.String facetsInclude = UNSPECIFIED, core.bool plusOneEnabled = UNSPECIFIED, core.bool plusOneUseGcsConfig = UNSPECIFIED, core.bool facetsEnabled = UNSPECIFIED, core.bool relatedQueriesUseGcsConfig = UNSPECIFIED, core.bool promotionsEnabled = UNSPECIFIED, core.String channels = UNSPECIFIED, core.String currency = UNSPECIFIED, core.bool categoryRecommendationsEnabled = UNSPECIFIED, core.String facetsDiscover = UNSPECIFIED, core.String categoryRecommendationsCategory = UNSPECIFIED, core.int startIndex = UNSPECIFIED, core.String availability = UNSPECIFIED, core.String crowdBy = UNSPECIFIED, core.bool spellingEnabled = UNSPECIFIED, core.String taxonomy = UNSPECIFIED, core.bool spellingUseGcsConfig = UNSPECIFIED, core.String useCase = UNSPECIFIED, core.String location = UNSPECIFIED, core.int maxVariants = UNSPECIFIED, core.String categoriesInclude = UNSPECIFIED, core.String boostBy = UNSPECIFIED, core.bool safe = UNSPECIFIED, core.bool categoriesUseGcsConfig = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.bool facetsUseGcsConfig = UNSPECIFIED, core.bool categoriesEnabled = UNSPECIFIED, core.String plusOneStyles = UNSPECIFIED, core.String attributeFilter = UNSPECIFIED, core.bool clickTracking = UNSPECIFIED, core.String thumbnails = UNSPECIFIED, core.String language = UNSPECIFIED, core.String categoryRecommendationsInclude = UNSPECIFIED, core.String country = UNSPECIFIED, core.String rankBy = UNSPECIFIED, core.String restrictBy = UNSPECIFIED, core.String q = UNSPECIFIED, core.bool redirectsEnabled = UNSPECIFIED, core.bool redirectsUseGcsConfig = UNSPECIFIED, core.bool relatedQueriesEnabled = UNSPECIFIED, core.bool categoryRecommendationsUseGcsConfig = UNSPECIFIED, core.bool promotionsUseGcsConfig = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -95,7 +98,6 @@ class ProductsResource {
     if (UNSPECIFIED != useCase) $queryParams["useCase"] = useCase;
     if (UNSPECIFIED != location) $queryParams["location"] = location;
     if (UNSPECIFIED != maxVariants) $queryParams["maxVariants"] = maxVariants;
-    if (UNSPECIFIED != plusOneOptions) $queryParams["plusOne.options"] = plusOneOptions;
     if (UNSPECIFIED != categoriesInclude) $queryParams["categories.include"] = categoriesInclude;
     if (UNSPECIFIED != boostBy) $queryParams["boostBy"] = boostBy;
     if (UNSPECIFIED != safe) $queryParams["safe"] = safe;
@@ -103,6 +105,7 @@ class ProductsResource {
     if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
     if (UNSPECIFIED != facetsUseGcsConfig) $queryParams["facets.useGcsConfig"] = facetsUseGcsConfig;
     if (UNSPECIFIED != categoriesEnabled) $queryParams["categories.enabled"] = categoriesEnabled;
+    if (UNSPECIFIED != plusOneStyles) $queryParams["plusOne.styles"] = plusOneStyles;
     if (UNSPECIFIED != attributeFilter) $queryParams["attributeFilter"] = attributeFilter;
     if (UNSPECIFIED != clickTracking) $queryParams["clickTracking"] = clickTracking;
     if (UNSPECIFIED != thumbnails) $queryParams["thumbnails"] = thumbnails;
@@ -126,19 +129,13 @@ class ProductsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "{source}/products").generate($pathParams, $queryParams);
-    final $completer = new Completer<Products>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Products.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Products.parse(JSON.parse($text)));
   }
 
   // Method ProductsResource.Get
@@ -149,7 +146,7 @@ class ProductsResource {
    * [productIdType] Type of productId
    * [productId] Id of product
    */
-  Future<Product> get(String source, int accountId, String productIdType, String productId, [String categoriesInclude = UNSPECIFIED, bool recommendationsEnabled = UNSPECIFIED, bool plusOneUseGcsConfig = UNSPECIFIED, String taxonomy = UNSPECIFIED, bool categoriesUseGcsConfig = UNSPECIFIED, String recommendationsInclude = UNSPECIFIED, bool categoriesEnabled = UNSPECIFIED, String location = UNSPECIFIED, bool plusOneEnabled = UNSPECIFIED, String thumbnails = UNSPECIFIED, String attributeFilter = UNSPECIFIED, bool recommendationsUseGcsConfig = UNSPECIFIED, String plusOneOptions = UNSPECIFIED]) {
+  core.Future<Product> get(core.String source, core.int accountId, core.String productIdType, core.String productId, [core.String categoriesInclude = UNSPECIFIED, core.bool recommendationsEnabled = UNSPECIFIED, core.String thumbnails = UNSPECIFIED, core.bool plusOneUseGcsConfig = UNSPECIFIED, core.String taxonomy = UNSPECIFIED, core.bool categoriesUseGcsConfig = UNSPECIFIED, core.String plusOneStyles = UNSPECIFIED, core.String recommendationsInclude = UNSPECIFIED, core.bool categoriesEnabled = UNSPECIFIED, core.String location = UNSPECIFIED, core.bool plusOneEnabled = UNSPECIFIED, core.String attributeFilter = UNSPECIFIED, core.bool recommendationsUseGcsConfig = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -159,17 +156,17 @@ class ProductsResource {
     $pathParams["productId"] = productId;
     if (UNSPECIFIED != categoriesInclude) $queryParams["categories.include"] = categoriesInclude;
     if (UNSPECIFIED != recommendationsEnabled) $queryParams["recommendations.enabled"] = recommendationsEnabled;
+    if (UNSPECIFIED != thumbnails) $queryParams["thumbnails"] = thumbnails;
     if (UNSPECIFIED != plusOneUseGcsConfig) $queryParams["plusOne.useGcsConfig"] = plusOneUseGcsConfig;
     if (UNSPECIFIED != taxonomy) $queryParams["taxonomy"] = taxonomy;
     if (UNSPECIFIED != categoriesUseGcsConfig) $queryParams["categories.useGcsConfig"] = categoriesUseGcsConfig;
+    if (UNSPECIFIED != plusOneStyles) $queryParams["plusOne.styles"] = plusOneStyles;
     if (UNSPECIFIED != recommendationsInclude) $queryParams["recommendations.include"] = recommendationsInclude;
     if (UNSPECIFIED != categoriesEnabled) $queryParams["categories.enabled"] = categoriesEnabled;
     if (UNSPECIFIED != location) $queryParams["location"] = location;
     if (UNSPECIFIED != plusOneEnabled) $queryParams["plusOne.enabled"] = plusOneEnabled;
-    if (UNSPECIFIED != thumbnails) $queryParams["thumbnails"] = thumbnails;
     if (UNSPECIFIED != attributeFilter) $queryParams["attributeFilter"] = attributeFilter;
     if (UNSPECIFIED != recommendationsUseGcsConfig) $queryParams["recommendations.useGcsConfig"] = recommendationsUseGcsConfig;
-    if (UNSPECIFIED != plusOneOptions) $queryParams["plusOne.options"] = plusOneOptions;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -179,50 +176,44 @@ class ProductsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "{source}/products/{accountId}/{productIdType}/{productId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Product>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Product.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Product.parse(JSON.parse($text)));
   }
 }
 
 // Schema .Product
 class Product extends IdentityHash {
   
-  String selfLink;
+  core.String selfLink;
 
   /** The kind of item, always shopping#product. */
-  String kind;
+  core.String kind;
 
   /** Product. */
   ShoppingModelProductJsonV1 product;
 
   /** Unique identifier for this request. */
-  String requestId;
+  core.String requestId;
 
   /** Recommendations for product. */
-  List<ShoppingModelRecommendationsJsonV1> recommendations;
+  core.List<ShoppingModelRecommendationsJsonV1> recommendations;
 
   /** Google internal. */
   ShoppingModelDebugJsonV1 debug;
 
   /** Id of product. */
-  String id;
+  core.String id;
 
   /** List of categories for product. */
-  List<ShoppingModelCategoryJsonV1> categories;
+  core.List<ShoppingModelCategoryJsonV1> categories;
 
   /** Parses an instance from its JSON representation. */
-  static Product parse(Map<String, Object> json) {
+  static Product parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Product();
     result.selfLink = identity(json["selfLink"]);
@@ -236,9 +227,9 @@ class Product extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Product value) {
+  static core.Object serialize(Product value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["selfLink"] = identity(value.selfLink);
     result["kind"] = identity(value.kind);
     result["product"] = ShoppingModelProductJsonV1.serialize(value.product);
@@ -255,52 +246,52 @@ class Product extends IdentityHash {
 // Schema .Products
 class Products extends IdentityHash {
   /** List of promotions. */
-  List<ProductsPromotions> promotions;
+  core.List<ProductsPromotions> promotions;
 
   /** Self link of feed. */
-  String selfLink;
+  core.String selfLink;
 
   /** The fixed string "shopping#products". The kind of feed returned. */
-  String kind;
+  core.String kind;
 
   /** List of returned stores. */
-  List<ProductsStores> stores;
+  core.List<ProductsStores> stores;
 
   /** Current item count. */
-  int currentItemCount;
+  core.int currentItemCount;
 
   /** List of returned products. */
-  List<Product> items;
+  core.List<Product> items;
 
   /** List of facets. */
-  List<ProductsFacets> facets;
+  core.List<ProductsFacets> facets;
 
   /** Number of items per page of results. */
-  int itemsPerPage;
+  core.int itemsPerPage;
 
   /** Redirects. */
-  List<String> redirects;
+  core.List<core.String> redirects;
 
   /** Next link of feed. */
-  String nextLink;
+  core.String nextLink;
 
   /** Related queries. */
-  List<String> relatedQueries;
+  core.List<core.String> relatedQueries;
 
   /** Total number of search results. */
-  int totalItems;
+  core.int totalItems;
 
   /** 1-based index of the first item in the search results. */
-  int startIndex;
+  core.int startIndex;
 
   /** Etag of feed. */
-  String etag;
+  core.String etag;
 
   /** Unique identifier for this request. */
-  String requestId;
+  core.String requestId;
 
   /** Recommendations for category. */
-  List<ShoppingModelRecommendationsJsonV1> categoryRecommendations;
+  core.List<ShoppingModelRecommendationsJsonV1> categoryRecommendations;
 
   /** Google internal. */
   ShoppingModelDebugJsonV1 debug;
@@ -309,16 +300,16 @@ class Products extends IdentityHash {
   ProductsSpelling spelling;
 
   /** Previous link of feed. */
-  String previousLink;
+  core.String previousLink;
 
   /** Id of feed. */
-  String id;
+  core.String id;
 
   /** List of categories. */
-  List<ShoppingModelCategoryJsonV1> categories;
+  core.List<ShoppingModelCategoryJsonV1> categories;
 
   /** Parses an instance from its JSON representation. */
-  static Products parse(Map<String, Object> json) {
+  static Products parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Products();
     result.promotions = map(ProductsPromotions.parse)(json["promotions"]);
@@ -345,9 +336,9 @@ class Products extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Products value) {
+  static core.Object serialize(Products value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["promotions"] = map(ProductsPromotions.serialize)(value.promotions);
     result["selfLink"] = identity(value.selfLink);
     result["kind"] = identity(value.kind);
@@ -379,31 +370,31 @@ class ProductsFacets extends IdentityHash {
   /**
  * Number of products matching the query that have a value for the facet's property or attribute.
  */
-  int count;
+  core.int count;
 
   /** Display name of facet. */
-  String displayName;
+  core.String displayName;
 
   /** Name of the facet's attribute (omitted for property facets). */
-  String name;
+  core.String name;
 
   /** List of Buckets within facet. */
-  List<ProductsFacetsBuckets> buckets;
+  core.List<ProductsFacetsBuckets> buckets;
 
   /** Property of facet (omitted for attribute facets). */
-  String property;
+  core.String property;
 
   /** Type of facet's attribute (omitted for property facets, one of: text, bool, int, float). */
-  String type;
+  core.String type;
 
   /**
  * Unit of the facet's property or attribute (omitted if the facet's property or attribute has no
  * unit).
  */
-  String unit;
+  core.String unit;
 
   /** Parses an instance from its JSON representation. */
-  static ProductsFacets parse(Map<String, Object> json) {
+  static ProductsFacets parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ProductsFacets();
     result.count = identity(json["count"]);
@@ -416,9 +407,9 @@ class ProductsFacets extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ProductsFacets value) {
+  static core.Object serialize(ProductsFacets value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["count"] = identity(value.count);
     result["displayName"] = identity(value.displayName);
     result["name"] = identity(value.name);
@@ -437,31 +428,31 @@ class ProductsFacetsBuckets extends IdentityHash {
  * Number of products matching the query that have a value for the facet's property or attribute
  * that matches the bucket.
  */
-  int count;
+  core.int count;
 
   /**
  * Whether the lower bound of the bucket is exclusive (omitted for value buckets or if the range has
  * no lower bound).
  */
-  bool minExclusive;
+  core.bool minExclusive;
 
   /** Lower bound of the bucket (omitted for value buckets or if the range has no lower bound). */
-  Object min;
+  core.Object min;
 
   /** Upper bound of the bucket (omitted for value buckets or if the range has no upper bound). */
-  Object max;
+  core.Object max;
 
   /** Value of the bucket (omitted for range buckets). */
-  Object value;
+  core.Object value;
 
   /**
  * Whether the upper bound of the bucket is exclusive (omitted for value buckets or if the range has
  * no upper bound).
  */
-  bool maxExclusive;
+  core.bool maxExclusive;
 
   /** Parses an instance from its JSON representation. */
-  static ProductsFacetsBuckets parse(Map<String, Object> json) {
+  static ProductsFacetsBuckets parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ProductsFacetsBuckets();
     result.count = identity(json["count"]);
@@ -473,9 +464,9 @@ class ProductsFacetsBuckets extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ProductsFacetsBuckets value) {
+  static core.Object serialize(ProductsFacetsBuckets value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["count"] = identity(value.count);
     result["minExclusive"] = identity(value.minExclusive);
     result["min"] = identity(value.min);
@@ -493,31 +484,28 @@ class ProductsPromotions extends IdentityHash {
   ShoppingModelProductJsonV1 product;
 
   /** Description of promotion (omitted if type is not standard). */
-  String description;
+  core.String description;
 
   /** Link to promotion image (omitted if type is not standard). */
-  String imageLink;
+  core.String imageLink;
 
   /** Link to promotion (omitted if type is not standard). */
-  String destLink;
+  core.String destLink;
 
   /** Custom HTML of promotion (omitted if type is not custom). */
-  String customHtml;
-
-  /** Link to promotion without scheme. DEPRECATED. WILL BE REMOVED SOON. USE destLink. */
-  String link;
+  core.String customHtml;
 
   /** List of custom fields of promotion. */
-  List<ProductsPromotionsCustomFields> customFields;
+  core.List<ProductsPromotionsCustomFields> customFields;
 
   /** Type of promotion (one of: standard, product, custom). */
-  String type;
+  core.String type;
 
   /** Name of promotion (omitted if type is not standard). */
-  String name;
+  core.String name;
 
   /** Parses an instance from its JSON representation. */
-  static ProductsPromotions parse(Map<String, Object> json) {
+  static ProductsPromotions parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ProductsPromotions();
     result.product = ShoppingModelProductJsonV1.parse(json["product"]);
@@ -525,22 +513,20 @@ class ProductsPromotions extends IdentityHash {
     result.imageLink = identity(json["imageLink"]);
     result.destLink = identity(json["destLink"]);
     result.customHtml = identity(json["customHtml"]);
-    result.link = identity(json["link"]);
     result.customFields = map(ProductsPromotionsCustomFields.parse)(json["customFields"]);
     result.type = identity(json["type"]);
     result.name = identity(json["name"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ProductsPromotions value) {
+  static core.Object serialize(ProductsPromotions value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["product"] = ShoppingModelProductJsonV1.serialize(value.product);
     result["description"] = identity(value.description);
     result["imageLink"] = identity(value.imageLink);
     result["destLink"] = identity(value.destLink);
     result["customHtml"] = identity(value.customHtml);
-    result["link"] = identity(value.link);
     result["customFields"] = map(ProductsPromotionsCustomFields.serialize)(value.customFields);
     result["type"] = identity(value.type);
     result["name"] = identity(value.name);
@@ -552,13 +538,13 @@ class ProductsPromotions extends IdentityHash {
 // Schema Products.ProductsPromotions.ProductsPromotionsCustomFields
 class ProductsPromotionsCustomFields extends IdentityHash {
   /** Name of field. */
-  String name;
+  core.String name;
 
   /** Value of field. */
-  String value;
+  core.String value;
 
   /** Parses an instance from its JSON representation. */
-  static ProductsPromotionsCustomFields parse(Map<String, Object> json) {
+  static ProductsPromotionsCustomFields parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ProductsPromotionsCustomFields();
     result.name = identity(json["name"]);
@@ -566,9 +552,9 @@ class ProductsPromotionsCustomFields extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ProductsPromotionsCustomFields value) {
+  static core.Object serialize(ProductsPromotionsCustomFields value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["name"] = identity(value.name);
     result["value"] = identity(value.value);
     return result;
@@ -579,19 +565,19 @@ class ProductsPromotionsCustomFields extends IdentityHash {
 // Schema Products.ProductsSpelling
 class ProductsSpelling extends IdentityHash {
   /** Suggestion for spelling. */
-  String suggestion;
+  core.String suggestion;
 
   /** Parses an instance from its JSON representation. */
-  static ProductsSpelling parse(Map<String, Object> json) {
+  static ProductsSpelling parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ProductsSpelling();
     result.suggestion = identity(json["suggestion"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ProductsSpelling value) {
+  static core.Object serialize(ProductsSpelling value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["suggestion"] = identity(value.suggestion);
     return result;
   }
@@ -601,28 +587,28 @@ class ProductsSpelling extends IdentityHash {
 // Schema Products.ProductsStores
 class ProductsStores extends IdentityHash {
   /** Merchant-supplied store code. */
-  String storeCode;
+  core.String storeCode;
 
   /** Name of merchant. */
-  String name;
+  core.String name;
 
   /** Name of store. */
-  String storeName;
+  core.String storeName;
 
   /** Id of store. */
-  String storeId;
+  core.String storeId;
 
   /** Telephone number of store. */
-  String telephone;
+  core.String telephone;
 
   /** Location of store. */
-  String location;
+  core.String location;
 
   /** Address of store. */
-  String address;
+  core.String address;
 
   /** Parses an instance from its JSON representation. */
-  static ProductsStores parse(Map<String, Object> json) {
+  static ProductsStores parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ProductsStores();
     result.storeCode = identity(json["storeCode"]);
@@ -635,9 +621,9 @@ class ProductsStores extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ProductsStores value) {
+  static core.Object serialize(ProductsStores value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["storeCode"] = identity(value.storeCode);
     result["name"] = identity(value.name);
     result["storeName"] = identity(value.storeName);
@@ -653,19 +639,19 @@ class ProductsStores extends IdentityHash {
 // Schema .ShoppingModelCategoryJsonV1
 class ShoppingModelCategoryJsonV1 extends IdentityHash {
   /** URL of category. */
-  String url;
+  core.String url;
 
   /** Short name of category. */
-  String shortName;
+  core.String shortName;
 
   /** Ids of the parents of the category. */
-  List<String> parents;
+  core.List<core.String> parents;
 
   /** Id of category. */
-  String id;
+  core.String id;
 
   /** Parses an instance from its JSON representation. */
-  static ShoppingModelCategoryJsonV1 parse(Map<String, Object> json) {
+  static ShoppingModelCategoryJsonV1 parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ShoppingModelCategoryJsonV1();
     result.url = identity(json["url"]);
@@ -675,9 +661,9 @@ class ShoppingModelCategoryJsonV1 extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ShoppingModelCategoryJsonV1 value) {
+  static core.Object serialize(ShoppingModelCategoryJsonV1 value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["url"] = identity(value.url);
     result["shortName"] = identity(value.shortName);
     result["parents"] = map(identity)(value.parents);
@@ -690,28 +676,28 @@ class ShoppingModelCategoryJsonV1 extends IdentityHash {
 // Schema .ShoppingModelDebugJsonV1
 class ShoppingModelDebugJsonV1 extends IdentityHash {
   /** Google internal. */
-  String searchRequest;
+  core.String searchRequest;
 
   /** Google internal. */
-  String rdcResponse;
+  core.String rdcResponse;
 
   /** Google internal. */
-  String facetsRequest;
+  core.String facetsRequest;
 
   /** Google internal. */
-  String searchResponse;
+  core.String searchResponse;
 
   /** Google internal. */
-  String elapsedMillis;
+  core.String elapsedMillis;
 
   /** Google internal. */
-  String facetsResponse;
+  core.String facetsResponse;
 
   /** Google internal */
-  List<ShoppingModelDebugJsonV1BackendTimes> backendTimes;
+  core.List<ShoppingModelDebugJsonV1BackendTimes> backendTimes;
 
   /** Parses an instance from its JSON representation. */
-  static ShoppingModelDebugJsonV1 parse(Map<String, Object> json) {
+  static ShoppingModelDebugJsonV1 parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ShoppingModelDebugJsonV1();
     result.searchRequest = identity(json["searchRequest"]);
@@ -724,9 +710,9 @@ class ShoppingModelDebugJsonV1 extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ShoppingModelDebugJsonV1 value) {
+  static core.Object serialize(ShoppingModelDebugJsonV1 value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["searchRequest"] = identity(value.searchRequest);
     result["rdcResponse"] = identity(value.rdcResponse);
     result["facetsRequest"] = identity(value.facetsRequest);
@@ -742,19 +728,19 @@ class ShoppingModelDebugJsonV1 extends IdentityHash {
 // Schema ShoppingModelDebugJsonV1.ShoppingModelDebugJsonV1BackendTimes
 class ShoppingModelDebugJsonV1BackendTimes extends IdentityHash {
   /** Google internal */
-  String serverMillis;
+  core.String serverMillis;
 
   /** Google internal */
-  String hostName;
+  core.String hostName;
 
   /** Google internal */
-  String name;
+  core.String name;
 
   /** Google internal */
-  String elapsedMillis;
+  core.String elapsedMillis;
 
   /** Parses an instance from its JSON representation. */
-  static ShoppingModelDebugJsonV1BackendTimes parse(Map<String, Object> json) {
+  static ShoppingModelDebugJsonV1BackendTimes parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ShoppingModelDebugJsonV1BackendTimes();
     result.serverMillis = identity(json["serverMillis"]);
@@ -764,9 +750,9 @@ class ShoppingModelDebugJsonV1BackendTimes extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ShoppingModelDebugJsonV1BackendTimes value) {
+  static core.Object serialize(ShoppingModelDebugJsonV1BackendTimes value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["serverMillis"] = identity(value.serverMillis);
     result["hostName"] = identity(value.hostName);
     result["name"] = identity(value.name);
@@ -782,111 +768,111 @@ class ShoppingModelProductJsonV1 extends IdentityHash {
  * Whether this product matched the user query. Only set for the variant offers (if any) attached to
  * a product offer.
  */
-  bool queryMatched;
+  core.bool queryMatched;
 
   /** The first GTIN of the product. Deprecated in favor of "gtins". */
-  String gtin;
+  core.String gtin;
 
   /** Images of product. */
-  List<ShoppingModelProductJsonV1Images> images;
+  core.List<ShoppingModelProductJsonV1Images> images;
 
   /** Inventories of product. */
-  List<ShoppingModelProductJsonV1Inventories> inventories;
+  core.List<ShoppingModelProductJsonV1Inventories> inventories;
 
   /** Author of product. */
   ShoppingModelProductJsonV1Author author;
 
   /** Condition of product (one of: new, refurbished, used). */
-  String condition;
+  core.String condition;
 
   /** Merchant-provided id of product (available only with a cx source). */
-  String providedId;
+  core.String providedId;
 
   /** Google Internal. */
-  List<String> internal8;
+  core.List<core.String> internal8;
 
   /** Description of product. */
-  String description;
+  core.String description;
 
   /** List of all the product's GTINs (in GTIN-14 format). */
-  List<String> gtins;
+  core.List<core.String> gtins;
 
   /** Google Internal. */
-  List<String> internal1;
+  core.List<core.String> internal1;
 
   /** Brand of product. */
-  String brand;
+  core.String brand;
 
   /** Google Internal. */
-  String internal3;
+  core.String internal3;
 
   /** Google Internal. */
-  List<ShoppingModelProductJsonV1Internal4> internal4;
+  core.List<ShoppingModelProductJsonV1Internal4> internal4;
 
   /** Google Internal. */
-  String internal6;
+  core.String internal6;
 
   /** Google Internal. */
-  bool internal7;
+  core.bool internal7;
 
   /** Link to product. */
-  String link;
+  core.String link;
 
   /** List of all the product's MPNs. */
-  List<String> mpns;
+  core.List<core.String> mpns;
 
   /** Attributes of product (available only with a cx source). */
-  List<ShoppingModelProductJsonV1Attributes> attributes;
+  core.List<ShoppingModelProductJsonV1Attributes> attributes;
 
   /** The number of variant offers returned that matched the query. */
-  int totalMatchingVariants;
+  core.int totalMatchingVariants;
 
   /** A list of variant offers associated with this product. */
-  List<ShoppingModelProductJsonV1Variants> variants;
+  core.List<ShoppingModelProductJsonV1Variants> variants;
 
   /** RFC 3339 formatted modification time and date of product. */
-  String modificationTime;
+  core.String modificationTime;
 
   /**
  * Categories of product according to the selected taxonomy, omitted if no taxonomy is selected.
  */
-  List<String> categories;
+  core.List<core.String> categories;
 
   /** BCP 47 language tag of language of product. */
-  String language;
+  core.String language;
 
   /** ISO 3166 code of target country of product. */
-  String country;
+  core.String country;
 
   /** Title of product. */
-  String title;
+  core.String title;
 
   /** RFC 3339 formatted creation time and date of product. */
-  String creationTime;
+  core.String creationTime;
 
   /** Google Internal. */
-  double internal14;
+  core.double internal14;
 
   /** Google Internal. */
-  String internal12;
+  core.String internal12;
 
   /** Google Internal. */
-  double internal13;
+  core.double internal13;
 
   /** Google Internal. */
-  List<String> internal10;
+  core.List<core.String> internal10;
 
   /** Code to add to the page to render the +1 content. */
-  String plusOne;
+  core.String plusOne;
 
   /** Google id of product. */
-  String googleId;
+  core.String googleId;
 
   /** Google Internal. */
-  double internal15;
+  core.double internal15;
 
   /** Parses an instance from its JSON representation. */
-  static ShoppingModelProductJsonV1 parse(Map<String, Object> json) {
+  static ShoppingModelProductJsonV1 parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ShoppingModelProductJsonV1();
     result.queryMatched = identity(json["queryMatched"]);
@@ -926,9 +912,9 @@ class ShoppingModelProductJsonV1 extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ShoppingModelProductJsonV1 value) {
+  static core.Object serialize(ShoppingModelProductJsonV1 value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["queryMatched"] = identity(value.queryMatched);
     result["gtin"] = identity(value.gtin);
     result["images"] = map(ShoppingModelProductJsonV1Images.serialize)(value.images);
@@ -971,22 +957,22 @@ class ShoppingModelProductJsonV1 extends IdentityHash {
 // Schema ShoppingModelProductJsonV1.ShoppingModelProductJsonV1Attributes
 class ShoppingModelProductJsonV1Attributes extends IdentityHash {
   /** Type of product attribute (one of: text, bool, int, float, dateRange, url). */
-  String type;
+  core.String type;
 
   /** Value of product attribute. */
-  Object value;
+  core.Object value;
 
   /** Display Name of prodct attribute. */
-  String displayName;
+  core.String displayName;
 
   /** Name of product attribute. */
-  String name;
+  core.String name;
 
   /** Unit of product attribute. */
-  String unit;
+  core.String unit;
 
   /** Parses an instance from its JSON representation. */
-  static ShoppingModelProductJsonV1Attributes parse(Map<String, Object> json) {
+  static ShoppingModelProductJsonV1Attributes parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ShoppingModelProductJsonV1Attributes();
     result.type = identity(json["type"]);
@@ -997,9 +983,9 @@ class ShoppingModelProductJsonV1Attributes extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ShoppingModelProductJsonV1Attributes value) {
+  static core.Object serialize(ShoppingModelProductJsonV1Attributes value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["type"] = identity(value.type);
     result["value"] = identity(value.value);
     result["displayName"] = identity(value.displayName);
@@ -1013,13 +999,13 @@ class ShoppingModelProductJsonV1Attributes extends IdentityHash {
 // Schema ShoppingModelProductJsonV1.ShoppingModelProductJsonV1Author
 class ShoppingModelProductJsonV1Author extends IdentityHash {
   /** Name of product author. */
-  String name;
+  core.String name;
 
   /** Account id of product author. */
-  String accountId;
+  core.String accountId;
 
   /** Parses an instance from its JSON representation. */
-  static ShoppingModelProductJsonV1Author parse(Map<String, Object> json) {
+  static ShoppingModelProductJsonV1Author parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ShoppingModelProductJsonV1Author();
     result.name = identity(json["name"]);
@@ -1027,9 +1013,9 @@ class ShoppingModelProductJsonV1Author extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ShoppingModelProductJsonV1Author value) {
+  static core.Object serialize(ShoppingModelProductJsonV1Author value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["name"] = identity(value.name);
     result["accountId"] = identity(value.accountId);
     return result;
@@ -1040,16 +1026,16 @@ class ShoppingModelProductJsonV1Author extends IdentityHash {
 // Schema ShoppingModelProductJsonV1.ShoppingModelProductJsonV1Images
 class ShoppingModelProductJsonV1Images extends IdentityHash {
   
-  String status;
+  core.String status;
 
   /** Link to product image. */
-  String link;
+  core.String link;
 
   /** Thumbnails of product image. */
-  List<ShoppingModelProductJsonV1ImagesThumbnails> thumbnails;
+  core.List<ShoppingModelProductJsonV1ImagesThumbnails> thumbnails;
 
   /** Parses an instance from its JSON representation. */
-  static ShoppingModelProductJsonV1Images parse(Map<String, Object> json) {
+  static ShoppingModelProductJsonV1Images parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ShoppingModelProductJsonV1Images();
     result.status = identity(json["status"]);
@@ -1058,9 +1044,9 @@ class ShoppingModelProductJsonV1Images extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ShoppingModelProductJsonV1Images value) {
+  static core.Object serialize(ShoppingModelProductJsonV1Images value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["status"] = identity(value.status);
     result["link"] = identity(value.link);
     result["thumbnails"] = map(ShoppingModelProductJsonV1ImagesThumbnails.serialize)(value.thumbnails);
@@ -1075,19 +1061,19 @@ class ShoppingModelProductJsonV1ImagesThumbnails extends IdentityHash {
  * Content of thumbnail (only available for the first thumbnail of the top results if SAYT is
  * enabled).
  */
-  String content;
+  core.String content;
 
   /** Width of thumbnail (omitted if not specified in the request). */
-  int width;
+  core.int width;
 
   /** Link to thumbnail. */
-  String link;
+  core.String link;
 
   /** Height of thumbnail (omitted if not specified in the request). */
-  int height;
+  core.int height;
 
   /** Parses an instance from its JSON representation. */
-  static ShoppingModelProductJsonV1ImagesThumbnails parse(Map<String, Object> json) {
+  static ShoppingModelProductJsonV1ImagesThumbnails parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ShoppingModelProductJsonV1ImagesThumbnails();
     result.content = identity(json["content"]);
@@ -1097,9 +1083,9 @@ class ShoppingModelProductJsonV1ImagesThumbnails extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ShoppingModelProductJsonV1ImagesThumbnails value) {
+  static core.Object serialize(ShoppingModelProductJsonV1ImagesThumbnails value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["content"] = identity(value.content);
     result["width"] = identity(value.width);
     result["link"] = identity(value.link);
@@ -1112,13 +1098,13 @@ class ShoppingModelProductJsonV1ImagesThumbnails extends IdentityHash {
 // Schema ShoppingModelProductJsonV1.ShoppingModelProductJsonV1Internal4
 class ShoppingModelProductJsonV1Internal4 extends IdentityHash {
   /** Google Internal. */
-  int node;
+  core.int node;
 
   /** Google Internal. */
-  double confidence;
+  core.double confidence;
 
   /** Parses an instance from its JSON representation. */
-  static ShoppingModelProductJsonV1Internal4 parse(Map<String, Object> json) {
+  static ShoppingModelProductJsonV1Internal4 parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ShoppingModelProductJsonV1Internal4();
     result.node = identity(json["node"]);
@@ -1126,9 +1112,9 @@ class ShoppingModelProductJsonV1Internal4 extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ShoppingModelProductJsonV1Internal4 value) {
+  static core.Object serialize(ShoppingModelProductJsonV1Internal4 value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["node"] = identity(value.node);
     result["confidence"] = identity(value.confidence);
     return result;
@@ -1139,52 +1125,52 @@ class ShoppingModelProductJsonV1Internal4 extends IdentityHash {
 // Schema ShoppingModelProductJsonV1.ShoppingModelProductJsonV1Inventories
 class ShoppingModelProductJsonV1Inventories extends IdentityHash {
   /** Installment price of product inventory. */
-  double installmentPrice;
+  core.double installmentPrice;
 
   /** Number of months for installment price. */
-  int installmentMonths;
+  core.int installmentMonths;
 
   /** Distance of product inventory. */
-  double distance;
+  core.double distance;
 
   /** Price of product inventory. */
-  double price;
+  core.double price;
 
   /** Store ID of product inventory. */
-  String storeId;
+  core.String storeId;
 
   /** Tax of product inventory. */
-  double tax;
+  core.double tax;
 
   /** Shipping cost of product inventory. */
-  double shipping;
+  core.double shipping;
 
   /** Currency of product inventory (an ISO 4217 alphabetic code). */
-  String currency;
+  core.String currency;
 
   /** Sale price of product inventory. */
-  double salePrice;
+  core.double salePrice;
 
   /** Original price of product inventory. Only returned for products that are on sale. */
-  double originalPrice;
+  core.double originalPrice;
 
   /** Distance unit of product inventory. */
-  String distanceUnit;
+  core.String distanceUnit;
 
   /** Sale start date. */
-  String saleStartDate;
+  core.String saleStartDate;
 
   /** Availability of product inventory. */
-  String availability;
+  core.String availability;
 
   /** Channel of product inventory (one of: online, local). */
-  String channel;
+  core.String channel;
 
   /** Sale end date. */
-  String saleEndDate;
+  core.String saleEndDate;
 
   /** Parses an instance from its JSON representation. */
-  static ShoppingModelProductJsonV1Inventories parse(Map<String, Object> json) {
+  static ShoppingModelProductJsonV1Inventories parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ShoppingModelProductJsonV1Inventories();
     result.installmentPrice = identity(json["installmentPrice"]);
@@ -1205,9 +1191,9 @@ class ShoppingModelProductJsonV1Inventories extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ShoppingModelProductJsonV1Inventories value) {
+  static core.Object serialize(ShoppingModelProductJsonV1Inventories value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["installmentPrice"] = identity(value.installmentPrice);
     result["installmentMonths"] = identity(value.installmentMonths);
     result["distance"] = identity(value.distance);
@@ -1234,16 +1220,16 @@ class ShoppingModelProductJsonV1Variants extends IdentityHash {
   ShoppingModelProductJsonV1 variant;
 
   /** Parses an instance from its JSON representation. */
-  static ShoppingModelProductJsonV1Variants parse(Map<String, Object> json) {
+  static ShoppingModelProductJsonV1Variants parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ShoppingModelProductJsonV1Variants();
     result.variant = ShoppingModelProductJsonV1.parse(json["variant"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ShoppingModelProductJsonV1Variants value) {
+  static core.Object serialize(ShoppingModelProductJsonV1Variants value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["variant"] = ShoppingModelProductJsonV1.serialize(value.variant);
     return result;
   }
@@ -1253,17 +1239,17 @@ class ShoppingModelProductJsonV1Variants extends IdentityHash {
 // Schema .ShoppingModelRecommendationsJsonV1
 class ShoppingModelRecommendationsJsonV1 extends IdentityHash {
   /** List of recommendations. */
-  List<ShoppingModelRecommendationsJsonV1RecommendationList> recommendationList;
+  core.List<ShoppingModelRecommendationsJsonV1RecommendationList> recommendationList;
 
   /**
  * Type of recommendation list (for offer-based recommendations, one of: all, purchaseToPurchase,
  * visitToVisit, visitToPurchase, relatedItems; for category-based recommendations, one of: all,
  * categoryMostVisited, categoryBestSeller).
  */
-  String type;
+  core.String type;
 
   /** Parses an instance from its JSON representation. */
-  static ShoppingModelRecommendationsJsonV1 parse(Map<String, Object> json) {
+  static ShoppingModelRecommendationsJsonV1 parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ShoppingModelRecommendationsJsonV1();
     result.recommendationList = map(ShoppingModelRecommendationsJsonV1RecommendationList.parse)(json["recommendationList"]);
@@ -1271,9 +1257,9 @@ class ShoppingModelRecommendationsJsonV1 extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ShoppingModelRecommendationsJsonV1 value) {
+  static core.Object serialize(ShoppingModelRecommendationsJsonV1 value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["recommendationList"] = map(ShoppingModelRecommendationsJsonV1RecommendationList.serialize)(value.recommendationList);
     result["type"] = identity(value.type);
     return result;
@@ -1287,16 +1273,16 @@ class ShoppingModelRecommendationsJsonV1RecommendationList extends IdentityHash 
   ShoppingModelProductJsonV1 product;
 
   /** Parses an instance from its JSON representation. */
-  static ShoppingModelRecommendationsJsonV1RecommendationList parse(Map<String, Object> json) {
+  static ShoppingModelRecommendationsJsonV1RecommendationList parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ShoppingModelRecommendationsJsonV1RecommendationList();
     result.product = ShoppingModelProductJsonV1.parse(json["product"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ShoppingModelRecommendationsJsonV1RecommendationList value) {
+  static core.Object serialize(ShoppingModelRecommendationsJsonV1RecommendationList value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["product"] = ShoppingModelProductJsonV1.serialize(value.product);
     return result;
   }
@@ -1304,14 +1290,14 @@ class ShoppingModelRecommendationsJsonV1RecommendationList extends IdentityHash 
 }
 
 // Enum ShoppingApi.Alt
-class ShoppingApiAlt implements Hashable {
+class ShoppingApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/atom+xml */
   static final ShoppingApiAlt ATOM = const ShoppingApiAlt._internal("atom", 0);
   /** Responses with Content-Type of application/json */
   static final ShoppingApiAlt JSON = const ShoppingApiAlt._internal("json", 1);
 
   /** All values of this enumeration */
-  static final List<ShoppingApiAlt> values = const <ShoppingApiAlt>[
+  static final core.List<ShoppingApiAlt> values = const <ShoppingApiAlt>[
     ATOM,
     JSON,
   ];
@@ -1323,14 +1309,14 @@ class ShoppingApiAlt implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static ShoppingApiAlt valueOf(String item) => _valuesMap[item];
+  static ShoppingApiAlt valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const ShoppingApiAlt._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const ShoppingApiAlt._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Alt".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Alt".hashCode();
 }
 

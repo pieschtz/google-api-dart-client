@@ -1,4 +1,5 @@
 #library("bigquery");
+#import('dart:core', prefix: 'core');
 #import('dart:json');
 
 #import('utils.dart');
@@ -8,13 +9,15 @@
 /**
  * A data platform for customers to create, manage, share and query data.
  */
-class BigqueryApi {
+class BigqueryApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
-  final String baseUrl;
+  final core.String baseUrl;
+  /** How we should identify ourselves to the service. */
+  Authenticator authenticator;
   /** The client library version */
-  final String clientVersion = "0.1";
+  final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
-  final String applicationName;
+  final core.String applicationName;
   BigqueryApi get _$service() => this;
   TablesResource _tables;
   TablesResource get tables() => _tables;
@@ -28,51 +31,51 @@ class BigqueryApi {
   ProjectsResource get projects() => _projects;
   
   /** Returns response with indentations and line breaks. */
-  bool prettyPrint;
+  core.bool prettyPrint;
 
   /** Selector specifying which fields to include in a partial response. */
-  String fields;
+  core.String fields;
 
   /**
    * Available to use for quota purposes for server-side applications. Can be any arbitrary string
    * assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.
    */
-  String quotaUser;
+  core.String quotaUser;
 
   /** OAuth 2.0 token for the current user. */
-  String oauthToken;
+  core.String oauthToken;
 
   /**
    * API key. Your API key identifies your project and provides you with API access, quota, and
    * reports. Required unless you provide an OAuth 2.0 token.
    */
-  String key;
+  core.String key;
 
   /**
    * IP address of the site where the request originates. Use this if you want to enforce per-user
    * limits.
    */
-  String userIp;
+  core.String userIp;
 
   /** Data format for the response. */
   BigqueryApiAlt alt;
 
 
-  BigqueryApi([this.baseUrl = "https://www.googleapis.com/bigquery/v2/", this.applicationName]) { 
+  BigqueryApi([this.baseUrl = "https://www.googleapis.com/bigquery/v2/", this.applicationName, this.authenticator]) { 
     _tables = new TablesResource._internal(this);
     _datasets = new DatasetsResource._internal(this);
     _jobs = new JobsResource._internal(this);
     _tabledata = new TabledataResource._internal(this);
     _projects = new ProjectsResource._internal(this);
   }
-  String get userAgent() {
+  core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}bigquery/v2/20120602 google-api-dart-client/${clientVersion}";
   }
 }
 
 // Resource .TablesResource
-class TablesResource {
+class TablesResource extends core.Object {
   final BigqueryApi _$service;
   
   TablesResource._internal(BigqueryApi $service) : _$service = $service;
@@ -84,7 +87,7 @@ class TablesResource {
    * [datasetId] Dataset ID of the new table
    * [content] the Table
    */
-  Future<Table> insert(String projectId, String datasetId, Table content) {
+  core.Future<Table> insert(core.String projectId, core.String datasetId, Table content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -101,19 +104,13 @@ class TablesResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Table.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "projects/{projectId}/datasets/{datasetId}/tables").generate($pathParams, $queryParams);
-    final $completer = new Completer<Table>();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Table.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Table.parse(JSON.parse($text)));
   }
 
   // Method TablesResource.Get
@@ -124,7 +121,7 @@ class TablesResource {
    * [datasetId] Dataset ID of the requested table
    * [tableId] Table ID of the requested table
    */
-  Future<Table> get(String projectId, String datasetId, String tableId) {
+  core.Future<Table> get(core.String projectId, core.String datasetId, core.String tableId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -140,19 +137,13 @@ class TablesResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "projects/{projectId}/datasets/{datasetId}/tables/{tableId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Table>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Table.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Table.parse(JSON.parse($text)));
   }
 
   // Method TablesResource.List
@@ -161,7 +152,7 @@ class TablesResource {
    * [projectId] Project ID of the tables to list
    * [datasetId] Dataset ID of the tables to list
    */
-  Future<TableList> list(String projectId, String datasetId, [String pageToken = UNSPECIFIED, int maxResults = UNSPECIFIED]) {
+  core.Future<TableList> list(core.String projectId, core.String datasetId, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -178,19 +169,13 @@ class TablesResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "projects/{projectId}/datasets/{datasetId}/tables").generate($pathParams, $queryParams);
-    final $completer = new Completer<TableList>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = TableList.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => TableList.parse(JSON.parse($text)));
   }
 
   // Method TablesResource.Update
@@ -201,7 +186,7 @@ class TablesResource {
    * [tableId] Table ID of the table to update
    * [content] the Table
    */
-  Future<Table> update(String projectId, String datasetId, String tableId, Table content) {
+  core.Future<Table> update(core.String projectId, core.String datasetId, core.String tableId, Table content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -219,19 +204,13 @@ class TablesResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Table.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "projects/{projectId}/datasets/{datasetId}/tables/{tableId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Table>();
     final $http = new HttpRequest($url, "PUT", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Table.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Table.parse(JSON.parse($text)));
   }
 
   // Method TablesResource.Patch
@@ -243,7 +222,7 @@ class TablesResource {
    * [tableId] Table ID of the table to update
    * [content] the Table
    */
-  Future<Table> patch(String projectId, String datasetId, String tableId, Table content) {
+  core.Future<Table> patch(core.String projectId, core.String datasetId, core.String tableId, Table content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -261,19 +240,13 @@ class TablesResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Table.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "projects/{projectId}/datasets/{datasetId}/tables/{tableId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Table>();
     final $http = new HttpRequest($url, "PATCH", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Table.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Table.parse(JSON.parse($text)));
   }
 
   // Method TablesResource.Delete
@@ -284,7 +257,7 @@ class TablesResource {
    * [datasetId] Dataset ID of the table to delete
    * [tableId] Table ID of the table to delete
    */
-  Future delete(String projectId, String datasetId, String tableId) {
+  core.Future delete(core.String projectId, core.String datasetId, core.String tableId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -300,24 +273,18 @@ class TablesResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "projects/{projectId}/datasets/{datasetId}/tables/{tableId}").generate($pathParams, $queryParams);
-    final $completer = new Completer();
     final $http = new HttpRequest($url, "DELETE", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = identity(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => identity(JSON.parse($text)));
   }
 }
 
 // Resource .DatasetsResource
-class DatasetsResource {
+class DatasetsResource extends core.Object {
   final BigqueryApi _$service;
   
   DatasetsResource._internal(BigqueryApi $service) : _$service = $service;
@@ -328,7 +295,7 @@ class DatasetsResource {
    * [projectId] Project ID of the new dataset
    * [content] the Dataset
    */
-  Future<Dataset> insert(String projectId, Dataset content) {
+  core.Future<Dataset> insert(core.String projectId, Dataset content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -344,19 +311,13 @@ class DatasetsResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Dataset.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "projects/{projectId}/datasets").generate($pathParams, $queryParams);
-    final $completer = new Completer<Dataset>();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Dataset.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Dataset.parse(JSON.parse($text)));
   }
 
   // Method DatasetsResource.Get
@@ -365,7 +326,7 @@ class DatasetsResource {
    * [projectId] Project ID of the requested dataset
    * [datasetId] Dataset ID of the requested dataset
    */
-  Future<Dataset> get(String projectId, String datasetId) {
+  core.Future<Dataset> get(core.String projectId, core.String datasetId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -380,19 +341,13 @@ class DatasetsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "projects/{projectId}/datasets/{datasetId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Dataset>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Dataset.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Dataset.parse(JSON.parse($text)));
   }
 
   // Method DatasetsResource.List
@@ -401,7 +356,7 @@ class DatasetsResource {
    * project owner can list (but not necessarily get) all datasets in his project.
    * [projectId] Project ID of the datasets to be listed
    */
-  Future<DatasetList> list(String projectId, [String pageToken = UNSPECIFIED, int maxResults = UNSPECIFIED]) {
+  core.Future<DatasetList> list(core.String projectId, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -417,19 +372,13 @@ class DatasetsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "projects/{projectId}/datasets").generate($pathParams, $queryParams);
-    final $completer = new Completer<DatasetList>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = DatasetList.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => DatasetList.parse(JSON.parse($text)));
   }
 
   // Method DatasetsResource.Update
@@ -441,7 +390,7 @@ class DatasetsResource {
    * [datasetId] Dataset ID of the dataset being updated
    * [content] the Dataset
    */
-  Future<Dataset> update(String projectId, String datasetId, Dataset content) {
+  core.Future<Dataset> update(core.String projectId, core.String datasetId, Dataset content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -458,19 +407,13 @@ class DatasetsResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Dataset.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "projects/{projectId}/datasets/{datasetId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Dataset>();
     final $http = new HttpRequest($url, "PUT", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Dataset.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Dataset.parse(JSON.parse($text)));
   }
 
   // Method DatasetsResource.Patch
@@ -483,7 +426,7 @@ class DatasetsResource {
    * [datasetId] Dataset ID of the dataset being updated
    * [content] the Dataset
    */
-  Future<Dataset> patch(String projectId, String datasetId, Dataset content) {
+  core.Future<Dataset> patch(core.String projectId, core.String datasetId, Dataset content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -500,19 +443,13 @@ class DatasetsResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Dataset.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "projects/{projectId}/datasets/{datasetId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Dataset>();
     final $http = new HttpRequest($url, "PATCH", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Dataset.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Dataset.parse(JSON.parse($text)));
   }
 
   // Method DatasetsResource.Delete
@@ -523,7 +460,7 @@ class DatasetsResource {
    * [projectId] Project ID of the dataset being deleted
    * [datasetId] Dataset ID of dataset being deleted
    */
-  Future delete(String projectId, String datasetId, [bool deleteContents = UNSPECIFIED]) {
+  core.Future delete(core.String projectId, core.String datasetId, [core.bool deleteContents = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -539,24 +476,18 @@ class DatasetsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "projects/{projectId}/datasets/{datasetId}").generate($pathParams, $queryParams);
-    final $completer = new Completer();
     final $http = new HttpRequest($url, "DELETE", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = identity(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => identity(JSON.parse($text)));
   }
 }
 
 // Resource .JobsResource
-class JobsResource {
+class JobsResource extends core.Object {
   final BigqueryApi _$service;
   
   JobsResource._internal(BigqueryApi $service) : _$service = $service;
@@ -567,7 +498,7 @@ class JobsResource {
    * [projectId] Project ID of the project that will be billed for the job
    * [content] the Job
    */
-  Future<Job> insert(String projectId, Job content) {
+  core.Future<Job> insert(core.String projectId, Job content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -583,19 +514,13 @@ class JobsResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Job.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "projects/{projectId}/jobs").generate($pathParams, $queryParams);
-    final $completer = new Completer<Job>();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Job.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Job.parse(JSON.parse($text)));
   }
 
   // Method JobsResource.Query
@@ -605,7 +530,7 @@ class JobsResource {
    * [projectId] Project ID of the project billed for the query
    * [content] the QueryRequest
    */
-  Future<QueryResponse> query(String projectId, QueryRequest content) {
+  core.Future<QueryResponse> query(core.String projectId, QueryRequest content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -621,19 +546,13 @@ class JobsResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(QueryRequest.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "projects/{projectId}/queries").generate($pathParams, $queryParams);
-    final $completer = new Completer<QueryResponse>();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = QueryResponse.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => QueryResponse.parse(JSON.parse($text)));
   }
 
   // Method JobsResource.List
@@ -641,7 +560,7 @@ class JobsResource {
    * Lists all the Jobs in the specified project that were started by the user.
    * [projectId] Project ID of the jobs to list
    */
-  Future<JobList> list(String projectId, [JobsResourceListProjection projection = UNSPECIFIED, JobsResourceListStateFilter stateFilter = UNSPECIFIED, bool allUsers = UNSPECIFIED, int maxResults = UNSPECIFIED, String pageToken = UNSPECIFIED]) {
+  core.Future<JobList> list(core.String projectId, [JobsResourceListProjection projection = UNSPECIFIED, JobsResourceListStateFilter stateFilter = UNSPECIFIED, core.bool allUsers = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String pageToken = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -660,19 +579,13 @@ class JobsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "projects/{projectId}/jobs").generate($pathParams, $queryParams);
-    final $completer = new Completer<JobList>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = JobList.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => JobList.parse(JSON.parse($text)));
   }
 
   // Method JobsResource.GetQueryResults
@@ -681,7 +594,7 @@ class JobsResource {
    * [projectId] Project ID of the query job
    * [jobId] Job ID of the query job
    */
-  Future<GetQueryResultsResponse> getQueryResults(String projectId, String jobId, [int timeoutMs = UNSPECIFIED, String startIndex = UNSPECIFIED, int maxResults = UNSPECIFIED]) {
+  core.Future<GetQueryResultsResponse> getQueryResults(core.String projectId, core.String jobId, [core.int timeoutMs = UNSPECIFIED, core.String startIndex = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -699,19 +612,13 @@ class JobsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "projects/{projectId}/queries/{jobId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<GetQueryResultsResponse>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = GetQueryResultsResponse.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => GetQueryResultsResponse.parse(JSON.parse($text)));
   }
 
   // Method JobsResource.Get
@@ -720,7 +627,7 @@ class JobsResource {
    * [projectId] Project ID of the requested job
    * [jobId] Job ID of the requested job
    */
-  Future<Job> get(String projectId, String jobId) {
+  core.Future<Job> get(core.String projectId, core.String jobId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -735,31 +642,25 @@ class JobsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "projects/{projectId}/jobs/{jobId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Job>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Job.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Job.parse(JSON.parse($text)));
   }
 }
 
 // Enum JobsResource.List.Projection
-class JobsResourceListProjection implements Hashable {
+class JobsResourceListProjection extends core.Object implements core.Hashable {
   /** Includes all job data */
   static final JobsResourceListProjection FULL = const JobsResourceListProjection._internal("full", 0);
   /** Does not include the job configuration */
   static final JobsResourceListProjection MINIMAL = const JobsResourceListProjection._internal("minimal", 1);
 
   /** All values of this enumeration */
-  static final List<JobsResourceListProjection> values = const <JobsResourceListProjection>[
+  static final core.List<JobsResourceListProjection> values = const <JobsResourceListProjection>[
     FULL,
     MINIMAL,
   ];
@@ -771,19 +672,19 @@ class JobsResourceListProjection implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static JobsResourceListProjection valueOf(String item) => _valuesMap[item];
+  static JobsResourceListProjection valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const JobsResourceListProjection._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const JobsResourceListProjection._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Projection".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Projection".hashCode();
 }
 
 // Enum JobsResource.List.StateFilter
-class JobsResourceListStateFilter implements Hashable {
+class JobsResourceListStateFilter extends core.Object implements core.Hashable {
   /** Finished jobs */
   static final JobsResourceListStateFilter DONE = const JobsResourceListStateFilter._internal("done", 0);
   /** Pending jobs */
@@ -792,7 +693,7 @@ class JobsResourceListStateFilter implements Hashable {
   static final JobsResourceListStateFilter RUNNING = const JobsResourceListStateFilter._internal("running", 2);
 
   /** All values of this enumeration */
-  static final List<JobsResourceListStateFilter> values = const <JobsResourceListStateFilter>[
+  static final core.List<JobsResourceListStateFilter> values = const <JobsResourceListStateFilter>[
     DONE,
     PENDING,
     RUNNING,
@@ -806,19 +707,19 @@ class JobsResourceListStateFilter implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static JobsResourceListStateFilter valueOf(String item) => _valuesMap[item];
+  static JobsResourceListStateFilter valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const JobsResourceListStateFilter._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const JobsResourceListStateFilter._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "StateFilter".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "StateFilter".hashCode();
 }
 
 // Resource .TabledataResource
-class TabledataResource {
+class TabledataResource extends core.Object {
   final BigqueryApi _$service;
   
   TabledataResource._internal(BigqueryApi $service) : _$service = $service;
@@ -830,7 +731,7 @@ class TabledataResource {
    * [datasetId] Dataset ID of the table to read
    * [tableId] Table ID of the table to read
    */
-  Future<TableDataList> list(String projectId, String datasetId, String tableId, [String startIndex = UNSPECIFIED, int maxResults = UNSPECIFIED]) {
+  core.Future<TableDataList> list(core.String projectId, core.String datasetId, core.String tableId, [core.String startIndex = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -848,24 +749,18 @@ class TabledataResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "projects/{projectId}/datasets/{datasetId}/tables/{tableId}/data").generate($pathParams, $queryParams);
-    final $completer = new Completer<TableDataList>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = TableDataList.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => TableDataList.parse(JSON.parse($text)));
   }
 }
 
 // Resource .ProjectsResource
-class ProjectsResource {
+class ProjectsResource extends core.Object {
   final BigqueryApi _$service;
   
   ProjectsResource._internal(BigqueryApi $service) : _$service = $service;
@@ -874,7 +769,7 @@ class ProjectsResource {
   /**
    * Lists the projects to which you have at least read access.
    */
-  Future<ProjectList> list([String pageToken = UNSPECIFIED, int maxResults = UNSPECIFIED]) {
+  core.Future<ProjectList> list([core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -889,38 +784,32 @@ class ProjectsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "projects").generate($pathParams, $queryParams);
-    final $completer = new Completer<ProjectList>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = ProjectList.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => ProjectList.parse(JSON.parse($text)));
   }
 }
 
 // Schema .Dataset
 class Dataset extends IdentityHash {
   /** [Output-only] The resource type. */
-  String kind;
+  core.String kind;
 
   /**
  * [Optional] A user-friendly string description for the dataset. This might be shown in BigQuery UI
  * for browsing the dataset.
  */
-  String description;
+  core.String description;
 
   /** [Required] Reference identifying dataset. */
   DatasetReference datasetReference;
 
   /** [Output-only] The time when this dataset was created, in milliseconds since the epoch. */
-  String creationTime;
+  core.String creationTime;
 
   /**
  * [Optional] Describes users' rights on the dataset. You can assign the same role to multiple
@@ -933,38 +822,38 @@ class Dataset extends IdentityHash {
  * object can have only one of the following members: userByEmail, groupByEmail, domain, or
  * allAuthenticatedUsers.
  */
-  List<DatasetAccess> access;
+  core.List<DatasetAccess> access;
 
   /** [Output-only] A hash of this resource. */
-  String etag;
+  core.String etag;
 
   /**
  * [Optional] A descriptive name for this dataset, which might be shown in any BigQuery user
  * interfaces for browsing the dataset. Use datasetId for making API calls.
  */
-  String friendlyName;
+  core.String friendlyName;
 
   /**
  * [Output-only] The date when this dataset or any of its tables was last modified, in milliseconds
  * since the epoch.
  */
-  String lastModifiedTime;
+  core.String lastModifiedTime;
 
   /**
  * [Output-only] The fully-qualified unique name of this dataset in the format projectId:datasetId.
  * The dataset name without the project name is given in the datasetId field. When creating a new
  * dataset, leave this field blank, and instead specify the datasetId field.
  */
-  String id;
+  core.String id;
 
   /**
  * [Output-only] An URL that can be used to access this resource again. You can use this URL in Get
  * or Update requests to this resource.
  */
-  String selfLink;
+  core.String selfLink;
 
   /** Parses an instance from its JSON representation. */
-  static Dataset parse(Map<String, Object> json) {
+  static Dataset parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Dataset();
     result.kind = identity(json["kind"]);
@@ -980,9 +869,9 @@ class Dataset extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Dataset value) {
+  static core.Object serialize(Dataset value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["kind"] = identity(value.kind);
     result["description"] = identity(value.description);
     result["datasetReference"] = DatasetReference.serialize(value.datasetReference);
@@ -1005,13 +894,13 @@ class DatasetAccess extends IdentityHash {
  * enclosing project. projectReaders: Readers of the enclosing project. projectWriters: Writers of
  * the enclosing project. allAuthenticatedUsers: All authenticated BigQuery users.
  */
-  String specialGroup;
+  core.String specialGroup;
 
   /**
  * [Pick one] A domain to grant access to. Any users signed in with the domain specified will be
  * granted the specified access. Example: "example.com".
  */
-  String domain;
+  core.String domain;
 
   /**
  * [Required] Describes the rights granted to the user specified by the other member of the access
@@ -1020,23 +909,23 @@ class DatasetAccess extends IdentityHash {
  * for datasets, on which they can call list() and get(). OWNER - User can call any method. The
  * dataset creator is granted this role by default.
  */
-  String role;
+  core.String role;
 
   /**
  * [Pick one] A fully-qualified email address of a mailing list to grant access to. This must be
  * either a Google Groups mailing list (ends in @googlegroups.com) or a group managed by an
  * enterprise version of Google Groups.
  */
-  String groupByEmail;
+  core.String groupByEmail;
 
   /**
  * [Pick one] A fully qualified email address of a user to grant access to. For example:
  * fred@example.com.
  */
-  String userByEmail;
+  core.String userByEmail;
 
   /** Parses an instance from its JSON representation. */
-  static DatasetAccess parse(Map<String, Object> json) {
+  static DatasetAccess parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new DatasetAccess();
     result.specialGroup = identity(json["specialGroup"]);
@@ -1047,9 +936,9 @@ class DatasetAccess extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(DatasetAccess value) {
+  static core.Object serialize(DatasetAccess value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["specialGroup"] = identity(value.specialGroup);
     result["domain"] = identity(value.domain);
     result["role"] = identity(value.role);
@@ -1066,22 +955,22 @@ class DatasetList extends IdentityHash {
  * A token to request the next page of results. Present only when there is more than one page of
  * results.* See Paging Through Results in the developer's guide.
  */
-  String nextPageToken;
+  core.String nextPageToken;
 
   /** The type of list. */
-  String kind;
+  core.String kind;
 
   /**
  * An array of one or more summarized dataset resources. Absent when there are no datasets in the
  * specified project.
  */
-  List<DatasetListDatasets> datasets;
+  core.List<DatasetListDatasets> datasets;
 
   /** A hash of this page of results. See Paging Through Results in the developer's guide. */
-  String etag;
+  core.String etag;
 
   /** Parses an instance from its JSON representation. */
-  static DatasetList parse(Map<String, Object> json) {
+  static DatasetList parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new DatasetList();
     result.nextPageToken = identity(json["nextPageToken"]);
@@ -1091,9 +980,9 @@ class DatasetList extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(DatasetList value) {
+  static core.Object serialize(DatasetList value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["nextPageToken"] = identity(value.nextPageToken);
     result["kind"] = identity(value.kind);
     result["datasets"] = map(DatasetListDatasets.serialize)(value.datasets);
@@ -1106,19 +995,19 @@ class DatasetList extends IdentityHash {
 // Schema DatasetList.DatasetListDatasets
 class DatasetListDatasets extends IdentityHash {
   /** A descriptive name for this dataset, if one exists. */
-  String friendlyName;
+  core.String friendlyName;
 
   /** The resource type. */
-  String kind;
+  core.String kind;
 
   /** The fully-qualified unique name of this dataset in the format projectId:datasetId. */
-  String id;
+  core.String id;
 
   /** Reference identifying dataset. */
   DatasetReference datasetReference;
 
   /** Parses an instance from its JSON representation. */
-  static DatasetListDatasets parse(Map<String, Object> json) {
+  static DatasetListDatasets parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new DatasetListDatasets();
     result.friendlyName = identity(json["friendlyName"]);
@@ -1128,9 +1017,9 @@ class DatasetListDatasets extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(DatasetListDatasets value) {
+  static core.Object serialize(DatasetListDatasets value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["friendlyName"] = identity(value.friendlyName);
     result["kind"] = identity(value.kind);
     result["id"] = identity(value.id);
@@ -1143,13 +1032,13 @@ class DatasetListDatasets extends IdentityHash {
 // Schema .DatasetReference
 class DatasetReference extends IdentityHash {
   /** [Optional] The ID of the container project. */
-  String projectId;
+  core.String projectId;
 
   /** [Required] A unique ID for this dataset, without the project name. */
-  String datasetId;
+  core.String datasetId;
 
   /** Parses an instance from its JSON representation. */
-  static DatasetReference parse(Map<String, Object> json) {
+  static DatasetReference parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new DatasetReference();
     result.projectId = identity(json["projectId"]);
@@ -1157,9 +1046,9 @@ class DatasetReference extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(DatasetReference value) {
+  static core.Object serialize(DatasetReference value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["projectId"] = identity(value.projectId);
     result["datasetId"] = identity(value.datasetId);
     return result;
@@ -1170,22 +1059,22 @@ class DatasetReference extends IdentityHash {
 // Schema .ErrorProto
 class ErrorProto extends IdentityHash {
   /** Debugging information for the service, if present. Should be ignored. */
-  String debugInfo;
+  core.String debugInfo;
 
   /** A human readable explanation of the error. */
-  String message;
+  core.String message;
 
   /**
  * Specifies the error reason. For example, reason will be "required" or "invalid" if some field was
  * missing or malformed.
  */
-  String reason;
+  core.String reason;
 
   /** Specifies where the error occurred, if present. */
-  String location;
+  core.String location;
 
   /** Parses an instance from its JSON representation. */
-  static ErrorProto parse(Map<String, Object> json) {
+  static ErrorProto parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ErrorProto();
     result.debugInfo = identity(json["debugInfo"]);
@@ -1195,9 +1084,9 @@ class ErrorProto extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ErrorProto value) {
+  static core.Object serialize(ErrorProto value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["debugInfo"] = identity(value.debugInfo);
     result["message"] = identity(value.message);
     result["reason"] = identity(value.reason);
@@ -1210,14 +1099,14 @@ class ErrorProto extends IdentityHash {
 // Schema .GetQueryResultsResponse
 class GetQueryResultsResponse extends IdentityHash {
   /** The resource type of the response. */
-  String kind;
+  core.String kind;
 
   /**
  * An object with as many results as can be contained within the maximum permitted reply size. To
  * get any additional rows, you can call GetQueryResults and specify the jobReference returned
  * above. Present only when the query completes successfully.
  */
-  List<TableRow> rows;
+  core.List<TableRow> rows;
 
   /**
  * Reference to the Helix Job that was created to run the query. This field will be present even if
@@ -1231,22 +1120,22 @@ class GetQueryResultsResponse extends IdentityHash {
  * Whether the query has completed or not. If rows or totalRows are present, this will always be
  * true. If this is false, totalRows will not be available.
  */
-  bool jobComplete;
+  core.bool jobComplete;
 
   /**
  * The total number of rows in the complete query result set, which can be more than the number of
  * rows in this single page of results. Present only when the query completes successfully.
  */
-  String totalRows;
+  core.String totalRows;
 
   /** A hash of this response. */
-  String etag;
+  core.String etag;
 
   /** The schema of the results. Present only when the query completes successfully. */
   TableSchema schema;
 
   /** Parses an instance from its JSON representation. */
-  static GetQueryResultsResponse parse(Map<String, Object> json) {
+  static GetQueryResultsResponse parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new GetQueryResultsResponse();
     result.kind = identity(json["kind"]);
@@ -1259,9 +1148,9 @@ class GetQueryResultsResponse extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(GetQueryResultsResponse value) {
+  static core.Object serialize(GetQueryResultsResponse value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["kind"] = identity(value.kind);
     result["rows"] = map(TableRow.serialize)(value.rows);
     result["jobReference"] = JobReference.serialize(value.jobReference);
@@ -1283,7 +1172,7 @@ class Job extends IdentityHash {
   JobStatus status;
 
   /** [Output-only] The type of the resource. */
-  String kind;
+  core.String kind;
 
   /** [Output-only] Information about the job, including starting time and ending time of the job. */
   JobStatistics statistics;
@@ -1292,19 +1181,19 @@ class Job extends IdentityHash {
   JobReference jobReference;
 
   /** [Output-only] A hash of this resource. */
-  String etag;
+  core.String etag;
 
   /** [Required] Describes the job configuration. */
   JobConfiguration configuration;
 
   /** [Output-only] Opaque ID field of the job */
-  String id;
+  core.String id;
 
   /** [Output-only] A URL that can be used to access this resource again. */
-  String selfLink;
+  core.String selfLink;
 
   /** Parses an instance from its JSON representation. */
-  static Job parse(Map<String, Object> json) {
+  static Job parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Job();
     result.status = JobStatus.parse(json["status"]);
@@ -1318,9 +1207,9 @@ class Job extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Job value) {
+  static core.Object serialize(Job value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["status"] = JobStatus.serialize(value.status);
     result["kind"] = identity(value.kind);
     result["statistics"] = JobStatistics.serialize(value.statistics);
@@ -1355,10 +1244,10 @@ class JobConfiguration extends IdentityHash {
  * [Optional] Properties providing extra details about how the job should be run. Not used for most
  * jobs.
  */
-  Map<String, String> properties;
+  core.Map<String, core.String> properties;
 
   /** Parses an instance from its JSON representation. */
-  static JobConfiguration parse(Map<String, Object> json) {
+  static JobConfiguration parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new JobConfiguration();
     result.load = JobConfigurationLoad.parse(json["load"]);
@@ -1370,9 +1259,9 @@ class JobConfiguration extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(JobConfiguration value) {
+  static core.Object serialize(JobConfiguration value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["load"] = JobConfigurationLoad.serialize(value.load);
     result["link"] = JobConfigurationLink.serialize(value.link);
     result["query"] = JobConfigurationQuery.serialize(value.query);
@@ -1390,19 +1279,19 @@ class JobConfigurationExtract extends IdentityHash {
  * [Required] The fully-qualified Google Cloud Storage URI where the extracted table should be
  * written.
  */
-  String destinationUri;
+  core.String destinationUri;
 
   /** [Optional] Delimiter to use between fields in the exported data. Default is ',' */
-  String fieldDelimiter;
+  core.String fieldDelimiter;
 
   /** [Required] A reference to the table being exported. */
   TableReference sourceTable;
 
   /** [Optional] Whether to print out a heder row in the results. Default is true. */
-  bool printHeader;
+  core.bool printHeader;
 
   /** Parses an instance from its JSON representation. */
-  static JobConfigurationExtract parse(Map<String, Object> json) {
+  static JobConfigurationExtract parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new JobConfigurationExtract();
     result.destinationUri = identity(json["destinationUri"]);
@@ -1412,9 +1301,9 @@ class JobConfigurationExtract extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(JobConfigurationExtract value) {
+  static core.Object serialize(JobConfigurationExtract value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["destinationUri"] = identity(value.destinationUri);
     result["fieldDelimiter"] = identity(value.fieldDelimiter);
     result["sourceTable"] = TableReference.serialize(value.sourceTable);
@@ -1427,22 +1316,22 @@ class JobConfigurationExtract extends IdentityHash {
 // Schema .JobConfigurationLink
 class JobConfigurationLink extends IdentityHash {
   /** [Optional] Whether or not to create a new table, if none exists. */
-  String createDisposition;
+  core.String createDisposition;
 
   /**
  * [Optional] Whether to overwrite an existing table (WRITE_TRUNCATE), append to an existing table
  * (WRITE_APPEND), or require that the the table is empty (WRITE_EMPTY). Default is WRITE_APPEND.
  */
-  String writeDisposition;
+  core.String writeDisposition;
 
   /** [Required] The destination table of the link job. */
   TableReference destinationTable;
 
   /** [Required] URI of source table to link. */
-  List<String> sourceUri;
+  core.List<core.String> sourceUri;
 
   /** Parses an instance from its JSON representation. */
-  static JobConfigurationLink parse(Map<String, Object> json) {
+  static JobConfigurationLink parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new JobConfigurationLink();
     result.createDisposition = identity(json["createDisposition"]);
@@ -1452,9 +1341,9 @@ class JobConfigurationLink extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(JobConfigurationLink value) {
+  static core.Object serialize(JobConfigurationLink value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["createDisposition"] = identity(value.createDisposition);
     result["writeDisposition"] = identity(value.writeDisposition);
     result["destinationTable"] = TableReference.serialize(value.destinationTable);
@@ -1469,10 +1358,10 @@ class JobConfigurationLoad extends IdentityHash {
   /**
  * [Optional] Character encoding of the input data. May be UTF-8 or ISO-8859-1. Default is UTF-8.
  */
-  String encoding;
+  core.String encoding;
 
   /** [Optional] Delimiter to use between fields in the import data. Default is ',' */
-  String fieldDelimiter;
+  core.String fieldDelimiter;
 
   /** [Required] Table being written to. */
   TableReference destinationTable;
@@ -1481,31 +1370,31 @@ class JobConfigurationLoad extends IdentityHash {
  * [Optional] Maximum number of bad records that should be ignored before the entire job is aborted
  * and no updates are performed.
  */
-  int maxBadRecords;
+  core.int maxBadRecords;
 
   /**
  * [Optional] Whether to overwrite an existing table (WRITE_TRUNCATE), append to an existing table
  * (WRITE_APPEND), or require that the the table is empty (WRITE_EMPTY). Default is WRITE_APPEND.
  */
-  String writeDisposition;
+  core.String writeDisposition;
 
   /** [Required] Source URIs describing Google Cloud Storage locations of data to load. */
-  List<String> sourceUris;
+  core.List<core.String> sourceUris;
 
   /** [Optional] Number of rows of initial data to skip in the data being imported. */
-  int skipLeadingRows;
+  core.int skipLeadingRows;
 
   /**
  * [Optional] Whether to create the table if it doesn't already exist (CREATE_IF_NEEDED) or to
  * require the table already exist (CREATE_NEVER). Default is CREATE_IF_NEEDED.
  */
-  String createDisposition;
+  core.String createDisposition;
 
   /** [Optional] Schema of the table being written to. */
   TableSchema schema;
 
   /** Parses an instance from its JSON representation. */
-  static JobConfigurationLoad parse(Map<String, Object> json) {
+  static JobConfigurationLoad parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new JobConfigurationLoad();
     result.encoding = identity(json["encoding"]);
@@ -1520,9 +1409,9 @@ class JobConfigurationLoad extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(JobConfigurationLoad value) {
+  static core.Object serialize(JobConfigurationLoad value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["encoding"] = identity(value.encoding);
     result["fieldDelimiter"] = identity(value.fieldDelimiter);
     result["destinationTable"] = TableReference.serialize(value.destinationTable);
@@ -1552,25 +1441,25 @@ class JobConfigurationQuery extends IdentityHash {
  * [Experimental] Specifies a priority for the query. Default is INTERACTIVE. Alternative is BATCH,
  * which may be subject to looser quota restrictions.
  */
-  String priority;
+  core.String priority;
 
   /**
  * [Optional] Whether to overwrite an existing table (WRITE_TRUNCATE), append to an existing table
  * (WRITE_APPEND), or require that the the table is empty (WRITE_EMPTY). Default is WRITE_EMPTY.
  */
-  String writeDisposition;
+  core.String writeDisposition;
 
   /**
  * [Optional] Whether to create the table if it doesn't already exist (CREATE_IF_NEEDED) or to
  * require the table already exist (CREATE_NEVER). Default is CREATE_IF_NEEDED.
  */
-  String createDisposition;
+  core.String createDisposition;
 
   /** [Required] BigQuery SQL query to execute. */
-  String query;
+  core.String query;
 
   /** Parses an instance from its JSON representation. */
-  static JobConfigurationQuery parse(Map<String, Object> json) {
+  static JobConfigurationQuery parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new JobConfigurationQuery();
     result.defaultDataset = DatasetReference.parse(json["defaultDataset"]);
@@ -1582,9 +1471,9 @@ class JobConfigurationQuery extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(JobConfigurationQuery value) {
+  static core.Object serialize(JobConfigurationQuery value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["defaultDataset"] = DatasetReference.serialize(value.defaultDataset);
     result["destinationTable"] = TableReference.serialize(value.destinationTable);
     result["priority"] = identity(value.priority);
@@ -1599,10 +1488,10 @@ class JobConfigurationQuery extends IdentityHash {
 // Schema .JobConfigurationTableCopy
 class JobConfigurationTableCopy extends IdentityHash {
   /** [Optional] Whether or not to create a new table, if none exists. */
-  String createDisposition;
+  core.String createDisposition;
 
   /** [Optional] Whether or not to append or require the table to be empty. */
-  String writeDisposition;
+  core.String writeDisposition;
 
   /** [Required] The destination table */
   TableReference destinationTable;
@@ -1611,7 +1500,7 @@ class JobConfigurationTableCopy extends IdentityHash {
   TableReference sourceTable;
 
   /** Parses an instance from its JSON representation. */
-  static JobConfigurationTableCopy parse(Map<String, Object> json) {
+  static JobConfigurationTableCopy parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new JobConfigurationTableCopy();
     result.createDisposition = identity(json["createDisposition"]);
@@ -1621,9 +1510,9 @@ class JobConfigurationTableCopy extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(JobConfigurationTableCopy value) {
+  static core.Object serialize(JobConfigurationTableCopy value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["createDisposition"] = identity(value.createDisposition);
     result["writeDisposition"] = identity(value.writeDisposition);
     result["destinationTable"] = TableReference.serialize(value.destinationTable);
@@ -1636,22 +1525,22 @@ class JobConfigurationTableCopy extends IdentityHash {
 // Schema .JobList
 class JobList extends IdentityHash {
   /** A token to request the next page of results. */
-  String nextPageToken;
+  core.String nextPageToken;
 
   /** Total number of jobs in this collection. */
-  int totalItems;
+  core.int totalItems;
 
   /** The resource type of the response. */
-  String kind;
+  core.String kind;
 
   /** A hash of this page of results. */
-  String etag;
+  core.String etag;
 
   /** List of jobs that were requested. */
-  List<JobListJobs> jobs;
+  core.List<JobListJobs> jobs;
 
   /** Parses an instance from its JSON representation. */
-  static JobList parse(Map<String, Object> json) {
+  static JobList parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new JobList();
     result.nextPageToken = identity(json["nextPageToken"]);
@@ -1662,9 +1551,9 @@ class JobList extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(JobList value) {
+  static core.Object serialize(JobList value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["nextPageToken"] = identity(value.nextPageToken);
     result["totalItems"] = identity(value.totalItems);
     result["kind"] = identity(value.kind);
@@ -1681,7 +1570,7 @@ class JobListJobs extends IdentityHash {
   JobStatus status;
 
   /** The resource type. */
-  String kind;
+  core.String kind;
 
   /** [Output-only] Information about the job, including starting time and ending time of the job. */
   JobStatistics statistics;
@@ -1693,19 +1582,19 @@ class JobListJobs extends IdentityHash {
  * Running state of the job. When the state is DONE, errorResult can be checked to determine whether
  * the job succeeded or failed.
  */
-  String state;
+  core.String state;
 
   /** [Full-projection-only] Specifies the job configuration. */
   JobConfiguration configuration;
 
   /** Unique opaque ID of the job. */
-  String id;
+  core.String id;
 
   /** A result object that will be present only if the job has failed. */
   ErrorProto errorResult;
 
   /** Parses an instance from its JSON representation. */
-  static JobListJobs parse(Map<String, Object> json) {
+  static JobListJobs parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new JobListJobs();
     result.status = JobStatus.parse(json["status"]);
@@ -1719,9 +1608,9 @@ class JobListJobs extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(JobListJobs value) {
+  static core.Object serialize(JobListJobs value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["status"] = JobStatus.serialize(value.status);
     result["kind"] = identity(value.kind);
     result["statistics"] = JobStatistics.serialize(value.statistics);
@@ -1738,13 +1627,13 @@ class JobListJobs extends IdentityHash {
 // Schema .JobReference
 class JobReference extends IdentityHash {
   /** [Required] Project ID being billed for the job. */
-  String projectId;
+  core.String projectId;
 
   /** [Required] ID of the job. */
-  String jobId;
+  core.String jobId;
 
   /** Parses an instance from its JSON representation. */
-  static JobReference parse(Map<String, Object> json) {
+  static JobReference parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new JobReference();
     result.projectId = identity(json["projectId"]);
@@ -1752,9 +1641,9 @@ class JobReference extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(JobReference value) {
+  static core.Object serialize(JobReference value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["projectId"] = identity(value.projectId);
     result["jobId"] = identity(value.jobId);
     return result;
@@ -1765,16 +1654,16 @@ class JobReference extends IdentityHash {
 // Schema .JobStatistics
 class JobStatistics extends IdentityHash {
   /** [Output-only] End time of this job, in milliseconds since the epoch. */
-  String endTime;
+  core.String endTime;
 
   /** [Output-only] Total bytes processed for this job. */
-  String totalBytesProcessed;
+  core.String totalBytesProcessed;
 
   /** [Output-only] Start time of this job, in milliseconds since the epoch. */
-  String startTime;
+  core.String startTime;
 
   /** Parses an instance from its JSON representation. */
-  static JobStatistics parse(Map<String, Object> json) {
+  static JobStatistics parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new JobStatistics();
     result.endTime = identity(json["endTime"]);
@@ -1783,9 +1672,9 @@ class JobStatistics extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(JobStatistics value) {
+  static core.Object serialize(JobStatistics value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["endTime"] = identity(value.endTime);
     result["totalBytesProcessed"] = identity(value.totalBytesProcessed);
     result["startTime"] = identity(value.startTime);
@@ -1797,13 +1686,13 @@ class JobStatistics extends IdentityHash {
 // Schema .JobStatus
 class JobStatus extends IdentityHash {
   /** [Output-only] Running state of the job. */
-  String state;
+  core.String state;
 
   /**
  * [Output-only] All errors encountered during the running of the job. Errors here do not
  * necessarily mean that the job has completed or was unsuccessful.
  */
-  List<ErrorProto> errors;
+  core.List<ErrorProto> errors;
 
   /**
  * [Output-only] Final error result of the job. If present, indicates that the job has completed and
@@ -1812,7 +1701,7 @@ class JobStatus extends IdentityHash {
   ErrorProto errorResult;
 
   /** Parses an instance from its JSON representation. */
-  static JobStatus parse(Map<String, Object> json) {
+  static JobStatus parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new JobStatus();
     result.state = identity(json["state"]);
@@ -1821,9 +1710,9 @@ class JobStatus extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(JobStatus value) {
+  static core.Object serialize(JobStatus value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["state"] = identity(value.state);
     result["errors"] = map(ErrorProto.serialize)(value.errors);
     result["errorResult"] = ErrorProto.serialize(value.errorResult);
@@ -1835,22 +1724,22 @@ class JobStatus extends IdentityHash {
 // Schema .ProjectList
 class ProjectList extends IdentityHash {
   /** A token to request the next page of results. */
-  String nextPageToken;
+  core.String nextPageToken;
 
   /** The total number of projects in the list. */
-  int totalItems;
+  core.int totalItems;
 
   /** The type of list. */
-  String kind;
+  core.String kind;
 
   /** A hash of the page of results */
-  String etag;
+  core.String etag;
 
   /** Projects to which you have at least READ access. */
-  List<ProjectListProjects> projects;
+  core.List<ProjectListProjects> projects;
 
   /** Parses an instance from its JSON representation. */
-  static ProjectList parse(Map<String, Object> json) {
+  static ProjectList parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ProjectList();
     result.nextPageToken = identity(json["nextPageToken"]);
@@ -1861,9 +1750,9 @@ class ProjectList extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ProjectList value) {
+  static core.Object serialize(ProjectList value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["nextPageToken"] = identity(value.nextPageToken);
     result["totalItems"] = identity(value.totalItems);
     result["kind"] = identity(value.kind);
@@ -1877,19 +1766,19 @@ class ProjectList extends IdentityHash {
 // Schema ProjectList.ProjectListProjects
 class ProjectListProjects extends IdentityHash {
   /** A descriptive name for this project. */
-  String friendlyName;
+  core.String friendlyName;
 
   /** The resource type. */
-  String kind;
+  core.String kind;
 
   /** An opaque ID of this project. */
-  String id;
+  core.String id;
 
   /** A unique reference to this project. */
   ProjectReference projectReference;
 
   /** Parses an instance from its JSON representation. */
-  static ProjectListProjects parse(Map<String, Object> json) {
+  static ProjectListProjects parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ProjectListProjects();
     result.friendlyName = identity(json["friendlyName"]);
@@ -1899,9 +1788,9 @@ class ProjectListProjects extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ProjectListProjects value) {
+  static core.Object serialize(ProjectListProjects value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["friendlyName"] = identity(value.friendlyName);
     result["kind"] = identity(value.kind);
     result["id"] = identity(value.id);
@@ -1916,19 +1805,19 @@ class ProjectReference extends IdentityHash {
   /**
  * [Required] ID of the project. Can be either the numeric ID or the assigned ID of the project.
  */
-  String projectId;
+  core.String projectId;
 
   /** Parses an instance from its JSON representation. */
-  static ProjectReference parse(Map<String, Object> json) {
+  static ProjectReference parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ProjectReference();
     result.projectId = identity(json["projectId"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ProjectReference value) {
+  static core.Object serialize(ProjectReference value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["projectId"] = identity(value.projectId);
     return result;
   }
@@ -1942,7 +1831,7 @@ class QueryRequest extends IdentityHash {
  * is to return immediately. If the timeout passes before the job completes, the request will fail
  * with a TIMEOUT error.
  */
-  int timeoutMs;
+  core.int timeoutMs;
 
   /**
  * [Required] A query string, following the BigQuery query syntax of the query to execute. Table
@@ -1950,17 +1839,17 @@ class QueryRequest extends IdentityHash {
  * specify the defaultDataset value. If the table is in the same project as the job, you can omit
  * the project ID. Example: SELECT f1 FROM myProjectId:myDatasetId.myTableId.
  */
-  String query;
+  core.String query;
 
   /** The resource type of the request. */
-  String kind;
+  core.String kind;
 
   /**
  * [Optional] The maximum number of results to return per page of results. If the response list
  * exceeds the maximum response size for a single response, you will have to page through the
  * results. Default is to return the maximum response size.
  */
-  int maxResults;
+  core.int maxResults;
 
   /**
  * [Optional] Specifies the default datasetId and projectId to assume for any unqualified table
@@ -1970,7 +1859,7 @@ class QueryRequest extends IdentityHash {
   DatasetReference defaultDataset;
 
   /** Parses an instance from its JSON representation. */
-  static QueryRequest parse(Map<String, Object> json) {
+  static QueryRequest parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new QueryRequest();
     result.timeoutMs = identity(json["timeoutMs"]);
@@ -1981,9 +1870,9 @@ class QueryRequest extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(QueryRequest value) {
+  static core.Object serialize(QueryRequest value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["timeoutMs"] = identity(value.timeoutMs);
     result["query"] = identity(value.query);
     result["kind"] = identity(value.kind);
@@ -1997,14 +1886,14 @@ class QueryRequest extends IdentityHash {
 // Schema .QueryResponse
 class QueryResponse extends IdentityHash {
   /** The resource type. */
-  String kind;
+  core.String kind;
 
   /**
  * An object with as many results as can be contained within the maximum permitted reply size. To
  * get any additional rows, you can call GetQueryResults and specify the jobReference returned
  * above.
  */
-  List<TableRow> rows;
+  core.List<TableRow> rows;
 
   /**
  * Reference to the Job that was created to run the query. This field will be present even if the
@@ -2018,19 +1907,19 @@ class QueryResponse extends IdentityHash {
  * Whether the query has completed or not. If rows or totalRows are present, this will always be
  * true. If this is false, totalRows will not be available.
  */
-  bool jobComplete;
+  core.bool jobComplete;
 
   /**
  * The total number of rows in the complete query result set, which can be more than the number of
  * rows in this single page of results.
  */
-  String totalRows;
+  core.String totalRows;
 
   /** The schema of the results. Present only when the query completes successfully. */
   TableSchema schema;
 
   /** Parses an instance from its JSON representation. */
-  static QueryResponse parse(Map<String, Object> json) {
+  static QueryResponse parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new QueryResponse();
     result.kind = identity(json["kind"]);
@@ -2042,9 +1931,9 @@ class QueryResponse extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(QueryResponse value) {
+  static core.Object serialize(QueryResponse value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["kind"] = identity(value.kind);
     result["rows"] = map(TableRow.serialize)(value.rows);
     result["jobReference"] = JobReference.serialize(value.jobReference);
@@ -2059,49 +1948,49 @@ class QueryResponse extends IdentityHash {
 // Schema .Table
 class Table extends IdentityHash {
   /** [Output-only] The type of the resource. */
-  String kind;
+  core.String kind;
 
   /** [Output-only] The time when this table was last modified, in milliseconds since the epoch. */
-  String lastModifiedTime;
+  core.String lastModifiedTime;
 
   /** [Optional] A user-friendly description of this table. */
-  String description;
+  core.String description;
 
   /** [Output-only] The time when this table was created, in milliseconds since the epoch. */
-  String creationTime;
+  core.String creationTime;
 
   /** [Required] Reference describing the ID of this table. */
   TableReference tableReference;
 
   /** [Output-only] The number of rows of data in this table. */
-  String numRows;
+  core.String numRows;
 
   /** [Output-only] The size of the table in bytes. */
-  String numBytes;
+  core.String numBytes;
 
   /** [Output-only] A hash of this resource. */
-  String etag;
+  core.String etag;
 
   /** [Optional] A descriptive name for this table. */
-  String friendlyName;
+  core.String friendlyName;
 
   /**
  * [Optional] The time when this table expires, in milliseconds since the epoch. If not present, the
  * table will persist indefinitely. Expired tables will be deleted and their storage reclaimed.
  */
-  String expirationTime;
+  core.String expirationTime;
 
   /** [Output-only] An opaque ID uniquely identifying the table. */
-  String id;
+  core.String id;
 
   /** [Output-only] A URL that can be used to access this resource again. */
-  String selfLink;
+  core.String selfLink;
 
   /** [Optional] Describes the schema of this table. */
   TableSchema schema;
 
   /** Parses an instance from its JSON representation. */
-  static Table parse(Map<String, Object> json) {
+  static Table parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Table();
     result.kind = identity(json["kind"]);
@@ -2120,9 +2009,9 @@ class Table extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Table value) {
+  static core.Object serialize(Table value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["kind"] = identity(value.kind);
     result["lastModifiedTime"] = identity(value.lastModifiedTime);
     result["description"] = identity(value.description);
@@ -2144,19 +2033,19 @@ class Table extends IdentityHash {
 // Schema .TableDataList
 class TableDataList extends IdentityHash {
   /** Rows of results. */
-  List<TableRow> rows;
+  core.List<TableRow> rows;
 
   /** The resource type of the response. */
-  String kind;
+  core.String kind;
 
   /** A hash of this page of results. */
-  String etag;
+  core.String etag;
 
   /** The total number of rows in the complete table. */
-  String totalRows;
+  core.String totalRows;
 
   /** Parses an instance from its JSON representation. */
-  static TableDataList parse(Map<String, Object> json) {
+  static TableDataList parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new TableDataList();
     result.rows = map(TableRow.parse)(json["rows"]);
@@ -2166,9 +2055,9 @@ class TableDataList extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(TableDataList value) {
+  static core.Object serialize(TableDataList value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["rows"] = map(TableRow.serialize)(value.rows);
     result["kind"] = identity(value.kind);
     result["etag"] = identity(value.etag);
@@ -2181,19 +2070,19 @@ class TableDataList extends IdentityHash {
 // Schema .TableFieldSchema
 class TableFieldSchema extends IdentityHash {
   /** [Optional] Describes nested fields when type is RECORD. */
-  List<TableFieldSchema> fields;
+  core.List<TableFieldSchema> fields;
 
   /** [Required] Data type of the field. */
-  String type;
+  core.String type;
 
   /** [Optional] Mode of the field (whether or not it can be null. Default is NULLABLE. */
-  String mode;
+  core.String mode;
 
   /** [Required] Name of the field. */
-  String name;
+  core.String name;
 
   /** Parses an instance from its JSON representation. */
-  static TableFieldSchema parse(Map<String, Object> json) {
+  static TableFieldSchema parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new TableFieldSchema();
     result.fields = map(TableFieldSchema.parse)(json["fields"]);
@@ -2203,9 +2092,9 @@ class TableFieldSchema extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(TableFieldSchema value) {
+  static core.Object serialize(TableFieldSchema value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["fields"] = map(TableFieldSchema.serialize)(value.fields);
     result["type"] = identity(value.type);
     result["mode"] = identity(value.mode);
@@ -2218,22 +2107,22 @@ class TableFieldSchema extends IdentityHash {
 // Schema .TableList
 class TableList extends IdentityHash {
   /** A token to request the next page of results. */
-  String nextPageToken;
+  core.String nextPageToken;
 
   /** Tables in the requested dataset. */
-  List<TableListTables> tables;
+  core.List<TableListTables> tables;
 
   /** The type of list. */
-  String kind;
+  core.String kind;
 
   /** A hash of this page of results. */
-  String etag;
+  core.String etag;
 
   /** The total number of tables in the dataset. */
-  int totalItems;
+  core.int totalItems;
 
   /** Parses an instance from its JSON representation. */
-  static TableList parse(Map<String, Object> json) {
+  static TableList parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new TableList();
     result.nextPageToken = identity(json["nextPageToken"]);
@@ -2244,9 +2133,9 @@ class TableList extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(TableList value) {
+  static core.Object serialize(TableList value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["nextPageToken"] = identity(value.nextPageToken);
     result["tables"] = map(TableListTables.serialize)(value.tables);
     result["kind"] = identity(value.kind);
@@ -2260,19 +2149,19 @@ class TableList extends IdentityHash {
 // Schema TableList.TableListTables
 class TableListTables extends IdentityHash {
   /** The user-friendly name for this table. */
-  String friendlyName;
+  core.String friendlyName;
 
   /** The resource type. */
-  String kind;
+  core.String kind;
 
   /** An opaque ID of the table */
-  String id;
+  core.String id;
 
   /** A reference uniquely identifying the table. */
   TableReference tableReference;
 
   /** Parses an instance from its JSON representation. */
-  static TableListTables parse(Map<String, Object> json) {
+  static TableListTables parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new TableListTables();
     result.friendlyName = identity(json["friendlyName"]);
@@ -2282,9 +2171,9 @@ class TableListTables extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(TableListTables value) {
+  static core.Object serialize(TableListTables value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["friendlyName"] = identity(value.friendlyName);
     result["kind"] = identity(value.kind);
     result["id"] = identity(value.id);
@@ -2297,16 +2186,16 @@ class TableListTables extends IdentityHash {
 // Schema .TableReference
 class TableReference extends IdentityHash {
   /** [Required] ID of the project billed for storage of the table. */
-  String projectId;
+  core.String projectId;
 
   /** [Required] ID of the table. */
-  String tableId;
+  core.String tableId;
 
   /** [Required] ID of the dataset containing the table. */
-  String datasetId;
+  core.String datasetId;
 
   /** Parses an instance from its JSON representation. */
-  static TableReference parse(Map<String, Object> json) {
+  static TableReference parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new TableReference();
     result.projectId = identity(json["projectId"]);
@@ -2315,9 +2204,9 @@ class TableReference extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(TableReference value) {
+  static core.Object serialize(TableReference value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["projectId"] = identity(value.projectId);
     result["tableId"] = identity(value.tableId);
     result["datasetId"] = identity(value.datasetId);
@@ -2329,19 +2218,19 @@ class TableReference extends IdentityHash {
 // Schema .TableRow
 class TableRow extends IdentityHash {
   /** Represents a single row in the result set, consisting of one or more fields. */
-  List<TableRowF> f;
+  core.List<TableRowF> f;
 
   /** Parses an instance from its JSON representation. */
-  static TableRow parse(Map<String, Object> json) {
+  static TableRow parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new TableRow();
     result.f = map(TableRowF.parse)(json["f"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(TableRow value) {
+  static core.Object serialize(TableRow value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["f"] = map(TableRowF.serialize)(value.f);
     return result;
   }
@@ -2351,19 +2240,19 @@ class TableRow extends IdentityHash {
 // Schema TableRow.TableRowF
 class TableRowF extends IdentityHash {
   /** Contains the field value in this row, as a string. */
-  String v;
+  core.String v;
 
   /** Parses an instance from its JSON representation. */
-  static TableRowF parse(Map<String, Object> json) {
+  static TableRowF parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new TableRowF();
     result.v = identity(json["v"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(TableRowF value) {
+  static core.Object serialize(TableRowF value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["v"] = identity(value.v);
     return result;
   }
@@ -2373,19 +2262,19 @@ class TableRowF extends IdentityHash {
 // Schema .TableSchema
 class TableSchema extends IdentityHash {
   /** Describes the fields in a table. */
-  List<TableFieldSchema> fields;
+  core.List<TableFieldSchema> fields;
 
   /** Parses an instance from its JSON representation. */
-  static TableSchema parse(Map<String, Object> json) {
+  static TableSchema parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new TableSchema();
     result.fields = map(TableFieldSchema.parse)(json["fields"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(TableSchema value) {
+  static core.Object serialize(TableSchema value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["fields"] = map(TableFieldSchema.serialize)(value.fields);
     return result;
   }
@@ -2393,14 +2282,14 @@ class TableSchema extends IdentityHash {
 }
 
 // Enum BigqueryApi.Alt
-class BigqueryApiAlt implements Hashable {
+class BigqueryApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of text/csv */
   static final BigqueryApiAlt CSV = const BigqueryApiAlt._internal("csv", 0);
   /** Responses with Content-Type of application/json */
   static final BigqueryApiAlt JSON = const BigqueryApiAlt._internal("json", 1);
 
   /** All values of this enumeration */
-  static final List<BigqueryApiAlt> values = const <BigqueryApiAlt>[
+  static final core.List<BigqueryApiAlt> values = const <BigqueryApiAlt>[
     CSV,
     JSON,
   ];
@@ -2412,14 +2301,14 @@ class BigqueryApiAlt implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static BigqueryApiAlt valueOf(String item) => _valuesMap[item];
+  static BigqueryApiAlt valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const BigqueryApiAlt._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const BigqueryApiAlt._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Alt".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Alt".hashCode();
 }
 

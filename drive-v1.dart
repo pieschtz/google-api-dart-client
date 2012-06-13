@@ -1,4 +1,5 @@
 #library("drive");
+#import('dart:core', prefix: 'core');
 #import('dart:json');
 
 #import('utils.dart');
@@ -8,59 +9,61 @@
 /**
  * The API to interact with Drive.
  */
-class DriveApi {
+class DriveApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
-  final String baseUrl;
+  final core.String baseUrl;
+  /** How we should identify ourselves to the service. */
+  Authenticator authenticator;
   /** The client library version */
-  final String clientVersion = "0.1";
+  final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
-  final String applicationName;
+  final core.String applicationName;
   DriveApi get _$service() => this;
   FilesResource _files;
   FilesResource get files() => _files;
   
   /** Returns response with indentations and line breaks. */
-  bool prettyPrint;
+  core.bool prettyPrint;
 
   /** Selector specifying which fields to include in a partial response. */
-  String fields;
+  core.String fields;
 
   /**
    * Available to use for quota purposes for server-side applications. Can be any arbitrary string
    * assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.
    */
-  String quotaUser;
+  core.String quotaUser;
 
   /** OAuth 2.0 token for the current user. */
-  String oauthToken;
+  core.String oauthToken;
 
   /**
    * API key. Your API key identifies your project and provides you with API access, quota, and
    * reports. Required unless you provide an OAuth 2.0 token.
    */
-  String key;
+  core.String key;
 
   /**
    * IP address of the site where the request originates. Use this if you want to enforce per-user
    * limits.
    */
-  String userIp;
+  core.String userIp;
 
   /** Data format for the response. */
   DriveApiAlt alt;
 
 
-  DriveApi([this.baseUrl = "https://www.googleapis.com/drive/v1/", this.applicationName]) { 
+  DriveApi([this.baseUrl = "https://www.googleapis.com/drive/v1/", this.applicationName, this.authenticator]) { 
     _files = new FilesResource._internal(this);
   }
-  String get userAgent() {
+  core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}drive/v1/20120602 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}drive/v1/20120608 google-api-dart-client/${clientVersion}";
   }
 }
 
 // Resource .FilesResource
-class FilesResource {
+class FilesResource extends core.Object {
   final DriveApi _$service;
   
   FilesResource._internal(DriveApi $service) : _$service = $service;
@@ -70,7 +73,7 @@ class FilesResource {
    * Inserts a file, and any settable metadata or blob content sent with the request.
    * [content] the File
    */
-  Future<File> insert(File content) {
+  core.Future<File> insert(File content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -85,19 +88,13 @@ class FilesResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(File.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "files").generate($pathParams, $queryParams);
-    final $completer = new Completer<File>();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = File.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => File.parse(JSON.parse($text)));
   }
 
   // Method FilesResource.Patch
@@ -106,7 +103,7 @@ class FilesResource {
    * [id] The id for the file in question.
    * [content] the File
    */
-  Future<File> patch(String id, File content, [bool updateViewedDate = UNSPECIFIED, bool updateModifiedDate = UNSPECIFIED, bool newRevision = UNSPECIFIED]) {
+  core.Future<File> patch(core.String id, File content, [core.bool updateViewedDate = UNSPECIFIED, core.bool updateModifiedDate = UNSPECIFIED, core.bool newRevision = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -125,19 +122,13 @@ class FilesResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(File.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "files/{id}").generate($pathParams, $queryParams);
-    final $completer = new Completer<File>();
     final $http = new HttpRequest($url, "PATCH", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = File.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => File.parse(JSON.parse($text)));
   }
 
   // Method FilesResource.Update
@@ -146,7 +137,7 @@ class FilesResource {
    * [id] The id for the file in question.
    * [content] the File
    */
-  Future<File> update(String id, File content, [bool updateViewedDate = UNSPECIFIED, bool updateModifiedDate = UNSPECIFIED, bool newRevision = UNSPECIFIED]) {
+  core.Future<File> update(core.String id, File content, [core.bool updateViewedDate = UNSPECIFIED, core.bool updateModifiedDate = UNSPECIFIED, core.bool newRevision = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -165,19 +156,13 @@ class FilesResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(File.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "files/{id}").generate($pathParams, $queryParams);
-    final $completer = new Completer<File>();
     final $http = new HttpRequest($url, "PUT", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = File.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => File.parse(JSON.parse($text)));
   }
 
   // Method FilesResource.Get
@@ -185,7 +170,7 @@ class FilesResource {
    * Gets a file's metadata by id.
    * [id] The id for the file in question.
    */
-  Future<File> get(String id, [bool updateViewedDate = UNSPECIFIED, FilesResourceGetProjection projection = UNSPECIFIED]) {
+  core.Future<File> get(core.String id, [core.bool updateViewedDate = UNSPECIFIED, FilesResourceGetProjection projection = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -201,31 +186,25 @@ class FilesResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "files/{id}").generate($pathParams, $queryParams);
-    final $completer = new Completer<File>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = File.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => File.parse(JSON.parse($text)));
   }
 }
 
 // Enum FilesResource.Get.Projection
-class FilesResourceGetProjection implements Hashable {
+class FilesResourceGetProjection extends core.Object implements core.Hashable {
   /** Includes only the basic metadata fields */
   static final FilesResourceGetProjection BASIC = const FilesResourceGetProjection._internal("BASIC", 0);
   /** Includes all metadata fields */
   static final FilesResourceGetProjection FULL = const FilesResourceGetProjection._internal("FULL", 1);
 
   /** All values of this enumeration */
-  static final List<FilesResourceGetProjection> values = const <FilesResourceGetProjection>[
+  static final core.List<FilesResourceGetProjection> values = const <FilesResourceGetProjection>[
     BASIC,
     FULL,
   ];
@@ -237,36 +216,36 @@ class FilesResourceGetProjection implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static FilesResourceGetProjection valueOf(String item) => _valuesMap[item];
+  static FilesResourceGetProjection valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const FilesResourceGetProjection._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const FilesResourceGetProjection._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Projection".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Projection".hashCode();
 }
 
 // Schema .File
 class File extends IdentityHash {
   /** The mimetype of the file */
-  String mimeType;
+  core.String mimeType;
 
   /** A link back to this file. */
-  String selfLink;
+  core.String selfLink;
 
   /** The type of file. This is always drive#file */
-  String kind;
+  core.String kind;
 
   /** A short description of the file */
-  String description;
+  core.String description;
 
   /** The title of this file. */
-  String title;
+  core.String title;
 
   /** Last time this file was modified by the user (formatted RFC 3339 timestamp). */
-  String modifiedByMeDate;
+  core.String modifiedByMeDate;
 
   /** Labels for the file. */
   FileLabels labels;
@@ -279,52 +258,52 @@ class File extends IdentityHash {
  * file in all of the provided folders. If no folders are provided, the file will be placed in the
  * default root folder. On update, this field is ignored.
  */
-  List<FileParentsCollection> parentsCollection;
+  core.List<FileParentsCollection> parentsCollection;
 
   /**
  * Short term download URL for the file. This will only be populated on files with content stored in
  * Drive.
  */
-  String downloadUrl;
+  core.String downloadUrl;
 
   /** The permissions for the authenticated user on this file. */
   Permission userPermission;
 
   /** ETag of the file. */
-  String etag;
+  core.String etag;
 
   /**
  * The size of the file in bytes. This will only be populated on files with content stored in Drive.
  */
-  String fileSize;
+  core.String fileSize;
 
   /** Create time for this file (formatted ISO8601 timestamp). */
-  String createdDate;
+  core.String createdDate;
 
   /**
  * The file extension used when downloading this file. This field is read only. To set the
  * extension, include it on title when creating the file. This will only be populated on files with
  * content stored in Drive.
  */
-  String fileExtension;
+  core.String fileExtension;
 
   /** Last time this file was viewed by anyone (formatted RFC 3339 timestamp). */
-  String lastViewedDate;
+  core.String lastViewedDate;
 
   /** The id of the file. */
-  String id;
+  core.String id;
 
   /**
  * An MD5 checksum for the content of this file. This will only be populated on files with content
  * stored in Drive.
  */
-  String md5Checksum;
+  core.String md5Checksum;
 
   /** Last time this file was modified by anyone (formatted RFC 3339 timestamp). */
-  String modifiedDate;
+  core.String modifiedDate;
 
   /** Parses an instance from its JSON representation. */
-  static File parse(Map<String, Object> json) {
+  static File parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new File();
     result.mimeType = identity(json["mimeType"]);
@@ -349,9 +328,9 @@ class File extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(File value) {
+  static core.Object serialize(File value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["mimeType"] = identity(value.mimeType);
     result["selfLink"] = identity(value.selfLink);
     result["kind"] = identity(value.kind);
@@ -379,19 +358,19 @@ class File extends IdentityHash {
 // Schema File.FileIndexableText
 class FileIndexableText extends IdentityHash {
   /** The text to be indexed for this file */
-  String text;
+  core.String text;
 
   /** Parses an instance from its JSON representation. */
-  static FileIndexableText parse(Map<String, Object> json) {
+  static FileIndexableText parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new FileIndexableText();
     result.text = identity(json["text"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(FileIndexableText value) {
+  static core.Object serialize(FileIndexableText value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["text"] = identity(value.text);
     return result;
   }
@@ -401,16 +380,16 @@ class FileIndexableText extends IdentityHash {
 // Schema File.FileLabels
 class FileLabels extends IdentityHash {
   /** Whether this file is hidden from the user */
-  bool hidden;
+  core.bool hidden;
 
   /** Whether this file is starred by the user. */
-  bool starred;
+  core.bool starred;
 
   /** Whether this file has been trashed. */
-  bool trashed;
+  core.bool trashed;
 
   /** Parses an instance from its JSON representation. */
-  static FileLabels parse(Map<String, Object> json) {
+  static FileLabels parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new FileLabels();
     result.hidden = identity(json["hidden"]);
@@ -419,9 +398,9 @@ class FileLabels extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(FileLabels value) {
+  static core.Object serialize(FileLabels value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["hidden"] = identity(value.hidden);
     result["starred"] = identity(value.starred);
     result["trashed"] = identity(value.trashed);
@@ -433,13 +412,13 @@ class FileLabels extends IdentityHash {
 // Schema File.FileParentsCollection
 class FileParentsCollection extends IdentityHash {
   /** A link to get the metadata for this parent */
-  String parentLink;
+  core.String parentLink;
 
   /** The id of this parent */
-  String id;
+  core.String id;
 
   /** Parses an instance from its JSON representation. */
-  static FileParentsCollection parse(Map<String, Object> json) {
+  static FileParentsCollection parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new FileParentsCollection();
     result.parentLink = identity(json["parentLink"]);
@@ -447,9 +426,9 @@ class FileParentsCollection extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(FileParentsCollection value) {
+  static core.Object serialize(FileParentsCollection value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["parentLink"] = identity(value.parentLink);
     result["id"] = identity(value.id);
     return result;
@@ -460,22 +439,22 @@ class FileParentsCollection extends IdentityHash {
 // Schema .Permission
 class Permission extends IdentityHash {
   /** The type of permission (For example: user, group etc). */
-  String type;
+  core.String type;
 
   /** The kind of this permission. This is always drive#permission */
-  String kind;
+  core.String kind;
 
   /** An etag for this permission. */
-  String etag;
+  core.String etag;
 
   /** The role that this permission describes. (For example: reader, writer, owner) */
-  String role;
+  core.String role;
 
   /** Any additional roles that this permission describes. */
-  List<String> additionalRoles;
+  core.List<core.String> additionalRoles;
 
   /** Parses an instance from its JSON representation. */
-  static Permission parse(Map<String, Object> json) {
+  static Permission parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Permission();
     result.type = identity(json["type"]);
@@ -486,9 +465,9 @@ class Permission extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Permission value) {
+  static core.Object serialize(Permission value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["type"] = identity(value.type);
     result["kind"] = identity(value.kind);
     result["etag"] = identity(value.etag);
@@ -500,12 +479,12 @@ class Permission extends IdentityHash {
 }
 
 // Enum DriveApi.Alt
-class DriveApiAlt implements Hashable {
+class DriveApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/json */
   static final DriveApiAlt JSON = const DriveApiAlt._internal("json", 0);
 
   /** All values of this enumeration */
-  static final List<DriveApiAlt> values = const <DriveApiAlt>[
+  static final core.List<DriveApiAlt> values = const <DriveApiAlt>[
     JSON,
   ];
 
@@ -515,14 +494,14 @@ class DriveApiAlt implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static DriveApiAlt valueOf(String item) => _valuesMap[item];
+  static DriveApiAlt valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const DriveApiAlt._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const DriveApiAlt._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Alt".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Alt".hashCode();
 }
 

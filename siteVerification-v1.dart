@@ -1,4 +1,5 @@
 #library("siteVerification");
+#import('dart:core', prefix: 'core');
 #import('dart:json');
 
 #import('utils.dart');
@@ -8,59 +9,61 @@
 /**
  * Lets you programatically verify ownership of websites or domains with Google.
  */
-class SiteVerificationApi {
+class SiteVerificationApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
-  final String baseUrl;
+  final core.String baseUrl;
+  /** How we should identify ourselves to the service. */
+  Authenticator authenticator;
   /** The client library version */
-  final String clientVersion = "0.1";
+  final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
-  final String applicationName;
+  final core.String applicationName;
   SiteVerificationApi get _$service() => this;
   WebResourceResource _webResource;
   WebResourceResource get webResource() => _webResource;
   
   /** Returns response with indentations and line breaks. */
-  bool prettyPrint;
+  core.bool prettyPrint;
 
   /** Selector specifying which fields to include in a partial response. */
-  String fields;
+  core.String fields;
 
   /**
    * Available to use for quota purposes for server-side applications. Can be any arbitrary string
    * assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.
    */
-  String quotaUser;
+  core.String quotaUser;
 
   /** OAuth 2.0 token for the current user. */
-  String oauthToken;
+  core.String oauthToken;
 
   /**
    * API key. Your API key identifies your project and provides you with API access, quota, and
    * reports. Required unless you provide an OAuth 2.0 token.
    */
-  String key;
+  core.String key;
 
   /**
    * IP address of the site where the request originates. Use this if you want to enforce per-user
    * limits.
    */
-  String userIp;
+  core.String userIp;
 
   /** Data format for the response. */
   SiteVerificationApiAlt alt;
 
 
-  SiteVerificationApi([this.baseUrl = "https://www.googleapis.com/siteVerification/v1/", this.applicationName]) { 
+  SiteVerificationApi([this.baseUrl = "https://www.googleapis.com/siteVerification/v1/", this.applicationName, this.authenticator]) { 
     _webResource = new WebResourceResource._internal(this);
   }
-  String get userAgent() {
+  core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}siteVerification/v1/20111216 google-api-dart-client/${clientVersion}";
   }
 }
 
 // Resource .WebResourceResource
-class WebResourceResource {
+class WebResourceResource extends core.Object {
   final SiteVerificationApi _$service;
   
   WebResourceResource._internal(SiteVerificationApi $service) : _$service = $service;
@@ -71,7 +74,7 @@ class WebResourceResource {
    * [verificationMethod] The method to use for verifying a site or domain.
    * [content] the SiteVerificationWebResourceResource
    */
-  Future<SiteVerificationWebResourceResource> insert(String verificationMethod, SiteVerificationWebResourceResource content) {
+  core.Future<SiteVerificationWebResourceResource> insert(core.String verificationMethod, SiteVerificationWebResourceResource content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -87,19 +90,13 @@ class WebResourceResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(SiteVerificationWebResourceResource.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "webResource").generate($pathParams, $queryParams);
-    final $completer = new Completer<SiteVerificationWebResourceResource>();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = SiteVerificationWebResourceResource.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => SiteVerificationWebResourceResource.parse(JSON.parse($text)));
   }
 
   // Method WebResourceResource.Get
@@ -107,7 +104,7 @@ class WebResourceResource {
    * Get the most current data for a website or domain.
    * [id] The id of a verified site or domain.
    */
-  Future<SiteVerificationWebResourceResource> get(String id) {
+  core.Future<SiteVerificationWebResourceResource> get(core.String id) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -121,26 +118,20 @@ class WebResourceResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "webResource/{id}").generate($pathParams, $queryParams);
-    final $completer = new Completer<SiteVerificationWebResourceResource>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = SiteVerificationWebResourceResource.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => SiteVerificationWebResourceResource.parse(JSON.parse($text)));
   }
 
   // Method WebResourceResource.List
   /**
    * Get the list of your verified websites and domains.
    */
-  Future<SiteVerificationWebResourceListResponse> list() {
+  core.Future<SiteVerificationWebResourceListResponse> list() {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -153,19 +144,13 @@ class WebResourceResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "webResource").generate($pathParams, $queryParams);
-    final $completer = new Completer<SiteVerificationWebResourceListResponse>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = SiteVerificationWebResourceListResponse.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => SiteVerificationWebResourceListResponse.parse(JSON.parse($text)));
   }
 
   // Method WebResourceResource.Update
@@ -174,7 +159,7 @@ class WebResourceResource {
    * [id] The id of a verified site or domain.
    * [content] the SiteVerificationWebResourceResource
    */
-  Future<SiteVerificationWebResourceResource> update(String id, SiteVerificationWebResourceResource content) {
+  core.Future<SiteVerificationWebResourceResource> update(core.String id, SiteVerificationWebResourceResource content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -190,19 +175,13 @@ class WebResourceResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(SiteVerificationWebResourceResource.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "webResource/{id}").generate($pathParams, $queryParams);
-    final $completer = new Completer<SiteVerificationWebResourceResource>();
     final $http = new HttpRequest($url, "PUT", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = SiteVerificationWebResourceResource.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => SiteVerificationWebResourceResource.parse(JSON.parse($text)));
   }
 
   // Method WebResourceResource.Patch
@@ -211,7 +190,7 @@ class WebResourceResource {
    * [id] The id of a verified site or domain.
    * [content] the SiteVerificationWebResourceResource
    */
-  Future<SiteVerificationWebResourceResource> patch(String id, SiteVerificationWebResourceResource content) {
+  core.Future<SiteVerificationWebResourceResource> patch(core.String id, SiteVerificationWebResourceResource content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -227,19 +206,13 @@ class WebResourceResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(SiteVerificationWebResourceResource.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "webResource/{id}").generate($pathParams, $queryParams);
-    final $completer = new Completer<SiteVerificationWebResourceResource>();
     final $http = new HttpRequest($url, "PATCH", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = SiteVerificationWebResourceResource.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => SiteVerificationWebResourceResource.parse(JSON.parse($text)));
   }
 
   // Method WebResourceResource.GetToken
@@ -247,7 +220,7 @@ class WebResourceResource {
    * Get a verification token for placing on a website or domain.
    * [content] the SiteVerificationWebResourceGettokenRequest
    */
-  Future<SiteVerificationWebResourceGettokenResponse> getToken(SiteVerificationWebResourceGettokenRequest content) {
+  core.Future<SiteVerificationWebResourceGettokenResponse> getToken(SiteVerificationWebResourceGettokenRequest content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -262,19 +235,13 @@ class WebResourceResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(SiteVerificationWebResourceGettokenRequest.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "token").generate($pathParams, $queryParams);
-    final $completer = new Completer<SiteVerificationWebResourceGettokenResponse>();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = SiteVerificationWebResourceGettokenResponse.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => SiteVerificationWebResourceGettokenResponse.parse(JSON.parse($text)));
   }
 
   // Method WebResourceResource.Delete
@@ -282,7 +249,7 @@ class WebResourceResource {
    * Relinquish ownership of a website or domain.
    * [id] The id of a verified site or domain.
    */
-  Future delete(String id) {
+  core.Future delete(core.String id) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -296,19 +263,13 @@ class WebResourceResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "webResource/{id}").generate($pathParams, $queryParams);
-    final $completer = new Completer();
     final $http = new HttpRequest($url, "DELETE", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = identity(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => identity(JSON.parse($text)));
   }
 }
 
@@ -318,13 +279,13 @@ class SiteVerificationWebResourceGettokenRequest extends IdentityHash {
  * The verification method that will be used to verify this site. For sites, 'FILE' or 'META'
  * methods may be used. For domains, only 'DNS' may be used.
  */
-  String verificationMethod;
+  core.String verificationMethod;
 
   /** The site for which a verification token will be generated. */
   SiteVerificationWebResourceGettokenRequestSite site;
 
   /** Parses an instance from its JSON representation. */
-  static SiteVerificationWebResourceGettokenRequest parse(Map<String, Object> json) {
+  static SiteVerificationWebResourceGettokenRequest parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new SiteVerificationWebResourceGettokenRequest();
     result.verificationMethod = identity(json["verificationMethod"]);
@@ -332,9 +293,9 @@ class SiteVerificationWebResourceGettokenRequest extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(SiteVerificationWebResourceGettokenRequest value) {
+  static core.Object serialize(SiteVerificationWebResourceGettokenRequest value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["verificationMethod"] = identity(value.verificationMethod);
     result["site"] = SiteVerificationWebResourceGettokenRequestSite.serialize(value.site);
     return result;
@@ -348,13 +309,13 @@ class SiteVerificationWebResourceGettokenRequestSite extends IdentityHash {
  * The site identifier. If the type is set to SITE, the identifier is a URL. If the type is set to
  * INET_DOMAIN, the site identifier is a domain name.
  */
-  String identifier;
+  core.String identifier;
 
   /** The type of resource to be verified. Can be SITE or INET_DOMAIN (domain name). */
-  String type;
+  core.String type;
 
   /** Parses an instance from its JSON representation. */
-  static SiteVerificationWebResourceGettokenRequestSite parse(Map<String, Object> json) {
+  static SiteVerificationWebResourceGettokenRequestSite parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new SiteVerificationWebResourceGettokenRequestSite();
     result.identifier = identity(json["identifier"]);
@@ -362,9 +323,9 @@ class SiteVerificationWebResourceGettokenRequestSite extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(SiteVerificationWebResourceGettokenRequestSite value) {
+  static core.Object serialize(SiteVerificationWebResourceGettokenRequestSite value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["identifier"] = identity(value.identifier);
     result["type"] = identity(value.type);
     return result;
@@ -378,7 +339,7 @@ class SiteVerificationWebResourceGettokenResponse extends IdentityHash {
  * The verification token. The token must be placed appropriately in order for verification to
  * succeed.
  */
-  String token;
+  core.String token;
 
   /**
  * The verification method to use in conjunction with this token. For FILE, the token should be
@@ -386,10 +347,10 @@ class SiteVerificationWebResourceGettokenResponse extends IdentityHash {
  * the token should be placed in the HEAD tag of the default page that is loaded for the site. For
  * DNS, the token should be placed in a TXT record of the domain.
  */
-  String method;
+  core.String method;
 
   /** Parses an instance from its JSON representation. */
-  static SiteVerificationWebResourceGettokenResponse parse(Map<String, Object> json) {
+  static SiteVerificationWebResourceGettokenResponse parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new SiteVerificationWebResourceGettokenResponse();
     result.token = identity(json["token"]);
@@ -397,9 +358,9 @@ class SiteVerificationWebResourceGettokenResponse extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(SiteVerificationWebResourceGettokenResponse value) {
+  static core.Object serialize(SiteVerificationWebResourceGettokenResponse value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["token"] = identity(value.token);
     result["method"] = identity(value.method);
     return result;
@@ -410,19 +371,19 @@ class SiteVerificationWebResourceGettokenResponse extends IdentityHash {
 // Schema .SiteVerificationWebResourceListResponse
 class SiteVerificationWebResourceListResponse extends IdentityHash {
   /** The list of sites that are owned by the authenticated user. */
-  List<SiteVerificationWebResourceResource> items;
+  core.List<SiteVerificationWebResourceResource> items;
 
   /** Parses an instance from its JSON representation. */
-  static SiteVerificationWebResourceListResponse parse(Map<String, Object> json) {
+  static SiteVerificationWebResourceListResponse parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new SiteVerificationWebResourceListResponse();
     result.items = map(SiteVerificationWebResourceResource.parse)(json["items"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(SiteVerificationWebResourceListResponse value) {
+  static core.Object serialize(SiteVerificationWebResourceListResponse value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["items"] = map(SiteVerificationWebResourceResource.serialize)(value.items);
     return result;
   }
@@ -432,19 +393,19 @@ class SiteVerificationWebResourceListResponse extends IdentityHash {
 // Schema .SiteVerificationWebResourceResource
 class SiteVerificationWebResourceResource extends IdentityHash {
   /** The email addresses of all verified owners. */
-  List<String> owners;
+  core.List<core.String> owners;
 
   /**
  * The string used to identify this site. This value should be used in the "id" portion of the REST
  * URL for the Get, Update, and Delete operations.
  */
-  String id;
+  core.String id;
 
   /** The address and type of a site that is verified or will be verified. */
   SiteVerificationWebResourceResourceSite site;
 
   /** Parses an instance from its JSON representation. */
-  static SiteVerificationWebResourceResource parse(Map<String, Object> json) {
+  static SiteVerificationWebResourceResource parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new SiteVerificationWebResourceResource();
     result.owners = map(identity)(json["owners"]);
@@ -453,9 +414,9 @@ class SiteVerificationWebResourceResource extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(SiteVerificationWebResourceResource value) {
+  static core.Object serialize(SiteVerificationWebResourceResource value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["owners"] = map(identity)(value.owners);
     result["id"] = identity(value.id);
     result["site"] = SiteVerificationWebResourceResourceSite.serialize(value.site);
@@ -470,13 +431,13 @@ class SiteVerificationWebResourceResourceSite extends IdentityHash {
  * The site identifier. If the type is set to SITE, the identifier is a URL. If the type is set to
  * INET_DOMAIN, the site identifier is a domain name.
  */
-  String identifier;
+  core.String identifier;
 
   /** The site type. Can be SITE or INET_DOMAIN (domain name). */
-  String type;
+  core.String type;
 
   /** Parses an instance from its JSON representation. */
-  static SiteVerificationWebResourceResourceSite parse(Map<String, Object> json) {
+  static SiteVerificationWebResourceResourceSite parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new SiteVerificationWebResourceResourceSite();
     result.identifier = identity(json["identifier"]);
@@ -484,9 +445,9 @@ class SiteVerificationWebResourceResourceSite extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(SiteVerificationWebResourceResourceSite value) {
+  static core.Object serialize(SiteVerificationWebResourceResourceSite value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["identifier"] = identity(value.identifier);
     result["type"] = identity(value.type);
     return result;
@@ -495,12 +456,12 @@ class SiteVerificationWebResourceResourceSite extends IdentityHash {
 }
 
 // Enum SiteVerificationApi.Alt
-class SiteVerificationApiAlt implements Hashable {
+class SiteVerificationApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/json */
   static final SiteVerificationApiAlt JSON = const SiteVerificationApiAlt._internal("json", 0);
 
   /** All values of this enumeration */
-  static final List<SiteVerificationApiAlt> values = const <SiteVerificationApiAlt>[
+  static final core.List<SiteVerificationApiAlt> values = const <SiteVerificationApiAlt>[
     JSON,
   ];
 
@@ -510,14 +471,14 @@ class SiteVerificationApiAlt implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static SiteVerificationApiAlt valueOf(String item) => _valuesMap[item];
+  static SiteVerificationApiAlt valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const SiteVerificationApiAlt._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const SiteVerificationApiAlt._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Alt".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Alt".hashCode();
 }
 

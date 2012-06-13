@@ -1,4 +1,5 @@
 #library("analytics");
+#import('dart:core', prefix: 'core');
 #import('dart:json');
 
 #import('utils.dart');
@@ -8,13 +9,15 @@
 /**
  * View and manage your Google Analytics data
  */
-class AnalyticsApi {
+class AnalyticsApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
-  final String baseUrl;
+  final core.String baseUrl;
+  /** How we should identify ourselves to the service. */
+  Authenticator authenticator;
   /** The client library version */
-  final String clientVersion = "0.1";
+  final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
-  final String applicationName;
+  final core.String applicationName;
   AnalyticsApi get _$service() => this;
   ManagementResource _management;
   ManagementResource get management() => _management;
@@ -22,48 +25,48 @@ class AnalyticsApi {
   DataResource get data() => _data;
   
   /** Returns response with indentations and line breaks. */
-  bool prettyPrint;
+  core.bool prettyPrint;
 
   /** Selector specifying which fields to include in a partial response. */
-  String fields;
+  core.String fields;
 
   /**
    * Available to use for quota purposes for server-side applications. Can be any arbitrary string
    * assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.
    */
-  String quotaUser;
+  core.String quotaUser;
 
   /** OAuth 2.0 token for the current user. */
-  String oauthToken;
+  core.String oauthToken;
 
   /**
    * API key. Your API key identifies your project and provides you with API access, quota, and
    * reports. Required unless you provide an OAuth 2.0 token.
    */
-  String key;
+  core.String key;
 
   /**
    * IP address of the site where the request originates. Use this if you want to enforce per-user
    * limits.
    */
-  String userIp;
+  core.String userIp;
 
   /** Data format for the response. */
   AnalyticsApiAlt alt;
 
 
-  AnalyticsApi([this.baseUrl = "https://www.googleapis.com/analytics/v3/", this.applicationName]) { 
+  AnalyticsApi([this.baseUrl = "https://www.googleapis.com/analytics/v3/", this.applicationName, this.authenticator]) { 
     _management = new ManagementResource._internal(this);
     _data = new DataResource._internal(this);
   }
-  String get userAgent() {
+  core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}analytics/v3/20120602 google-api-dart-client/${clientVersion}";
   }
 }
 
 // Resource .ManagementResource
-class ManagementResource {
+class ManagementResource extends core.Object {
   final AnalyticsApi _$service;
   final ManagementWebpropertiesResourceResource webproperties;
   final ManagementSegmentsResourceResource segments;
@@ -81,7 +84,7 @@ class ManagementResource {
 
 
 // Resource ManagementResource.ManagementWebpropertiesResourceResource
-class ManagementWebpropertiesResourceResource {
+class ManagementWebpropertiesResourceResource extends core.Object {
   final AnalyticsApi _$service;
   
   ManagementWebpropertiesResourceResource._internal(AnalyticsApi $service) : _$service = $service;
@@ -92,7 +95,7 @@ class ManagementWebpropertiesResourceResource {
    * [accountId] Account ID to retrieve web properties for. Can either be a specific account ID or '~all', which
    *        refers to all the accounts that user has access to.
    */
-  Future<Webproperties> list(String accountId, [int maxResults = UNSPECIFIED, int startIndex = UNSPECIFIED]) {
+  core.Future<Webproperties> list(core.String accountId, [core.int maxResults = UNSPECIFIED, core.int startIndex = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -108,24 +111,18 @@ class ManagementWebpropertiesResourceResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "management/accounts/{accountId}/webproperties").generate($pathParams, $queryParams);
-    final $completer = new Completer<Webproperties>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Webproperties.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Webproperties.parse(JSON.parse($text)));
   }
 }
 
 // Resource ManagementResource.ManagementSegmentsResourceResource
-class ManagementSegmentsResourceResource {
+class ManagementSegmentsResourceResource extends core.Object {
   final AnalyticsApi _$service;
   
   ManagementSegmentsResourceResource._internal(AnalyticsApi $service) : _$service = $service;
@@ -134,7 +131,7 @@ class ManagementSegmentsResourceResource {
   /**
    * Lists advanced segments to which the user has access.
    */
-  Future<Segments> list([int maxResults = UNSPECIFIED, int startIndex = UNSPECIFIED]) {
+  core.Future<Segments> list([core.int maxResults = UNSPECIFIED, core.int startIndex = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -149,24 +146,18 @@ class ManagementSegmentsResourceResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "management/segments").generate($pathParams, $queryParams);
-    final $completer = new Completer<Segments>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Segments.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Segments.parse(JSON.parse($text)));
   }
 }
 
 // Resource ManagementResource.ManagementAccountsResourceResource
-class ManagementAccountsResourceResource {
+class ManagementAccountsResourceResource extends core.Object {
   final AnalyticsApi _$service;
   
   ManagementAccountsResourceResource._internal(AnalyticsApi $service) : _$service = $service;
@@ -175,7 +166,7 @@ class ManagementAccountsResourceResource {
   /**
    * Lists all accounts to which the user has access.
    */
-  Future<Accounts> list([int maxResults = UNSPECIFIED, int startIndex = UNSPECIFIED]) {
+  core.Future<Accounts> list([core.int maxResults = UNSPECIFIED, core.int startIndex = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -190,24 +181,18 @@ class ManagementAccountsResourceResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "management/accounts").generate($pathParams, $queryParams);
-    final $completer = new Completer<Accounts>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Accounts.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Accounts.parse(JSON.parse($text)));
   }
 }
 
 // Resource ManagementResource.ManagementGoalsResourceResource
-class ManagementGoalsResourceResource {
+class ManagementGoalsResourceResource extends core.Object {
   final AnalyticsApi _$service;
   
   ManagementGoalsResourceResource._internal(AnalyticsApi $service) : _$service = $service;
@@ -222,7 +207,7 @@ class ManagementGoalsResourceResource {
    * [profileId] Profile ID to retrieve goals for. Can either be a specific profile ID or '~all', which refers to all
    *        the profiles that user has access to.
    */
-  Future<Goals> list(String accountId, String webPropertyId, String profileId, [int maxResults = UNSPECIFIED, int startIndex = UNSPECIFIED]) {
+  core.Future<Goals> list(core.String accountId, core.String webPropertyId, core.String profileId, [core.int maxResults = UNSPECIFIED, core.int startIndex = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -240,24 +225,18 @@ class ManagementGoalsResourceResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/goals").generate($pathParams, $queryParams);
-    final $completer = new Completer<Goals>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Goals.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Goals.parse(JSON.parse($text)));
   }
 }
 
 // Resource ManagementResource.ManagementProfilesResourceResource
-class ManagementProfilesResourceResource {
+class ManagementProfilesResourceResource extends core.Object {
   final AnalyticsApi _$service;
   
   ManagementProfilesResourceResource._internal(AnalyticsApi $service) : _$service = $service;
@@ -270,7 +249,7 @@ class ManagementProfilesResourceResource {
    * [webPropertyId] Web property ID for the profiles to retrieve. Can either be a specific web property ID or '~all',
    *        which refers to all the web properties to which the user has access.
    */
-  Future<Profiles> list(String accountId, String webPropertyId, [int maxResults = UNSPECIFIED, int startIndex = UNSPECIFIED]) {
+  core.Future<Profiles> list(core.String accountId, core.String webPropertyId, [core.int maxResults = UNSPECIFIED, core.int startIndex = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -287,24 +266,18 @@ class ManagementProfilesResourceResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles").generate($pathParams, $queryParams);
-    final $completer = new Completer<Profiles>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Profiles.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Profiles.parse(JSON.parse($text)));
   }
 }
 
 // Resource .DataResource
-class DataResource {
+class DataResource extends core.Object {
   final AnalyticsApi _$service;
   final DataGaResourceResource ga;
   
@@ -314,7 +287,7 @@ class DataResource {
 
 
 // Resource DataResource.DataGaResourceResource
-class DataGaResourceResource {
+class DataGaResourceResource extends core.Object {
   final AnalyticsApi _$service;
   
   DataGaResourceResource._internal(AnalyticsApi $service) : _$service = $service;
@@ -331,7 +304,7 @@ class DataGaResourceResource {
    * [metrics] A comma-separated list of Analytics metrics. E.g., 'ga:visits,ga:pageviews'. At least one metric
    *        must be specified.
    */
-  Future<GaData> get(String ids, String startDate, String endDate, String metrics, [int maxResults = UNSPECIFIED, String sort = UNSPECIFIED, String dimensions = UNSPECIFIED, int startIndex = UNSPECIFIED, String segment = UNSPECIFIED, String filters = UNSPECIFIED]) {
+  core.Future<GaData> get(core.String ids, core.String startDate, core.String endDate, core.String metrics, [core.int maxResults = UNSPECIFIED, core.String sort = UNSPECIFIED, core.String dimensions = UNSPECIFIED, core.int startIndex = UNSPECIFIED, core.String segment = UNSPECIFIED, core.String filters = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -354,47 +327,41 @@ class DataGaResourceResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "data/ga").generate($pathParams, $queryParams);
-    final $completer = new Completer<GaData>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = GaData.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => GaData.parse(JSON.parse($text)));
   }
 }
 
 // Schema .Account
 class Account extends IdentityHash {
   /** Resource type for Analytics account. */
-  String kind;
+  core.String kind;
 
   /** Account name. */
-  String name;
+  core.String name;
 
   /** Time the account was created. */
-  String created;
+  core.String created;
 
   /** Time the account was last modified. */
-  String updated;
+  core.String updated;
 
   /** Child link for an account entry. Points to the list of web properties for this account. */
   AccountChildLink childLink;
 
   /** Account ID. */
-  String id;
+  core.String id;
 
   /** Link for this account. */
-  String selfLink;
+  core.String selfLink;
 
   /** Parses an instance from its JSON representation. */
-  static Account parse(Map<String, Object> json) {
+  static Account parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Account();
     result.kind = identity(json["kind"]);
@@ -407,9 +374,9 @@ class Account extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Account value) {
+  static core.Object serialize(Account value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["kind"] = identity(value.kind);
     result["name"] = identity(value.name);
     result["created"] = identity(value.created);
@@ -425,13 +392,13 @@ class Account extends IdentityHash {
 // Schema Account.AccountChildLink
 class AccountChildLink extends IdentityHash {
   /** Link to the list of web properties for this account. */
-  String href;
+  core.String href;
 
   /** Type of the child link. Its value is "analytics#webproperties". */
-  String type;
+  core.String type;
 
   /** Parses an instance from its JSON representation. */
-  static AccountChildLink parse(Map<String, Object> json) {
+  static AccountChildLink parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new AccountChildLink();
     result.href = identity(json["href"]);
@@ -439,9 +406,9 @@ class AccountChildLink extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(AccountChildLink value) {
+  static core.Object serialize(AccountChildLink value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["href"] = identity(value.href);
     result["type"] = identity(value.type);
     return result;
@@ -452,40 +419,40 @@ class AccountChildLink extends IdentityHash {
 // Schema .Accounts
 class Accounts extends IdentityHash {
   /** Email ID of the authenticated user */
-  String username;
+  core.String username;
 
   /** Collection type. */
-  String kind;
+  core.String kind;
 
   /** A list of accounts. */
-  List<Account> items;
+  core.List<Account> items;
 
   /**
  * The maximum number of entries the response can contain, regardless of the actual number of
  * entries returned. Its value ranges from 1 to 10,000 with a value of 1000 by default, or otherwise
  * specified by the max-results query parameter.
  */
-  int itemsPerPage;
+  core.int itemsPerPage;
 
   /** Previous link for this account collection. */
-  String previousLink;
+  core.String previousLink;
 
   /**
  * The starting index of the entries, which is 1 by default or otherwise specified by the start-
  * index query parameter.
  */
-  int startIndex;
+  core.int startIndex;
 
   /** Next link for this account collection. */
-  String nextLink;
+  core.String nextLink;
 
   /**
  * The total number of results for the query, regardless of the number of results in the response.
  */
-  int totalResults;
+  core.int totalResults;
 
   /** Parses an instance from its JSON representation. */
-  static Accounts parse(Map<String, Object> json) {
+  static Accounts parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Accounts();
     result.username = identity(json["username"]);
@@ -499,9 +466,9 @@ class Accounts extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Accounts value) {
+  static core.Object serialize(Accounts value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["username"] = identity(value.username);
     result["kind"] = identity(value.kind);
     result["items"] = map(Account.serialize)(value.items);
@@ -518,45 +485,45 @@ class Accounts extends IdentityHash {
 // Schema .GaData
 class GaData extends IdentityHash {
   /** Resource type. */
-  String kind;
+  core.String kind;
 
   /**
  * Analytics data rows, where each row contains a list of dimension values followed by the metric
  * values. The order of dimensions and metrics is same as specified in the request.
  */
-  List<List<String>> rows;
+  core.List<core.List<core.String>> rows;
 
   /** Determines if Analytics data contains samples. */
-  bool containsSampledData;
+  core.bool containsSampledData;
 
   /** The total number of rows for the query, regardless of the number of rows in the response. */
-  int totalResults;
+  core.int totalResults;
 
   /**
  * The maximum number of rows the response can contain, regardless of the actual number of rows
  * returned. Its value ranges from 1 to 10,000 with a value of 1000 by default, or otherwise
  * specified by the max-results query parameter.
  */
-  int itemsPerPage;
+  core.int itemsPerPage;
 
   /**
  * Total values for the requested metrics over all the results, not just the results returned in
  * this response. The order of the metric totals is same as the metric order specified in the
  * request.
  */
-  Map<String, String> totalsForAllResults;
+  core.Map<String, core.String> totalsForAllResults;
 
   /** Link to next page for this Analytics data query. */
-  String nextLink;
+  core.String nextLink;
 
   /** Unique ID for this data response. */
-  String id;
+  core.String id;
 
   /** Analytics data request query parameters. */
   GaDataQuery query;
 
   /** Link to previous page for this Analytics data query. */
-  String previousLink;
+  core.String previousLink;
 
   /** Information for the profile, for which the Analytics data was requested. */
   GaDataProfileInfo profileInfo;
@@ -565,13 +532,13 @@ class GaData extends IdentityHash {
  * Column headers that list dimension names followed by the metric names. The order of dimensions
  * and metrics is same as specified in the request.
  */
-  List<GaDataColumnHeaders> columnHeaders;
+  core.List<GaDataColumnHeaders> columnHeaders;
 
   /** Link to this page. */
-  String selfLink;
+  core.String selfLink;
 
   /** Parses an instance from its JSON representation. */
-  static GaData parse(Map<String, Object> json) {
+  static GaData parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new GaData();
     result.kind = identity(json["kind"]);
@@ -590,9 +557,9 @@ class GaData extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(GaData value) {
+  static core.Object serialize(GaData value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["kind"] = identity(value.kind);
     result["rows"] = map(map(identity))(value.rows);
     result["containsSampledData"] = identity(value.containsSampledData);
@@ -617,16 +584,16 @@ class GaDataColumnHeaders extends IdentityHash {
  * Data type. Dimension column headers have only STRING as the data type. Metric column headers have
  * data types for metric values such as INTEGER, DOUBLE, CURRENCY etc.
  */
-  String dataType;
+  core.String dataType;
 
   /** Column Type. Either DIMENSION or METRIC. */
-  String columnType;
+  core.String columnType;
 
   /** Column name. */
-  String name;
+  core.String name;
 
   /** Parses an instance from its JSON representation. */
-  static GaDataColumnHeaders parse(Map<String, Object> json) {
+  static GaDataColumnHeaders parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new GaDataColumnHeaders();
     result.dataType = identity(json["dataType"]);
@@ -635,9 +602,9 @@ class GaDataColumnHeaders extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(GaDataColumnHeaders value) {
+  static core.Object serialize(GaDataColumnHeaders value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["dataType"] = identity(value.dataType);
     result["columnType"] = identity(value.columnType);
     result["name"] = identity(value.name);
@@ -649,25 +616,25 @@ class GaDataColumnHeaders extends IdentityHash {
 // Schema GaData.GaDataProfileInfo
 class GaDataProfileInfo extends IdentityHash {
   /** Web Property ID to which this profile belongs. */
-  String webPropertyId;
+  core.String webPropertyId;
 
   /** Internal ID for the web property to which this profile belongs. */
-  String internalWebPropertyId;
+  core.String internalWebPropertyId;
 
   /** Table ID for profile. */
-  String tableId;
+  core.String tableId;
 
   /** Profile ID. */
-  String profileId;
+  core.String profileId;
 
   /** Profile name. */
-  String profileName;
+  core.String profileName;
 
   /** Account ID to which this profile belongs. */
-  String accountId;
+  core.String accountId;
 
   /** Parses an instance from its JSON representation. */
-  static GaDataProfileInfo parse(Map<String, Object> json) {
+  static GaDataProfileInfo parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new GaDataProfileInfo();
     result.webPropertyId = identity(json["webPropertyId"]);
@@ -679,9 +646,9 @@ class GaDataProfileInfo extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(GaDataProfileInfo value) {
+  static core.Object serialize(GaDataProfileInfo value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["webPropertyId"] = identity(value.webPropertyId);
     result["internalWebPropertyId"] = identity(value.internalWebPropertyId);
     result["tableId"] = identity(value.tableId);
@@ -696,37 +663,37 @@ class GaDataProfileInfo extends IdentityHash {
 // Schema GaData.GaDataQuery
 class GaDataQuery extends IdentityHash {
   /** Maximum results per page. */
-  int maxResults;
+  core.int maxResults;
 
   /** List of dimensions or metrics based on which Analytics data is sorted. */
-  List<String> sort;
+  core.List<core.String> sort;
 
   /** List of analytics dimensions. */
-  String dimensions;
+  core.String dimensions;
 
   /** Start date. */
-  String startDate;
+  core.String startDate;
 
   /** Start index. */
-  int startIndex;
+  core.int startIndex;
 
   /** Analytics advanced segment. */
-  String segment;
+  core.String segment;
 
   /** Unique table ID. */
-  String ids;
+  core.String ids;
 
   /** List of analytics metrics. */
-  List<String> metrics;
+  core.List<core.String> metrics;
 
   /** Comma-separated list of dimension or metric filters. */
-  String filters;
+  core.String filters;
 
   /** End date. */
-  String endDate;
+  core.String endDate;
 
   /** Parses an instance from its JSON representation. */
-  static GaDataQuery parse(Map<String, Object> json) {
+  static GaDataQuery parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new GaDataQuery();
     result.maxResults = identity(json["max-results"]);
@@ -742,9 +709,9 @@ class GaDataQuery extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(GaDataQuery value) {
+  static core.Object serialize(GaDataQuery value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["max-results"] = identity(value.maxResults);
     result["sort"] = map(identity)(value.sort);
     result["dimensions"] = identity(value.dimensions);
@@ -763,43 +730,43 @@ class GaDataQuery extends IdentityHash {
 // Schema .Goal
 class Goal extends IdentityHash {
   /** Resource type for an Analytics goal. */
-  String kind;
+  core.String kind;
 
   /** Details for the goal of the type VISIT_TIME_ON_SITE. */
   GoalVisitTimeOnSiteDetails visitTimeOnSiteDetails;
 
   /** Goal name. */
-  String name;
+  core.String name;
 
   /** Time this goal was created. */
-  String created;
+  core.String created;
 
   /** Details for the goal of the type URL_DESTINATION. */
   GoalUrlDestinationDetails urlDestinationDetails;
 
   /** Time this goal was last modified. */
-  String updated;
+  core.String updated;
 
   /** Goal value. */
-  double value;
+  core.double value;
 
   /** Details for the goal of the type VISIT_NUM_PAGES. */
   GoalVisitNumPagesDetails visitNumPagesDetails;
 
   /** Internal ID for the web property to which this goal belongs. */
-  String internalWebPropertyId;
+  core.String internalWebPropertyId;
 
   /** Details for the goal of the type EVENT. */
   GoalEventDetails eventDetails;
 
   /** Web property ID to which this goal belongs. The web property ID is of the form UA-XXXXX-YY. */
-  String webPropertyId;
+  core.String webPropertyId;
 
   /** Determines whether this goal is active. */
-  bool active;
+  core.bool active;
 
   /** Profile ID to which this goal belongs. */
-  String profileId;
+  core.String profileId;
 
   /** Parent link for a goal. Points to the profile to which this goal belongs. */
   GoalParentLink parentLink;
@@ -807,19 +774,19 @@ class Goal extends IdentityHash {
   /**
  * Goal type. Possible values are URL_DESTINATION, VISIT_TIME_ON_SITE, VISIT_NUM_PAGES, AND EVENT.
  */
-  String type;
+  core.String type;
 
   /** Goal ID. */
-  String id;
+  core.String id;
 
   /** Link for this goal. */
-  String selfLink;
+  core.String selfLink;
 
   /** Account ID to which this goal belongs. */
-  String accountId;
+  core.String accountId;
 
   /** Parses an instance from its JSON representation. */
-  static Goal parse(Map<String, Object> json) {
+  static Goal parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Goal();
     result.kind = identity(json["kind"]);
@@ -843,9 +810,9 @@ class Goal extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Goal value) {
+  static core.Object serialize(Goal value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["kind"] = identity(value.kind);
     result["visitTimeOnSiteDetails"] = GoalVisitTimeOnSiteDetails.serialize(value.visitTimeOnSiteDetails);
     result["name"] = identity(value.name);
@@ -872,13 +839,13 @@ class Goal extends IdentityHash {
 // Schema Goal.GoalEventDetails
 class GoalEventDetails extends IdentityHash {
   /** List of event conditions. */
-  List<GoalEventDetailsEventConditions> eventConditions;
+  core.List<GoalEventDetailsEventConditions> eventConditions;
 
   /** Determines if the event value should be used as the value for this goal. */
-  bool useEventValue;
+  core.bool useEventValue;
 
   /** Parses an instance from its JSON representation. */
-  static GoalEventDetails parse(Map<String, Object> json) {
+  static GoalEventDetails parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new GoalEventDetails();
     result.eventConditions = map(GoalEventDetailsEventConditions.parse)(json["eventConditions"]);
@@ -886,9 +853,9 @@ class GoalEventDetails extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(GoalEventDetails value) {
+  static core.Object serialize(GoalEventDetails value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["eventConditions"] = map(GoalEventDetailsEventConditions.serialize)(value.eventConditions);
     result["useEventValue"] = identity(value.useEventValue);
     return result;
@@ -899,22 +866,22 @@ class GoalEventDetails extends IdentityHash {
 // Schema Goal.GoalEventDetails.GoalEventDetailsEventConditions
 class GoalEventDetailsEventConditions extends IdentityHash {
   /** Type of this event condition. Possible values are CATEGORY, ACTION, LABEL, or VALUE. */
-  String type;
+  core.String type;
 
   /** Type of the match to be performed. Possible values are REGEXP, BEGINS_WITH, or EXACT. */
-  String matchType;
+  core.String matchType;
 
   /** Expression used for this match. */
-  String expression;
+  core.String expression;
 
   /** Type of comparison. Possible values are LESS_THAN, GREATER_THAN or EQUAL. */
-  String comparisonType;
+  core.String comparisonType;
 
   /** Value used for this comparison. */
-  String comparisonValue;
+  core.String comparisonValue;
 
   /** Parses an instance from its JSON representation. */
-  static GoalEventDetailsEventConditions parse(Map<String, Object> json) {
+  static GoalEventDetailsEventConditions parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new GoalEventDetailsEventConditions();
     result.type = identity(json["type"]);
@@ -925,9 +892,9 @@ class GoalEventDetailsEventConditions extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(GoalEventDetailsEventConditions value) {
+  static core.Object serialize(GoalEventDetailsEventConditions value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["type"] = identity(value.type);
     result["matchType"] = identity(value.matchType);
     result["expression"] = identity(value.expression);
@@ -941,13 +908,13 @@ class GoalEventDetailsEventConditions extends IdentityHash {
 // Schema Goal.GoalParentLink
 class GoalParentLink extends IdentityHash {
   /** Link to the profile to which this goal belongs. */
-  String href;
+  core.String href;
 
   /** Value is "analytics#profile". */
-  String type;
+  core.String type;
 
   /** Parses an instance from its JSON representation. */
-  static GoalParentLink parse(Map<String, Object> json) {
+  static GoalParentLink parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new GoalParentLink();
     result.href = identity(json["href"]);
@@ -955,9 +922,9 @@ class GoalParentLink extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(GoalParentLink value) {
+  static core.Object serialize(GoalParentLink value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["href"] = identity(value.href);
     result["type"] = identity(value.type);
     return result;
@@ -968,22 +935,22 @@ class GoalParentLink extends IdentityHash {
 // Schema Goal.GoalUrlDestinationDetails
 class GoalUrlDestinationDetails extends IdentityHash {
   /** URL for this goal. */
-  String url;
+  core.String url;
 
   /** Determines if the goal URL must exactly match the capitalization of visited URLs. */
-  bool caseSensitive;
+  core.bool caseSensitive;
 
   /** Match type for the goal URL. Possible values are HEAD, EXACT, or REGEX. */
-  String matchType;
+  core.String matchType;
 
   /** List of steps configured for this goal funnel. */
-  List<GoalUrlDestinationDetailsSteps> steps;
+  core.List<GoalUrlDestinationDetailsSteps> steps;
 
   /** Determines if the first step in this goal is required. */
-  bool firstStepRequired;
+  core.bool firstStepRequired;
 
   /** Parses an instance from its JSON representation. */
-  static GoalUrlDestinationDetails parse(Map<String, Object> json) {
+  static GoalUrlDestinationDetails parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new GoalUrlDestinationDetails();
     result.url = identity(json["url"]);
@@ -994,9 +961,9 @@ class GoalUrlDestinationDetails extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(GoalUrlDestinationDetails value) {
+  static core.Object serialize(GoalUrlDestinationDetails value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["url"] = identity(value.url);
     result["caseSensitive"] = identity(value.caseSensitive);
     result["matchType"] = identity(value.matchType);
@@ -1010,16 +977,16 @@ class GoalUrlDestinationDetails extends IdentityHash {
 // Schema Goal.GoalUrlDestinationDetails.GoalUrlDestinationDetailsSteps
 class GoalUrlDestinationDetailsSteps extends IdentityHash {
   /** URL for this step. */
-  String url;
+  core.String url;
 
   /** Step name. */
-  String name;
+  core.String name;
 
   /** Step number. */
-  int number;
+  core.int number;
 
   /** Parses an instance from its JSON representation. */
-  static GoalUrlDestinationDetailsSteps parse(Map<String, Object> json) {
+  static GoalUrlDestinationDetailsSteps parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new GoalUrlDestinationDetailsSteps();
     result.url = identity(json["url"]);
@@ -1028,9 +995,9 @@ class GoalUrlDestinationDetailsSteps extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(GoalUrlDestinationDetailsSteps value) {
+  static core.Object serialize(GoalUrlDestinationDetailsSteps value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["url"] = identity(value.url);
     result["name"] = identity(value.name);
     result["number"] = identity(value.number);
@@ -1042,13 +1009,13 @@ class GoalUrlDestinationDetailsSteps extends IdentityHash {
 // Schema Goal.GoalVisitNumPagesDetails
 class GoalVisitNumPagesDetails extends IdentityHash {
   /** Type of comparison. Possible values are LESS_THAN, GREATER_THAN, or EQUAL. */
-  String comparisonType;
+  core.String comparisonType;
 
   /** Value used for this comparison. */
-  String comparisonValue;
+  core.String comparisonValue;
 
   /** Parses an instance from its JSON representation. */
-  static GoalVisitNumPagesDetails parse(Map<String, Object> json) {
+  static GoalVisitNumPagesDetails parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new GoalVisitNumPagesDetails();
     result.comparisonType = identity(json["comparisonType"]);
@@ -1056,9 +1023,9 @@ class GoalVisitNumPagesDetails extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(GoalVisitNumPagesDetails value) {
+  static core.Object serialize(GoalVisitNumPagesDetails value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["comparisonType"] = identity(value.comparisonType);
     result["comparisonValue"] = identity(value.comparisonValue);
     return result;
@@ -1069,13 +1036,13 @@ class GoalVisitNumPagesDetails extends IdentityHash {
 // Schema Goal.GoalVisitTimeOnSiteDetails
 class GoalVisitTimeOnSiteDetails extends IdentityHash {
   /** Type of comparison. Possible values are LESS_THAN or GREATER_THAN. */
-  String comparisonType;
+  core.String comparisonType;
 
   /** Value used for this comparison. */
-  String comparisonValue;
+  core.String comparisonValue;
 
   /** Parses an instance from its JSON representation. */
-  static GoalVisitTimeOnSiteDetails parse(Map<String, Object> json) {
+  static GoalVisitTimeOnSiteDetails parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new GoalVisitTimeOnSiteDetails();
     result.comparisonType = identity(json["comparisonType"]);
@@ -1083,9 +1050,9 @@ class GoalVisitTimeOnSiteDetails extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(GoalVisitTimeOnSiteDetails value) {
+  static core.Object serialize(GoalVisitTimeOnSiteDetails value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["comparisonType"] = identity(value.comparisonType);
     result["comparisonValue"] = identity(value.comparisonValue);
     return result;
@@ -1096,40 +1063,40 @@ class GoalVisitTimeOnSiteDetails extends IdentityHash {
 // Schema .Goals
 class Goals extends IdentityHash {
   /** Email ID of the authenticated user */
-  String username;
+  core.String username;
 
   /** Collection type. */
-  String kind;
+  core.String kind;
 
   /** A list of goals. */
-  List<Goal> items;
+  core.List<Goal> items;
 
   /**
  * The maximum number of resources the response can contain, regardless of the actual number of
  * resources returned. Its value ranges from 1 to 10,000 with a value of 1000 by default, or
  * otherwise specified by the max-results query parameter.
  */
-  int itemsPerPage;
+  core.int itemsPerPage;
 
   /** Link to previous page for this goal collection. */
-  String previousLink;
+  core.String previousLink;
 
   /**
  * The starting index of the resources, which is 1 by default or otherwise specified by the start-
  * index query parameter.
  */
-  int startIndex;
+  core.int startIndex;
 
   /** Link to next page for this goal collection. */
-  String nextLink;
+  core.String nextLink;
 
   /**
  * The total number of results for the query, regardless of the number of resources in the result.
  */
-  int totalResults;
+  core.int totalResults;
 
   /** Parses an instance from its JSON representation. */
-  static Goals parse(Map<String, Object> json) {
+  static Goals parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Goals();
     result.username = identity(json["username"]);
@@ -1143,9 +1110,9 @@ class Goals extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Goals value) {
+  static core.Object serialize(Goals value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["username"] = identity(value.username);
     result["kind"] = identity(value.kind);
     result["items"] = map(Goal.serialize)(value.items);
@@ -1162,58 +1129,58 @@ class Goals extends IdentityHash {
 // Schema .Profile
 class Profile extends IdentityHash {
   /** Default page for this profile. */
-  String defaultPage;
+  core.String defaultPage;
 
   /** Resource type for Analytics profile. */
-  String kind;
+  core.String kind;
 
   /** The query parameters that are excluded from this profile. */
-  String excludeQueryParameters;
+  core.String excludeQueryParameters;
 
   /** Name of this profile. */
-  String name;
+  core.String name;
 
   /** Time this profile was created. */
-  String created;
+  core.String created;
 
   /** Web property ID of the form UA-XXXXX-YY to which this profile belongs. */
-  String webPropertyId;
+  core.String webPropertyId;
 
   /** Time this profile was last modified. */
-  String updated;
+  core.String updated;
 
   /** The site search query parameters for this profile. */
-  String siteSearchQueryParameters;
+  core.String siteSearchQueryParameters;
 
   /** The currency type associated with this profile. */
-  String currency;
+  core.String currency;
 
   /** Internal ID for the web property to which this profile belongs. */
-  String internalWebPropertyId;
+  core.String internalWebPropertyId;
 
   /** Child link for this profile. Points to the list of goals for this profile. */
   ProfileChildLink childLink;
 
   /** Time zone for which this profile has been configured. */
-  String timezone;
+  core.String timezone;
 
   /** Site search category parameters for this profile. */
-  String siteSearchCategoryParameters;
+  core.String siteSearchCategoryParameters;
 
   /** Parent link for this profile. Points to the web property to which this profile belongs. */
   ProfileParentLink parentLink;
 
   /** Profile ID. */
-  String id;
+  core.String id;
 
   /** Link for this profile. */
-  String selfLink;
+  core.String selfLink;
 
   /** Account ID to which this profile belongs. */
-  String accountId;
+  core.String accountId;
 
   /** Parses an instance from its JSON representation. */
-  static Profile parse(Map<String, Object> json) {
+  static Profile parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Profile();
     result.defaultPage = identity(json["defaultPage"]);
@@ -1236,9 +1203,9 @@ class Profile extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Profile value) {
+  static core.Object serialize(Profile value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["defaultPage"] = identity(value.defaultPage);
     result["kind"] = identity(value.kind);
     result["excludeQueryParameters"] = identity(value.excludeQueryParameters);
@@ -1264,13 +1231,13 @@ class Profile extends IdentityHash {
 // Schema Profile.ProfileChildLink
 class ProfileChildLink extends IdentityHash {
   /** Link to the list of goals for this profile. */
-  String href;
+  core.String href;
 
   /** Value is "analytics#goals". */
-  String type;
+  core.String type;
 
   /** Parses an instance from its JSON representation. */
-  static ProfileChildLink parse(Map<String, Object> json) {
+  static ProfileChildLink parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ProfileChildLink();
     result.href = identity(json["href"]);
@@ -1278,9 +1245,9 @@ class ProfileChildLink extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ProfileChildLink value) {
+  static core.Object serialize(ProfileChildLink value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["href"] = identity(value.href);
     result["type"] = identity(value.type);
     return result;
@@ -1291,13 +1258,13 @@ class ProfileChildLink extends IdentityHash {
 // Schema Profile.ProfileParentLink
 class ProfileParentLink extends IdentityHash {
   /** Link to the web property to which this profile belongs. */
-  String href;
+  core.String href;
 
   /** Value is "analytics#webproperty". */
-  String type;
+  core.String type;
 
   /** Parses an instance from its JSON representation. */
-  static ProfileParentLink parse(Map<String, Object> json) {
+  static ProfileParentLink parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ProfileParentLink();
     result.href = identity(json["href"]);
@@ -1305,9 +1272,9 @@ class ProfileParentLink extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ProfileParentLink value) {
+  static core.Object serialize(ProfileParentLink value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["href"] = identity(value.href);
     result["type"] = identity(value.type);
     return result;
@@ -1318,40 +1285,40 @@ class ProfileParentLink extends IdentityHash {
 // Schema .Profiles
 class Profiles extends IdentityHash {
   /** Email ID of the authenticated user */
-  String username;
+  core.String username;
 
   /** Collection type. */
-  String kind;
+  core.String kind;
 
   /** A list of profiles. */
-  List<Profile> items;
+  core.List<Profile> items;
 
   /**
  * The maximum number of resources the response can contain, regardless of the actual number of
  * resources returned. Its value ranges from 1 to 10,000 with a value of 1000 by default, or
  * otherwise specified by the max-results query parameter.
  */
-  int itemsPerPage;
+  core.int itemsPerPage;
 
   /** Link to previous page for this profile collection. */
-  String previousLink;
+  core.String previousLink;
 
   /**
  * The starting index of the resources, which is 1 by default or otherwise specified by the start-
  * index query parameter.
  */
-  int startIndex;
+  core.int startIndex;
 
   /** Link to next page for this profile collection. */
-  String nextLink;
+  core.String nextLink;
 
   /**
  * The total number of results for the query, regardless of the number of results in the response.
  */
-  int totalResults;
+  core.int totalResults;
 
   /** Parses an instance from its JSON representation. */
-  static Profiles parse(Map<String, Object> json) {
+  static Profiles parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Profiles();
     result.username = identity(json["username"]);
@@ -1365,9 +1332,9 @@ class Profiles extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Profiles value) {
+  static core.Object serialize(Profiles value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["username"] = identity(value.username);
     result["kind"] = identity(value.kind);
     result["items"] = map(Profile.serialize)(value.items);
@@ -1384,31 +1351,31 @@ class Profiles extends IdentityHash {
 // Schema .Segment
 class Segment extends IdentityHash {
   /** Advanced segment definition. */
-  String definition;
+  core.String definition;
 
   /** Resource type for Analytics advanced segment. */
-  String kind;
+  core.String kind;
 
   /** Segment ID. Can be used with the 'segment' parameter in Data Feed. */
-  String segmentId;
+  core.String segmentId;
 
   /** Time the advanced segment was created. */
-  String created;
+  core.String created;
 
   /** Time the advanced segment was last modified. */
-  String updated;
+  core.String updated;
 
   /** Advanced segment ID. */
-  String id;
+  core.String id;
 
   /** Link for this advanced segment. */
-  String selfLink;
+  core.String selfLink;
 
   /** Advanced segment name. */
-  String name;
+  core.String name;
 
   /** Parses an instance from its JSON representation. */
-  static Segment parse(Map<String, Object> json) {
+  static Segment parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Segment();
     result.definition = identity(json["definition"]);
@@ -1422,9 +1389,9 @@ class Segment extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Segment value) {
+  static core.Object serialize(Segment value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["definition"] = identity(value.definition);
     result["kind"] = identity(value.kind);
     result["segmentId"] = identity(value.segmentId);
@@ -1441,40 +1408,40 @@ class Segment extends IdentityHash {
 // Schema .Segments
 class Segments extends IdentityHash {
   /** Email ID of the authenticated user */
-  String username;
+  core.String username;
 
   /** Collection type for advanced segments. */
-  String kind;
+  core.String kind;
 
   /** A list of advanced segments. */
-  List<Segment> items;
+  core.List<Segment> items;
 
   /**
  * The maximum number of resources the response can contain, regardless of the actual number of
  * resources returned. Its value ranges from 1 to 10,000 with a value of 1000 by default, or
  * otherwise specified by the max-results query parameter.
  */
-  int itemsPerPage;
+  core.int itemsPerPage;
 
   /** Link to previous page for this advanced segment collection. */
-  String previousLink;
+  core.String previousLink;
 
   /**
  * The starting index of the resources, which is 1 by default or otherwise specified by the start-
  * index query parameter.
  */
-  int startIndex;
+  core.int startIndex;
 
   /** Link to next page for this advanced segment collection. */
-  String nextLink;
+  core.String nextLink;
 
   /**
  * The total number of results for the query, regardless of the number of results in the response.
  */
-  int totalResults;
+  core.int totalResults;
 
   /** Parses an instance from its JSON representation. */
-  static Segments parse(Map<String, Object> json) {
+  static Segments parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Segments();
     result.username = identity(json["username"]);
@@ -1488,9 +1455,9 @@ class Segments extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Segments value) {
+  static core.Object serialize(Segments value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["username"] = identity(value.username);
     result["kind"] = identity(value.kind);
     result["items"] = map(Segment.serialize)(value.items);
@@ -1507,40 +1474,40 @@ class Segments extends IdentityHash {
 // Schema .Webproperties
 class Webproperties extends IdentityHash {
   /** Email ID of the authenticated user */
-  String username;
+  core.String username;
 
   /** Collection type. */
-  String kind;
+  core.String kind;
 
   /** A list of web properties. */
-  List<Webproperty> items;
+  core.List<Webproperty> items;
 
   /**
  * The maximum number of resources the response can contain, regardless of the actual number of
  * resources returned. Its value ranges from 1 to 10,000 with a value of 1000 by default, or
  * otherwise specified by the max-results query parameter.
  */
-  int itemsPerPage;
+  core.int itemsPerPage;
 
   /** Link to previous page for this web property collection. */
-  String previousLink;
+  core.String previousLink;
 
   /**
  * The starting index of the resources, which is 1 by default or otherwise specified by the start-
  * index query parameter.
  */
-  int startIndex;
+  core.int startIndex;
 
   /** Link to next page for this web property collection. */
-  String nextLink;
+  core.String nextLink;
 
   /**
  * The total number of results for the query, regardless of the number of results in the response.
  */
-  int totalResults;
+  core.int totalResults;
 
   /** Parses an instance from its JSON representation. */
-  static Webproperties parse(Map<String, Object> json) {
+  static Webproperties parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Webproperties();
     result.username = identity(json["username"]);
@@ -1554,9 +1521,9 @@ class Webproperties extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Webproperties value) {
+  static core.Object serialize(Webproperties value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["username"] = identity(value.username);
     result["kind"] = identity(value.kind);
     result["items"] = map(Webproperty.serialize)(value.items);
@@ -1573,22 +1540,22 @@ class Webproperties extends IdentityHash {
 // Schema .Webproperty
 class Webproperty extends IdentityHash {
   /** Resource type for Analytics WebProperty. */
-  String kind;
+  core.String kind;
 
   /** Name of this web property. */
-  String name;
+  core.String name;
 
   /** Time this web property was created. */
-  String created;
+  core.String created;
 
   /** Time this web property was last modified. */
-  String updated;
+  core.String updated;
 
   /** Website url for this web property. */
-  String websiteUrl;
+  core.String websiteUrl;
 
   /** Internal ID for this web property. */
-  String internalWebPropertyId;
+  core.String internalWebPropertyId;
 
   /** Child link for this web property. Points to the list of profiles for this web property. */
   WebpropertyChildLink childLink;
@@ -1597,16 +1564,16 @@ class Webproperty extends IdentityHash {
   WebpropertyParentLink parentLink;
 
   /** Web property ID of the form UA-XXXXX-YY. */
-  String id;
+  core.String id;
 
   /** Link for this web property. */
-  String selfLink;
+  core.String selfLink;
 
   /** Account ID to which this web property belongs. */
-  String accountId;
+  core.String accountId;
 
   /** Parses an instance from its JSON representation. */
-  static Webproperty parse(Map<String, Object> json) {
+  static Webproperty parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Webproperty();
     result.kind = identity(json["kind"]);
@@ -1623,9 +1590,9 @@ class Webproperty extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Webproperty value) {
+  static core.Object serialize(Webproperty value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["kind"] = identity(value.kind);
     result["name"] = identity(value.name);
     result["created"] = identity(value.created);
@@ -1645,13 +1612,13 @@ class Webproperty extends IdentityHash {
 // Schema Webproperty.WebpropertyChildLink
 class WebpropertyChildLink extends IdentityHash {
   /** Link to the list of profiles for this web property. */
-  String href;
+  core.String href;
 
   /** Type of the parent link. Its value is "analytics#profiles". */
-  String type;
+  core.String type;
 
   /** Parses an instance from its JSON representation. */
-  static WebpropertyChildLink parse(Map<String, Object> json) {
+  static WebpropertyChildLink parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new WebpropertyChildLink();
     result.href = identity(json["href"]);
@@ -1659,9 +1626,9 @@ class WebpropertyChildLink extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(WebpropertyChildLink value) {
+  static core.Object serialize(WebpropertyChildLink value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["href"] = identity(value.href);
     result["type"] = identity(value.type);
     return result;
@@ -1672,13 +1639,13 @@ class WebpropertyChildLink extends IdentityHash {
 // Schema Webproperty.WebpropertyParentLink
 class WebpropertyParentLink extends IdentityHash {
   /** Link to the account for this web property. */
-  String href;
+  core.String href;
 
   /** Type of the parent link. Its value is "analytics#account". */
-  String type;
+  core.String type;
 
   /** Parses an instance from its JSON representation. */
-  static WebpropertyParentLink parse(Map<String, Object> json) {
+  static WebpropertyParentLink parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new WebpropertyParentLink();
     result.href = identity(json["href"]);
@@ -1686,9 +1653,9 @@ class WebpropertyParentLink extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(WebpropertyParentLink value) {
+  static core.Object serialize(WebpropertyParentLink value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["href"] = identity(value.href);
     result["type"] = identity(value.type);
     return result;
@@ -1697,12 +1664,12 @@ class WebpropertyParentLink extends IdentityHash {
 }
 
 // Enum AnalyticsApi.Alt
-class AnalyticsApiAlt implements Hashable {
+class AnalyticsApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/json */
   static final AnalyticsApiAlt JSON = const AnalyticsApiAlt._internal("json", 0);
 
   /** All values of this enumeration */
-  static final List<AnalyticsApiAlt> values = const <AnalyticsApiAlt>[
+  static final core.List<AnalyticsApiAlt> values = const <AnalyticsApiAlt>[
     JSON,
   ];
 
@@ -1712,14 +1679,14 @@ class AnalyticsApiAlt implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static AnalyticsApiAlt valueOf(String item) => _valuesMap[item];
+  static AnalyticsApiAlt valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const AnalyticsApiAlt._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const AnalyticsApiAlt._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Alt".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Alt".hashCode();
 }
 

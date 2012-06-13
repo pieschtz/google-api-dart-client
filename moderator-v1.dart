@@ -1,4 +1,5 @@
 #library("moderator");
+#import('dart:core', prefix: 'core');
 #import('dart:json');
 
 #import('utils.dart');
@@ -8,13 +9,15 @@
 /**
  * Moderator API
  */
-class ModeratorApi {
+class ModeratorApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
-  final String baseUrl;
+  final core.String baseUrl;
+  /** How we should identify ourselves to the service. */
+  Authenticator authenticator;
   /** The client library version */
-  final String clientVersion = "0.1";
+  final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
-  final String applicationName;
+  final core.String applicationName;
   ModeratorApi get _$service() => this;
   VotesResource _votes;
   VotesResource get votes() => _votes;
@@ -40,37 +43,37 @@ class ModeratorApi {
   SubmissionsResource get submissions() => _submissions;
   
   /** Returns response with indentations and line breaks. */
-  bool prettyPrint;
+  core.bool prettyPrint;
 
   /** Selector specifying which fields to include in a partial response. */
-  String fields;
+  core.String fields;
 
   /**
    * Available to use for quota purposes for server-side applications. Can be any arbitrary string
    * assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.
    */
-  String quotaUser;
+  core.String quotaUser;
 
   /** OAuth 2.0 token for the current user. */
-  String oauthToken;
+  core.String oauthToken;
 
   /**
    * API key. Your API key identifies your project and provides you with API access, quota, and
    * reports. Required unless you provide an OAuth 2.0 token.
    */
-  String key;
+  core.String key;
 
   /**
    * IP address of the site where the request originates. Use this if you want to enforce per-user
    * limits.
    */
-  String userIp;
+  core.String userIp;
 
   /** Data format for the response. */
   ModeratorApiAlt alt;
 
 
-  ModeratorApi([this.baseUrl = "https://www.googleapis.com/moderator/v1/", this.applicationName]) { 
+  ModeratorApi([this.baseUrl = "https://www.googleapis.com/moderator/v1/", this.applicationName, this.authenticator]) { 
     _votes = new VotesResource._internal(this);
     _responses = new ResponsesResource._internal(this);
     _tags = new TagsResource._internal(this);
@@ -83,14 +86,14 @@ class ModeratorApi {
     _my = new MyResource._internal(this);
     _submissions = new SubmissionsResource._internal(this);
   }
-  String get userAgent() {
+  core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}moderator/v1/19700115 google-api-dart-client/${clientVersion}";
   }
 }
 
 // Resource .VotesResource
-class VotesResource {
+class VotesResource extends core.Object {
   final ModeratorApi _$service;
   
   VotesResource._internal(ModeratorApi $service) : _$service = $service;
@@ -103,7 +106,7 @@ class VotesResource {
    * [submissionId] The decimal ID of the Submission within the Series.
    * [content] the Vote
    */
-  Future<Vote> insert(int seriesId, int submissionId, Vote content, [String unauthToken = UNSPECIFIED]) {
+  core.Future<Vote> insert(core.int seriesId, core.int submissionId, Vote content, [core.String unauthToken = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -121,19 +124,13 @@ class VotesResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Vote.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "series/{seriesId}/submissions/{submissionId}/votes/@me").generate($pathParams, $queryParams);
-    final $completer = new Completer<Vote>();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Vote.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Vote.parse(JSON.parse($text)));
   }
 
   // Method VotesResource.Patch
@@ -144,7 +141,7 @@ class VotesResource {
    * [submissionId] The decimal ID of the Submission within the Series.
    * [content] the Vote
    */
-  Future<Vote> patch(int seriesId, int submissionId, Vote content, [String userId = UNSPECIFIED, String unauthToken = UNSPECIFIED]) {
+  core.Future<Vote> patch(core.int seriesId, core.int submissionId, Vote content, [core.String userId = UNSPECIFIED, core.String unauthToken = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -163,19 +160,13 @@ class VotesResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Vote.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "series/{seriesId}/submissions/{submissionId}/votes/@me").generate($pathParams, $queryParams);
-    final $completer = new Completer<Vote>();
     final $http = new HttpRequest($url, "PATCH", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Vote.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Vote.parse(JSON.parse($text)));
   }
 
   // Method VotesResource.List
@@ -183,7 +174,7 @@ class VotesResource {
    * Lists the votes by the authenticated user for the given series.
    * [seriesId] The decimal ID of the Series.
    */
-  Future<VoteList> list(int seriesId, [int maxResults = UNSPECIFIED, int startIndex = UNSPECIFIED]) {
+  core.Future<VoteList> list(core.int seriesId, [core.int maxResults = UNSPECIFIED, core.int startIndex = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -199,19 +190,13 @@ class VotesResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "series/{seriesId}/votes/@me").generate($pathParams, $queryParams);
-    final $completer = new Completer<VoteList>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = VoteList.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => VoteList.parse(JSON.parse($text)));
   }
 
   // Method VotesResource.Update
@@ -222,7 +207,7 @@ class VotesResource {
    * [submissionId] The decimal ID of the Submission within the Series.
    * [content] the Vote
    */
-  Future<Vote> update(int seriesId, int submissionId, Vote content, [String userId = UNSPECIFIED, String unauthToken = UNSPECIFIED]) {
+  core.Future<Vote> update(core.int seriesId, core.int submissionId, Vote content, [core.String userId = UNSPECIFIED, core.String unauthToken = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -241,19 +226,13 @@ class VotesResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Vote.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "series/{seriesId}/submissions/{submissionId}/votes/@me").generate($pathParams, $queryParams);
-    final $completer = new Completer<Vote>();
     final $http = new HttpRequest($url, "PUT", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Vote.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Vote.parse(JSON.parse($text)));
   }
 
   // Method VotesResource.Get
@@ -263,7 +242,7 @@ class VotesResource {
    * [seriesId] The decimal ID of the Series.
    * [submissionId] The decimal ID of the Submission within the Series.
    */
-  Future<Vote> get(int seriesId, int submissionId, [String userId = UNSPECIFIED, String unauthToken = UNSPECIFIED]) {
+  core.Future<Vote> get(core.int seriesId, core.int submissionId, [core.String userId = UNSPECIFIED, core.String unauthToken = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -280,24 +259,18 @@ class VotesResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "series/{seriesId}/submissions/{submissionId}/votes/@me").generate($pathParams, $queryParams);
-    final $completer = new Completer<Vote>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Vote.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Vote.parse(JSON.parse($text)));
   }
 }
 
 // Resource .ResponsesResource
-class ResponsesResource {
+class ResponsesResource extends core.Object {
   final ModeratorApi _$service;
   
   ResponsesResource._internal(ModeratorApi $service) : _$service = $service;
@@ -311,7 +284,7 @@ class ResponsesResource {
    * [parentSubmissionId] The decimal ID of the parent Submission within the Series.
    * [content] the Submission
    */
-  Future<Submission> insert(int seriesId, int topicId, int parentSubmissionId, Submission content, [String unauthToken = UNSPECIFIED, bool anonymous = UNSPECIFIED]) {
+  core.Future<Submission> insert(core.int seriesId, core.int topicId, core.int parentSubmissionId, Submission content, [core.String unauthToken = UNSPECIFIED, core.bool anonymous = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -331,19 +304,13 @@ class ResponsesResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Submission.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "series/{seriesId}/topics/{topicId}/submissions/{parentSubmissionId}/responses").generate($pathParams, $queryParams);
-    final $completer = new Completer<Submission>();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Submission.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Submission.parse(JSON.parse($text)));
   }
 
   // Method ResponsesResource.List
@@ -353,7 +320,7 @@ class ResponsesResource {
    * [seriesId] The decimal ID of the Series.
    * [submissionId] The decimal ID of the Submission within the Series.
    */
-  Future<SubmissionList> list(int seriesId, int submissionId, [int maxResults = UNSPECIFIED, String sort = UNSPECIFIED, String author = UNSPECIFIED, int startIndex = UNSPECIFIED, String q = UNSPECIFIED, bool hasAttachedVideo = UNSPECIFIED]) {
+  core.Future<SubmissionList> list(core.int seriesId, core.int submissionId, [core.int maxResults = UNSPECIFIED, core.String sort = UNSPECIFIED, core.String author = UNSPECIFIED, core.int startIndex = UNSPECIFIED, core.String q = UNSPECIFIED, core.bool hasAttachedVideo = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -374,24 +341,18 @@ class ResponsesResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "series/{seriesId}/submissions/{submissionId}/responses").generate($pathParams, $queryParams);
-    final $completer = new Completer<SubmissionList>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = SubmissionList.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => SubmissionList.parse(JSON.parse($text)));
   }
 }
 
 // Resource .TagsResource
-class TagsResource {
+class TagsResource extends core.Object {
   final ModeratorApi _$service;
   
   TagsResource._internal(ModeratorApi $service) : _$service = $service;
@@ -403,7 +364,7 @@ class TagsResource {
    * [submissionId] The decimal ID of the Submission within the Series.
    * [content] the Tag
    */
-  Future<Tag> insert(int seriesId, int submissionId, Tag content) {
+  core.Future<Tag> insert(core.int seriesId, core.int submissionId, Tag content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -420,19 +381,13 @@ class TagsResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Tag.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "series/{seriesId}/submissions/{submissionId}/tags").generate($pathParams, $queryParams);
-    final $completer = new Completer<Tag>();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Tag.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Tag.parse(JSON.parse($text)));
   }
 
   // Method TagsResource.List
@@ -441,7 +396,7 @@ class TagsResource {
    * [seriesId] The decimal ID of the Series.
    * [submissionId] The decimal ID of the Submission within the Series.
    */
-  Future<TagList> list(int seriesId, int submissionId) {
+  core.Future<TagList> list(core.int seriesId, core.int submissionId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -456,19 +411,13 @@ class TagsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "series/{seriesId}/submissions/{submissionId}/tags").generate($pathParams, $queryParams);
-    final $completer = new Completer<TagList>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = TagList.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => TagList.parse(JSON.parse($text)));
   }
 
   // Method TagsResource.Delete
@@ -478,7 +427,7 @@ class TagsResource {
    * [submissionId] The decimal ID of the Submission within the Series.
    * [tagId]
    */
-  Future delete(int seriesId, int submissionId, String tagId) {
+  core.Future delete(core.int seriesId, core.int submissionId, core.String tagId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -494,24 +443,18 @@ class TagsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "series/{seriesId}/submissions/{submissionId}/tags/{tagId}").generate($pathParams, $queryParams);
-    final $completer = new Completer();
     final $http = new HttpRequest($url, "DELETE", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = identity(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => identity(JSON.parse($text)));
   }
 }
 
 // Resource .SeriesResource
-class SeriesResource {
+class SeriesResource extends core.Object {
   final ModeratorApi _$service;
   final SeriesSubmissionsResourceResource submissions;
   final SeriesResponsesResourceResource responses;
@@ -525,7 +468,7 @@ class SeriesResource {
    * Inserts a new series.
    * [content] the Series
    */
-  Future<Series> insert(Series content) {
+  core.Future<Series> insert(Series content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -540,19 +483,13 @@ class SeriesResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Series.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "series").generate($pathParams, $queryParams);
-    final $completer = new Completer<Series>();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Series.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Series.parse(JSON.parse($text)));
   }
 
   // Method SeriesResource.Patch
@@ -561,7 +498,7 @@ class SeriesResource {
    * [seriesId] The decimal ID of the Series.
    * [content] the Series
    */
-  Future<Series> patch(int seriesId, Series content) {
+  core.Future<Series> patch(core.int seriesId, Series content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -577,26 +514,20 @@ class SeriesResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Series.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "series/{seriesId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Series>();
     final $http = new HttpRequest($url, "PATCH", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Series.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Series.parse(JSON.parse($text)));
   }
 
   // Method SeriesResource.List
   /**
    * Searches the series and returns the search results.
    */
-  Future<SeriesList> list([int maxResults = UNSPECIFIED, String q = UNSPECIFIED, int startIndex = UNSPECIFIED]) {
+  core.Future<SeriesList> list([core.int maxResults = UNSPECIFIED, core.String q = UNSPECIFIED, core.int startIndex = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -612,19 +543,13 @@ class SeriesResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "series").generate($pathParams, $queryParams);
-    final $completer = new Completer<SeriesList>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = SeriesList.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => SeriesList.parse(JSON.parse($text)));
   }
 
   // Method SeriesResource.Update
@@ -633,7 +558,7 @@ class SeriesResource {
    * [seriesId] The decimal ID of the Series.
    * [content] the Series
    */
-  Future<Series> update(int seriesId, Series content) {
+  core.Future<Series> update(core.int seriesId, Series content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -649,19 +574,13 @@ class SeriesResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Series.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "series/{seriesId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Series>();
     final $http = new HttpRequest($url, "PUT", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Series.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Series.parse(JSON.parse($text)));
   }
 
   // Method SeriesResource.Get
@@ -669,7 +588,7 @@ class SeriesResource {
    * Returns the specified series.
    * [seriesId] The decimal ID of the Series.
    */
-  Future<Series> get(int seriesId) {
+  core.Future<Series> get(core.int seriesId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -683,25 +602,19 @@ class SeriesResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "series/{seriesId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Series>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Series.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Series.parse(JSON.parse($text)));
   }
 }
 
 
 // Resource SeriesResource.SeriesSubmissionsResourceResource
-class SeriesSubmissionsResourceResource {
+class SeriesSubmissionsResourceResource extends core.Object {
   final ModeratorApi _$service;
   
   SeriesSubmissionsResourceResource._internal(ModeratorApi $service) : _$service = $service;
@@ -711,7 +624,7 @@ class SeriesSubmissionsResourceResource {
    * Searches the submissions for the specified series and returns the search results.
    * [seriesId] The decimal ID of the Series.
    */
-  Future<SubmissionList> list(int seriesId, [String lang = UNSPECIFIED, int maxResults = UNSPECIFIED, bool includeVotes = UNSPECIFIED, int startIndex = UNSPECIFIED, String author = UNSPECIFIED, String sort = UNSPECIFIED, String q = UNSPECIFIED, bool hasAttachedVideo = UNSPECIFIED]) {
+  core.Future<SubmissionList> list(core.int seriesId, [core.String lang = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.bool includeVotes = UNSPECIFIED, core.int startIndex = UNSPECIFIED, core.String author = UNSPECIFIED, core.String sort = UNSPECIFIED, core.String q = UNSPECIFIED, core.bool hasAttachedVideo = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -733,24 +646,18 @@ class SeriesSubmissionsResourceResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "series/{seriesId}/submissions").generate($pathParams, $queryParams);
-    final $completer = new Completer<SubmissionList>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = SubmissionList.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => SubmissionList.parse(JSON.parse($text)));
   }
 }
 
 // Resource SeriesResource.SeriesResponsesResourceResource
-class SeriesResponsesResourceResource {
+class SeriesResponsesResourceResource extends core.Object {
   final ModeratorApi _$service;
   
   SeriesResponsesResourceResource._internal(ModeratorApi $service) : _$service = $service;
@@ -760,7 +667,7 @@ class SeriesResponsesResourceResource {
    * Searches the responses for the specified series and returns the search results.
    * [seriesId] The decimal ID of the Series.
    */
-  Future<SeriesList> list(int seriesId, [int maxResults = UNSPECIFIED, String sort = UNSPECIFIED, String author = UNSPECIFIED, int startIndex = UNSPECIFIED, String q = UNSPECIFIED, bool hasAttachedVideo = UNSPECIFIED]) {
+  core.Future<SeriesList> list(core.int seriesId, [core.int maxResults = UNSPECIFIED, core.String sort = UNSPECIFIED, core.String author = UNSPECIFIED, core.int startIndex = UNSPECIFIED, core.String q = UNSPECIFIED, core.bool hasAttachedVideo = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -780,24 +687,18 @@ class SeriesResponsesResourceResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "series/{seriesId}/responses").generate($pathParams, $queryParams);
-    final $completer = new Completer<SeriesList>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = SeriesList.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => SeriesList.parse(JSON.parse($text)));
   }
 }
 
 // Resource .TopicsResource
-class TopicsResource {
+class TopicsResource extends core.Object {
   final ModeratorApi _$service;
   final TopicsSubmissionsResourceResource submissions;
   
@@ -810,7 +711,7 @@ class TopicsResource {
    * [seriesId] The decimal ID of the Series.
    * [content] the Topic
    */
-  Future<Topic> insert(int seriesId, Topic content) {
+  core.Future<Topic> insert(core.int seriesId, Topic content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -826,19 +727,13 @@ class TopicsResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Topic.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "series/{seriesId}/topics").generate($pathParams, $queryParams);
-    final $completer = new Completer<Topic>();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Topic.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Topic.parse(JSON.parse($text)));
   }
 
   // Method TopicsResource.List
@@ -846,7 +741,7 @@ class TopicsResource {
    * Searches the topics within the specified series and returns the search results.
    * [seriesId] The decimal ID of the Series.
    */
-  Future<TopicList> list(int seriesId, [int maxResults = UNSPECIFIED, String q = UNSPECIFIED, int startIndex = UNSPECIFIED, String mode = UNSPECIFIED]) {
+  core.Future<TopicList> list(core.int seriesId, [core.int maxResults = UNSPECIFIED, core.String q = UNSPECIFIED, core.int startIndex = UNSPECIFIED, core.String mode = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -864,19 +759,13 @@ class TopicsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "series/{seriesId}/topics").generate($pathParams, $queryParams);
-    final $completer = new Completer<TopicList>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = TopicList.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => TopicList.parse(JSON.parse($text)));
   }
 
   // Method TopicsResource.Update
@@ -886,7 +775,7 @@ class TopicsResource {
    * [topicId] The decimal ID of the Topic within the Series.
    * [content] the Topic
    */
-  Future<Topic> update(int seriesId, int topicId, Topic content) {
+  core.Future<Topic> update(core.int seriesId, core.int topicId, Topic content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -903,19 +792,13 @@ class TopicsResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Topic.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "series/{seriesId}/topics/{topicId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Topic>();
     final $http = new HttpRequest($url, "PUT", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Topic.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Topic.parse(JSON.parse($text)));
   }
 
   // Method TopicsResource.Get
@@ -924,7 +807,7 @@ class TopicsResource {
    * [seriesId] The decimal ID of the Series.
    * [topicId] The decimal ID of the Topic within the Series.
    */
-  Future<Topic> get(int seriesId, int topicId) {
+  core.Future<Topic> get(core.int seriesId, core.int topicId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -939,25 +822,19 @@ class TopicsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "series/{seriesId}/topics/{topicId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Topic>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Topic.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Topic.parse(JSON.parse($text)));
   }
 }
 
 
 // Resource TopicsResource.TopicsSubmissionsResourceResource
-class TopicsSubmissionsResourceResource {
+class TopicsSubmissionsResourceResource extends core.Object {
   final ModeratorApi _$service;
   
   TopicsSubmissionsResourceResource._internal(ModeratorApi $service) : _$service = $service;
@@ -969,7 +846,7 @@ class TopicsSubmissionsResourceResource {
    * [seriesId] The decimal ID of the Series.
    * [topicId] The decimal ID of the Topic within the Series.
    */
-  Future<SubmissionList> list(int seriesId, int topicId, [int maxResults = UNSPECIFIED, bool includeVotes = UNSPECIFIED, int startIndex = UNSPECIFIED, String author = UNSPECIFIED, String sort = UNSPECIFIED, String q = UNSPECIFIED, bool hasAttachedVideo = UNSPECIFIED]) {
+  core.Future<SubmissionList> list(core.int seriesId, core.int topicId, [core.int maxResults = UNSPECIFIED, core.bool includeVotes = UNSPECIFIED, core.int startIndex = UNSPECIFIED, core.String author = UNSPECIFIED, core.String sort = UNSPECIFIED, core.String q = UNSPECIFIED, core.bool hasAttachedVideo = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -991,24 +868,18 @@ class TopicsSubmissionsResourceResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "series/{seriesId}/topics/{topicId}/submissions").generate($pathParams, $queryParams);
-    final $completer = new Completer<SubmissionList>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = SubmissionList.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => SubmissionList.parse(JSON.parse($text)));
   }
 }
 
 // Resource .GlobalResource
-class GlobalResource {
+class GlobalResource extends core.Object {
   final ModeratorApi _$service;
   final GlobalSeriesResourceResource series;
   
@@ -1018,7 +889,7 @@ class GlobalResource {
 
 
 // Resource GlobalResource.GlobalSeriesResourceResource
-class GlobalSeriesResourceResource {
+class GlobalSeriesResourceResource extends core.Object {
   final ModeratorApi _$service;
   
   GlobalSeriesResourceResource._internal(ModeratorApi $service) : _$service = $service;
@@ -1027,7 +898,7 @@ class GlobalSeriesResourceResource {
   /**
    * Searches the public series and returns the search results.
    */
-  Future<SeriesList> list([int maxResults = UNSPECIFIED, String q = UNSPECIFIED, int startIndex = UNSPECIFIED]) {
+  core.Future<SeriesList> list([core.int maxResults = UNSPECIFIED, core.String q = UNSPECIFIED, core.int startIndex = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1043,24 +914,18 @@ class GlobalSeriesResourceResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "search").generate($pathParams, $queryParams);
-    final $completer = new Completer<SeriesList>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = SeriesList.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => SeriesList.parse(JSON.parse($text)));
   }
 }
 
 // Resource .ProfilesResource
-class ProfilesResource {
+class ProfilesResource extends core.Object {
   final ModeratorApi _$service;
   
   ProfilesResource._internal(ModeratorApi $service) : _$service = $service;
@@ -1070,7 +935,7 @@ class ProfilesResource {
    * Updates the profile information for the authenticated user. This method supports patch semantics.
    * [content] the Profile
    */
-  Future<Profile> patch(Profile content) {
+  core.Future<Profile> patch(Profile content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1085,19 +950,13 @@ class ProfilesResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Profile.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "profiles/@me").generate($pathParams, $queryParams);
-    final $completer = new Completer<Profile>();
     final $http = new HttpRequest($url, "PATCH", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Profile.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Profile.parse(JSON.parse($text)));
   }
 
   // Method ProfilesResource.Update
@@ -1105,7 +964,7 @@ class ProfilesResource {
    * Updates the profile information for the authenticated user.
    * [content] the Profile
    */
-  Future<Profile> update(Profile content) {
+  core.Future<Profile> update(Profile content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1120,26 +979,20 @@ class ProfilesResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Profile.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "profiles/@me").generate($pathParams, $queryParams);
-    final $completer = new Completer<Profile>();
     final $http = new HttpRequest($url, "PUT", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Profile.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Profile.parse(JSON.parse($text)));
   }
 
   // Method ProfilesResource.Get
   /**
    * Returns the profile information for the authenticated user.
    */
-  Future<Profile> get() {
+  core.Future<Profile> get() {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1152,24 +1005,18 @@ class ProfilesResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "profiles/@me").generate($pathParams, $queryParams);
-    final $completer = new Completer<Profile>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Profile.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Profile.parse(JSON.parse($text)));
   }
 }
 
 // Resource .FeaturedResource
-class FeaturedResource {
+class FeaturedResource extends core.Object {
   final ModeratorApi _$service;
   final FeaturedSeriesResourceResource series;
   
@@ -1179,7 +1026,7 @@ class FeaturedResource {
 
 
 // Resource FeaturedResource.FeaturedSeriesResourceResource
-class FeaturedSeriesResourceResource {
+class FeaturedSeriesResourceResource extends core.Object {
   final ModeratorApi _$service;
   
   FeaturedSeriesResourceResource._internal(ModeratorApi $service) : _$service = $service;
@@ -1188,7 +1035,7 @@ class FeaturedSeriesResourceResource {
   /**
    * Lists the featured series.
    */
-  Future<SeriesList> list() {
+  core.Future<SeriesList> list() {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1201,24 +1048,18 @@ class FeaturedSeriesResourceResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "series/featured").generate($pathParams, $queryParams);
-    final $completer = new Completer<SeriesList>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = SeriesList.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => SeriesList.parse(JSON.parse($text)));
   }
 }
 
 // Resource .MyrecentResource
-class MyrecentResource {
+class MyrecentResource extends core.Object {
   final ModeratorApi _$service;
   final MyrecentSeriesResourceResource series;
   
@@ -1228,7 +1069,7 @@ class MyrecentResource {
 
 
 // Resource MyrecentResource.MyrecentSeriesResourceResource
-class MyrecentSeriesResourceResource {
+class MyrecentSeriesResourceResource extends core.Object {
   final ModeratorApi _$service;
   
   MyrecentSeriesResourceResource._internal(ModeratorApi $service) : _$service = $service;
@@ -1237,7 +1078,7 @@ class MyrecentSeriesResourceResource {
   /**
    * Lists the series the authenticated user has visited.
    */
-  Future<SeriesList> list() {
+  core.Future<SeriesList> list() {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1250,24 +1091,18 @@ class MyrecentSeriesResourceResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "series/@me/recent").generate($pathParams, $queryParams);
-    final $completer = new Completer<SeriesList>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = SeriesList.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => SeriesList.parse(JSON.parse($text)));
   }
 }
 
 // Resource .MyResource
-class MyResource {
+class MyResource extends core.Object {
   final ModeratorApi _$service;
   final MySeriesResourceResource series;
   
@@ -1277,7 +1112,7 @@ class MyResource {
 
 
 // Resource MyResource.MySeriesResourceResource
-class MySeriesResourceResource {
+class MySeriesResourceResource extends core.Object {
   final ModeratorApi _$service;
   
   MySeriesResourceResource._internal(ModeratorApi $service) : _$service = $service;
@@ -1286,7 +1121,7 @@ class MySeriesResourceResource {
   /**
    * Lists all series created by the authenticated user.
    */
-  Future<SeriesList> list() {
+  core.Future<SeriesList> list() {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1299,24 +1134,18 @@ class MySeriesResourceResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "series/@me/mine").generate($pathParams, $queryParams);
-    final $completer = new Completer<SeriesList>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = SeriesList.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => SeriesList.parse(JSON.parse($text)));
   }
 }
 
 // Resource .SubmissionsResource
-class SubmissionsResource {
+class SubmissionsResource extends core.Object {
   final ModeratorApi _$service;
   
   SubmissionsResource._internal(ModeratorApi $service) : _$service = $service;
@@ -1328,7 +1157,7 @@ class SubmissionsResource {
    * [topicId] The decimal ID of the Topic within the Series.
    * [content] the Submission
    */
-  Future<Submission> insert(int seriesId, int topicId, Submission content, [String unauthToken = UNSPECIFIED, bool anonymous = UNSPECIFIED]) {
+  core.Future<Submission> insert(core.int seriesId, core.int topicId, Submission content, [core.String unauthToken = UNSPECIFIED, core.bool anonymous = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1347,19 +1176,13 @@ class SubmissionsResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Submission.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "series/{seriesId}/topics/{topicId}/submissions").generate($pathParams, $queryParams);
-    final $completer = new Completer<Submission>();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Submission.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Submission.parse(JSON.parse($text)));
   }
 
   // Method SubmissionsResource.Get
@@ -1368,7 +1191,7 @@ class SubmissionsResource {
    * [seriesId] The decimal ID of the Series.
    * [submissionId] The decimal ID of the Submission within the Series.
    */
-  Future<Submission> get(int seriesId, int submissionId, [String lang = UNSPECIFIED, bool includeVotes = UNSPECIFIED]) {
+  core.Future<Submission> get(core.int seriesId, core.int submissionId, [core.String lang = UNSPECIFIED, core.bool includeVotes = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1385,19 +1208,13 @@ class SubmissionsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "series/{seriesId}/submissions/{submissionId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Submission>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Submission.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Submission.parse(JSON.parse($text)));
   }
 }
 
@@ -1407,16 +1224,16 @@ class ModeratorTopicsResourcePartial extends IdentityHash {
   ModeratorTopicsResourcePartialId id;
 
   /** Parses an instance from its JSON representation. */
-  static ModeratorTopicsResourcePartial parse(Map<String, Object> json) {
+  static ModeratorTopicsResourcePartial parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ModeratorTopicsResourcePartial();
     result.id = ModeratorTopicsResourcePartialId.parse(json["id"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ModeratorTopicsResourcePartial value) {
+  static core.Object serialize(ModeratorTopicsResourcePartial value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["id"] = ModeratorTopicsResourcePartialId.serialize(value.id);
     return result;
   }
@@ -1426,13 +1243,13 @@ class ModeratorTopicsResourcePartial extends IdentityHash {
 // Schema ModeratorTopicsResourcePartial.ModeratorTopicsResourcePartialId
 class ModeratorTopicsResourcePartialId extends IdentityHash {
   
-  String seriesId;
+  core.String seriesId;
 
   
-  String topicId;
+  core.String topicId;
 
   /** Parses an instance from its JSON representation. */
-  static ModeratorTopicsResourcePartialId parse(Map<String, Object> json) {
+  static ModeratorTopicsResourcePartialId parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ModeratorTopicsResourcePartialId();
     result.seriesId = identity(json["seriesId"]);
@@ -1440,9 +1257,9 @@ class ModeratorTopicsResourcePartialId extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ModeratorTopicsResourcePartialId value) {
+  static core.Object serialize(ModeratorTopicsResourcePartialId value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["seriesId"] = identity(value.seriesId);
     result["topicId"] = identity(value.topicId);
     return result;
@@ -1453,13 +1270,13 @@ class ModeratorTopicsResourcePartialId extends IdentityHash {
 // Schema .ModeratorVotesResourcePartial
 class ModeratorVotesResourcePartial extends IdentityHash {
   
-  String vote;
+  core.String vote;
 
   
-  String flag;
+  core.String flag;
 
   /** Parses an instance from its JSON representation. */
-  static ModeratorVotesResourcePartial parse(Map<String, Object> json) {
+  static ModeratorVotesResourcePartial parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ModeratorVotesResourcePartial();
     result.vote = identity(json["vote"]);
@@ -1467,9 +1284,9 @@ class ModeratorVotesResourcePartial extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ModeratorVotesResourcePartial value) {
+  static core.Object serialize(ModeratorVotesResourcePartial value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["vote"] = identity(value.vote);
     result["flag"] = identity(value.flag);
     return result;
@@ -1480,7 +1297,7 @@ class ModeratorVotesResourcePartial extends IdentityHash {
 // Schema .Profile
 class Profile extends IdentityHash {
   
-  String kind;
+  core.String kind;
 
   
   ProfileAttribution attribution;
@@ -1489,7 +1306,7 @@ class Profile extends IdentityHash {
   ProfileId id;
 
   /** Parses an instance from its JSON representation. */
-  static Profile parse(Map<String, Object> json) {
+  static Profile parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Profile();
     result.kind = identity(json["kind"]);
@@ -1498,9 +1315,9 @@ class Profile extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Profile value) {
+  static core.Object serialize(Profile value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["kind"] = identity(value.kind);
     result["attribution"] = ProfileAttribution.serialize(value.attribution);
     result["id"] = ProfileId.serialize(value.id);
@@ -1515,16 +1332,16 @@ class ProfileAttribution extends IdentityHash {
   ProfileAttributionGeo geo;
 
   
-  String displayName;
+  core.String displayName;
 
   
-  String location;
+  core.String location;
 
   
-  String avatarUrl;
+  core.String avatarUrl;
 
   /** Parses an instance from its JSON representation. */
-  static ProfileAttribution parse(Map<String, Object> json) {
+  static ProfileAttribution parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ProfileAttribution();
     result.geo = ProfileAttributionGeo.parse(json["geo"]);
@@ -1534,9 +1351,9 @@ class ProfileAttribution extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ProfileAttribution value) {
+  static core.Object serialize(ProfileAttribution value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["geo"] = ProfileAttributionGeo.serialize(value.geo);
     result["displayName"] = identity(value.displayName);
     result["location"] = identity(value.location);
@@ -1549,16 +1366,16 @@ class ProfileAttribution extends IdentityHash {
 // Schema Profile.ProfileAttribution.ProfileAttributionGeo
 class ProfileAttributionGeo extends IdentityHash {
   
-  double latitude;
+  core.double latitude;
 
   
-  String location;
+  core.String location;
 
   
-  double longitude;
+  core.double longitude;
 
   /** Parses an instance from its JSON representation. */
-  static ProfileAttributionGeo parse(Map<String, Object> json) {
+  static ProfileAttributionGeo parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ProfileAttributionGeo();
     result.latitude = identity(json["latitude"]);
@@ -1567,9 +1384,9 @@ class ProfileAttributionGeo extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ProfileAttributionGeo value) {
+  static core.Object serialize(ProfileAttributionGeo value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["latitude"] = identity(value.latitude);
     result["location"] = identity(value.location);
     result["longitude"] = identity(value.longitude);
@@ -1581,19 +1398,19 @@ class ProfileAttributionGeo extends IdentityHash {
 // Schema Profile.ProfileId
 class ProfileId extends IdentityHash {
   
-  String user;
+  core.String user;
 
   /** Parses an instance from its JSON representation. */
-  static ProfileId parse(Map<String, Object> json) {
+  static ProfileId parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ProfileId();
     result.user = identity(json["user"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ProfileId value) {
+  static core.Object serialize(ProfileId value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["user"] = identity(value.user);
     return result;
   }
@@ -1603,31 +1420,31 @@ class ProfileId extends IdentityHash {
 // Schema .Series
 class Series extends IdentityHash {
   
-  String kind;
+  core.String kind;
 
   
-  String description;
+  core.String description;
 
   
   SeriesRules rules;
 
   
-  bool unauthVotingAllowed;
+  core.bool unauthVotingAllowed;
 
   
-  bool videoSubmissionAllowed;
+  core.bool videoSubmissionAllowed;
 
   
-  String name;
+  core.String name;
 
   
-  int numTopics;
+  core.int numTopics;
 
   
-  bool anonymousSubmissionAllowed;
+  core.bool anonymousSubmissionAllowed;
 
   
-  bool unauthSubmissionAllowed;
+  core.bool unauthSubmissionAllowed;
 
   
   SeriesId id;
@@ -1636,7 +1453,7 @@ class Series extends IdentityHash {
   SeriesCounters counters;
 
   /** Parses an instance from its JSON representation. */
-  static Series parse(Map<String, Object> json) {
+  static Series parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Series();
     result.kind = identity(json["kind"]);
@@ -1653,9 +1470,9 @@ class Series extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Series value) {
+  static core.Object serialize(Series value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["kind"] = identity(value.kind);
     result["description"] = identity(value.description);
     result["rules"] = SeriesRules.serialize(value.rules);
@@ -1675,28 +1492,28 @@ class Series extends IdentityHash {
 // Schema Series.SeriesCounters
 class SeriesCounters extends IdentityHash {
   
-  int users;
+  core.int users;
 
   
-  int noneVotes;
+  core.int noneVotes;
 
   
-  int videoSubmissions;
+  core.int videoSubmissions;
 
   
-  int minusVotes;
+  core.int minusVotes;
 
   
-  int anonymousSubmissions;
+  core.int anonymousSubmissions;
 
   
-  int submissions;
+  core.int submissions;
 
   
-  int plusVotes;
+  core.int plusVotes;
 
   /** Parses an instance from its JSON representation. */
-  static SeriesCounters parse(Map<String, Object> json) {
+  static SeriesCounters parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new SeriesCounters();
     result.users = identity(json["users"]);
@@ -1709,9 +1526,9 @@ class SeriesCounters extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(SeriesCounters value) {
+  static core.Object serialize(SeriesCounters value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["users"] = identity(value.users);
     result["noneVotes"] = identity(value.noneVotes);
     result["videoSubmissions"] = identity(value.videoSubmissions);
@@ -1727,19 +1544,19 @@ class SeriesCounters extends IdentityHash {
 // Schema Series.SeriesId
 class SeriesId extends IdentityHash {
   
-  String seriesId;
+  core.String seriesId;
 
   /** Parses an instance from its JSON representation. */
-  static SeriesId parse(Map<String, Object> json) {
+  static SeriesId parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new SeriesId();
     result.seriesId = identity(json["seriesId"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(SeriesId value) {
+  static core.Object serialize(SeriesId value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["seriesId"] = identity(value.seriesId);
     return result;
   }
@@ -1749,13 +1566,13 @@ class SeriesId extends IdentityHash {
 // Schema .SeriesList
 class SeriesList extends IdentityHash {
   
-  List<Series> items;
+  core.List<Series> items;
 
   
-  String kind;
+  core.String kind;
 
   /** Parses an instance from its JSON representation. */
-  static SeriesList parse(Map<String, Object> json) {
+  static SeriesList parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new SeriesList();
     result.items = map(Series.parse)(json["items"]);
@@ -1763,9 +1580,9 @@ class SeriesList extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(SeriesList value) {
+  static core.Object serialize(SeriesList value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["items"] = map(Series.serialize)(value.items);
     result["kind"] = identity(value.kind);
     return result;
@@ -1782,7 +1599,7 @@ class SeriesRules extends IdentityHash {
   SeriesRulesSubmissions submissions;
 
   /** Parses an instance from its JSON representation. */
-  static SeriesRules parse(Map<String, Object> json) {
+  static SeriesRules parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new SeriesRules();
     result.votes = SeriesRulesVotes.parse(json["votes"]);
@@ -1790,9 +1607,9 @@ class SeriesRules extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(SeriesRules value) {
+  static core.Object serialize(SeriesRules value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["votes"] = SeriesRulesVotes.serialize(value.votes);
     result["submissions"] = SeriesRulesSubmissions.serialize(value.submissions);
     return result;
@@ -1803,13 +1620,13 @@ class SeriesRules extends IdentityHash {
 // Schema Series.SeriesRules.SeriesRulesSubmissions
 class SeriesRulesSubmissions extends IdentityHash {
   
-  String close;
+  core.String close;
 
   
-  String open;
+  core.String open;
 
   /** Parses an instance from its JSON representation. */
-  static SeriesRulesSubmissions parse(Map<String, Object> json) {
+  static SeriesRulesSubmissions parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new SeriesRulesSubmissions();
     result.close = identity(json["close"]);
@@ -1817,9 +1634,9 @@ class SeriesRulesSubmissions extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(SeriesRulesSubmissions value) {
+  static core.Object serialize(SeriesRulesSubmissions value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["close"] = identity(value.close);
     result["open"] = identity(value.open);
     return result;
@@ -1830,13 +1647,13 @@ class SeriesRulesSubmissions extends IdentityHash {
 // Schema Series.SeriesRules.SeriesRulesVotes
 class SeriesRulesVotes extends IdentityHash {
   
-  String close;
+  core.String close;
 
   
-  String open;
+  core.String open;
 
   /** Parses an instance from its JSON representation. */
-  static SeriesRulesVotes parse(Map<String, Object> json) {
+  static SeriesRulesVotes parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new SeriesRulesVotes();
     result.close = identity(json["close"]);
@@ -1844,9 +1661,9 @@ class SeriesRulesVotes extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(SeriesRulesVotes value) {
+  static core.Object serialize(SeriesRulesVotes value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["close"] = identity(value.close);
     result["open"] = identity(value.open);
     return result;
@@ -1857,25 +1674,25 @@ class SeriesRulesVotes extends IdentityHash {
 // Schema .Submission
 class Submission extends IdentityHash {
   
-  String kind;
+  core.String kind;
 
   
   SubmissionAttribution attribution;
 
   
-  String created;
+  core.String created;
 
   
-  String text;
+  core.String text;
 
   
-  List<ModeratorTopicsResourcePartial> topics;
+  core.List<ModeratorTopicsResourcePartial> topics;
 
   
-  String author;
+  core.String author;
 
   
-  List<SubmissionTranslations> translations;
+  core.List<SubmissionTranslations> translations;
 
   
   SubmissionParentSubmissionId parentSubmissionId;
@@ -1884,7 +1701,7 @@ class Submission extends IdentityHash {
   ModeratorVotesResourcePartial vote;
 
   
-  String attachmentUrl;
+  core.String attachmentUrl;
 
   
   SubmissionGeo geo;
@@ -1896,7 +1713,7 @@ class Submission extends IdentityHash {
   SubmissionCounters counters;
 
   /** Parses an instance from its JSON representation. */
-  static Submission parse(Map<String, Object> json) {
+  static Submission parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Submission();
     result.kind = identity(json["kind"]);
@@ -1915,9 +1732,9 @@ class Submission extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Submission value) {
+  static core.Object serialize(Submission value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["kind"] = identity(value.kind);
     result["attribution"] = SubmissionAttribution.serialize(value.attribution);
     result["created"] = identity(value.created);
@@ -1939,16 +1756,16 @@ class Submission extends IdentityHash {
 // Schema Submission.SubmissionAttribution
 class SubmissionAttribution extends IdentityHash {
   
-  String displayName;
+  core.String displayName;
 
   
-  String location;
+  core.String location;
 
   
-  String avatarUrl;
+  core.String avatarUrl;
 
   /** Parses an instance from its JSON representation. */
-  static SubmissionAttribution parse(Map<String, Object> json) {
+  static SubmissionAttribution parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new SubmissionAttribution();
     result.displayName = identity(json["displayName"]);
@@ -1957,9 +1774,9 @@ class SubmissionAttribution extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(SubmissionAttribution value) {
+  static core.Object serialize(SubmissionAttribution value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["displayName"] = identity(value.displayName);
     result["location"] = identity(value.location);
     result["avatarUrl"] = identity(value.avatarUrl);
@@ -1971,16 +1788,16 @@ class SubmissionAttribution extends IdentityHash {
 // Schema Submission.SubmissionCounters
 class SubmissionCounters extends IdentityHash {
   
-  int noneVotes;
+  core.int noneVotes;
 
   
-  int minusVotes;
+  core.int minusVotes;
 
   
-  int plusVotes;
+  core.int plusVotes;
 
   /** Parses an instance from its JSON representation. */
-  static SubmissionCounters parse(Map<String, Object> json) {
+  static SubmissionCounters parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new SubmissionCounters();
     result.noneVotes = identity(json["noneVotes"]);
@@ -1989,9 +1806,9 @@ class SubmissionCounters extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(SubmissionCounters value) {
+  static core.Object serialize(SubmissionCounters value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["noneVotes"] = identity(value.noneVotes);
     result["minusVotes"] = identity(value.minusVotes);
     result["plusVotes"] = identity(value.plusVotes);
@@ -2003,16 +1820,16 @@ class SubmissionCounters extends IdentityHash {
 // Schema Submission.SubmissionGeo
 class SubmissionGeo extends IdentityHash {
   
-  double latitude;
+  core.double latitude;
 
   
-  String location;
+  core.String location;
 
   
-  double longitude;
+  core.double longitude;
 
   /** Parses an instance from its JSON representation. */
-  static SubmissionGeo parse(Map<String, Object> json) {
+  static SubmissionGeo parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new SubmissionGeo();
     result.latitude = identity(json["latitude"]);
@@ -2021,9 +1838,9 @@ class SubmissionGeo extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(SubmissionGeo value) {
+  static core.Object serialize(SubmissionGeo value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["latitude"] = identity(value.latitude);
     result["location"] = identity(value.location);
     result["longitude"] = identity(value.longitude);
@@ -2035,13 +1852,13 @@ class SubmissionGeo extends IdentityHash {
 // Schema Submission.SubmissionId
 class SubmissionId extends IdentityHash {
   
-  String seriesId;
+  core.String seriesId;
 
   
-  String submissionId;
+  core.String submissionId;
 
   /** Parses an instance from its JSON representation. */
-  static SubmissionId parse(Map<String, Object> json) {
+  static SubmissionId parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new SubmissionId();
     result.seriesId = identity(json["seriesId"]);
@@ -2049,9 +1866,9 @@ class SubmissionId extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(SubmissionId value) {
+  static core.Object serialize(SubmissionId value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["seriesId"] = identity(value.seriesId);
     result["submissionId"] = identity(value.submissionId);
     return result;
@@ -2062,13 +1879,13 @@ class SubmissionId extends IdentityHash {
 // Schema .SubmissionList
 class SubmissionList extends IdentityHash {
   
-  List<Submission> items;
+  core.List<Submission> items;
 
   
-  String kind;
+  core.String kind;
 
   /** Parses an instance from its JSON representation. */
-  static SubmissionList parse(Map<String, Object> json) {
+  static SubmissionList parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new SubmissionList();
     result.items = map(Submission.parse)(json["items"]);
@@ -2076,9 +1893,9 @@ class SubmissionList extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(SubmissionList value) {
+  static core.Object serialize(SubmissionList value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["items"] = map(Submission.serialize)(value.items);
     result["kind"] = identity(value.kind);
     return result;
@@ -2089,13 +1906,13 @@ class SubmissionList extends IdentityHash {
 // Schema Submission.SubmissionParentSubmissionId
 class SubmissionParentSubmissionId extends IdentityHash {
   
-  String seriesId;
+  core.String seriesId;
 
   
-  String submissionId;
+  core.String submissionId;
 
   /** Parses an instance from its JSON representation. */
-  static SubmissionParentSubmissionId parse(Map<String, Object> json) {
+  static SubmissionParentSubmissionId parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new SubmissionParentSubmissionId();
     result.seriesId = identity(json["seriesId"]);
@@ -2103,9 +1920,9 @@ class SubmissionParentSubmissionId extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(SubmissionParentSubmissionId value) {
+  static core.Object serialize(SubmissionParentSubmissionId value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["seriesId"] = identity(value.seriesId);
     result["submissionId"] = identity(value.submissionId);
     return result;
@@ -2116,13 +1933,13 @@ class SubmissionParentSubmissionId extends IdentityHash {
 // Schema Submission.SubmissionTranslations
 class SubmissionTranslations extends IdentityHash {
   
-  String lang;
+  core.String lang;
 
   
-  String text;
+  core.String text;
 
   /** Parses an instance from its JSON representation. */
-  static SubmissionTranslations parse(Map<String, Object> json) {
+  static SubmissionTranslations parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new SubmissionTranslations();
     result.lang = identity(json["lang"]);
@@ -2130,9 +1947,9 @@ class SubmissionTranslations extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(SubmissionTranslations value) {
+  static core.Object serialize(SubmissionTranslations value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["lang"] = identity(value.lang);
     result["text"] = identity(value.text);
     return result;
@@ -2143,16 +1960,16 @@ class SubmissionTranslations extends IdentityHash {
 // Schema .Tag
 class Tag extends IdentityHash {
   
-  String text;
+  core.String text;
 
   
-  String kind;
+  core.String kind;
 
   
   TagId id;
 
   /** Parses an instance from its JSON representation. */
-  static Tag parse(Map<String, Object> json) {
+  static Tag parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Tag();
     result.text = identity(json["text"]);
@@ -2161,9 +1978,9 @@ class Tag extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Tag value) {
+  static core.Object serialize(Tag value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["text"] = identity(value.text);
     result["kind"] = identity(value.kind);
     result["id"] = TagId.serialize(value.id);
@@ -2175,16 +1992,16 @@ class Tag extends IdentityHash {
 // Schema Tag.TagId
 class TagId extends IdentityHash {
   
-  String seriesId;
+  core.String seriesId;
 
   
-  String tagId;
+  core.String tagId;
 
   
-  String submissionId;
+  core.String submissionId;
 
   /** Parses an instance from its JSON representation. */
-  static TagId parse(Map<String, Object> json) {
+  static TagId parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new TagId();
     result.seriesId = identity(json["seriesId"]);
@@ -2193,9 +2010,9 @@ class TagId extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(TagId value) {
+  static core.Object serialize(TagId value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["seriesId"] = identity(value.seriesId);
     result["tagId"] = identity(value.tagId);
     result["submissionId"] = identity(value.submissionId);
@@ -2207,13 +2024,13 @@ class TagId extends IdentityHash {
 // Schema .TagList
 class TagList extends IdentityHash {
   
-  List<Tag> items;
+  core.List<Tag> items;
 
   
-  String kind;
+  core.String kind;
 
   /** Parses an instance from its JSON representation. */
-  static TagList parse(Map<String, Object> json) {
+  static TagList parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new TagList();
     result.items = map(Tag.parse)(json["items"]);
@@ -2221,9 +2038,9 @@ class TagList extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(TagList value) {
+  static core.Object serialize(TagList value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["items"] = map(Tag.serialize)(value.items);
     result["kind"] = identity(value.kind);
     return result;
@@ -2234,10 +2051,10 @@ class TagList extends IdentityHash {
 // Schema .Topic
 class Topic extends IdentityHash {
   
-  String kind;
+  core.String kind;
 
   
-  String description;
+  core.String description;
 
   
   TopicRules rules;
@@ -2246,7 +2063,7 @@ class Topic extends IdentityHash {
   Submission featuredSubmission;
 
   
-  String presenter;
+  core.String presenter;
 
   
   TopicCounters counters;
@@ -2255,10 +2072,10 @@ class Topic extends IdentityHash {
   TopicId id;
 
   
-  String name;
+  core.String name;
 
   /** Parses an instance from its JSON representation. */
-  static Topic parse(Map<String, Object> json) {
+  static Topic parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Topic();
     result.kind = identity(json["kind"]);
@@ -2272,9 +2089,9 @@ class Topic extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Topic value) {
+  static core.Object serialize(Topic value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["kind"] = identity(value.kind);
     result["description"] = identity(value.description);
     result["rules"] = TopicRules.serialize(value.rules);
@@ -2291,25 +2108,25 @@ class Topic extends IdentityHash {
 // Schema Topic.TopicCounters
 class TopicCounters extends IdentityHash {
   
-  int users;
+  core.int users;
 
   
-  int noneVotes;
+  core.int noneVotes;
 
   
-  int videoSubmissions;
+  core.int videoSubmissions;
 
   
-  int minusVotes;
+  core.int minusVotes;
 
   
-  int submissions;
+  core.int submissions;
 
   
-  int plusVotes;
+  core.int plusVotes;
 
   /** Parses an instance from its JSON representation. */
-  static TopicCounters parse(Map<String, Object> json) {
+  static TopicCounters parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new TopicCounters();
     result.users = identity(json["users"]);
@@ -2321,9 +2138,9 @@ class TopicCounters extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(TopicCounters value) {
+  static core.Object serialize(TopicCounters value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["users"] = identity(value.users);
     result["noneVotes"] = identity(value.noneVotes);
     result["videoSubmissions"] = identity(value.videoSubmissions);
@@ -2338,13 +2155,13 @@ class TopicCounters extends IdentityHash {
 // Schema Topic.TopicId
 class TopicId extends IdentityHash {
   
-  String seriesId;
+  core.String seriesId;
 
   
-  String topicId;
+  core.String topicId;
 
   /** Parses an instance from its JSON representation. */
-  static TopicId parse(Map<String, Object> json) {
+  static TopicId parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new TopicId();
     result.seriesId = identity(json["seriesId"]);
@@ -2352,9 +2169,9 @@ class TopicId extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(TopicId value) {
+  static core.Object serialize(TopicId value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["seriesId"] = identity(value.seriesId);
     result["topicId"] = identity(value.topicId);
     return result;
@@ -2365,13 +2182,13 @@ class TopicId extends IdentityHash {
 // Schema .TopicList
 class TopicList extends IdentityHash {
   
-  List<Topic> items;
+  core.List<Topic> items;
 
   
-  String kind;
+  core.String kind;
 
   /** Parses an instance from its JSON representation. */
-  static TopicList parse(Map<String, Object> json) {
+  static TopicList parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new TopicList();
     result.items = map(Topic.parse)(json["items"]);
@@ -2379,9 +2196,9 @@ class TopicList extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(TopicList value) {
+  static core.Object serialize(TopicList value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["items"] = map(Topic.serialize)(value.items);
     result["kind"] = identity(value.kind);
     return result;
@@ -2398,7 +2215,7 @@ class TopicRules extends IdentityHash {
   TopicRulesSubmissions submissions;
 
   /** Parses an instance from its JSON representation. */
-  static TopicRules parse(Map<String, Object> json) {
+  static TopicRules parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new TopicRules();
     result.votes = TopicRulesVotes.parse(json["votes"]);
@@ -2406,9 +2223,9 @@ class TopicRules extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(TopicRules value) {
+  static core.Object serialize(TopicRules value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["votes"] = TopicRulesVotes.serialize(value.votes);
     result["submissions"] = TopicRulesSubmissions.serialize(value.submissions);
     return result;
@@ -2419,13 +2236,13 @@ class TopicRules extends IdentityHash {
 // Schema Topic.TopicRules.TopicRulesSubmissions
 class TopicRulesSubmissions extends IdentityHash {
   
-  String close;
+  core.String close;
 
   
-  String open;
+  core.String open;
 
   /** Parses an instance from its JSON representation. */
-  static TopicRulesSubmissions parse(Map<String, Object> json) {
+  static TopicRulesSubmissions parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new TopicRulesSubmissions();
     result.close = identity(json["close"]);
@@ -2433,9 +2250,9 @@ class TopicRulesSubmissions extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(TopicRulesSubmissions value) {
+  static core.Object serialize(TopicRulesSubmissions value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["close"] = identity(value.close);
     result["open"] = identity(value.open);
     return result;
@@ -2446,13 +2263,13 @@ class TopicRulesSubmissions extends IdentityHash {
 // Schema Topic.TopicRules.TopicRulesVotes
 class TopicRulesVotes extends IdentityHash {
   
-  String close;
+  core.String close;
 
   
-  String open;
+  core.String open;
 
   /** Parses an instance from its JSON representation. */
-  static TopicRulesVotes parse(Map<String, Object> json) {
+  static TopicRulesVotes parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new TopicRulesVotes();
     result.close = identity(json["close"]);
@@ -2460,9 +2277,9 @@ class TopicRulesVotes extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(TopicRulesVotes value) {
+  static core.Object serialize(TopicRulesVotes value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["close"] = identity(value.close);
     result["open"] = identity(value.open);
     return result;
@@ -2473,19 +2290,19 @@ class TopicRulesVotes extends IdentityHash {
 // Schema .Vote
 class Vote extends IdentityHash {
   
-  String vote;
+  core.String vote;
 
   
-  String flag;
+  core.String flag;
 
   
   VoteId id;
 
   
-  String kind;
+  core.String kind;
 
   /** Parses an instance from its JSON representation. */
-  static Vote parse(Map<String, Object> json) {
+  static Vote parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Vote();
     result.vote = identity(json["vote"]);
@@ -2495,9 +2312,9 @@ class Vote extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Vote value) {
+  static core.Object serialize(Vote value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["vote"] = identity(value.vote);
     result["flag"] = identity(value.flag);
     result["id"] = VoteId.serialize(value.id);
@@ -2510,13 +2327,13 @@ class Vote extends IdentityHash {
 // Schema Vote.VoteId
 class VoteId extends IdentityHash {
   
-  String seriesId;
+  core.String seriesId;
 
   
-  String submissionId;
+  core.String submissionId;
 
   /** Parses an instance from its JSON representation. */
-  static VoteId parse(Map<String, Object> json) {
+  static VoteId parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new VoteId();
     result.seriesId = identity(json["seriesId"]);
@@ -2524,9 +2341,9 @@ class VoteId extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(VoteId value) {
+  static core.Object serialize(VoteId value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["seriesId"] = identity(value.seriesId);
     result["submissionId"] = identity(value.submissionId);
     return result;
@@ -2537,13 +2354,13 @@ class VoteId extends IdentityHash {
 // Schema .VoteList
 class VoteList extends IdentityHash {
   
-  List<Vote> items;
+  core.List<Vote> items;
 
   
-  String kind;
+  core.String kind;
 
   /** Parses an instance from its JSON representation. */
-  static VoteList parse(Map<String, Object> json) {
+  static VoteList parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new VoteList();
     result.items = map(Vote.parse)(json["items"]);
@@ -2551,9 +2368,9 @@ class VoteList extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(VoteList value) {
+  static core.Object serialize(VoteList value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["items"] = map(Vote.serialize)(value.items);
     result["kind"] = identity(value.kind);
     return result;
@@ -2562,12 +2379,12 @@ class VoteList extends IdentityHash {
 }
 
 // Enum ModeratorApi.Alt
-class ModeratorApiAlt implements Hashable {
+class ModeratorApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/json */
   static final ModeratorApiAlt JSON = const ModeratorApiAlt._internal("json", 0);
 
   /** All values of this enumeration */
-  static final List<ModeratorApiAlt> values = const <ModeratorApiAlt>[
+  static final core.List<ModeratorApiAlt> values = const <ModeratorApiAlt>[
     JSON,
   ];
 
@@ -2577,14 +2394,14 @@ class ModeratorApiAlt implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static ModeratorApiAlt valueOf(String item) => _valuesMap[item];
+  static ModeratorApiAlt valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const ModeratorApiAlt._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const ModeratorApiAlt._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Alt".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Alt".hashCode();
 }
 

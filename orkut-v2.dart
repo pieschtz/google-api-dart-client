@@ -1,4 +1,5 @@
 #library("orkut");
+#import('dart:core', prefix: 'core');
 #import('dart:json');
 
 #import('utils.dart');
@@ -8,13 +9,15 @@
 /**
  * Lets you manage activities, comments and badges in Orkut. More stuff coming in time.
  */
-class OrkutApi {
+class OrkutApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
-  final String baseUrl;
+  final core.String baseUrl;
+  /** How we should identify ourselves to the service. */
+  Authenticator authenticator;
   /** The client library version */
-  final String clientVersion = "0.1";
+  final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
-  final String applicationName;
+  final core.String applicationName;
   OrkutApi get _$service() => this;
   CommunityMembersResource _communityMembers;
   CommunityMembersResource get communityMembers() => _communityMembers;
@@ -50,37 +53,37 @@ class OrkutApi {
   CountersResource get counters() => _counters;
   
   /** Returns response with indentations and line breaks. */
-  bool prettyPrint;
+  core.bool prettyPrint;
 
   /** Selector specifying which fields to include in a partial response. */
-  String fields;
+  core.String fields;
 
   /**
    * Available to use for quota purposes for server-side applications. Can be any arbitrary string
    * assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.
    */
-  String quotaUser;
+  core.String quotaUser;
 
   /** OAuth 2.0 token for the current user. */
-  String oauthToken;
+  core.String oauthToken;
 
   /**
    * API key. Your API key identifies your project and provides you with API access, quota, and
    * reports. Required unless you provide an OAuth 2.0 token.
    */
-  String key;
+  core.String key;
 
   /**
    * IP address of the site where the request originates. Use this if you want to enforce per-user
    * limits.
    */
-  String userIp;
+  core.String userIp;
 
   /** Data format for the response. */
   OrkutApiAlt alt;
 
 
-  OrkutApi([this.baseUrl = "https://www.googleapis.com/orkut/v2/", this.applicationName]) { 
+  OrkutApi([this.baseUrl = "https://www.googleapis.com/orkut/v2/", this.applicationName, this.authenticator]) { 
     _communityMembers = new CommunityMembersResource._internal(this);
     _activities = new ActivitiesResource._internal(this);
     _communityPollComments = new CommunityPollCommentsResource._internal(this);
@@ -98,14 +101,14 @@ class OrkutApi {
     _badges = new BadgesResource._internal(this);
     _counters = new CountersResource._internal(this);
   }
-  String get userAgent() {
+  core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}orkut/v2/20120223 google-api-dart-client/${clientVersion}";
   }
 }
 
 // Resource .CommunityMembersResource
-class CommunityMembersResource {
+class CommunityMembersResource extends core.Object {
   final OrkutApi _$service;
   
   CommunityMembersResource._internal(OrkutApi $service) : _$service = $service;
@@ -116,7 +119,7 @@ class CommunityMembersResource {
    * [communityId] ID of the community.
    * [userId] ID of the user.
    */
-  Future<CommunityMembers> insert(int communityId, String userId) {
+  core.Future<CommunityMembers> insert(core.int communityId, core.String userId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -131,19 +134,13 @@ class CommunityMembersResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "communities/{communityId}/members/{userId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<CommunityMembers>();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = CommunityMembers.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => CommunityMembers.parse(JSON.parse($text)));
   }
 
   // Method CommunityMembersResource.Get
@@ -152,7 +149,7 @@ class CommunityMembersResource {
    * [communityId] ID of the community.
    * [userId] ID of the user.
    */
-  Future<CommunityMembers> get(int communityId, String userId, [String hl = UNSPECIFIED]) {
+  core.Future<CommunityMembers> get(core.int communityId, core.String userId, [core.String hl = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -168,19 +165,13 @@ class CommunityMembersResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "communities/{communityId}/members/{userId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<CommunityMembers>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = CommunityMembers.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => CommunityMembers.parse(JSON.parse($text)));
   }
 
   // Method CommunityMembersResource.List
@@ -190,7 +181,7 @@ class CommunityMembersResource {
    * as that count may be approximate.
    * [communityId] The ID of the community whose members will be listed.
    */
-  Future<CommunityMembersList> list(int communityId, [String pageToken = UNSPECIFIED, bool friendsOnly = UNSPECIFIED, int maxResults = UNSPECIFIED, String hl = UNSPECIFIED]) {
+  core.Future<CommunityMembersList> list(core.int communityId, [core.String pageToken = UNSPECIFIED, core.bool friendsOnly = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String hl = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -208,19 +199,13 @@ class CommunityMembersResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "communities/{communityId}/members").generate($pathParams, $queryParams);
-    final $completer = new Completer<CommunityMembersList>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = CommunityMembersList.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => CommunityMembersList.parse(JSON.parse($text)));
   }
 
   // Method CommunityMembersResource.Delete
@@ -229,7 +214,7 @@ class CommunityMembersResource {
    * [communityId] ID of the community.
    * [userId] ID of the user.
    */
-  Future delete(int communityId, String userId) {
+  core.Future delete(core.int communityId, core.String userId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -244,24 +229,18 @@ class CommunityMembersResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "communities/{communityId}/members/{userId}").generate($pathParams, $queryParams);
-    final $completer = new Completer();
     final $http = new HttpRequest($url, "DELETE", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = identity(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => identity(JSON.parse($text)));
   }
 }
 
 // Resource .ActivitiesResource
-class ActivitiesResource {
+class ActivitiesResource extends core.Object {
   final OrkutApi _$service;
   
   ActivitiesResource._internal(OrkutApi $service) : _$service = $service;
@@ -273,7 +252,7 @@ class ActivitiesResource {
    *        authenticated user).
    * [collection] The collection of activities to list.
    */
-  Future<ActivityList> list(String userId, ActivitiesResourceListCollection collection, [String pageToken = UNSPECIFIED, int maxResults = UNSPECIFIED, String hl = UNSPECIFIED]) {
+  core.Future<ActivityList> list(core.String userId, ActivitiesResourceListCollection collection, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String hl = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -291,19 +270,13 @@ class ActivitiesResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "people/{userId}/activities/{collection}").generate($pathParams, $queryParams);
-    final $completer = new Completer<ActivityList>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = ActivityList.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => ActivityList.parse(JSON.parse($text)));
   }
 
   // Method ActivitiesResource.Delete
@@ -311,7 +284,7 @@ class ActivitiesResource {
    * Deletes an existing activity, if the access controls allow it.
    * [activityId] ID of the activity to remove.
    */
-  Future delete(String activityId) {
+  core.Future delete(core.String activityId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -325,24 +298,18 @@ class ActivitiesResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "activities/{activityId}").generate($pathParams, $queryParams);
-    final $completer = new Completer();
     final $http = new HttpRequest($url, "DELETE", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = identity(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => identity(JSON.parse($text)));
   }
 }
 
 // Enum ActivitiesResource.List.Collection
-class ActivitiesResourceListCollection implements Hashable {
+class ActivitiesResourceListCollection extends core.Object implements core.Hashable {
   /**
  * All activities created by the specified user that the authenticated user is authorized to view.
  */
@@ -356,7 +323,7 @@ class ActivitiesResourceListCollection implements Hashable {
   static final ActivitiesResourceListCollection STREAM = const ActivitiesResourceListCollection._internal("stream", 2);
 
   /** All values of this enumeration */
-  static final List<ActivitiesResourceListCollection> values = const <ActivitiesResourceListCollection>[
+  static final core.List<ActivitiesResourceListCollection> values = const <ActivitiesResourceListCollection>[
     ALL,
     SCRAPS,
     STREAM,
@@ -370,19 +337,19 @@ class ActivitiesResourceListCollection implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static ActivitiesResourceListCollection valueOf(String item) => _valuesMap[item];
+  static ActivitiesResourceListCollection valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const ActivitiesResourceListCollection._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const ActivitiesResourceListCollection._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Collection".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Collection".hashCode();
 }
 
 // Resource .CommunityPollCommentsResource
-class CommunityPollCommentsResource {
+class CommunityPollCommentsResource extends core.Object {
   final OrkutApi _$service;
   
   CommunityPollCommentsResource._internal(OrkutApi $service) : _$service = $service;
@@ -394,7 +361,7 @@ class CommunityPollCommentsResource {
    * [pollId] The ID of the poll being commented.
    * [content] the CommunityPollComment
    */
-  Future<CommunityPollComment> insert(int communityId, String pollId, CommunityPollComment content) {
+  core.Future<CommunityPollComment> insert(core.int communityId, core.String pollId, CommunityPollComment content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -411,19 +378,13 @@ class CommunityPollCommentsResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(CommunityPollComment.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "communities/{communityId}/polls/{pollId}/comments").generate($pathParams, $queryParams);
-    final $completer = new Completer<CommunityPollComment>();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = CommunityPollComment.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => CommunityPollComment.parse(JSON.parse($text)));
   }
 
   // Method CommunityPollCommentsResource.List
@@ -432,7 +393,7 @@ class CommunityPollCommentsResource {
    * [communityId] The ID of the community whose poll is having its comments listed.
    * [pollId] The ID of the community whose polls will be listed.
    */
-  Future<CommunityPollCommentList> list(int communityId, String pollId, [String pageToken = UNSPECIFIED, int maxResults = UNSPECIFIED, String hl = UNSPECIFIED]) {
+  core.Future<CommunityPollCommentList> list(core.int communityId, core.String pollId, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String hl = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -450,24 +411,18 @@ class CommunityPollCommentsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "communities/{communityId}/polls/{pollId}/comments").generate($pathParams, $queryParams);
-    final $completer = new Completer<CommunityPollCommentList>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = CommunityPollCommentList.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => CommunityPollCommentList.parse(JSON.parse($text)));
   }
 }
 
 // Resource .CommunityPollsResource
-class CommunityPollsResource {
+class CommunityPollsResource extends core.Object {
   final OrkutApi _$service;
   
   CommunityPollsResource._internal(OrkutApi $service) : _$service = $service;
@@ -477,7 +432,7 @@ class CommunityPollsResource {
    * Retrieves the polls of a community.
    * [communityId] The ID of the community which polls will be listed.
    */
-  Future<CommunityPollList> list(int communityId, [String pageToken = UNSPECIFIED, int maxResults = UNSPECIFIED, String hl = UNSPECIFIED]) {
+  core.Future<CommunityPollList> list(core.int communityId, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String hl = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -494,19 +449,13 @@ class CommunityPollsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "communities/{communityId}/polls").generate($pathParams, $queryParams);
-    final $completer = new Completer<CommunityPollList>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = CommunityPollList.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => CommunityPollList.parse(JSON.parse($text)));
   }
 
   // Method CommunityPollsResource.Get
@@ -515,7 +464,7 @@ class CommunityPollsResource {
    * [communityId] The ID of the community for whose poll will be retrieved.
    * [pollId] The ID of the poll to get.
    */
-  Future<CommunityPoll> get(int communityId, String pollId, [String hl = UNSPECIFIED]) {
+  core.Future<CommunityPoll> get(core.int communityId, core.String pollId, [core.String hl = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -531,24 +480,18 @@ class CommunityPollsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "communities/{communityId}/polls/{pollId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<CommunityPoll>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = CommunityPoll.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => CommunityPoll.parse(JSON.parse($text)));
   }
 }
 
 // Resource .CommunityMessagesResource
-class CommunityMessagesResource {
+class CommunityMessagesResource extends core.Object {
   final OrkutApi _$service;
   
   CommunityMessagesResource._internal(OrkutApi $service) : _$service = $service;
@@ -560,7 +503,7 @@ class CommunityMessagesResource {
    * [topicId] The ID of the topic the message should be added to.
    * [content] the CommunityMessage
    */
-  Future<CommunityMessage> insert(int communityId, String topicId, CommunityMessage content) {
+  core.Future<CommunityMessage> insert(core.int communityId, core.String topicId, CommunityMessage content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -577,19 +520,13 @@ class CommunityMessagesResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(CommunityMessage.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "communities/{communityId}/topics/{topicId}/messages").generate($pathParams, $queryParams);
-    final $completer = new Completer<CommunityMessage>();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = CommunityMessage.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => CommunityMessage.parse(JSON.parse($text)));
   }
 
   // Method CommunityMessagesResource.List
@@ -598,7 +535,7 @@ class CommunityMessagesResource {
    * [communityId] The ID of the community which messages will be listed.
    * [topicId] The ID of the topic which messages will be listed.
    */
-  Future<CommunityMessageList> list(int communityId, String topicId, [String pageToken = UNSPECIFIED, int maxResults = UNSPECIFIED, String hl = UNSPECIFIED]) {
+  core.Future<CommunityMessageList> list(core.int communityId, core.String topicId, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String hl = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -616,19 +553,13 @@ class CommunityMessagesResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "communities/{communityId}/topics/{topicId}/messages").generate($pathParams, $queryParams);
-    final $completer = new Completer<CommunityMessageList>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = CommunityMessageList.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => CommunityMessageList.parse(JSON.parse($text)));
   }
 
   // Method CommunityMessagesResource.Delete
@@ -638,7 +569,7 @@ class CommunityMessagesResource {
    * [topicId] The ID of the topic whose message will be moved to the trash folder.
    * [messageId] The ID of the message to be moved to the trash folder.
    */
-  Future delete(int communityId, String topicId, String messageId) {
+  core.Future delete(core.int communityId, core.String topicId, core.String messageId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -654,24 +585,18 @@ class CommunityMessagesResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "communities/{communityId}/topics/{topicId}/messages/{messageId}").generate($pathParams, $queryParams);
-    final $completer = new Completer();
     final $http = new HttpRequest($url, "DELETE", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = identity(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => identity(JSON.parse($text)));
   }
 }
 
 // Resource .CommunityTopicsResource
-class CommunityTopicsResource {
+class CommunityTopicsResource extends core.Object {
   final OrkutApi _$service;
   
   CommunityTopicsResource._internal(OrkutApi $service) : _$service = $service;
@@ -682,7 +607,7 @@ class CommunityTopicsResource {
    * [communityId] The ID of the community the topic should be added to.
    * [content] the CommunityTopic
    */
-  Future<CommunityTopic> insert(int communityId, CommunityTopic content, [bool isShout = UNSPECIFIED]) {
+  core.Future<CommunityTopic> insert(core.int communityId, CommunityTopic content, [core.bool isShout = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -699,19 +624,13 @@ class CommunityTopicsResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(CommunityTopic.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "communities/{communityId}/topics").generate($pathParams, $queryParams);
-    final $completer = new Completer<CommunityTopic>();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = CommunityTopic.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => CommunityTopic.parse(JSON.parse($text)));
   }
 
   // Method CommunityTopicsResource.Get
@@ -720,7 +639,7 @@ class CommunityTopicsResource {
    * [communityId] The ID of the community whose topic will be retrieved.
    * [topicId] The ID of the topic to get.
    */
-  Future<CommunityTopic> get(int communityId, String topicId, [String hl = UNSPECIFIED]) {
+  core.Future<CommunityTopic> get(core.int communityId, core.String topicId, [core.String hl = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -736,19 +655,13 @@ class CommunityTopicsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "communities/{communityId}/topics/{topicId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<CommunityTopic>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = CommunityTopic.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => CommunityTopic.parse(JSON.parse($text)));
   }
 
   // Method CommunityTopicsResource.List
@@ -756,7 +669,7 @@ class CommunityTopicsResource {
    * Retrieves the topics of a community.
    * [communityId] The ID of the community which topics will be listed.
    */
-  Future<CommunityTopicList> list(int communityId, [String pageToken = UNSPECIFIED, int maxResults = UNSPECIFIED, String hl = UNSPECIFIED]) {
+  core.Future<CommunityTopicList> list(core.int communityId, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String hl = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -773,19 +686,13 @@ class CommunityTopicsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "communities/{communityId}/topics").generate($pathParams, $queryParams);
-    final $completer = new Completer<CommunityTopicList>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = CommunityTopicList.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => CommunityTopicList.parse(JSON.parse($text)));
   }
 
   // Method CommunityTopicsResource.Delete
@@ -794,7 +701,7 @@ class CommunityTopicsResource {
    * [communityId] The ID of the community whose topic will be moved to the trash folder.
    * [topicId] The ID of the topic to be moved to the trash folder.
    */
-  Future delete(int communityId, String topicId) {
+  core.Future delete(core.int communityId, core.String topicId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -809,24 +716,18 @@ class CommunityTopicsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "communities/{communityId}/topics/{topicId}").generate($pathParams, $queryParams);
-    final $completer = new Completer();
     final $http = new HttpRequest($url, "DELETE", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = identity(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => identity(JSON.parse($text)));
   }
 }
 
 // Resource .CommentsResource
-class CommentsResource {
+class CommentsResource extends core.Object {
   final OrkutApi _$service;
   
   CommentsResource._internal(OrkutApi $service) : _$service = $service;
@@ -837,7 +738,7 @@ class CommentsResource {
    * [activityId] The ID of the activity to contain the new comment.
    * [content] the Comment
    */
-  Future<Comment> insert(String activityId, Comment content) {
+  core.Future<Comment> insert(core.String activityId, Comment content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -853,19 +754,13 @@ class CommentsResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Comment.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "activities/{activityId}/comments").generate($pathParams, $queryParams);
-    final $completer = new Completer<Comment>();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Comment.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Comment.parse(JSON.parse($text)));
   }
 
   // Method CommentsResource.Get
@@ -873,7 +768,7 @@ class CommentsResource {
    * Retrieves an existing comment.
    * [commentId] ID of the comment to get.
    */
-  Future<Comment> get(String commentId, [String hl = UNSPECIFIED]) {
+  core.Future<Comment> get(core.String commentId, [core.String hl = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -888,19 +783,13 @@ class CommentsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "comments/{commentId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Comment>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Comment.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Comment.parse(JSON.parse($text)));
   }
 
   // Method CommentsResource.List
@@ -908,7 +797,7 @@ class CommentsResource {
    * Retrieves a list of comments, possibly filtered.
    * [activityId] The ID of the activity containing the comments.
    */
-  Future<CommentList> list(String activityId, [CommentsResourceListOrderBy orderBy = UNSPECIFIED, String pageToken = UNSPECIFIED, int maxResults = UNSPECIFIED, String hl = UNSPECIFIED]) {
+  core.Future<CommentList> list(core.String activityId, [CommentsResourceListOrderBy orderBy = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String hl = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -926,19 +815,13 @@ class CommentsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "activities/{activityId}/comments").generate($pathParams, $queryParams);
-    final $completer = new Completer<CommentList>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = CommentList.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => CommentList.parse(JSON.parse($text)));
   }
 
   // Method CommentsResource.Delete
@@ -946,7 +829,7 @@ class CommentsResource {
    * Deletes an existing comment.
    * [commentId] ID of the comment to remove.
    */
-  Future delete(String commentId) {
+  core.Future delete(core.String commentId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -960,31 +843,25 @@ class CommentsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "comments/{commentId}").generate($pathParams, $queryParams);
-    final $completer = new Completer();
     final $http = new HttpRequest($url, "DELETE", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = identity(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => identity(JSON.parse($text)));
   }
 }
 
 // Enum CommentsResource.List.OrderBy
-class CommentsResourceListOrderBy implements Hashable {
+class CommentsResourceListOrderBy extends core.Object implements core.Hashable {
   /** Use ascending sort order. */
   static final CommentsResourceListOrderBy ASCENDING = const CommentsResourceListOrderBy._internal("ascending", 0);
   /** Use descending sort order. */
   static final CommentsResourceListOrderBy DESCENDING = const CommentsResourceListOrderBy._internal("descending", 1);
 
   /** All values of this enumeration */
-  static final List<CommentsResourceListOrderBy> values = const <CommentsResourceListOrderBy>[
+  static final core.List<CommentsResourceListOrderBy> values = const <CommentsResourceListOrderBy>[
     ASCENDING,
     DESCENDING,
   ];
@@ -996,19 +873,19 @@ class CommentsResourceListOrderBy implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static CommentsResourceListOrderBy valueOf(String item) => _valuesMap[item];
+  static CommentsResourceListOrderBy valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const CommentsResourceListOrderBy._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const CommentsResourceListOrderBy._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "OrderBy".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "OrderBy".hashCode();
 }
 
 // Resource .AclResource
-class AclResource {
+class AclResource extends core.Object {
   final OrkutApi _$service;
   
   AclResource._internal(OrkutApi $service) : _$service = $service;
@@ -1019,7 +896,7 @@ class AclResource {
    * [activityId] ID of the activity.
    * [userId] ID of the user to be removed from the activity.
    */
-  Future delete(String activityId, String userId) {
+  core.Future delete(core.String activityId, core.String userId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1034,24 +911,18 @@ class AclResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "activities/{activityId}/acl/{userId}").generate($pathParams, $queryParams);
-    final $completer = new Completer();
     final $http = new HttpRequest($url, "DELETE", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = identity(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => identity(JSON.parse($text)));
   }
 }
 
 // Resource .CommunityRelatedResource
-class CommunityRelatedResource {
+class CommunityRelatedResource extends core.Object {
   final OrkutApi _$service;
   
   CommunityRelatedResource._internal(OrkutApi $service) : _$service = $service;
@@ -1061,7 +932,7 @@ class CommunityRelatedResource {
    * Retrieves the communities related to another one.
    * [communityId] The ID of the community whose related communities will be listed.
    */
-  Future<CommunityList> list(int communityId, [String hl = UNSPECIFIED]) {
+  core.Future<CommunityList> list(core.int communityId, [core.String hl = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1076,24 +947,18 @@ class CommunityRelatedResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "communities/{communityId}/related").generate($pathParams, $queryParams);
-    final $completer = new Completer<CommunityList>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = CommunityList.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => CommunityList.parse(JSON.parse($text)));
   }
 }
 
 // Resource .ScrapsResource
-class ScrapsResource {
+class ScrapsResource extends core.Object {
   final OrkutApi _$service;
   
   ScrapsResource._internal(OrkutApi $service) : _$service = $service;
@@ -1103,7 +968,7 @@ class ScrapsResource {
    * Creates a new scrap.
    * [content] the Activity
    */
-  Future<Activity> insert(Activity content) {
+  core.Future<Activity> insert(Activity content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1118,24 +983,18 @@ class ScrapsResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Activity.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "activities/scraps").generate($pathParams, $queryParams);
-    final $completer = new Completer<Activity>();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Activity.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Activity.parse(JSON.parse($text)));
   }
 }
 
 // Resource .CommunityPollVotesResource
-class CommunityPollVotesResource {
+class CommunityPollVotesResource extends core.Object {
   final OrkutApi _$service;
   
   CommunityPollVotesResource._internal(OrkutApi $service) : _$service = $service;
@@ -1147,7 +1006,7 @@ class CommunityPollVotesResource {
    * [pollId] The ID of the poll being voted.
    * [content] the CommunityPollVote
    */
-  Future<CommunityPollVote> insert(int communityId, String pollId, CommunityPollVote content) {
+  core.Future<CommunityPollVote> insert(core.int communityId, core.String pollId, CommunityPollVote content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1164,24 +1023,18 @@ class CommunityPollVotesResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(CommunityPollVote.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "communities/{communityId}/polls/{pollId}/votes").generate($pathParams, $queryParams);
-    final $completer = new Completer<CommunityPollVote>();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = CommunityPollVote.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => CommunityPollVote.parse(JSON.parse($text)));
   }
 }
 
 // Resource .CommunitiesResource
-class CommunitiesResource {
+class CommunitiesResource extends core.Object {
   final OrkutApi _$service;
   
   CommunitiesResource._internal(OrkutApi $service) : _$service = $service;
@@ -1191,7 +1044,7 @@ class CommunitiesResource {
    * Retrieves the list of communities the current user is a member of.
    * [userId] The ID of the user whose communities will be listed. Can be me to refer to caller.
    */
-  Future<CommunityList> list(String userId, [CommunitiesResourceListOrderBy orderBy = UNSPECIFIED, int maxResults = UNSPECIFIED, String hl = UNSPECIFIED]) {
+  core.Future<CommunityList> list(core.String userId, [CommunitiesResourceListOrderBy orderBy = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String hl = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1208,19 +1061,13 @@ class CommunitiesResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "people/{userId}/communities").generate($pathParams, $queryParams);
-    final $completer = new Completer<CommunityList>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = CommunityList.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => CommunityList.parse(JSON.parse($text)));
   }
 
   // Method CommunitiesResource.Get
@@ -1228,7 +1075,7 @@ class CommunitiesResource {
    * Retrieves the basic information (aka. profile) of a community.
    * [communityId] The ID of the community to get.
    */
-  Future<Community> get(int communityId, [String hl = UNSPECIFIED]) {
+  core.Future<Community> get(core.int communityId, [core.String hl = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1243,24 +1090,18 @@ class CommunitiesResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "communities/{communityId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Community>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Community.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Community.parse(JSON.parse($text)));
   }
 }
 
 // Enum CommunitiesResource.List.OrderBy
-class CommunitiesResourceListOrderBy implements Hashable {
+class CommunitiesResourceListOrderBy extends core.Object implements core.Hashable {
   /** Returns the communities sorted by a fixed, natural order. */
   static final CommunitiesResourceListOrderBy ID = const CommunitiesResourceListOrderBy._internal("id", 0);
   /**
@@ -1270,7 +1111,7 @@ class CommunitiesResourceListOrderBy implements Hashable {
   static final CommunitiesResourceListOrderBy RANKED = const CommunitiesResourceListOrderBy._internal("ranked", 1);
 
   /** All values of this enumeration */
-  static final List<CommunitiesResourceListOrderBy> values = const <CommunitiesResourceListOrderBy>[
+  static final core.List<CommunitiesResourceListOrderBy> values = const <CommunitiesResourceListOrderBy>[
     ID,
     RANKED,
   ];
@@ -1282,19 +1123,19 @@ class CommunitiesResourceListOrderBy implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static CommunitiesResourceListOrderBy valueOf(String item) => _valuesMap[item];
+  static CommunitiesResourceListOrderBy valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const CommunitiesResourceListOrderBy._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const CommunitiesResourceListOrderBy._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "OrderBy".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "OrderBy".hashCode();
 }
 
 // Resource .CommunityFollowResource
-class CommunityFollowResource {
+class CommunityFollowResource extends core.Object {
   final OrkutApi _$service;
   
   CommunityFollowResource._internal(OrkutApi $service) : _$service = $service;
@@ -1305,7 +1146,7 @@ class CommunityFollowResource {
    * [communityId] ID of the community.
    * [userId] ID of the user.
    */
-  Future<CommunityMembers> insert(int communityId, String userId) {
+  core.Future<CommunityMembers> insert(core.int communityId, core.String userId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1320,19 +1161,13 @@ class CommunityFollowResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "communities/{communityId}/followers/{userId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<CommunityMembers>();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = CommunityMembers.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => CommunityMembers.parse(JSON.parse($text)));
   }
 
   // Method CommunityFollowResource.Delete
@@ -1341,7 +1176,7 @@ class CommunityFollowResource {
    * [communityId] ID of the community.
    * [userId] ID of the user.
    */
-  Future delete(int communityId, String userId) {
+  core.Future delete(core.int communityId, core.String userId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1356,24 +1191,18 @@ class CommunityFollowResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "communities/{communityId}/followers/{userId}").generate($pathParams, $queryParams);
-    final $completer = new Completer();
     final $http = new HttpRequest($url, "DELETE", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = identity(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => identity(JSON.parse($text)));
   }
 }
 
 // Resource .ActivityVisibilityResource
-class ActivityVisibilityResource {
+class ActivityVisibilityResource extends core.Object {
   final OrkutApi _$service;
   
   ActivityVisibilityResource._internal(OrkutApi $service) : _$service = $service;
@@ -1384,7 +1213,7 @@ class ActivityVisibilityResource {
    * [activityId] ID of the activity.
    * [content] the Visibility
    */
-  Future<Visibility> patch(String activityId, Visibility content) {
+  core.Future<Visibility> patch(core.String activityId, Visibility content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1400,19 +1229,13 @@ class ActivityVisibilityResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Visibility.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "activities/{activityId}/visibility").generate($pathParams, $queryParams);
-    final $completer = new Completer<Visibility>();
     final $http = new HttpRequest($url, "PATCH", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Visibility.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Visibility.parse(JSON.parse($text)));
   }
 
   // Method ActivityVisibilityResource.Update
@@ -1421,7 +1244,7 @@ class ActivityVisibilityResource {
    * [activityId] ID of the activity.
    * [content] the Visibility
    */
-  Future<Visibility> update(String activityId, Visibility content) {
+  core.Future<Visibility> update(core.String activityId, Visibility content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1437,19 +1260,13 @@ class ActivityVisibilityResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Visibility.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "activities/{activityId}/visibility").generate($pathParams, $queryParams);
-    final $completer = new Completer<Visibility>();
     final $http = new HttpRequest($url, "PUT", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Visibility.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Visibility.parse(JSON.parse($text)));
   }
 
   // Method ActivityVisibilityResource.Get
@@ -1457,7 +1274,7 @@ class ActivityVisibilityResource {
    * Gets the visibility of an existing activity.
    * [activityId] ID of the activity to get the visibility.
    */
-  Future<Visibility> get(String activityId) {
+  core.Future<Visibility> get(core.String activityId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1471,24 +1288,18 @@ class ActivityVisibilityResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "activities/{activityId}/visibility").generate($pathParams, $queryParams);
-    final $completer = new Completer<Visibility>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Visibility.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Visibility.parse(JSON.parse($text)));
   }
 }
 
 // Resource .BadgesResource
-class BadgesResource {
+class BadgesResource extends core.Object {
   final OrkutApi _$service;
   
   BadgesResource._internal(OrkutApi $service) : _$service = $service;
@@ -1498,7 +1309,7 @@ class BadgesResource {
    * Retrieves the list of visible badges of a user.
    * [userId] The id of the user whose badges will be listed. Can be me to refer to caller.
    */
-  Future<BadgeList> list(String userId) {
+  core.Future<BadgeList> list(core.String userId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1512,19 +1323,13 @@ class BadgesResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "people/{userId}/badges").generate($pathParams, $queryParams);
-    final $completer = new Completer<BadgeList>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = BadgeList.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => BadgeList.parse(JSON.parse($text)));
   }
 
   // Method BadgesResource.Get
@@ -1533,7 +1338,7 @@ class BadgesResource {
    * [userId] The ID of the user whose badges will be listed. Can be me to refer to caller.
    * [badgeId] The ID of the badge that will be retrieved.
    */
-  Future<Badge> get(String userId, String badgeId) {
+  core.Future<Badge> get(core.String userId, core.String badgeId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1548,24 +1353,18 @@ class BadgesResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "people/{userId}/badges/{badgeId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Badge>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Badge.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Badge.parse(JSON.parse($text)));
   }
 }
 
 // Resource .CountersResource
-class CountersResource {
+class CountersResource extends core.Object {
   final OrkutApi _$service;
   
   CountersResource._internal(OrkutApi $service) : _$service = $service;
@@ -1575,7 +1374,7 @@ class CountersResource {
    * Retrieves the counters of a user.
    * [userId] The ID of the user whose counters will be listed. Can be me to refer to caller.
    */
-  Future<Counters> list(String userId) {
+  core.Future<Counters> list(core.String userId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1589,38 +1388,32 @@ class CountersResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "people/{userId}/counters").generate($pathParams, $queryParams);
-    final $completer = new Completer<Counters>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Counters.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Counters.parse(JSON.parse($text)));
   }
 }
 
 // Schema .Acl
 class Acl extends IdentityHash {
   /** The list of ACL entries. */
-  List<AclItems> items;
+  core.List<AclItems> items;
 
   /** Identifies this resource as an access control list. Value: "orkut#acl" */
-  String kind;
+  core.String kind;
 
   /** Human readable description of the access granted. */
-  String description;
+  core.String description;
 
   /** The total count of participants of the parent resource. */
-  int totalParticipants;
+  core.int totalParticipants;
 
   /** Parses an instance from its JSON representation. */
-  static Acl parse(Map<String, Object> json) {
+  static Acl parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Acl();
     result.items = map(AclItems.parse)(json["items"]);
@@ -1630,9 +1423,9 @@ class Acl extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Acl value) {
+  static core.Object serialize(Acl value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["items"] = map(AclItems.serialize)(value.items);
     result["kind"] = identity(value.kind);
     result["description"] = identity(value.description);
@@ -1645,16 +1438,16 @@ class Acl extends IdentityHash {
 // Schema Acl.AclItems
 class AclItems extends IdentityHash {
   /** The type of entity to whom access is granted. */
-  String type;
+  core.String type;
 
   /**
  * The ID of the entity. For entities of type "person" or "circle", this is the ID of the resource.
  * For other types, this will be unset.
  */
-  String id;
+  core.String id;
 
   /** Parses an instance from its JSON representation. */
-  static AclItems parse(Map<String, Object> json) {
+  static AclItems parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new AclItems();
     result.type = identity(json["type"]);
@@ -1662,9 +1455,9 @@ class AclItems extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(AclItems value) {
+  static core.Object serialize(AclItems value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["type"] = identity(value.type);
     result["id"] = identity(value.id);
     return result;
@@ -1675,19 +1468,19 @@ class AclItems extends IdentityHash {
 // Schema .Activity
 class Activity extends IdentityHash {
   /** The kind of activity. Always orkut#activity. */
-  String kind;
+  core.String kind;
 
   /** Links to resources related to this activity. */
-  List<OrkutLinkResource> links;
+  core.List<OrkutLinkResource> links;
 
   /** Title of the activity. */
-  String title;
+  core.String title;
 
   /** The activity's object. */
   ActivityObject object;
 
   /** The time at which the activity was last updated. */
-  String updated;
+  core.String updated;
 
   /** The person who performed the activity. */
   OrkutAuthorResource actor;
@@ -1701,16 +1494,16 @@ class Activity extends IdentityHash {
  * stream, e.g. status, scrap. - update - User commented on an activity. - make-friend - User added
  * a new friend. - birthday - User has a birthday.
  */
-  String verb;
+  core.String verb;
 
   /** The time at which the activity was initially published. */
-  String published;
+  core.String published;
 
   /** The ID for the activity. */
-  String id;
+  core.String id;
 
   /** Parses an instance from its JSON representation. */
-  static Activity parse(Map<String, Object> json) {
+  static Activity parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Activity();
     result.kind = identity(json["kind"]);
@@ -1726,9 +1519,9 @@ class Activity extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Activity value) {
+  static core.Object serialize(Activity value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["kind"] = identity(value.kind);
     result["links"] = map(OrkutLinkResource.serialize)(value.links);
     result["title"] = identity(value.title);
@@ -1750,16 +1543,16 @@ class ActivityList extends IdentityHash {
  * The value of pageToken query parameter in activities.list request to get the next page, if there
  * are more to retrieve.
  */
-  String nextPageToken;
+  core.String nextPageToken;
 
   /** List of activities retrieved. */
-  List<Activity> items;
+  core.List<Activity> items;
 
   /** Identifies this resource as a collection of activities. Value: "orkut#activityList" */
-  String kind;
+  core.String kind;
 
   /** Parses an instance from its JSON representation. */
-  static ActivityList parse(Map<String, Object> json) {
+  static ActivityList parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ActivityList();
     result.nextPageToken = identity(json["nextPageToken"]);
@@ -1768,9 +1561,9 @@ class ActivityList extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ActivityList value) {
+  static core.Object serialize(ActivityList value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["nextPageToken"] = identity(value.nextPageToken);
     result["items"] = map(Activity.serialize)(value.items);
     result["kind"] = identity(value.kind);
@@ -1786,10 +1579,10 @@ class ActivityObject extends IdentityHash {
  * changes to this property, using the value of originalContent as a starting point. If the update
  * is successful, the server adds HTML formatting and responds with this formatted content.
  */
-  String content;
+  core.String content;
 
   /** The list of additional items. */
-  List<OrkutActivityobjectsResource> items;
+  core.List<OrkutActivityobjectsResource> items;
 
   /** Comments in reply to this activity. */
   ActivityObjectReplies replies;
@@ -1798,10 +1591,10 @@ class ActivityObject extends IdentityHash {
  * The type of the object affected by the activity. Clients can use this information to style the
  * rendered activity object differently depending on the content.
  */
-  String objectType;
+  core.String objectType;
 
   /** Parses an instance from its JSON representation. */
-  static ActivityObject parse(Map<String, Object> json) {
+  static ActivityObject parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ActivityObject();
     result.content = identity(json["content"]);
@@ -1811,9 +1604,9 @@ class ActivityObject extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ActivityObject value) {
+  static core.Object serialize(ActivityObject value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["content"] = identity(value.content);
     result["items"] = map(OrkutActivityobjectsResource.serialize)(value.items);
     result["replies"] = ActivityObjectReplies.serialize(value.replies);
@@ -1826,16 +1619,16 @@ class ActivityObject extends IdentityHash {
 // Schema Activity.ActivityObject.ActivityObjectReplies
 class ActivityObjectReplies extends IdentityHash {
   /** Total number of comments. */
-  String totalItems;
+  core.String totalItems;
 
   /** The list of comments. */
-  List<Comment> items;
+  core.List<Comment> items;
 
   /** URL for the collection of comments in reply to this activity. */
-  String url;
+  core.String url;
 
   /** Parses an instance from its JSON representation. */
-  static ActivityObjectReplies parse(Map<String, Object> json) {
+  static ActivityObjectReplies parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ActivityObjectReplies();
     result.totalItems = identity(json["totalItems"]);
@@ -1844,9 +1637,9 @@ class ActivityObjectReplies extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ActivityObjectReplies value) {
+  static core.Object serialize(ActivityObjectReplies value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["totalItems"] = identity(value.totalItems);
     result["items"] = map(Comment.serialize)(value.items);
     result["url"] = identity(value.url);
@@ -1858,34 +1651,34 @@ class ActivityObjectReplies extends IdentityHash {
 // Schema .Badge
 class Badge extends IdentityHash {
   /** The URL for the 24x24 badge logo. */
-  String badgeSmallLogo;
+  core.String badgeSmallLogo;
 
   /** Identifies this resource as a badge. Value: "orkut#badge" */
-  String kind;
+  core.String kind;
 
   /** The description for the badge, suitable for display. */
-  String description;
+  core.String description;
 
   /** The URL for the 32x32 badge sponsor logo. */
-  String sponsorLogo;
+  core.String sponsorLogo;
 
   /** The name of the badge sponsor, suitable for display. */
-  String sponsorName;
+  core.String sponsorName;
 
   /** The URL for the 64x64 badge logo. */
-  String badgeLargeLogo;
+  core.String badgeLargeLogo;
 
   /** The name of the badge, suitable for display. */
-  String caption;
+  core.String caption;
 
   /** The URL for the badge sponsor. */
-  String sponsorUrl;
+  core.String sponsorUrl;
 
   /** The unique ID for the badge. */
-  String id;
+  core.String id;
 
   /** Parses an instance from its JSON representation. */
-  static Badge parse(Map<String, Object> json) {
+  static Badge parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Badge();
     result.badgeSmallLogo = identity(json["badgeSmallLogo"]);
@@ -1900,9 +1693,9 @@ class Badge extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Badge value) {
+  static core.Object serialize(Badge value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["badgeSmallLogo"] = identity(value.badgeSmallLogo);
     result["kind"] = identity(value.kind);
     result["description"] = identity(value.description);
@@ -1920,13 +1713,13 @@ class Badge extends IdentityHash {
 // Schema .BadgeList
 class BadgeList extends IdentityHash {
   /** List of badges retrieved. */
-  List<Badge> items;
+  core.List<Badge> items;
 
   /** Identifies this resource as a collection of badges. Value: "orkut#badgeList" */
-  String kind;
+  core.String kind;
 
   /** Parses an instance from its JSON representation. */
-  static BadgeList parse(Map<String, Object> json) {
+  static BadgeList parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new BadgeList();
     result.items = map(Badge.parse)(json["items"]);
@@ -1934,9 +1727,9 @@ class BadgeList extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(BadgeList value) {
+  static core.Object serialize(BadgeList value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["items"] = map(Badge.serialize)(value.items);
     result["kind"] = identity(value.kind);
     return result;
@@ -1950,25 +1743,25 @@ class Comment extends IdentityHash {
   CommentInReplyTo inReplyTo;
 
   /** Identifies this resource as a comment. Value: "orkut#comment" */
-  String kind;
+  core.String kind;
 
   /** List of resources for the comment. */
-  List<OrkutLinkResource> links;
+  core.List<OrkutLinkResource> links;
 
   /** The person who posted the comment. */
   OrkutAuthorResource actor;
 
   /** The content of the comment in text/html */
-  String content;
+  core.String content;
 
   /** The time the comment was initially published, in RFC 3339 format. */
-  String published;
+  core.String published;
 
   /** The unique ID for the comment. */
-  String id;
+  core.String id;
 
   /** Parses an instance from its JSON representation. */
-  static Comment parse(Map<String, Object> json) {
+  static Comment parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Comment();
     result.inReplyTo = CommentInReplyTo.parse(json["inReplyTo"]);
@@ -1981,9 +1774,9 @@ class Comment extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Comment value) {
+  static core.Object serialize(Comment value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["inReplyTo"] = CommentInReplyTo.serialize(value.inReplyTo);
     result["kind"] = identity(value.kind);
     result["links"] = map(OrkutLinkResource.serialize)(value.links);
@@ -1999,22 +1792,22 @@ class Comment extends IdentityHash {
 // Schema Comment.CommentInReplyTo
 class CommentInReplyTo extends IdentityHash {
   /** Type of the post on activity stream being commented. Always text/html. */
-  String type;
+  core.String type;
 
   /** Link to the post on activity stream being commented. */
-  String href;
+  core.String href;
 
   /** Unique identifier of the post on activity stream being commented. */
-  String ref;
+  core.String ref;
 
   /**
  * Relationship between the comment and the post on activity stream being commented. Always
  * inReplyTo.
  */
-  String rel;
+  core.String rel;
 
   /** Parses an instance from its JSON representation. */
-  static CommentInReplyTo parse(Map<String, Object> json) {
+  static CommentInReplyTo parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new CommentInReplyTo();
     result.type = identity(json["type"]);
@@ -2024,9 +1817,9 @@ class CommentInReplyTo extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(CommentInReplyTo value) {
+  static core.Object serialize(CommentInReplyTo value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["type"] = identity(value.type);
     result["href"] = identity(value.href);
     result["ref"] = identity(value.ref);
@@ -2042,22 +1835,22 @@ class CommentList extends IdentityHash {
  * The value of pageToken query parameter in comments.list request to get the next page, if there
  * are more to retrieve.
  */
-  String nextPageToken;
+  core.String nextPageToken;
 
   /** List of comments retrieved. */
-  List<Comment> items;
+  core.List<Comment> items;
 
   /** Identifies this resource as a collection of comments. Value: "orkut#commentList" */
-  String kind;
+  core.String kind;
 
   /**
  * The value of pageToken query parameter in comments.list request to get the previous page, if
  * there are more to retrieve.
  */
-  String previousPageToken;
+  core.String previousPageToken;
 
   /** Parses an instance from its JSON representation. */
-  static CommentList parse(Map<String, Object> json) {
+  static CommentList parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new CommentList();
     result.nextPageToken = identity(json["nextPageToken"]);
@@ -2067,9 +1860,9 @@ class CommentList extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(CommentList value) {
+  static core.Object serialize(CommentList value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["nextPageToken"] = identity(value.nextPageToken);
     result["items"] = map(Comment.serialize)(value.items);
     result["kind"] = identity(value.kind);
@@ -2082,52 +1875,52 @@ class CommentList extends IdentityHash {
 // Schema .Community
 class Community extends IdentityHash {
   /** The category of the community. */
-  String category;
+  core.String category;
 
   /** Identifies this resource as a community. Value: "orkut#community" */
-  String kind;
+  core.String kind;
 
   /**
  * The number of users who are part of the community. This number may be approximate, so do not rely
  * on it for iteration.
  */
-  int memberCount;
+  core.int memberCount;
 
   /** The description of the community. */
-  String description;
+  core.String description;
 
   /** The official language of the community. */
-  String language;
+  core.String language;
 
   /** List of resources for the community. */
-  List<OrkutLinkResource> links;
+  core.List<OrkutLinkResource> links;
 
   /** The time the community was created, in RFC 3339 format. */
-  String creationDate;
+  core.String creationDate;
 
   /** The person who owns the community. */
   OrkutAuthorResource owner;
 
   /** The list of moderators of the community. */
-  List<OrkutAuthorResource> moderators;
+  core.List<OrkutAuthorResource> moderators;
 
   /** The location of the community. */
-  String location;
+  core.String location;
 
   /** The co-owners of the community. */
-  List<OrkutAuthorResource> coOwners;
+  core.List<OrkutAuthorResource> coOwners;
 
   /** The photo of the community. */
-  String photoUrl;
+  core.String photoUrl;
 
   /** The id of the community. */
-  int id;
+  core.int id;
 
   /** The name of the community. */
-  String name;
+  core.String name;
 
   /** Parses an instance from its JSON representation. */
-  static Community parse(Map<String, Object> json) {
+  static Community parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Community();
     result.category = identity(json["category"]);
@@ -2147,9 +1940,9 @@ class Community extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Community value) {
+  static core.Object serialize(Community value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["category"] = identity(value.category);
     result["kind"] = identity(value.kind);
     result["member_count"] = identity(value.memberCount);
@@ -2172,13 +1965,13 @@ class Community extends IdentityHash {
 // Schema .CommunityList
 class CommunityList extends IdentityHash {
   /** List of communities retrieved. */
-  List<Community> items;
+  core.List<Community> items;
 
   /** Identifies this resource as a collection of communities. Value: "orkut#communityList" */
-  String kind;
+  core.String kind;
 
   /** Parses an instance from its JSON representation. */
-  static CommunityList parse(Map<String, Object> json) {
+  static CommunityList parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new CommunityList();
     result.items = map(Community.parse)(json["items"]);
@@ -2186,9 +1979,9 @@ class CommunityList extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(CommunityList value) {
+  static core.Object serialize(CommunityList value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["items"] = map(Community.serialize)(value.items);
     result["kind"] = identity(value.kind);
     return result;
@@ -2205,10 +1998,10 @@ class CommunityMembers extends IdentityHash {
   OrkutActivitypersonResource person;
 
   /** Kind of this item. Always orkut#communityMembers. */
-  String kind;
+  core.String kind;
 
   /** Parses an instance from its JSON representation. */
-  static CommunityMembers parse(Map<String, Object> json) {
+  static CommunityMembers parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new CommunityMembers();
     result.communityMembershipStatus = CommunityMembershipStatus.parse(json["communityMembershipStatus"]);
@@ -2217,9 +2010,9 @@ class CommunityMembers extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(CommunityMembers value) {
+  static core.Object serialize(CommunityMembers value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["communityMembershipStatus"] = CommunityMembershipStatus.serialize(value.communityMembershipStatus);
     result["person"] = OrkutActivitypersonResource.serialize(value.person);
     result["kind"] = identity(value.kind);
@@ -2234,32 +2027,32 @@ class CommunityMembersList extends IdentityHash {
  * The value of pageToken query parameter in community_members.list request to get the next page, if
  * there are more to retrieve.
  */
-  String nextPageToken;
+  core.String nextPageToken;
 
   /** Kind of this item. Always orkut#communityMembersList. */
-  String kind;
+  core.String kind;
 
   /** List of community members retrieved. */
-  List<CommunityMembers> items;
+  core.List<CommunityMembers> items;
 
   /**
  * The value of pageToken query parameter in community_members.list request to get the previous
  * page, if there are more to retrieve.
  */
-  String prevPageToken;
+  core.String prevPageToken;
 
   /**
  * The value of pageToken query parameter in community_members.list request to get the last page.
  */
-  String lastPageToken;
+  core.String lastPageToken;
 
   /**
  * The value of pageToken query parameter in community_members.list request to get the first page.
  */
-  String firstPageToken;
+  core.String firstPageToken;
 
   /** Parses an instance from its JSON representation. */
-  static CommunityMembersList parse(Map<String, Object> json) {
+  static CommunityMembersList parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new CommunityMembersList();
     result.nextPageToken = identity(json["nextPageToken"]);
@@ -2271,9 +2064,9 @@ class CommunityMembersList extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(CommunityMembersList value) {
+  static core.Object serialize(CommunityMembersList value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["nextPageToken"] = identity(value.nextPageToken);
     result["kind"] = identity(value.kind);
     result["items"] = map(CommunityMembers.serialize)(value.items);
@@ -2288,40 +2081,40 @@ class CommunityMembersList extends IdentityHash {
 // Schema .CommunityMembershipStatus
 class CommunityMembershipStatus extends IdentityHash {
   /** The status of the current link between the community and the user. */
-  String status;
+  core.String status;
 
   /** Whether the user is following this community. */
-  bool isFollowing;
+  core.bool isFollowing;
 
   /** Whether the restore operation is available for the community. */
-  bool isRestoreAvailable;
+  core.bool isRestoreAvailable;
 
   /** Whether the session user is a community moderator. */
-  bool isModerator;
+  core.bool isModerator;
 
   /** Kind of this item. Always orkut#communityMembershipStatus. */
-  String kind;
+  core.String kind;
 
   /** Whether the session user is a community co-owner. */
-  bool isCoOwner;
+  core.bool isCoOwner;
 
   /** Whether the user can create a poll in this community. */
-  bool canCreatePoll;
+  core.bool canCreatePoll;
 
   /** Whether the user can perform a shout operation in this community. */
-  bool canShout;
+  core.bool canShout;
 
   /** Whether the session user is the community owner. */
-  bool isOwner;
+  core.bool isOwner;
 
   /** Whether the user can create a topic in this community. */
-  bool canCreateTopic;
+  core.bool canCreateTopic;
 
   /** Whether the take-back operation is available for the community. */
-  bool isTakebackAvailable;
+  core.bool isTakebackAvailable;
 
   /** Parses an instance from its JSON representation. */
-  static CommunityMembershipStatus parse(Map<String, Object> json) {
+  static CommunityMembershipStatus parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new CommunityMembershipStatus();
     result.status = identity(json["status"]);
@@ -2338,9 +2131,9 @@ class CommunityMembershipStatus extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(CommunityMembershipStatus value) {
+  static core.Object serialize(CommunityMembershipStatus value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["status"] = identity(value.status);
     result["isFollowing"] = identity(value.isFollowing);
     result["isRestoreAvailable"] = identity(value.isRestoreAvailable);
@@ -2360,34 +2153,34 @@ class CommunityMembershipStatus extends IdentityHash {
 // Schema .CommunityMessage
 class CommunityMessage extends IdentityHash {
   /** The body of the message. */
-  String body;
+  core.String body;
 
   /** Identifies this resource as a community message. Value: "orkut#communityMessage" */
-  String kind;
+  core.String kind;
 
   /** List of resources for the community message. */
-  List<OrkutLinkResource> links;
+  core.List<OrkutLinkResource> links;
 
   /** The creator of the message. If ommited, the message is annonimous. */
   OrkutAuthorResource author;
 
   /** The ID of the message. */
-  String id;
+  core.String id;
 
   /** The timestamp of the date when the message was added, in RFC 3339 format. */
-  String addedDate;
+  core.String addedDate;
 
   /**
  * Whether this post was marked as spam by the viewer, when he/she is not the community owner or one
  * of its moderators.
  */
-  bool isSpam;
+  core.bool isSpam;
 
   /** The subject of the message. */
-  String subject;
+  core.String subject;
 
   /** Parses an instance from its JSON representation. */
-  static CommunityMessage parse(Map<String, Object> json) {
+  static CommunityMessage parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new CommunityMessage();
     result.body = identity(json["body"]);
@@ -2401,9 +2194,9 @@ class CommunityMessage extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(CommunityMessage value) {
+  static core.Object serialize(CommunityMessage value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["body"] = identity(value.body);
     result["kind"] = identity(value.kind);
     result["links"] = map(OrkutLinkResource.serialize)(value.links);
@@ -2423,35 +2216,35 @@ class CommunityMessageList extends IdentityHash {
  * The value of pageToken query parameter in community_messages.list request to get the next page,
  * if there are more to retrieve.
  */
-  String nextPageToken;
+  core.String nextPageToken;
 
   /**
  * Identifies this resource as a collection of community messages. Value:
  * "orkut#communityMessageList"
  */
-  String kind;
+  core.String kind;
 
   /** List of messages retrieved. */
-  List<CommunityMessage> items;
+  core.List<CommunityMessage> items;
 
   /**
  * The value of pageToken query parameter in community_messages.list request to get the previous
  * page, if there are more to retrieve.
  */
-  String prevPageToken;
+  core.String prevPageToken;
 
   /**
  * The value of pageToken query parameter in community_messages.list request to get the last page.
  */
-  String lastPageToken;
+  core.String lastPageToken;
 
   /**
  * The value of pageToken query parameter in community_messages.list request to get the first page.
  */
-  String firstPageToken;
+  core.String firstPageToken;
 
   /** Parses an instance from its JSON representation. */
-  static CommunityMessageList parse(Map<String, Object> json) {
+  static CommunityMessageList parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new CommunityMessageList();
     result.nextPageToken = identity(json["nextPageToken"]);
@@ -2463,9 +2256,9 @@ class CommunityMessageList extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(CommunityMessageList value) {
+  static core.Object serialize(CommunityMessageList value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["nextPageToken"] = identity(value.nextPageToken);
     result["kind"] = identity(value.kind);
     result["items"] = map(CommunityMessage.serialize)(value.items);
@@ -2480,88 +2273,88 @@ class CommunityMessageList extends IdentityHash {
 // Schema .CommunityPoll
 class CommunityPoll extends IdentityHash {
   /** List of resources for the community poll. */
-  List<OrkutLinkResource> links;
+  core.List<OrkutLinkResource> links;
 
   /** Whether this poll allows voting for more than one option. */
-  bool isMultipleAnswers;
+  core.bool isMultipleAnswers;
 
   /** The image representing the poll. Field is omitted if no image exists. */
   CommunityPollImage image;
 
   /** The ending date of this poll or empty if the poll doesn't have one. */
-  String endingTime;
+  core.String endingTime;
 
   /** Whether non-members of the community can vote on the poll. */
-  bool isVotingAllowedForNonMembers;
+  core.bool isVotingAllowedForNonMembers;
 
   /**
  * Whether the user has marked this poll as spam. This only affects the poll for this user, not
  * globally.
  */
-  bool isSpam;
+  core.bool isSpam;
 
   /** The total number of votes this poll has received. */
-  int totalNumberOfVotes;
+  core.int totalNumberOfVotes;
 
   /** The person who created the poll. */
   OrkutAuthorResource author;
 
   /** The poll question. */
-  String question;
+  core.String question;
 
   /** The poll ID. */
-  String id;
+  core.String id;
 
   /**
  * Whether this poll is restricted for members only. If a poll is open but the user can't vote on
  * it, it's been restricted to members only. This information is important to tell this case apart
  * from the one where the user can't vote simply because the poll is already closed.
  */
-  bool isRestricted;
+  core.bool isRestricted;
 
   /** The ID of the community. */
-  int communityId;
+  core.int communityId;
 
   /** If user has already voted, whether his vote is publicly visible. */
-  bool isUsersVotePublic;
+  core.bool isUsersVotePublic;
 
   /** The date of the last update of this poll. */
-  String lastUpdate;
+  core.String lastUpdate;
 
   /** The poll description. */
-  String description;
+  core.String description;
 
   /** List of options the user has voted on, if there are any. */
-  List<int> votedOptions;
+  core.List<core.int> votedOptions;
 
   /**
  * Whether this poll is still opened for voting. A poll is open for voting if it is not closed, the
  * user has not yet voted on it and the user has the permission to do so, which happens if he/she is
  * either a community member or the poll is open for everybody.
  */
-  bool isOpenForVoting;
+  core.bool isOpenForVoting;
 
   /**
  * Whether the poll is not expired if there is an expiration date. A poll is open (that is, not
  * closed for voting) if it either is not expired or doesn't have an expiration date at all. Note
  * that just because a poll is open, it doesn't mean that the requester can vote on it.
  */
-  bool isClosed;
+  core.bool isClosed;
 
   /** Whether the user has voted on this poll. */
-  bool hasVoted;
+  core.bool hasVoted;
 
   /** Identifies this resource as a community poll. Value: "orkut#communityPoll" */
-  String kind;
+  core.String kind;
 
   /** The date of creation of this poll */
-  String creationTime;
+  core.String creationTime;
 
   /** List of options of this poll. */
-  List<OrkutCommunitypolloptionResource> options;
+  core.List<OrkutCommunitypolloptionResource> options;
 
   /** Parses an instance from its JSON representation. */
-  static CommunityPoll parse(Map<String, Object> json) {
+  static CommunityPoll parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new CommunityPoll();
     result.links = map(OrkutLinkResource.parse)(json["links"]);
@@ -2589,9 +2382,9 @@ class CommunityPoll extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(CommunityPoll value) {
+  static core.Object serialize(CommunityPoll value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["links"] = map(OrkutLinkResource.serialize)(value.links);
     result["isMultipleAnswers"] = identity(value.isMultipleAnswers);
     result["image"] = CommunityPollImage.serialize(value.image);
@@ -2622,22 +2415,22 @@ class CommunityPoll extends IdentityHash {
 // Schema .CommunityPollComment
 class CommunityPollComment extends IdentityHash {
   /** The body of the message. */
-  String body;
+  core.String body;
 
   /** Identifies this resource as a community poll comment. Value: "orkut#communityPollComment" */
-  String kind;
+  core.String kind;
 
   /** The date when the message was added, in RFC 3339 format. */
-  String addedDate;
+  core.String addedDate;
 
   /** The ID of the comment. */
-  int id;
+  core.int id;
 
   /** The creator of the comment. */
   OrkutAuthorResource author;
 
   /** Parses an instance from its JSON representation. */
-  static CommunityPollComment parse(Map<String, Object> json) {
+  static CommunityPollComment parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new CommunityPollComment();
     result.body = identity(json["body"]);
@@ -2648,9 +2441,9 @@ class CommunityPollComment extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(CommunityPollComment value) {
+  static core.Object serialize(CommunityPollComment value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["body"] = identity(value.body);
     result["kind"] = identity(value.kind);
     result["addedDate"] = identity(value.addedDate);
@@ -2667,37 +2460,37 @@ class CommunityPollCommentList extends IdentityHash {
  * The value of pageToken query parameter in community_poll_comments.list request to get the next
  * page, if there are more to retrieve.
  */
-  String nextPageToken;
+  core.String nextPageToken;
 
   /**
  * Identifies this resource as a collection of community poll comments. Value:
  * "orkut#CommunityPollCommentList"
  */
-  String kind;
+  core.String kind;
 
   /** List of community poll comments retrieved. */
-  List<CommunityPollComment> items;
+  core.List<CommunityPollComment> items;
 
   /**
  * The value of pageToken query parameter in community_poll_comments.list request to get the
  * previous page, if there are more to retrieve.
  */
-  String prevPageToken;
+  core.String prevPageToken;
 
   /**
  * The value of pageToken query parameter in community_poll_comments.list request to get the last
  * page.
  */
-  String lastPageToken;
+  core.String lastPageToken;
 
   /**
  * The value of pageToken query parameter in community_poll_comments.list request to get the first
  * page.
  */
-  String firstPageToken;
+  core.String firstPageToken;
 
   /** Parses an instance from its JSON representation. */
-  static CommunityPollCommentList parse(Map<String, Object> json) {
+  static CommunityPollCommentList parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new CommunityPollCommentList();
     result.nextPageToken = identity(json["nextPageToken"]);
@@ -2709,9 +2502,9 @@ class CommunityPollCommentList extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(CommunityPollCommentList value) {
+  static core.Object serialize(CommunityPollCommentList value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["nextPageToken"] = identity(value.nextPageToken);
     result["kind"] = identity(value.kind);
     result["items"] = map(CommunityPollComment.serialize)(value.items);
@@ -2726,19 +2519,19 @@ class CommunityPollCommentList extends IdentityHash {
 // Schema CommunityPoll.CommunityPollImage
 class CommunityPollImage extends IdentityHash {
   /** A URL that points to an image of the poll. */
-  String url;
+  core.String url;
 
   /** Parses an instance from its JSON representation. */
-  static CommunityPollImage parse(Map<String, Object> json) {
+  static CommunityPollImage parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new CommunityPollImage();
     result.url = identity(json["url"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(CommunityPollImage value) {
+  static core.Object serialize(CommunityPollImage value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["url"] = identity(value.url);
     return result;
   }
@@ -2751,32 +2544,32 @@ class CommunityPollList extends IdentityHash {
  * The value of pageToken query parameter in community_polls.list request to get the next page, if
  * there are more to retrieve.
  */
-  String nextPageToken;
+  core.String nextPageToken;
 
   /**
  * Identifies this resource as a collection of community polls. Value: "orkut#communityPollList"
  */
-  String kind;
+  core.String kind;
 
   /** List of community polls retrieved. */
-  List<CommunityPoll> items;
+  core.List<CommunityPoll> items;
 
   /**
  * The value of pageToken query parameter in community_polls.list request to get the previous page,
  * if there are more to retrieve.
  */
-  String prevPageToken;
+  core.String prevPageToken;
 
   /** The value of pageToken query parameter in community_polls.list request to get the last page. */
-  String lastPageToken;
+  core.String lastPageToken;
 
   /**
  * The value of pageToken query parameter in community_polls.list request to get the first page.
  */
-  String firstPageToken;
+  core.String firstPageToken;
 
   /** Parses an instance from its JSON representation. */
-  static CommunityPollList parse(Map<String, Object> json) {
+  static CommunityPollList parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new CommunityPollList();
     result.nextPageToken = identity(json["nextPageToken"]);
@@ -2788,9 +2581,9 @@ class CommunityPollList extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(CommunityPollList value) {
+  static core.Object serialize(CommunityPollList value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["nextPageToken"] = identity(value.nextPageToken);
     result["kind"] = identity(value.kind);
     result["items"] = map(CommunityPoll.serialize)(value.items);
@@ -2805,16 +2598,16 @@ class CommunityPollList extends IdentityHash {
 // Schema .CommunityPollVote
 class CommunityPollVote extends IdentityHash {
   /** Identifies this resource as a community poll vote. Value: "orkut#communityPollVote" */
-  String kind;
+  core.String kind;
 
   /** The ids of the voted options. */
-  List<int> optionIds;
+  core.List<core.int> optionIds;
 
   /** Whether this vote is visible to other users or not. */
-  bool isVotevisible;
+  core.bool isVotevisible;
 
   /** Parses an instance from its JSON representation. */
-  static CommunityPollVote parse(Map<String, Object> json) {
+  static CommunityPollVote parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new CommunityPollVote();
     result.kind = identity(json["kind"]);
@@ -2823,9 +2616,9 @@ class CommunityPollVote extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(CommunityPollVote value) {
+  static core.Object serialize(CommunityPollVote value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["kind"] = identity(value.kind);
     result["optionIds"] = map(identity)(value.optionIds);
     result["isVotevisible"] = identity(value.isVotevisible);
@@ -2837,40 +2630,40 @@ class CommunityPollVote extends IdentityHash {
 // Schema .CommunityTopic
 class CommunityTopic extends IdentityHash {
   /** The body of the topic. */
-  String body;
+  core.String body;
 
   /** The timestamp of the last update, in RFC 3339 format. */
-  String lastUpdate;
+  core.String lastUpdate;
 
   /** Identifies this resource as a community topic. Value: "orkut#communityTopic" */
-  String kind;
+  core.String kind;
 
   /** List of resources for the community. */
-  List<OrkutLinkResource> links;
+  core.List<OrkutLinkResource> links;
 
   /** The creator of the topic. */
   OrkutAuthorResource author;
 
   /** The title of the topic. */
-  String title;
+  core.String title;
 
   /** Most recent messages. */
-  List<CommunityMessage> messages;
+  core.List<CommunityMessage> messages;
 
   /** Snippet of the last message posted on this topic. */
-  String latestMessageSnippet;
+  core.String latestMessageSnippet;
 
   /** Whether the topic is closed for new messages. */
-  bool isClosed;
+  core.bool isClosed;
 
   /** The total number of replies this topic has received. */
-  int numberOfReplies;
+  core.int numberOfReplies;
 
   /** The ID of the topic. */
-  String id;
+  core.String id;
 
   /** Parses an instance from its JSON representation. */
-  static CommunityTopic parse(Map<String, Object> json) {
+  static CommunityTopic parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new CommunityTopic();
     result.body = identity(json["body"]);
@@ -2887,9 +2680,9 @@ class CommunityTopic extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(CommunityTopic value) {
+  static core.Object serialize(CommunityTopic value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["body"] = identity(value.body);
     result["lastUpdate"] = identity(value.lastUpdate);
     result["kind"] = identity(value.kind);
@@ -2912,32 +2705,32 @@ class CommunityTopicList extends IdentityHash {
  * The value of pageToken query parameter in community_topic.list request to get the next page, if
  * there are more to retrieve.
  */
-  String nextPageToken;
+  core.String nextPageToken;
 
   /**
  * Identifies this resource as a collection of community topics. Value: "orkut#communityTopicList"
  */
-  String kind;
+  core.String kind;
 
   /** List of topics retrieved. */
-  List<CommunityTopic> items;
+  core.List<CommunityTopic> items;
 
   /**
  * The value of pageToken query parameter in community_topic.list request to get the previous page,
  * if there are more to retrieve.
  */
-  String prevPageToken;
+  core.String prevPageToken;
 
   /** The value of pageToken query parameter in community_topic.list request to get the last page. */
-  String lastPageToken;
+  core.String lastPageToken;
 
   /**
  * The value of pageToken query parameter in community_topic.list request to get the first page.
  */
-  String firstPageToken;
+  core.String firstPageToken;
 
   /** Parses an instance from its JSON representation. */
-  static CommunityTopicList parse(Map<String, Object> json) {
+  static CommunityTopicList parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new CommunityTopicList();
     result.nextPageToken = identity(json["nextPageToken"]);
@@ -2949,9 +2742,9 @@ class CommunityTopicList extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(CommunityTopicList value) {
+  static core.Object serialize(CommunityTopicList value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["nextPageToken"] = identity(value.nextPageToken);
     result["kind"] = identity(value.kind);
     result["items"] = map(CommunityTopic.serialize)(value.items);
@@ -2966,13 +2759,13 @@ class CommunityTopicList extends IdentityHash {
 // Schema .Counters
 class Counters extends IdentityHash {
   /** List of counters retrieved. */
-  List<OrkutCounterResource> items;
+  core.List<OrkutCounterResource> items;
 
   /** Identifies this resource as a collection of counters. Value: "orkut#counters" */
-  String kind;
+  core.String kind;
 
   /** Parses an instance from its JSON representation. */
-  static Counters parse(Map<String, Object> json) {
+  static Counters parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Counters();
     result.items = map(OrkutCounterResource.parse)(json["items"]);
@@ -2980,9 +2773,9 @@ class Counters extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Counters value) {
+  static core.Object serialize(Counters value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["items"] = map(OrkutCounterResource.serialize)(value.items);
     result["kind"] = identity(value.kind);
     return result;
@@ -2993,10 +2786,10 @@ class Counters extends IdentityHash {
 // Schema .OrkutActivityobjectsResource
 class OrkutActivityobjectsResource extends IdentityHash {
   /** The title of the object. */
-  String displayName;
+  core.String displayName;
 
   /** Links to other resources related to this object. */
-  List<OrkutLinkResource> links;
+  core.List<OrkutLinkResource> links;
 
   /** The community which is related with this activity, e.g. a joined community. */
   Community community;
@@ -3006,19 +2799,19 @@ class OrkutActivityobjectsResource extends IdentityHash {
  * changes to this property, using the value of originalContent as a starting point. If the update
  * is successful, the server adds HTML formatting and responds with this formatted content.
  */
-  String content;
+  core.String content;
 
   /** The person who is related with this activity, e.g. an Added User. */
   OrkutActivitypersonResource person;
 
   /** The ID for the object. */
-  String id;
+  core.String id;
 
   /** The object type. */
-  String objectType;
+  core.String objectType;
 
   /** Parses an instance from its JSON representation. */
-  static OrkutActivityobjectsResource parse(Map<String, Object> json) {
+  static OrkutActivityobjectsResource parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new OrkutActivityobjectsResource();
     result.displayName = identity(json["displayName"]);
@@ -3031,9 +2824,9 @@ class OrkutActivityobjectsResource extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(OrkutActivityobjectsResource value) {
+  static core.Object serialize(OrkutActivityobjectsResource value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["displayName"] = identity(value.displayName);
     result["links"] = map(OrkutLinkResource.serialize)(value.links);
     result["community"] = Community.serialize(value.community);
@@ -3055,10 +2848,10 @@ class OrkutActivitypersonResource extends IdentityHash {
  * The person's profile url. This is adapted from Google+ and was originaly introduced as extra
  * OpenSocial convenience fields.
  */
-  String url;
+  core.String url;
 
   /** The person's gender. Values include "male", "female", and "other". */
-  String gender;
+  core.String gender;
 
   /**
  * The person's profile photo. This is adapted from Google+ and was originaly introduced as extra
@@ -3067,13 +2860,13 @@ class OrkutActivitypersonResource extends IdentityHash {
   OrkutActivitypersonResourceImage image;
 
   /** The person's date of birth, represented as YYYY-MM-DD. */
-  String birthday;
+  core.String birthday;
 
   /** The person's opensocial ID. */
-  String id;
+  core.String id;
 
   /** Parses an instance from its JSON representation. */
-  static OrkutActivitypersonResource parse(Map<String, Object> json) {
+  static OrkutActivitypersonResource parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new OrkutActivitypersonResource();
     result.name = OrkutActivitypersonResourceName.parse(json["name"]);
@@ -3085,9 +2878,9 @@ class OrkutActivitypersonResource extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(OrkutActivitypersonResource value) {
+  static core.Object serialize(OrkutActivitypersonResource value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["name"] = OrkutActivitypersonResourceName.serialize(value.name);
     result["url"] = identity(value.url);
     result["gender"] = identity(value.gender);
@@ -3102,19 +2895,19 @@ class OrkutActivitypersonResource extends IdentityHash {
 // Schema OrkutActivitypersonResource.OrkutActivitypersonResourceImage
 class OrkutActivitypersonResourceImage extends IdentityHash {
   /** The URL of the person's profile photo. */
-  String url;
+  core.String url;
 
   /** Parses an instance from its JSON representation. */
-  static OrkutActivitypersonResourceImage parse(Map<String, Object> json) {
+  static OrkutActivitypersonResourceImage parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new OrkutActivitypersonResourceImage();
     result.url = identity(json["url"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(OrkutActivitypersonResourceImage value) {
+  static core.Object serialize(OrkutActivitypersonResourceImage value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["url"] = identity(value.url);
     return result;
   }
@@ -3124,13 +2917,13 @@ class OrkutActivitypersonResourceImage extends IdentityHash {
 // Schema OrkutActivitypersonResource.OrkutActivitypersonResourceName
 class OrkutActivitypersonResourceName extends IdentityHash {
   /** The given name (first name) of this person. */
-  String givenName;
+  core.String givenName;
 
   /** The family name (last name) of this person. */
-  String familyName;
+  core.String familyName;
 
   /** Parses an instance from its JSON representation. */
-  static OrkutActivitypersonResourceName parse(Map<String, Object> json) {
+  static OrkutActivitypersonResourceName parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new OrkutActivitypersonResourceName();
     result.givenName = identity(json["givenName"]);
@@ -3138,9 +2931,9 @@ class OrkutActivitypersonResourceName extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(OrkutActivitypersonResourceName value) {
+  static core.Object serialize(OrkutActivitypersonResourceName value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["givenName"] = identity(value.givenName);
     result["familyName"] = identity(value.familyName);
     return result;
@@ -3151,19 +2944,19 @@ class OrkutActivitypersonResourceName extends IdentityHash {
 // Schema .OrkutAuthorResource
 class OrkutAuthorResource extends IdentityHash {
   /** The URL of the author who posted the comment [not yet implemented] */
-  String url;
+  core.String url;
 
   /** Image data about the author. */
   OrkutAuthorResourceImage image;
 
   /** The name of the author, suitable for display. */
-  String displayName;
+  core.String displayName;
 
   /** Unique identifier of the person who posted the comment. This is the person's OpenSocial ID. */
-  String id;
+  core.String id;
 
   /** Parses an instance from its JSON representation. */
-  static OrkutAuthorResource parse(Map<String, Object> json) {
+  static OrkutAuthorResource parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new OrkutAuthorResource();
     result.url = identity(json["url"]);
@@ -3173,9 +2966,9 @@ class OrkutAuthorResource extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(OrkutAuthorResource value) {
+  static core.Object serialize(OrkutAuthorResource value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["url"] = identity(value.url);
     result["image"] = OrkutAuthorResourceImage.serialize(value.image);
     result["displayName"] = identity(value.displayName);
@@ -3188,19 +2981,19 @@ class OrkutAuthorResource extends IdentityHash {
 // Schema OrkutAuthorResource.OrkutAuthorResourceImage
 class OrkutAuthorResourceImage extends IdentityHash {
   /** A URL that points to a thumbnail photo of the author. */
-  String url;
+  core.String url;
 
   /** Parses an instance from its JSON representation. */
-  static OrkutAuthorResourceImage parse(Map<String, Object> json) {
+  static OrkutAuthorResourceImage parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new OrkutAuthorResourceImage();
     result.url = identity(json["url"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(OrkutAuthorResourceImage value) {
+  static core.Object serialize(OrkutAuthorResourceImage value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["url"] = identity(value.url);
     return result;
   }
@@ -3213,16 +3006,16 @@ class OrkutCommunitypolloptionResource extends IdentityHash {
   OrkutCommunitypolloptionResourceImage image;
 
   /** The poll option ID */
-  int optionId;
+  core.int optionId;
 
   /** The option description. */
-  String description;
+  core.String description;
 
   /** The total number of votes that this option received. */
-  int numberOfVotes;
+  core.int numberOfVotes;
 
   /** Parses an instance from its JSON representation. */
-  static OrkutCommunitypolloptionResource parse(Map<String, Object> json) {
+  static OrkutCommunitypolloptionResource parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new OrkutCommunitypolloptionResource();
     result.image = OrkutCommunitypolloptionResourceImage.parse(json["image"]);
@@ -3232,9 +3025,9 @@ class OrkutCommunitypolloptionResource extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(OrkutCommunitypolloptionResource value) {
+  static core.Object serialize(OrkutCommunitypolloptionResource value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["image"] = OrkutCommunitypolloptionResourceImage.serialize(value.image);
     result["optionId"] = identity(value.optionId);
     result["description"] = identity(value.description);
@@ -3247,19 +3040,19 @@ class OrkutCommunitypolloptionResource extends IdentityHash {
 // Schema OrkutCommunitypolloptionResource.OrkutCommunitypolloptionResourceImage
 class OrkutCommunitypolloptionResourceImage extends IdentityHash {
   /** A URL that points to an image of the poll question. */
-  String url;
+  core.String url;
 
   /** Parses an instance from its JSON representation. */
-  static OrkutCommunitypolloptionResourceImage parse(Map<String, Object> json) {
+  static OrkutCommunitypolloptionResourceImage parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new OrkutCommunitypolloptionResourceImage();
     result.url = identity(json["url"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(OrkutCommunitypolloptionResourceImage value) {
+  static core.Object serialize(OrkutCommunitypolloptionResourceImage value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["url"] = identity(value.url);
     return result;
   }
@@ -3269,7 +3062,7 @@ class OrkutCommunitypolloptionResourceImage extends IdentityHash {
 // Schema .OrkutCounterResource
 class OrkutCounterResource extends IdentityHash {
   /** The number of resources on the counted collection. */
-  int total;
+  core.int total;
 
   /** Link to the collection being counted. */
   OrkutLinkResource link;
@@ -3279,10 +3072,10 @@ class OrkutCounterResource extends IdentityHash {
  * the user. - photos - The photos of the user. - videos - The videos of the user. -
  * pendingTestimonials - The pending testimonials of the user.
  */
-  String name;
+  core.String name;
 
   /** Parses an instance from its JSON representation. */
-  static OrkutCounterResource parse(Map<String, Object> json) {
+  static OrkutCounterResource parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new OrkutCounterResource();
     result.total = identity(json["total"]);
@@ -3291,9 +3084,9 @@ class OrkutCounterResource extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(OrkutCounterResource value) {
+  static core.Object serialize(OrkutCounterResource value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["total"] = identity(value.total);
     result["link"] = OrkutLinkResource.serialize(value.link);
     result["name"] = identity(value.name);
@@ -3305,19 +3098,19 @@ class OrkutCounterResource extends IdentityHash {
 // Schema .OrkutLinkResource
 class OrkutLinkResource extends IdentityHash {
   /** URL of the link. */
-  String href;
+  core.String href;
 
   /** Media type of the link. */
-  String type;
+  core.String type;
 
   /** Relation between the resource and the parent object. */
-  String rel;
+  core.String rel;
 
   /** Title of the link. */
-  String title;
+  core.String title;
 
   /** Parses an instance from its JSON representation. */
-  static OrkutLinkResource parse(Map<String, Object> json) {
+  static OrkutLinkResource parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new OrkutLinkResource();
     result.href = identity(json["href"]);
@@ -3327,9 +3120,9 @@ class OrkutLinkResource extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(OrkutLinkResource value) {
+  static core.Object serialize(OrkutLinkResource value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["href"] = identity(value.href);
     result["type"] = identity(value.type);
     result["rel"] = identity(value.rel);
@@ -3342,19 +3135,19 @@ class OrkutLinkResource extends IdentityHash {
 // Schema .Visibility
 class Visibility extends IdentityHash {
   /** Identifies this resource as a visibility item. Value: "orkut#visibility" */
-  String kind;
+  core.String kind;
 
   /**
  * The visibility of the resource. Possible values are: - default: not hidden by the user - hidden:
  * hidden
  */
-  String visibility;
+  core.String visibility;
 
   /** List of resources for the visibility item. */
-  List<OrkutLinkResource> links;
+  core.List<OrkutLinkResource> links;
 
   /** Parses an instance from its JSON representation. */
-  static Visibility parse(Map<String, Object> json) {
+  static Visibility parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Visibility();
     result.kind = identity(json["kind"]);
@@ -3363,9 +3156,9 @@ class Visibility extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Visibility value) {
+  static core.Object serialize(Visibility value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["kind"] = identity(value.kind);
     result["visibility"] = identity(value.visibility);
     result["links"] = map(OrkutLinkResource.serialize)(value.links);
@@ -3375,12 +3168,12 @@ class Visibility extends IdentityHash {
 }
 
 // Enum OrkutApi.Alt
-class OrkutApiAlt implements Hashable {
+class OrkutApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/json */
   static final OrkutApiAlt JSON = const OrkutApiAlt._internal("json", 0);
 
   /** All values of this enumeration */
-  static final List<OrkutApiAlt> values = const <OrkutApiAlt>[
+  static final core.List<OrkutApiAlt> values = const <OrkutApiAlt>[
     JSON,
   ];
 
@@ -3390,14 +3183,14 @@ class OrkutApiAlt implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static OrkutApiAlt valueOf(String item) => _valuesMap[item];
+  static OrkutApiAlt valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const OrkutApiAlt._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const OrkutApiAlt._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Alt".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Alt".hashCode();
 }
 

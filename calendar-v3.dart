@@ -1,4 +1,5 @@
 #library("calendar");
+#import('dart:core', prefix: 'core');
 #import('dart:json');
 
 #import('utils.dart');
@@ -8,13 +9,15 @@
 /**
  * Lets you manipulate events and other calendar data.
  */
-class CalendarApi {
+class CalendarApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
-  final String baseUrl;
+  final core.String baseUrl;
+  /** How we should identify ourselves to the service. */
+  Authenticator authenticator;
   /** The client library version */
-  final String clientVersion = "0.1";
+  final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
-  final String applicationName;
+  final core.String applicationName;
   CalendarApi get _$service() => this;
   FreebusyResource _freebusy;
   FreebusyResource get freebusy() => _freebusy;
@@ -32,37 +35,37 @@ class CalendarApi {
   EventsResource get events() => _events;
   
   /** Returns response with indentations and line breaks. */
-  bool prettyPrint;
+  core.bool prettyPrint;
 
   /** Selector specifying which fields to include in a partial response. */
-  String fields;
+  core.String fields;
 
   /**
    * Available to use for quota purposes for server-side applications. Can be any arbitrary string
    * assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.
    */
-  String quotaUser;
+  core.String quotaUser;
 
   /** OAuth 2.0 token for the current user. */
-  String oauthToken;
+  core.String oauthToken;
 
   /**
    * API key. Your API key identifies your project and provides you with API access, quota, and
    * reports. Required unless you provide an OAuth 2.0 token.
    */
-  String key;
+  core.String key;
 
   /**
    * IP address of the site where the request originates. Use this if you want to enforce per-user
    * limits.
    */
-  String userIp;
+  core.String userIp;
 
   /** Data format for the response. */
   CalendarApiAlt alt;
 
 
-  CalendarApi([this.baseUrl = "https://www.googleapis.com/calendar/v3/", this.applicationName]) { 
+  CalendarApi([this.baseUrl = "https://www.googleapis.com/calendar/v3/", this.applicationName, this.authenticator]) { 
     _freebusy = new FreebusyResource._internal(this);
     _settings = new SettingsResource._internal(this);
     _calendarList = new CalendarListResource._internal(this);
@@ -71,14 +74,14 @@ class CalendarApi {
     _colors = new ColorsResource._internal(this);
     _events = new EventsResource._internal(this);
   }
-  String get userAgent() {
+  core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}calendar/v3/20120423 google-api-dart-client/${clientVersion}";
   }
 }
 
 // Resource .FreebusyResource
-class FreebusyResource {
+class FreebusyResource extends core.Object {
   final CalendarApi _$service;
   
   FreebusyResource._internal(CalendarApi $service) : _$service = $service;
@@ -88,7 +91,7 @@ class FreebusyResource {
    * Returns free/busy information for a set of calendars.
    * [content] the FreeBusyRequest
    */
-  Future<FreeBusyResponse> query(FreeBusyRequest content) {
+  core.Future<FreeBusyResponse> query(FreeBusyRequest content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -103,24 +106,18 @@ class FreebusyResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(FreeBusyRequest.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "freeBusy").generate($pathParams, $queryParams);
-    final $completer = new Completer<FreeBusyResponse>();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = FreeBusyResponse.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => FreeBusyResponse.parse(JSON.parse($text)));
   }
 }
 
 // Resource .SettingsResource
-class SettingsResource {
+class SettingsResource extends core.Object {
   final CalendarApi _$service;
   
   SettingsResource._internal(CalendarApi $service) : _$service = $service;
@@ -129,7 +126,7 @@ class SettingsResource {
   /**
    * Returns all user settings for the authenticated user.
    */
-  Future<Settings> list() {
+  core.Future<Settings> list() {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -142,19 +139,13 @@ class SettingsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "users/me/settings").generate($pathParams, $queryParams);
-    final $completer = new Completer<Settings>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Settings.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Settings.parse(JSON.parse($text)));
   }
 
   // Method SettingsResource.Get
@@ -162,7 +153,7 @@ class SettingsResource {
    * Returns a single user setting.
    * [setting] Name of the user setting.
    */
-  Future<Setting> get(String setting) {
+  core.Future<Setting> get(core.String setting) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -176,24 +167,18 @@ class SettingsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "users/me/settings/{setting}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Setting>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Setting.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Setting.parse(JSON.parse($text)));
   }
 }
 
 // Resource .CalendarListResource
-class CalendarListResource {
+class CalendarListResource extends core.Object {
   final CalendarApi _$service;
   
   CalendarListResource._internal(CalendarApi $service) : _$service = $service;
@@ -203,7 +188,7 @@ class CalendarListResource {
    * Adds an entry to the user's calendar list.
    * [content] the CalendarListEntry
    */
-  Future<CalendarListEntry> insert(CalendarListEntry content) {
+  core.Future<CalendarListEntry> insert(CalendarListEntry content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -218,19 +203,13 @@ class CalendarListResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(CalendarListEntry.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "users/me/calendarList").generate($pathParams, $queryParams);
-    final $completer = new Completer<CalendarListEntry>();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = CalendarListEntry.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => CalendarListEntry.parse(JSON.parse($text)));
   }
 
   // Method CalendarListResource.Get
@@ -238,7 +217,7 @@ class CalendarListResource {
    * Returns an entry on the user's calendar list.
    * [calendarId] Calendar identifier.
    */
-  Future<CalendarListEntry> get(String calendarId) {
+  core.Future<CalendarListEntry> get(core.String calendarId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -252,26 +231,20 @@ class CalendarListResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "users/me/calendarList/{calendarId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<CalendarListEntry>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = CalendarListEntry.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => CalendarListEntry.parse(JSON.parse($text)));
   }
 
   // Method CalendarListResource.List
   /**
    * Returns entries on the user's calendar list.
    */
-  Future<CalendarList> list([String pageToken = UNSPECIFIED, bool showHidden = UNSPECIFIED, int maxResults = UNSPECIFIED, CalendarListResourceListMinAccessRole minAccessRole = UNSPECIFIED]) {
+  core.Future<CalendarList> list([core.String pageToken = UNSPECIFIED, core.bool showHidden = UNSPECIFIED, core.int maxResults = UNSPECIFIED, CalendarListResourceListMinAccessRole minAccessRole = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -288,19 +261,13 @@ class CalendarListResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "users/me/calendarList").generate($pathParams, $queryParams);
-    final $completer = new Completer<CalendarList>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = CalendarList.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => CalendarList.parse(JSON.parse($text)));
   }
 
   // Method CalendarListResource.Update
@@ -309,7 +276,7 @@ class CalendarListResource {
    * [calendarId] Calendar identifier.
    * [content] the CalendarListEntry
    */
-  Future<CalendarListEntry> update(String calendarId, CalendarListEntry content) {
+  core.Future<CalendarListEntry> update(core.String calendarId, CalendarListEntry content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -325,19 +292,13 @@ class CalendarListResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(CalendarListEntry.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "users/me/calendarList/{calendarId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<CalendarListEntry>();
     final $http = new HttpRequest($url, "PUT", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = CalendarListEntry.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => CalendarListEntry.parse(JSON.parse($text)));
   }
 
   // Method CalendarListResource.Patch
@@ -346,7 +307,7 @@ class CalendarListResource {
    * [calendarId] Calendar identifier.
    * [content] the CalendarListEntry
    */
-  Future<CalendarListEntry> patch(String calendarId, CalendarListEntry content) {
+  core.Future<CalendarListEntry> patch(core.String calendarId, CalendarListEntry content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -362,19 +323,13 @@ class CalendarListResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(CalendarListEntry.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "users/me/calendarList/{calendarId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<CalendarListEntry>();
     final $http = new HttpRequest($url, "PATCH", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = CalendarListEntry.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => CalendarListEntry.parse(JSON.parse($text)));
   }
 
   // Method CalendarListResource.Delete
@@ -382,7 +337,7 @@ class CalendarListResource {
    * Deletes an entry on the user's calendar list.
    * [calendarId] Calendar identifier.
    */
-  Future delete(String calendarId) {
+  core.Future delete(core.String calendarId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -396,24 +351,18 @@ class CalendarListResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "users/me/calendarList/{calendarId}").generate($pathParams, $queryParams);
-    final $completer = new Completer();
     final $http = new HttpRequest($url, "DELETE", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = identity(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => identity(JSON.parse($text)));
   }
 }
 
 // Enum CalendarListResource.List.MinAccessRole
-class CalendarListResourceListMinAccessRole implements Hashable {
+class CalendarListResourceListMinAccessRole extends core.Object implements core.Hashable {
   /** The user can read free/busy information. */
   static final CalendarListResourceListMinAccessRole FREEBUSYREADER = const CalendarListResourceListMinAccessRole._internal("freeBusyReader", 0);
   /** The user can read and modify events and access control lists. */
@@ -424,7 +373,7 @@ class CalendarListResourceListMinAccessRole implements Hashable {
   static final CalendarListResourceListMinAccessRole WRITER = const CalendarListResourceListMinAccessRole._internal("writer", 3);
 
   /** All values of this enumeration */
-  static final List<CalendarListResourceListMinAccessRole> values = const <CalendarListResourceListMinAccessRole>[
+  static final core.List<CalendarListResourceListMinAccessRole> values = const <CalendarListResourceListMinAccessRole>[
     FREEBUSYREADER,
     OWNER,
     READER,
@@ -440,19 +389,19 @@ class CalendarListResourceListMinAccessRole implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static CalendarListResourceListMinAccessRole valueOf(String item) => _valuesMap[item];
+  static CalendarListResourceListMinAccessRole valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const CalendarListResourceListMinAccessRole._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const CalendarListResourceListMinAccessRole._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "MinAccessRole".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "MinAccessRole".hashCode();
 }
 
 // Resource .CalendarsResource
-class CalendarsResource {
+class CalendarsResource extends core.Object {
   final CalendarApi _$service;
   
   CalendarsResource._internal(CalendarApi $service) : _$service = $service;
@@ -462,7 +411,7 @@ class CalendarsResource {
    * Creates a secondary calendar.
    * [content] the Calendar
    */
-  Future<Calendar> insert(Calendar content) {
+  core.Future<Calendar> insert(Calendar content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -477,19 +426,13 @@ class CalendarsResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Calendar.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "calendars").generate($pathParams, $queryParams);
-    final $completer = new Completer<Calendar>();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Calendar.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Calendar.parse(JSON.parse($text)));
   }
 
   // Method CalendarsResource.Get
@@ -497,7 +440,7 @@ class CalendarsResource {
    * Returns metadata for a calendar.
    * [calendarId] Calendar identifier.
    */
-  Future<Calendar> get(String calendarId) {
+  core.Future<Calendar> get(core.String calendarId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -511,19 +454,13 @@ class CalendarsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "calendars/{calendarId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Calendar>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Calendar.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Calendar.parse(JSON.parse($text)));
   }
 
   // Method CalendarsResource.Clear
@@ -532,7 +469,7 @@ class CalendarsResource {
    * of an account and cannot be undone.
    * [calendarId] Calendar identifier.
    */
-  Future clear(String calendarId) {
+  core.Future clear(core.String calendarId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -546,19 +483,13 @@ class CalendarsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "calendars/{calendarId}/clear").generate($pathParams, $queryParams);
-    final $completer = new Completer();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = identity(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => identity(JSON.parse($text)));
   }
 
   // Method CalendarsResource.Update
@@ -567,7 +498,7 @@ class CalendarsResource {
    * [calendarId] Calendar identifier.
    * [content] the Calendar
    */
-  Future<Calendar> update(String calendarId, Calendar content) {
+  core.Future<Calendar> update(core.String calendarId, Calendar content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -583,19 +514,13 @@ class CalendarsResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Calendar.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "calendars/{calendarId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Calendar>();
     final $http = new HttpRequest($url, "PUT", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Calendar.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Calendar.parse(JSON.parse($text)));
   }
 
   // Method CalendarsResource.Patch
@@ -604,7 +529,7 @@ class CalendarsResource {
    * [calendarId] Calendar identifier.
    * [content] the Calendar
    */
-  Future<Calendar> patch(String calendarId, Calendar content) {
+  core.Future<Calendar> patch(core.String calendarId, Calendar content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -620,19 +545,13 @@ class CalendarsResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Calendar.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "calendars/{calendarId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Calendar>();
     final $http = new HttpRequest($url, "PATCH", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Calendar.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Calendar.parse(JSON.parse($text)));
   }
 
   // Method CalendarsResource.Delete
@@ -640,7 +559,7 @@ class CalendarsResource {
    * Deletes a secondary calendar.
    * [calendarId] Calendar identifier.
    */
-  Future delete(String calendarId) {
+  core.Future delete(core.String calendarId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -654,24 +573,18 @@ class CalendarsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "calendars/{calendarId}").generate($pathParams, $queryParams);
-    final $completer = new Completer();
     final $http = new HttpRequest($url, "DELETE", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = identity(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => identity(JSON.parse($text)));
   }
 }
 
 // Resource .AclResource
-class AclResource {
+class AclResource extends core.Object {
   final CalendarApi _$service;
   
   AclResource._internal(CalendarApi $service) : _$service = $service;
@@ -682,7 +595,7 @@ class AclResource {
    * [calendarId] Calendar identifier.
    * [content] the AclRule
    */
-  Future<AclRule> insert(String calendarId, AclRule content) {
+  core.Future<AclRule> insert(core.String calendarId, AclRule content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -698,19 +611,13 @@ class AclResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(AclRule.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "calendars/{calendarId}/acl").generate($pathParams, $queryParams);
-    final $completer = new Completer<AclRule>();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = AclRule.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => AclRule.parse(JSON.parse($text)));
   }
 
   // Method AclResource.Get
@@ -719,7 +626,7 @@ class AclResource {
    * [calendarId] Calendar identifier.
    * [ruleId] ACL rule identifier.
    */
-  Future<AclRule> get(String calendarId, String ruleId) {
+  core.Future<AclRule> get(core.String calendarId, core.String ruleId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -734,19 +641,13 @@ class AclResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "calendars/{calendarId}/acl/{ruleId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<AclRule>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = AclRule.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => AclRule.parse(JSON.parse($text)));
   }
 
   // Method AclResource.List
@@ -754,7 +655,7 @@ class AclResource {
    * Returns the rules in the access control list for the calendar.
    * [calendarId] Calendar identifier.
    */
-  Future<Acl> list(String calendarId) {
+  core.Future<Acl> list(core.String calendarId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -768,19 +669,13 @@ class AclResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "calendars/{calendarId}/acl").generate($pathParams, $queryParams);
-    final $completer = new Completer<Acl>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Acl.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Acl.parse(JSON.parse($text)));
   }
 
   // Method AclResource.Update
@@ -790,7 +685,7 @@ class AclResource {
    * [ruleId] ACL rule identifier.
    * [content] the AclRule
    */
-  Future<AclRule> update(String calendarId, String ruleId, AclRule content) {
+  core.Future<AclRule> update(core.String calendarId, core.String ruleId, AclRule content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -807,19 +702,13 @@ class AclResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(AclRule.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "calendars/{calendarId}/acl/{ruleId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<AclRule>();
     final $http = new HttpRequest($url, "PUT", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = AclRule.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => AclRule.parse(JSON.parse($text)));
   }
 
   // Method AclResource.Patch
@@ -829,7 +718,7 @@ class AclResource {
    * [ruleId] ACL rule identifier.
    * [content] the AclRule
    */
-  Future<AclRule> patch(String calendarId, String ruleId, AclRule content) {
+  core.Future<AclRule> patch(core.String calendarId, core.String ruleId, AclRule content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -846,19 +735,13 @@ class AclResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(AclRule.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "calendars/{calendarId}/acl/{ruleId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<AclRule>();
     final $http = new HttpRequest($url, "PATCH", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = AclRule.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => AclRule.parse(JSON.parse($text)));
   }
 
   // Method AclResource.Delete
@@ -867,7 +750,7 @@ class AclResource {
    * [calendarId] Calendar identifier.
    * [ruleId] ACL rule identifier.
    */
-  Future delete(String calendarId, String ruleId) {
+  core.Future delete(core.String calendarId, core.String ruleId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -882,24 +765,18 @@ class AclResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "calendars/{calendarId}/acl/{ruleId}").generate($pathParams, $queryParams);
-    final $completer = new Completer();
     final $http = new HttpRequest($url, "DELETE", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = identity(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => identity(JSON.parse($text)));
   }
 }
 
 // Resource .ColorsResource
-class ColorsResource {
+class ColorsResource extends core.Object {
   final CalendarApi _$service;
   
   ColorsResource._internal(CalendarApi $service) : _$service = $service;
@@ -908,7 +785,7 @@ class ColorsResource {
   /**
    * Returns the color definitions for calendars and events.
    */
-  Future<Colors> get() {
+  core.Future<Colors> get() {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -921,24 +798,18 @@ class ColorsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "colors").generate($pathParams, $queryParams);
-    final $completer = new Completer<Colors>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Colors.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Colors.parse(JSON.parse($text)));
   }
 }
 
 // Resource .EventsResource
-class EventsResource {
+class EventsResource extends core.Object {
   final CalendarApi _$service;
   
   EventsResource._internal(CalendarApi $service) : _$service = $service;
@@ -949,7 +820,7 @@ class EventsResource {
    * [calendarId] Calendar identifier.
    * [content] the Event
    */
-  Future<Event> insert(String calendarId, Event content, [bool sendNotifications = UNSPECIFIED]) {
+  core.Future<Event> insert(core.String calendarId, Event content, [core.bool sendNotifications = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -966,19 +837,13 @@ class EventsResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Event.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "calendars/{calendarId}/events").generate($pathParams, $queryParams);
-    final $completer = new Completer<Event>();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Event.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Event.parse(JSON.parse($text)));
   }
 
   // Method EventsResource.Get
@@ -987,7 +852,7 @@ class EventsResource {
    * [calendarId] Calendar identifier.
    * [eventId] Event identifier.
    */
-  Future<Event> get(String calendarId, String eventId, [String timeZone = UNSPECIFIED, int maxAttendees = UNSPECIFIED]) {
+  core.Future<Event> get(core.String calendarId, core.String eventId, [core.String timeZone = UNSPECIFIED, core.int maxAttendees = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1004,19 +869,13 @@ class EventsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "calendars/{calendarId}/events/{eventId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Event>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Event.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Event.parse(JSON.parse($text)));
   }
 
   // Method EventsResource.Move
@@ -1026,7 +885,7 @@ class EventsResource {
    * [eventId] Event identifier.
    * [destination] Calendar identifier of the target calendar where the event is to be moved to.
    */
-  Future<Event> move(String calendarId, String eventId, String destination, [bool sendNotifications = UNSPECIFIED]) {
+  core.Future<Event> move(core.String calendarId, core.String eventId, core.String destination, [core.bool sendNotifications = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1043,19 +902,13 @@ class EventsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "calendars/{calendarId}/events/{eventId}/move").generate($pathParams, $queryParams);
-    final $completer = new Completer<Event>();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Event.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Event.parse(JSON.parse($text)));
   }
 
   // Method EventsResource.List
@@ -1063,7 +916,7 @@ class EventsResource {
    * Returns events on the specified calendar.
    * [calendarId] Calendar identifier.
    */
-  Future<Events> list(String calendarId, [EventsResourceListOrderBy orderBy = UNSPECIFIED, bool showHiddenInvitations = UNSPECIFIED, bool showDeleted = UNSPECIFIED, String iCalUID = UNSPECIFIED, String updatedMin = UNSPECIFIED, bool singleEvents = UNSPECIFIED, int maxResults = UNSPECIFIED, String q = UNSPECIFIED, String pageToken = UNSPECIFIED, String timeMin = UNSPECIFIED, String timeZone = UNSPECIFIED, String timeMax = UNSPECIFIED, int maxAttendees = UNSPECIFIED]) {
+  core.Future<Events> list(core.String calendarId, [EventsResourceListOrderBy orderBy = UNSPECIFIED, core.bool showHiddenInvitations = UNSPECIFIED, core.bool showDeleted = UNSPECIFIED, core.String iCalUID = UNSPECIFIED, core.String updatedMin = UNSPECIFIED, core.bool singleEvents = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String q = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.String timeMin = UNSPECIFIED, core.String timeZone = UNSPECIFIED, core.String timeMax = UNSPECIFIED, core.int maxAttendees = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1090,19 +943,13 @@ class EventsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "calendars/{calendarId}/events").generate($pathParams, $queryParams);
-    final $completer = new Completer<Events>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Events.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Events.parse(JSON.parse($text)));
   }
 
   // Method EventsResource.Update
@@ -1112,7 +959,7 @@ class EventsResource {
    * [eventId] Event identifier.
    * [content] the Event
    */
-  Future<Event> update(String calendarId, String eventId, Event content, [bool sendNotifications = UNSPECIFIED]) {
+  core.Future<Event> update(core.String calendarId, core.String eventId, Event content, [core.bool sendNotifications = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1130,19 +977,13 @@ class EventsResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Event.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "calendars/{calendarId}/events/{eventId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Event>();
     final $http = new HttpRequest($url, "PUT", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Event.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Event.parse(JSON.parse($text)));
   }
 
   // Method EventsResource.Patch
@@ -1152,7 +993,7 @@ class EventsResource {
    * [eventId] Event identifier.
    * [content] the Event
    */
-  Future<Event> patch(String calendarId, String eventId, Event content, [bool sendNotifications = UNSPECIFIED]) {
+  core.Future<Event> patch(core.String calendarId, core.String eventId, Event content, [core.bool sendNotifications = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1170,19 +1011,13 @@ class EventsResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Event.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "calendars/{calendarId}/events/{eventId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Event>();
     final $http = new HttpRequest($url, "PATCH", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Event.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Event.parse(JSON.parse($text)));
   }
 
   // Method EventsResource.Instances
@@ -1191,7 +1026,7 @@ class EventsResource {
    * [calendarId] Calendar identifier.
    * [eventId] Recurring event identifier.
    */
-  Future<Events> instances(String calendarId, String eventId, [bool showDeleted = UNSPECIFIED, int maxResults = UNSPECIFIED, String pageToken = UNSPECIFIED, String timeZone = UNSPECIFIED, String originalStart = UNSPECIFIED, int maxAttendees = UNSPECIFIED]) {
+  core.Future<Events> instances(core.String calendarId, core.String eventId, [core.bool showDeleted = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.String timeZone = UNSPECIFIED, core.String originalStart = UNSPECIFIED, core.int maxAttendees = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1212,19 +1047,13 @@ class EventsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "calendars/{calendarId}/events/{eventId}/instances").generate($pathParams, $queryParams);
-    final $completer = new Completer<Events>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Events.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Events.parse(JSON.parse($text)));
   }
 
   // Method EventsResource.Import
@@ -1233,7 +1062,7 @@ class EventsResource {
    * [calendarId] Calendar identifier.
    * [content] the Event
    */
-  Future<Event> import(String calendarId, Event content) {
+  core.Future<Event> import(core.String calendarId, Event content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1249,19 +1078,13 @@ class EventsResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Event.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "calendars/{calendarId}/events/import").generate($pathParams, $queryParams);
-    final $completer = new Completer<Event>();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Event.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Event.parse(JSON.parse($text)));
   }
 
   // Method EventsResource.QuickAdd
@@ -1270,7 +1093,7 @@ class EventsResource {
    * [calendarId] Calendar identifier.
    * [text] The text describing the event to be created.
    */
-  Future<Event> quickAdd(String calendarId, String text, [bool sendNotifications = UNSPECIFIED]) {
+  core.Future<Event> quickAdd(core.String calendarId, core.String text, [core.bool sendNotifications = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1286,19 +1109,13 @@ class EventsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "calendars/{calendarId}/events/quickAdd").generate($pathParams, $queryParams);
-    final $completer = new Completer<Event>();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Event.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Event.parse(JSON.parse($text)));
   }
 
   // Method EventsResource.Delete
@@ -1307,7 +1124,7 @@ class EventsResource {
    * [calendarId] Calendar identifier.
    * [eventId] Event identifier.
    */
-  Future delete(String calendarId, String eventId, [bool sendNotifications = UNSPECIFIED]) {
+  core.Future delete(core.String calendarId, core.String eventId, [core.bool sendNotifications = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1323,24 +1140,18 @@ class EventsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "calendars/{calendarId}/events/{eventId}").generate($pathParams, $queryParams);
-    final $completer = new Completer();
     final $http = new HttpRequest($url, "DELETE", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = identity(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => identity(JSON.parse($text)));
   }
 }
 
 // Enum EventsResource.List.OrderBy
-class EventsResourceListOrderBy implements Hashable {
+class EventsResourceListOrderBy extends core.Object implements core.Hashable {
   /**
  * Order by the start date/time (ascending). This is only available when querying single events
  * (i.e. the parameter "singleEvents" is True)
@@ -1350,7 +1161,7 @@ class EventsResourceListOrderBy implements Hashable {
   static final EventsResourceListOrderBy UPDATED = const EventsResourceListOrderBy._internal("updated", 1);
 
   /** All values of this enumeration */
-  static final List<EventsResourceListOrderBy> values = const <EventsResourceListOrderBy>[
+  static final core.List<EventsResourceListOrderBy> values = const <EventsResourceListOrderBy>[
     STARTTIME,
     UPDATED,
   ];
@@ -1362,15 +1173,15 @@ class EventsResourceListOrderBy implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static EventsResourceListOrderBy valueOf(String item) => _valuesMap[item];
+  static EventsResourceListOrderBy valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const EventsResourceListOrderBy._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const EventsResourceListOrderBy._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "OrderBy".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "OrderBy".hashCode();
 }
 
 // Schema .Acl
@@ -1378,19 +1189,19 @@ class Acl extends IdentityHash {
   /**
  * Token used to access the next page of this result. Omitted if no further results are available.
  */
-  String nextPageToken;
+  core.String nextPageToken;
 
   /** List of rules on the access control list. */
-  List<AclRule> items;
+  core.List<AclRule> items;
 
   /** Type of the collection ("calendar#acl"). */
-  String kind;
+  core.String kind;
 
   /** ETag of the collection. */
-  String etag;
+  core.String etag;
 
   /** Parses an instance from its JSON representation. */
-  static Acl parse(Map<String, Object> json) {
+  static Acl parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Acl();
     result.nextPageToken = identity(json["nextPageToken"]);
@@ -1400,9 +1211,9 @@ class Acl extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Acl value) {
+  static core.Object serialize(Acl value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["nextPageToken"] = identity(value.nextPageToken);
     result["items"] = map(AclRule.serialize)(value.items);
     result["kind"] = identity(value.kind);
@@ -1418,10 +1229,10 @@ class AclRule extends IdentityHash {
   AclRuleScope scope;
 
   /** Type of the resource ("calendar#aclRule"). */
-  String kind;
+  core.String kind;
 
   /** ETag of the resource. */
-  String etag;
+  core.String etag;
 
   /**
  * The role assigned to the scope. Possible values are: - "none" - Provides no access. -
@@ -1432,13 +1243,13 @@ class AclRule extends IdentityHash {
  * ownership of the calendar. This role has all of the permissions of the writer role with the
  * additional ability to see and manipulate ACLs.
  */
-  String role;
+  core.String role;
 
   /** Identifier of the ACL rule. */
-  String id;
+  core.String id;
 
   /** Parses an instance from its JSON representation. */
-  static AclRule parse(Map<String, Object> json) {
+  static AclRule parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new AclRule();
     result.scope = AclRuleScope.parse(json["scope"]);
@@ -1449,9 +1260,9 @@ class AclRule extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(AclRule value) {
+  static core.Object serialize(AclRule value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["scope"] = AclRuleScope.serialize(value.scope);
     result["kind"] = identity(value.kind);
     result["etag"] = identity(value.etag);
@@ -1470,16 +1281,16 @@ class AclRuleScope extends IdentityHash {
  * "domain" - Limits the scope to a domain.  Note: The permissions granted to the "default", or
  * public, scope apply to any user, authenticated or not.
  */
-  String type;
+  core.String type;
 
   /**
  * The email address of a user or group, or the name of a domain, depending on the scope type.
  * Omitted for type "default".
  */
-  String value;
+  core.String value;
 
   /** Parses an instance from its JSON representation. */
-  static AclRuleScope parse(Map<String, Object> json) {
+  static AclRuleScope parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new AclRuleScope();
     result.type = identity(json["type"]);
@@ -1487,9 +1298,9 @@ class AclRuleScope extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(AclRuleScope value) {
+  static core.Object serialize(AclRuleScope value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["type"] = identity(value.type);
     result["value"] = identity(value.value);
     return result;
@@ -1500,28 +1311,28 @@ class AclRuleScope extends IdentityHash {
 // Schema .Calendar
 class Calendar extends IdentityHash {
   /** Type of the resource ("calendar#calendar"). */
-  String kind;
+  core.String kind;
 
   /** Description of the calendar. Optional. */
-  String description;
+  core.String description;
 
   /** Title of the calendar. */
-  String summary;
+  core.String summary;
 
   /** ETag of the resource. */
-  String etag;
+  core.String etag;
 
   /** Geographic location of the calendar as free-form text. Optional. */
-  String location;
+  core.String location;
 
   /** The time zone of the calendar. Optional. */
-  String timeZone;
+  core.String timeZone;
 
   /** Identifier of the calendar. */
-  String id;
+  core.String id;
 
   /** Parses an instance from its JSON representation. */
-  static Calendar parse(Map<String, Object> json) {
+  static Calendar parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Calendar();
     result.kind = identity(json["kind"]);
@@ -1534,9 +1345,9 @@ class Calendar extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Calendar value) {
+  static core.Object serialize(Calendar value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["kind"] = identity(value.kind);
     result["description"] = identity(value.description);
     result["summary"] = identity(value.summary);
@@ -1552,19 +1363,19 @@ class Calendar extends IdentityHash {
 // Schema .CalendarList
 class CalendarList extends IdentityHash {
   /** Token used to access the next page of this result. */
-  String nextPageToken;
+  core.String nextPageToken;
 
   /** Calendars that are present on the user's calendar list. */
-  List<CalendarListEntry> items;
+  core.List<CalendarListEntry> items;
 
   /** Type of the collection ("calendar#calendarList"). */
-  String kind;
+  core.String kind;
 
   /** ETag of the collection. */
-  String etag;
+  core.String etag;
 
   /** Parses an instance from its JSON representation. */
-  static CalendarList parse(Map<String, Object> json) {
+  static CalendarList parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new CalendarList();
     result.nextPageToken = identity(json["nextPageToken"]);
@@ -1574,9 +1385,9 @@ class CalendarList extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(CalendarList value) {
+  static core.Object serialize(CalendarList value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["nextPageToken"] = identity(value.nextPageToken);
     result["items"] = map(CalendarListEntry.serialize)(value.items);
     result["kind"] = identity(value.kind);
@@ -1589,40 +1400,40 @@ class CalendarList extends IdentityHash {
 // Schema .CalendarListEntry
 class CalendarListEntry extends IdentityHash {
   /** Type of the resource ("calendar#calendarListEntry"). */
-  String kind;
+  core.String kind;
 
   /** The default reminders that the authenticated user has for this calendar. */
-  List<EventReminder> defaultReminders;
+  core.List<EventReminder> defaultReminders;
 
   /** Description of the calendar. Optional. Read-only. */
-  String description;
+  core.String description;
 
   /**
  * The color of the calendar. This is an ID referring to an entry in the "calendar" section of the
  * colors definition (see the "colors" endpoint). Optional.
  */
-  String colorId;
+  core.String colorId;
 
   /** Whether the calendar content shows up in the calendar UI. Optional. The default is False. */
-  bool selected;
+  core.bool selected;
 
   /** Title of the calendar. Read-only. */
-  String summary;
+  core.String summary;
 
   /** ETag of the resource. */
-  String etag;
+  core.String etag;
 
   /** Geographic location of the calendar as free-form text. Optional. Read-only. */
-  String location;
+  core.String location;
 
   /** The summary that the authenticated user has set for this calendar. Optional. */
-  String summaryOverride;
+  core.String summaryOverride;
 
   /** The time zone of the calendar. Optional. Read-only. */
-  String timeZone;
+  core.String timeZone;
 
   /** Whether the calendar has been hidden from the list. Optional. The default is False. */
-  bool hidden;
+  core.bool hidden;
 
   /**
  * The effective access role that the authenticated user has on the calendar. Read-only. Possible
@@ -1633,13 +1444,13 @@ class CalendarListEntry extends IdentityHash {
  * "owner" - Provides ownership of the calendar. This role has all of the permissions of the writer
  * role with the additional ability to see and manipulate ACLs.
  */
-  String accessRole;
+  core.String accessRole;
 
   /** Identifier of the calendar. */
-  String id;
+  core.String id;
 
   /** Parses an instance from its JSON representation. */
-  static CalendarListEntry parse(Map<String, Object> json) {
+  static CalendarListEntry parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new CalendarListEntry();
     result.kind = identity(json["kind"]);
@@ -1658,9 +1469,9 @@ class CalendarListEntry extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(CalendarListEntry value) {
+  static core.Object serialize(CalendarListEntry value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["kind"] = identity(value.kind);
     result["defaultReminders"] = map(EventReminder.serialize)(value.defaultReminders);
     result["description"] = identity(value.description);
@@ -1684,13 +1495,13 @@ class ColorDefinition extends IdentityHash {
   /**
  * The foreground color that can be used to write on top of a background with 'background' color.
  */
-  String foreground;
+  core.String foreground;
 
   /** The background color associated with this color definition. */
-  String background;
+  core.String background;
 
   /** Parses an instance from its JSON representation. */
-  static ColorDefinition parse(Map<String, Object> json) {
+  static ColorDefinition parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ColorDefinition();
     result.foreground = identity(json["foreground"]);
@@ -1698,9 +1509,9 @@ class ColorDefinition extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ColorDefinition value) {
+  static core.Object serialize(ColorDefinition value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["foreground"] = identity(value.foreground);
     result["background"] = identity(value.background);
     return result;
@@ -1714,22 +1525,22 @@ class Colors extends IdentityHash {
  * Palette of calendar colors, mapping from the color ID to its definition. An 'calendarListEntry'
  * resource refers to one of these color IDs in its 'color' field. Read-only.
  */
-  Map<String, ColorDefinition> calendar;
+  core.Map<String, ColorDefinition> calendar;
 
   /** Last modification time of the color palette (as a RFC 3339 timestamp). Read-only. */
-  String updated;
+  core.String updated;
 
   /**
  * Palette of event colors, mapping from the color ID to its definition. An 'event' resource may
  * refer to one of these color IDs in its 'color' field. Read-only.
  */
-  Map<String, ColorDefinition> event;
+  core.Map<String, ColorDefinition> event;
 
   /** Type of the resource ("calendar#colors"). */
-  String kind;
+  core.String kind;
 
   /** Parses an instance from its JSON representation. */
-  static Colors parse(Map<String, Object> json) {
+  static Colors parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Colors();
     result.calendar = mapValues(ColorDefinition.parse)(json["calendar"]);
@@ -1739,9 +1550,9 @@ class Colors extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Colors value) {
+  static core.Object serialize(Colors value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["calendar"] = mapValues(ColorDefinition.serialize)(value.calendar);
     result["updated"] = identity(value.updated);
     result["event"] = mapValues(ColorDefinition.serialize)(value.event);
@@ -1754,7 +1565,7 @@ class Colors extends IdentityHash {
 // Schema .Error
 class Error extends IdentityHash {
   /** Domain, or broad category, of the error. */
-  String domain;
+  core.String domain;
 
   /**
  * Specific reason for the error. Some of the possible values are: - "groupTooBig" - The group of
@@ -1764,10 +1575,10 @@ class Error extends IdentityHash {
  * error types may be added in the future, so clients should gracefully handle additional error
  * statuses not included in this list.
  */
-  String reason;
+  core.String reason;
 
   /** Parses an instance from its JSON representation. */
-  static Error parse(Map<String, Object> json) {
+  static Error parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Error();
     result.domain = identity(json["domain"]);
@@ -1775,9 +1586,9 @@ class Error extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Error value) {
+  static core.Object serialize(Error value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["domain"] = identity(value.domain);
     result["reason"] = identity(value.reason);
     return result;
@@ -1798,19 +1609,19 @@ class Event extends IdentityHash {
   EventOrganizer organizer;
 
   /** Identifier of the event. */
-  String id;
+  core.String id;
 
   /** The attendees of the event. */
-  List<EventAttendee> attendees;
+  core.List<EventAttendee> attendees;
 
   /** An absolute link to this event in the Google Calendar Web UI. Read-only. */
-  String htmlLink;
+  core.String htmlLink;
 
   /**
  * List of RRULE, EXRULE, RDATE and EXDATE lines for a recurring event. This field is omitted for
  * single events or instances of recurring events.
  */
-  List<String> recurrence;
+  core.List<core.String> recurrence;
 
   /**
  * The (inclusive) start time of the event. For a recurring event, this is the start time of the
@@ -1819,16 +1630,16 @@ class Event extends IdentityHash {
   EventDateTime start;
 
   /** ETag of the resource. */
-  String etag;
+  core.String etag;
 
   /** Geographic location of the event as free-form text. Optional. */
-  String location;
+  core.String location;
 
   /**
  * For an instance of a recurring event, this is the event ID of the recurring event itself.
  * Immutable.
  */
-  String recurringEventId;
+  core.String recurringEventId;
 
   /**
  * For an instance of a recurring event, this is the time at which this event would start according
@@ -1841,25 +1652,25 @@ class Event extends IdentityHash {
  * is the default status. - "tentative" - The event is tentatively confirmed. - "cancelled" - The
  * event is cancelled.
  */
-  String status;
+  core.String status;
 
   /** Last modification time of the event (as a RFC 3339 timestamp). Read-only. */
-  String updated;
+  core.String updated;
 
   /** A gadget that extends this event. */
   EventGadget gadget;
 
   /** Description of the event. Optional. */
-  String description;
+  core.String description;
 
   /** Event ID in the iCalendar format. */
-  String iCalUID;
+  core.String iCalUID;
 
   /** Extended properties of the event. */
   EventExtendedProperties extendedProperties;
 
   /** Sequence number as per iCalendar. */
-  int sequence;
+  core.int sequence;
 
   /**
  * Visibility of the event. Optional. Possible values are: - "default" - Uses the default visibility
@@ -1868,12 +1679,12 @@ class Event extends IdentityHash {
  * event attendees may view event details. - "confidential" - The event is private. This value is
  * provided for compatibility reasons.
  */
-  String visibility;
+  core.String visibility;
 
   /**
  * Whether attendees other than the organizer can modify the event. Optional. The default is False.
  */
-  bool guestsCanModify;
+  core.bool guestsCanModify;
 
   /**
  * The (exclusive) end time of the event. For a recurring event, this is the end time of the first
@@ -1887,22 +1698,22 @@ class Event extends IdentityHash {
  * event, this can be used to only update the participant's response. Optional. The default is
  * False.
  */
-  bool attendeesOmitted;
+  core.bool attendeesOmitted;
 
   /** Type of the resource ("calendar#event"). */
-  String kind;
+  core.String kind;
 
   /** Creation time of the event (as a RFC 3339 timestamp). Read-only. */
-  String created;
+  core.String created;
 
   /**
  * The color of the event. This is an ID referring to an entry in the "event" section of the colors
  * definition (see the "colors" endpoint). Optional.
  */
-  String colorId;
+  core.String colorId;
 
   /** Whether anyone can invite themselves to the event. Optional. The default is False. */
-  bool anyoneCanAddSelf;
+  core.bool anyoneCanAddSelf;
 
   /** Information about the event's reminders for the authenticated user. */
   EventReminders reminders;
@@ -1911,32 +1722,32 @@ class Event extends IdentityHash {
  * Whether attendees other than the organizer can see who the event's attendees are. Optional. The
  * default is False.
  */
-  bool guestsCanSeeOtherGuests;
+  core.bool guestsCanSeeOtherGuests;
 
   /** Title of the event. */
-  String summary;
+  core.String summary;
 
   /**
  * Whether attendees other than the organizer can invite others to the event. Optional. The default
  * is False.
  */
-  bool guestsCanInviteOthers;
+  core.bool guestsCanInviteOthers;
 
   /**
  * Whether the event blocks time on the calendar. Optional. Possible values are: - "opaque" - The
  * event blocks time on the calendar. This is the default value. - "transparent" - The event does
  * not block time on the calendar.
  */
-  String transparency;
+  core.String transparency;
 
   /**
  * Whether this is a private event copy where changes are not shared with other copies on other
  * calendars. Optional. Immutable.
  */
-  bool privateCopy;
+  core.bool privateCopy;
 
   /** Parses an instance from its JSON representation. */
-  static Event parse(Map<String, Object> json) {
+  static Event parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Event();
     result.creator = EventCreator.parse(json["creator"]);
@@ -1974,9 +1785,9 @@ class Event extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Event value) {
+  static core.Object serialize(Event value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["creator"] = EventCreator.serialize(value.creator);
     result["organizer"] = EventOrganizer.serialize(value.organizer);
     result["id"] = identity(value.id);
@@ -2017,16 +1828,16 @@ class Event extends IdentityHash {
 // Schema .EventAttendee
 class EventAttendee extends IdentityHash {
   /** The attendee's response comment. Optional. */
-  String comment;
+  core.String comment;
 
   /** The attendee's name, if available. Optional. */
-  String displayName;
+  core.String displayName;
 
   /**
  * Whether this entry represents the calendar on which this copy of the event appears. Read-only.
  * The default is False.
  */
-  bool self;
+  core.bool self;
 
   /**
  * The attendee's response status. Possible values are: - "needsAction" - The attendee has not
@@ -2034,27 +1845,27 @@ class EventAttendee extends IdentityHash {
  * "tentative" - The attendee has tentatively accepted the invitation. - "accepted" - The attendee
  * has accepted the invitation.
  */
-  String responseStatus;
+  core.String responseStatus;
 
   /** Number of additional guests. Optional. The default is 0. */
-  int additionalGuests;
+  core.int additionalGuests;
 
   /** Whether the attendee is a resource. Read-only. The default is False. */
-  bool resource;
+  core.bool resource;
 
   /** Whether the attendee is the organizer of the event. Read-only. The default is False. */
-  bool organizer;
+  core.bool organizer;
 
   /** Whether this is an optional attendee. Optional. The default is False. */
-  bool optional;
+  core.bool optional;
 
   /**
  * The attendee's email address, if available. This field must be present when adding an attendee.
  */
-  String email;
+  core.String email;
 
   /** Parses an instance from its JSON representation. */
-  static EventAttendee parse(Map<String, Object> json) {
+  static EventAttendee parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new EventAttendee();
     result.comment = identity(json["comment"]);
@@ -2069,9 +1880,9 @@ class EventAttendee extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(EventAttendee value) {
+  static core.Object serialize(EventAttendee value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["comment"] = identity(value.comment);
     result["displayName"] = identity(value.displayName);
     result["self"] = identity(value.self);
@@ -2092,16 +1903,16 @@ class EventCreator extends IdentityHash {
  * Whether the creator corresponds to the calendar on which this copy of the event appears. Read-
  * only. The default is False.
  */
-  bool self;
+  core.bool self;
 
   /** The creator's name, if available. */
-  String displayName;
+  core.String displayName;
 
   /** The creator's email address, if available. */
-  String email;
+  core.String email;
 
   /** Parses an instance from its JSON representation. */
-  static EventCreator parse(Map<String, Object> json) {
+  static EventCreator parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new EventCreator();
     result.self = identity(json["self"]);
@@ -2110,9 +1921,9 @@ class EventCreator extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(EventCreator value) {
+  static core.Object serialize(EventCreator value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["self"] = identity(value.self);
     result["displayName"] = identity(value.displayName);
     result["email"] = identity(value.email);
@@ -2124,22 +1935,22 @@ class EventCreator extends IdentityHash {
 // Schema .EventDateTime
 class EventDateTime extends IdentityHash {
   /** The date, in the format "yyyy-mm-dd", if this is an all-day event. */
-  String date;
+  core.String date;
 
   /**
  * The name of the time zone in which the time is specified (e.g. "Europe/Zurich"). Optional. The
  * default is the time zone of the calendar.
  */
-  String timeZone;
+  core.String timeZone;
 
   /**
  * The time, as a combined date-time value (formatted according to RFC 3339). A time zone offset is
  * required unless a time zone is explicitly specified in 'timeZone'.
  */
-  String dateTime;
+  core.String dateTime;
 
   /** Parses an instance from its JSON representation. */
-  static EventDateTime parse(Map<String, Object> json) {
+  static EventDateTime parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new EventDateTime();
     result.date = identity(json["date"]);
@@ -2148,9 +1959,9 @@ class EventDateTime extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(EventDateTime value) {
+  static core.Object serialize(EventDateTime value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["date"] = identity(value.date);
     result["timeZone"] = identity(value.timeZone);
     result["dateTime"] = identity(value.dateTime);
@@ -2162,13 +1973,13 @@ class EventDateTime extends IdentityHash {
 // Schema Event.EventExtendedProperties
 class EventExtendedProperties extends IdentityHash {
   /** Properties that are shared between copies of the event on other attendees' calendars. */
-  Map<String, String> shared;
+  core.Map<String, core.String> shared;
 
   /** Properties that are private to the copy of the event that appears on this calendar. */
-  Map<String, String> private;
+  core.Map<String, core.String> private;
 
   /** Parses an instance from its JSON representation. */
-  static EventExtendedProperties parse(Map<String, Object> json) {
+  static EventExtendedProperties parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new EventExtendedProperties();
     result.shared = mapValues(identity)(json["shared"]);
@@ -2176,9 +1987,9 @@ class EventExtendedProperties extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(EventExtendedProperties value) {
+  static core.Object serialize(EventExtendedProperties value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["shared"] = mapValues(identity)(value.shared);
     result["private"] = mapValues(identity)(value.private);
     return result;
@@ -2189,34 +2000,34 @@ class EventExtendedProperties extends IdentityHash {
 // Schema Event.EventGadget
 class EventGadget extends IdentityHash {
   /** Preferences. */
-  Map<String, String> preferences;
+  core.Map<String, core.String> preferences;
 
   /** The gadget's title. */
-  String title;
+  core.String title;
 
   /** The gadget's height in pixels. Optional. */
-  int height;
+  core.int height;
 
   /** The gadget's width in pixels. Optional. */
-  int width;
+  core.int width;
 
   /** The gadget's URL. */
-  String link;
+  core.String link;
 
   /** The gadget's type. */
-  String type;
+  core.String type;
 
   /**
  * The gadget's display mode. Optional. Possible values are: - "icon" - The gadget displays next to
  * the event's title in the calendar view. - "chip" - The gadget displays when the event is clicked.
  */
-  String display;
+  core.String display;
 
   /** The gadget's icon URL. */
-  String iconLink;
+  core.String iconLink;
 
   /** Parses an instance from its JSON representation. */
-  static EventGadget parse(Map<String, Object> json) {
+  static EventGadget parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new EventGadget();
     result.preferences = mapValues(identity)(json["preferences"]);
@@ -2230,9 +2041,9 @@ class EventGadget extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(EventGadget value) {
+  static core.Object serialize(EventGadget value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["preferences"] = mapValues(identity)(value.preferences);
     result["title"] = identity(value.title);
     result["height"] = identity(value.height);
@@ -2252,16 +2063,16 @@ class EventOrganizer extends IdentityHash {
  * Whether the organizer corresponds to the calendar on which this copy of the event appears. Read-
  * only. The default is False.
  */
-  bool self;
+  core.bool self;
 
   /** The organizer's name, if available. */
-  String displayName;
+  core.String displayName;
 
   /** The organizer's email address, if available. */
-  String email;
+  core.String email;
 
   /** Parses an instance from its JSON representation. */
-  static EventOrganizer parse(Map<String, Object> json) {
+  static EventOrganizer parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new EventOrganizer();
     result.self = identity(json["self"]);
@@ -2270,9 +2081,9 @@ class EventOrganizer extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(EventOrganizer value) {
+  static core.Object serialize(EventOrganizer value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["self"] = identity(value.self);
     result["displayName"] = identity(value.displayName);
     result["email"] = identity(value.email);
@@ -2284,16 +2095,16 @@ class EventOrganizer extends IdentityHash {
 // Schema .EventReminder
 class EventReminder extends IdentityHash {
   /** Number of minutes before the start of the event when the reminder should trigger. */
-  int minutes;
+  core.int minutes;
 
   /**
  * The method used by this reminder. Possible values are: - "email" - Reminders are sent via email.
  * - "sms" - Reminders are sent via SMS. - "popup" - Reminders are sent via a UI popup.
  */
-  String method;
+  core.String method;
 
   /** Parses an instance from its JSON representation. */
-  static EventReminder parse(Map<String, Object> json) {
+  static EventReminder parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new EventReminder();
     result.minutes = identity(json["minutes"]);
@@ -2301,9 +2112,9 @@ class EventReminder extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(EventReminder value) {
+  static core.Object serialize(EventReminder value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["minutes"] = identity(value.minutes);
     result["method"] = identity(value.method);
     return result;
@@ -2317,13 +2128,13 @@ class EventReminders extends IdentityHash {
  * If the event doesn't use the default reminders, this lists the reminders specific to the event,
  * or, if not set, indicates that no reminders are set for this event.
  */
-  List<EventReminder> overrides;
+  core.List<EventReminder> overrides;
 
   /** Whether the default reminders of the calendar apply to the event. */
-  bool useDefault;
+  core.bool useDefault;
 
   /** Parses an instance from its JSON representation. */
-  static EventReminders parse(Map<String, Object> json) {
+  static EventReminders parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new EventReminders();
     result.overrides = map(EventReminder.parse)(json["overrides"]);
@@ -2331,9 +2142,9 @@ class EventReminders extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(EventReminders value) {
+  static core.Object serialize(EventReminders value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["overrides"] = map(EventReminder.serialize)(value.overrides);
     result["useDefault"] = identity(value.useDefault);
     return result;
@@ -2346,35 +2157,35 @@ class Events extends IdentityHash {
   /**
  * Token used to access the next page of this result. Omitted if no further results are available.
  */
-  String nextPageToken;
+  core.String nextPageToken;
 
   /** Type of the collection ("calendar#events"). */
-  String kind;
+  core.String kind;
 
   /**
  * The default reminders on the calendar for the authenticated user. These reminders apply to all
  * events on this calendar that do not explicitly override them (i.e. do not have
  * 'reminders.useDefault' set to 'true').
  */
-  List<EventReminder> defaultReminders;
+  core.List<EventReminder> defaultReminders;
 
   /** Description of the calendar. Read-only. */
-  String description;
+  core.String description;
 
   /** List of events on the calendar. */
-  List<Event> items;
+  core.List<Event> items;
 
   /** Last modification time of the calendar (as a RFC 3339 timestamp). Read-only. */
-  String updated;
+  core.String updated;
 
   /** Title of the calendar. Read-only. */
-  String summary;
+  core.String summary;
 
   /** ETag of the collection. */
-  String etag;
+  core.String etag;
 
   /** The time zone of the calendar. Read-only. */
-  String timeZone;
+  core.String timeZone;
 
   /**
  * The user's access role for this calendar. Read-only. Possible values are: - "none" - The user has
@@ -2385,10 +2196,10 @@ class Events extends IdentityHash {
  * visible. - "owner" - The user has ownership of the calendar. This role has all of the permissions
  * of the writer role with the additional ability to see and manipulate ACLs.
  */
-  String accessRole;
+  core.String accessRole;
 
   /** Parses an instance from its JSON representation. */
-  static Events parse(Map<String, Object> json) {
+  static Events parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Events();
     result.nextPageToken = identity(json["nextPageToken"]);
@@ -2404,9 +2215,9 @@ class Events extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Events value) {
+  static core.Object serialize(Events value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["nextPageToken"] = identity(value.nextPageToken);
     result["kind"] = identity(value.kind);
     result["defaultReminders"] = map(EventReminder.serialize)(value.defaultReminders);
@@ -2425,13 +2236,13 @@ class Events extends IdentityHash {
 // Schema .FreeBusyCalendar
 class FreeBusyCalendar extends IdentityHash {
   /** List of time ranges during which this calendar should be regarded as busy. */
-  List<TimePeriod> busy;
+  core.List<TimePeriod> busy;
 
   /** Optional error(s) (if computation for the calendar failed). */
-  List<Error> errors;
+  core.List<Error> errors;
 
   /** Parses an instance from its JSON representation. */
-  static FreeBusyCalendar parse(Map<String, Object> json) {
+  static FreeBusyCalendar parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new FreeBusyCalendar();
     result.busy = map(TimePeriod.parse)(json["busy"]);
@@ -2439,9 +2250,9 @@ class FreeBusyCalendar extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(FreeBusyCalendar value) {
+  static core.Object serialize(FreeBusyCalendar value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["busy"] = map(TimePeriod.serialize)(value.busy);
     result["errors"] = map(Error.serialize)(value.errors);
     return result;
@@ -2452,13 +2263,13 @@ class FreeBusyCalendar extends IdentityHash {
 // Schema .FreeBusyGroup
 class FreeBusyGroup extends IdentityHash {
   /** Optional error(s) (if computation for the group failed). */
-  List<Error> errors;
+  core.List<Error> errors;
 
   /** List of calendars' identifiers within a group. */
-  List<String> calendars;
+  core.List<core.String> calendars;
 
   /** Parses an instance from its JSON representation. */
-  static FreeBusyGroup parse(Map<String, Object> json) {
+  static FreeBusyGroup parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new FreeBusyGroup();
     result.errors = map(Error.parse)(json["errors"]);
@@ -2466,9 +2277,9 @@ class FreeBusyGroup extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(FreeBusyGroup value) {
+  static core.Object serialize(FreeBusyGroup value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["errors"] = map(Error.serialize)(value.errors);
     result["calendars"] = map(identity)(value.calendars);
     return result;
@@ -2479,28 +2290,28 @@ class FreeBusyGroup extends IdentityHash {
 // Schema .FreeBusyRequest
 class FreeBusyRequest extends IdentityHash {
   /** Maximal number of calendars for which FreeBusy information is to be provided. Optional. */
-  int calendarExpansionMax;
+  core.int calendarExpansionMax;
 
   /**
  * Maximal number of calendar identifiers to be provided for a single group. Optional. An error will
  * be returned for a group with more members than this value.
  */
-  int groupExpansionMax;
+  core.int groupExpansionMax;
 
   /** The end of the interval for the query. */
-  String timeMax;
+  core.String timeMax;
 
   /** List of calendars and/or groups to query. */
-  List<FreeBusyRequestItem> items;
+  core.List<FreeBusyRequestItem> items;
 
   /** The start of the interval for the query. */
-  String timeMin;
+  core.String timeMin;
 
   /** Time zone used in the response. Optional. The default is UTC. */
-  String timeZone;
+  core.String timeZone;
 
   /** Parses an instance from its JSON representation. */
-  static FreeBusyRequest parse(Map<String, Object> json) {
+  static FreeBusyRequest parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new FreeBusyRequest();
     result.calendarExpansionMax = identity(json["calendarExpansionMax"]);
@@ -2512,9 +2323,9 @@ class FreeBusyRequest extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(FreeBusyRequest value) {
+  static core.Object serialize(FreeBusyRequest value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["calendarExpansionMax"] = identity(value.calendarExpansionMax);
     result["groupExpansionMax"] = identity(value.groupExpansionMax);
     result["timeMax"] = identity(value.timeMax);
@@ -2529,19 +2340,19 @@ class FreeBusyRequest extends IdentityHash {
 // Schema .FreeBusyRequestItem
 class FreeBusyRequestItem extends IdentityHash {
   /** The identifier of a calendar or a group. */
-  String id;
+  core.String id;
 
   /** Parses an instance from its JSON representation. */
-  static FreeBusyRequestItem parse(Map<String, Object> json) {
+  static FreeBusyRequestItem parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new FreeBusyRequestItem();
     result.id = identity(json["id"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(FreeBusyRequestItem value) {
+  static core.Object serialize(FreeBusyRequestItem value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["id"] = identity(value.id);
     return result;
   }
@@ -2551,22 +2362,22 @@ class FreeBusyRequestItem extends IdentityHash {
 // Schema .FreeBusyResponse
 class FreeBusyResponse extends IdentityHash {
   /** The end of the interval. */
-  String timeMax;
+  core.String timeMax;
 
   /** Type of the resource ("calendar#freeBusy"). */
-  String kind;
+  core.String kind;
 
   /** List of free/busy information for calendars. */
-  Map<String, FreeBusyCalendar> calendars;
+  core.Map<String, FreeBusyCalendar> calendars;
 
   /** The start of the interval. */
-  String timeMin;
+  core.String timeMin;
 
   /** Expansion of groups. */
-  Map<String, FreeBusyGroup> groups;
+  core.Map<String, FreeBusyGroup> groups;
 
   /** Parses an instance from its JSON representation. */
-  static FreeBusyResponse parse(Map<String, Object> json) {
+  static FreeBusyResponse parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new FreeBusyResponse();
     result.timeMax = identity(json["timeMax"]);
@@ -2577,9 +2388,9 @@ class FreeBusyResponse extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(FreeBusyResponse value) {
+  static core.Object serialize(FreeBusyResponse value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["timeMax"] = identity(value.timeMax);
     result["kind"] = identity(value.kind);
     result["calendars"] = mapValues(FreeBusyCalendar.serialize)(value.calendars);
@@ -2593,19 +2404,19 @@ class FreeBusyResponse extends IdentityHash {
 // Schema .Setting
 class Setting extends IdentityHash {
   /** Type of the resource ("calendar#setting"). */
-  String kind;
+  core.String kind;
 
   /** ETag of the resource. */
-  String etag;
+  core.String etag;
 
   /** Name of the user setting. */
-  String id;
+  core.String id;
 
   /** Value of the user setting. The format of the value depends on the ID of the setting. */
-  String value;
+  core.String value;
 
   /** Parses an instance from its JSON representation. */
-  static Setting parse(Map<String, Object> json) {
+  static Setting parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Setting();
     result.kind = identity(json["kind"]);
@@ -2615,9 +2426,9 @@ class Setting extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Setting value) {
+  static core.Object serialize(Setting value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["kind"] = identity(value.kind);
     result["etag"] = identity(value.etag);
     result["id"] = identity(value.id);
@@ -2630,16 +2441,16 @@ class Setting extends IdentityHash {
 // Schema .Settings
 class Settings extends IdentityHash {
   /** List of user settings. */
-  List<Setting> items;
+  core.List<Setting> items;
 
   /** Type of the collection ("calendar#settings"). */
-  String kind;
+  core.String kind;
 
   /** Etag of the collection. */
-  String etag;
+  core.String etag;
 
   /** Parses an instance from its JSON representation. */
-  static Settings parse(Map<String, Object> json) {
+  static Settings parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Settings();
     result.items = map(Setting.parse)(json["items"]);
@@ -2648,9 +2459,9 @@ class Settings extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Settings value) {
+  static core.Object serialize(Settings value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["items"] = map(Setting.serialize)(value.items);
     result["kind"] = identity(value.kind);
     result["etag"] = identity(value.etag);
@@ -2662,13 +2473,13 @@ class Settings extends IdentityHash {
 // Schema .TimePeriod
 class TimePeriod extends IdentityHash {
   /** The (inclusive) start of the time period. */
-  String start;
+  core.String start;
 
   /** The (exclusive) end of the time period. */
-  String end;
+  core.String end;
 
   /** Parses an instance from its JSON representation. */
-  static TimePeriod parse(Map<String, Object> json) {
+  static TimePeriod parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new TimePeriod();
     result.start = identity(json["start"]);
@@ -2676,9 +2487,9 @@ class TimePeriod extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(TimePeriod value) {
+  static core.Object serialize(TimePeriod value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["start"] = identity(value.start);
     result["end"] = identity(value.end);
     return result;
@@ -2687,12 +2498,12 @@ class TimePeriod extends IdentityHash {
 }
 
 // Enum CalendarApi.Alt
-class CalendarApiAlt implements Hashable {
+class CalendarApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/json */
   static final CalendarApiAlt JSON = const CalendarApiAlt._internal("json", 0);
 
   /** All values of this enumeration */
-  static final List<CalendarApiAlt> values = const <CalendarApiAlt>[
+  static final core.List<CalendarApiAlt> values = const <CalendarApiAlt>[
     JSON,
   ];
 
@@ -2702,14 +2513,14 @@ class CalendarApiAlt implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static CalendarApiAlt valueOf(String item) => _valuesMap[item];
+  static CalendarApiAlt valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const CalendarApiAlt._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const CalendarApiAlt._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Alt".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Alt".hashCode();
 }
 

@@ -1,4 +1,5 @@
 #library("blogger");
+#import('dart:core', prefix: 'core');
 #import('dart:json');
 
 #import('utils.dart');
@@ -8,13 +9,15 @@
 /**
  * API for access to the data within Blogger.
  */
-class BloggerApi {
+class BloggerApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
-  final String baseUrl;
+  final core.String baseUrl;
+  /** How we should identify ourselves to the service. */
+  Authenticator authenticator;
   /** The client library version */
-  final String clientVersion = "0.1";
+  final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
-  final String applicationName;
+  final core.String applicationName;
   BloggerApi get _$service() => this;
   BlogsResource _blogs;
   BlogsResource get blogs() => _blogs;
@@ -28,51 +31,51 @@ class BloggerApi {
   UsersResource get users() => _users;
   
   /** Returns response with indentations and line breaks. */
-  bool prettyPrint;
+  core.bool prettyPrint;
 
   /** Selector specifying which fields to include in a partial response. */
-  String fields;
+  core.String fields;
 
   /**
    * Available to use for quota purposes for server-side applications. Can be any arbitrary string
    * assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.
    */
-  String quotaUser;
+  core.String quotaUser;
 
   /** OAuth 2.0 token for the current user. */
-  String oauthToken;
+  core.String oauthToken;
 
   /**
    * API key. Your API key identifies your project and provides you with API access, quota, and
    * reports. Required unless you provide an OAuth 2.0 token.
    */
-  String key;
+  core.String key;
 
   /**
    * IP address of the site where the request originates. Use this if you want to enforce per-user
    * limits.
    */
-  String userIp;
+  core.String userIp;
 
   /** Data format for the response. */
   BloggerApiAlt alt;
 
 
-  BloggerApi([this.baseUrl = "https://www.googleapis.com/blogger/v2/", this.applicationName]) { 
+  BloggerApi([this.baseUrl = "https://www.googleapis.com/blogger/v2/", this.applicationName, this.authenticator]) { 
     _blogs = new BlogsResource._internal(this);
     _posts = new PostsResource._internal(this);
     _pages = new PagesResource._internal(this);
     _comments = new CommentsResource._internal(this);
     _users = new UsersResource._internal(this);
   }
-  String get userAgent() {
+  core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}blogger/v2/20120508 google-api-dart-client/${clientVersion}";
   }
 }
 
 // Resource .BlogsResource
-class BlogsResource {
+class BlogsResource extends core.Object {
   final BloggerApi _$service;
   
   BlogsResource._internal(BloggerApi $service) : _$service = $service;
@@ -82,7 +85,7 @@ class BlogsResource {
    * Gets one blog by id.
    * [blogId] The ID of the blog to get.
    */
-  Future<Blog> get(String blogId) {
+  core.Future<Blog> get(core.String blogId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -96,24 +99,18 @@ class BlogsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "blogs/{blogId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Blog>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Blog.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Blog.parse(JSON.parse($text)));
   }
 }
 
 // Resource .PostsResource
-class PostsResource {
+class PostsResource extends core.Object {
   final BloggerApi _$service;
   
   PostsResource._internal(BloggerApi $service) : _$service = $service;
@@ -123,7 +120,7 @@ class PostsResource {
    * Retrieves a list of posts, possibly filtered.
    * [blogId] ID of the blog to fetch posts from.
    */
-  Future<PostList> list(String blogId, [String pageToken = UNSPECIFIED, bool fetchBodies = UNSPECIFIED, int maxResults = UNSPECIFIED, String startDate = UNSPECIFIED]) {
+  core.Future<PostList> list(core.String blogId, [core.String pageToken = UNSPECIFIED, core.bool fetchBodies = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String startDate = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -141,19 +138,13 @@ class PostsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "blogs/{blogId}/posts").generate($pathParams, $queryParams);
-    final $completer = new Completer<PostList>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = PostList.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => PostList.parse(JSON.parse($text)));
   }
 
   // Method PostsResource.Get
@@ -162,7 +153,7 @@ class PostsResource {
    * [blogId] ID of the blog to fetch the post from.
    * [postId] The ID of the post
    */
-  Future<Post> get(String blogId, String postId) {
+  core.Future<Post> get(core.String blogId, core.String postId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -177,24 +168,18 @@ class PostsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "blogs/{blogId}/posts/{postId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Post>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Post.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Post.parse(JSON.parse($text)));
   }
 }
 
 // Resource .PagesResource
-class PagesResource {
+class PagesResource extends core.Object {
   final BloggerApi _$service;
   
   PagesResource._internal(BloggerApi $service) : _$service = $service;
@@ -204,7 +189,7 @@ class PagesResource {
    * Retrieves pages for a blog, possibly filtered.
    * [blogId] ID of the blog to fetch pages from.
    */
-  Future<PageList> list(String blogId, [bool fetchBodies = UNSPECIFIED]) {
+  core.Future<PageList> list(core.String blogId, [core.bool fetchBodies = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -219,19 +204,13 @@ class PagesResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "blogs/{blogId}/pages").generate($pathParams, $queryParams);
-    final $completer = new Completer<PageList>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = PageList.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => PageList.parse(JSON.parse($text)));
   }
 
   // Method PagesResource.Get
@@ -240,7 +219,7 @@ class PagesResource {
    * [blogId] ID of the blog containing the page.
    * [pageId] The ID of the page to get.
    */
-  Future<Page> get(String blogId, String pageId) {
+  core.Future<Page> get(core.String blogId, core.String pageId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -255,24 +234,18 @@ class PagesResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "blogs/{blogId}/pages/{pageId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Page>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Page.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Page.parse(JSON.parse($text)));
   }
 }
 
 // Resource .CommentsResource
-class CommentsResource {
+class CommentsResource extends core.Object {
   final BloggerApi _$service;
   
   CommentsResource._internal(BloggerApi $service) : _$service = $service;
@@ -283,7 +256,7 @@ class CommentsResource {
    * [blogId] ID of the blog to fetch comments from.
    * [postId] ID of the post to fetch posts from.
    */
-  Future<CommentList> list(String blogId, String postId, [String startDate = UNSPECIFIED, int maxResults = UNSPECIFIED, String pageToken = UNSPECIFIED, bool fetchBodies = UNSPECIFIED]) {
+  core.Future<CommentList> list(core.String blogId, core.String postId, [core.String startDate = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.bool fetchBodies = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -302,19 +275,13 @@ class CommentsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "blogs/{blogId}/posts/{postId}/comments").generate($pathParams, $queryParams);
-    final $completer = new Completer<CommentList>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = CommentList.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => CommentList.parse(JSON.parse($text)));
   }
 
   // Method CommentsResource.Get
@@ -324,7 +291,7 @@ class CommentsResource {
    * [postId] ID of the post to fetch posts from.
    * [commentId] The ID of the comment to get.
    */
-  Future<Comment> get(String blogId, String postId, String commentId) {
+  core.Future<Comment> get(core.String blogId, core.String postId, core.String commentId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -340,24 +307,18 @@ class CommentsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "blogs/{blogId}/posts/{postId}/comments/{commentId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Comment>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Comment.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Comment.parse(JSON.parse($text)));
   }
 }
 
 // Resource .UsersResource
-class UsersResource {
+class UsersResource extends core.Object {
   final BloggerApi _$service;
   final UsersBlogsResourceResource blogs;
   
@@ -369,7 +330,7 @@ class UsersResource {
    * Gets one user by id.
    * [userId] The ID of the user to get.
    */
-  Future<User> get(String userId) {
+  core.Future<User> get(core.String userId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -383,25 +344,19 @@ class UsersResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "users/{userId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<User>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = User.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => User.parse(JSON.parse($text)));
   }
 }
 
 
 // Resource UsersResource.UsersBlogsResourceResource
-class UsersBlogsResourceResource {
+class UsersBlogsResourceResource extends core.Object {
   final BloggerApi _$service;
   
   UsersBlogsResourceResource._internal(BloggerApi $service) : _$service = $service;
@@ -412,7 +367,7 @@ class UsersBlogsResourceResource {
    * [userId] ID of the user whose blogs are to be fetched. Either the word 'self' (sans quote marks) or the
    *        user's profile identifier.
    */
-  Future<BlogList> list(String userId) {
+  core.Future<BlogList> list(core.String userId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -426,29 +381,23 @@ class UsersBlogsResourceResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "users/{userId}/blogs").generate($pathParams, $queryParams);
-    final $completer = new Completer<BlogList>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = BlogList.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => BlogList.parse(JSON.parse($text)));
   }
 }
 
 // Schema .Blog
 class Blog extends IdentityHash {
   /** The kind of this entry. Always blogger#blog */
-  String kind;
+  core.String kind;
 
   /** The description of this blog. This is displayed underneath the title. */
-  String description;
+  core.String description;
 
   /** The locale this Blog is set to. */
   BlogLocale locale;
@@ -457,28 +406,28 @@ class Blog extends IdentityHash {
   BlogPosts posts;
 
   /** RFC 3339 date-time when this blog was last updated. */
-  String updated;
+  core.String updated;
 
   /** The identifier for this resource. */
-  String id;
+  core.String id;
 
   /** The URL where this blog is published. */
-  String url;
+  core.String url;
 
   /** RFC 3339 date-time when this blog was published. */
-  String published;
+  core.String published;
 
   /** The container of pages in this blog. */
   BlogPages pages;
 
   /** The API REST URL to fetch this resource from. */
-  String selfLink;
+  core.String selfLink;
 
   /** The name of this blog. This is displayed as the title. */
-  String name;
+  core.String name;
 
   /** Parses an instance from its JSON representation. */
-  static Blog parse(Map<String, Object> json) {
+  static Blog parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Blog();
     result.kind = identity(json["kind"]);
@@ -495,9 +444,9 @@ class Blog extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Blog value) {
+  static core.Object serialize(Blog value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["kind"] = identity(value.kind);
     result["description"] = identity(value.description);
     result["locale"] = BlogLocale.serialize(value.locale);
@@ -517,13 +466,13 @@ class Blog extends IdentityHash {
 // Schema .BlogList
 class BlogList extends IdentityHash {
   /** The list of Blogs this user has Authorship or Admin rights over. */
-  List<Blog> items;
+  core.List<Blog> items;
 
   /** The kind of this entity. Always blogger#blogList */
-  String kind;
+  core.String kind;
 
   /** Parses an instance from its JSON representation. */
-  static BlogList parse(Map<String, Object> json) {
+  static BlogList parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new BlogList();
     result.items = map(Blog.parse)(json["items"]);
@@ -531,9 +480,9 @@ class BlogList extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(BlogList value) {
+  static core.Object serialize(BlogList value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["items"] = map(Blog.serialize)(value.items);
     result["kind"] = identity(value.kind);
     return result;
@@ -544,16 +493,16 @@ class BlogList extends IdentityHash {
 // Schema Blog.BlogLocale
 class BlogLocale extends IdentityHash {
   /** The country this blog's locale is set to. */
-  String country;
+  core.String country;
 
   /** The language variant this blog is authored in. */
-  String variant;
+  core.String variant;
 
   /** The language this blog is authored in. */
-  String language;
+  core.String language;
 
   /** Parses an instance from its JSON representation. */
-  static BlogLocale parse(Map<String, Object> json) {
+  static BlogLocale parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new BlogLocale();
     result.country = identity(json["country"]);
@@ -562,9 +511,9 @@ class BlogLocale extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(BlogLocale value) {
+  static core.Object serialize(BlogLocale value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["country"] = identity(value.country);
     result["variant"] = identity(value.variant);
     result["language"] = identity(value.language);
@@ -576,13 +525,13 @@ class BlogLocale extends IdentityHash {
 // Schema Blog.BlogPages
 class BlogPages extends IdentityHash {
   /** The count of pages in this blog. */
-  int totalItems;
+  core.int totalItems;
 
   /** The URL of the container for pages in this blog. */
-  String selfLink;
+  core.String selfLink;
 
   /** Parses an instance from its JSON representation. */
-  static BlogPages parse(Map<String, Object> json) {
+  static BlogPages parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new BlogPages();
     result.totalItems = identity(json["totalItems"]);
@@ -590,9 +539,9 @@ class BlogPages extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(BlogPages value) {
+  static core.Object serialize(BlogPages value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["totalItems"] = identity(value.totalItems);
     result["selfLink"] = identity(value.selfLink);
     return result;
@@ -603,13 +552,13 @@ class BlogPages extends IdentityHash {
 // Schema Blog.BlogPosts
 class BlogPosts extends IdentityHash {
   /** The count of posts in this blog. */
-  int totalItems;
+  core.int totalItems;
 
   /** The URL of the container for posts in this blog. */
-  String selfLink;
+  core.String selfLink;
 
   /** Parses an instance from its JSON representation. */
-  static BlogPosts parse(Map<String, Object> json) {
+  static BlogPosts parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new BlogPosts();
     result.totalItems = identity(json["totalItems"]);
@@ -617,9 +566,9 @@ class BlogPosts extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(BlogPosts value) {
+  static core.Object serialize(BlogPosts value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["totalItems"] = identity(value.totalItems);
     result["selfLink"] = identity(value.selfLink);
     return result;
@@ -630,10 +579,10 @@ class BlogPosts extends IdentityHash {
 // Schema .Comment
 class Comment extends IdentityHash {
   /** The actual content of the comment. May include HTML markup. */
-  String content;
+  core.String content;
 
   /** The kind of this entry. Always blogger#comment */
-  String kind;
+  core.String kind;
 
   /** Data about the comment this is in reply to. */
   CommentInReplyTo inReplyTo;
@@ -642,25 +591,25 @@ class Comment extends IdentityHash {
   CommentAuthor author;
 
   /** RFC 3339 date-time when this comment was last updated. */
-  String updated;
+  core.String updated;
 
   /** Data about the blog containing this comment. */
   CommentBlog blog;
 
   /** RFC 3339 date-time when this comment was published. */
-  String published;
+  core.String published;
 
   /** Data about the post containing this comment. */
   CommentPost post;
 
   /** The identifier for this resource. */
-  String id;
+  core.String id;
 
   /** The API REST URL to fetch this resource from. */
-  String selfLink;
+  core.String selfLink;
 
   /** Parses an instance from its JSON representation. */
-  static Comment parse(Map<String, Object> json) {
+  static Comment parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Comment();
     result.content = identity(json["content"]);
@@ -676,9 +625,9 @@ class Comment extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Comment value) {
+  static core.Object serialize(Comment value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["content"] = identity(value.content);
     result["kind"] = identity(value.kind);
     result["inReplyTo"] = CommentInReplyTo.serialize(value.inReplyTo);
@@ -697,19 +646,19 @@ class Comment extends IdentityHash {
 // Schema Comment.CommentAuthor
 class CommentAuthor extends IdentityHash {
   /** The URL of the Comment creator's Profile page. */
-  String url;
+  core.String url;
 
   /** The comment creator's avatar. */
   CommentAuthorImage image;
 
   /** The display name. */
-  String displayName;
+  core.String displayName;
 
   /** The identifier of the Comment creator. */
-  String id;
+  core.String id;
 
   /** Parses an instance from its JSON representation. */
-  static CommentAuthor parse(Map<String, Object> json) {
+  static CommentAuthor parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new CommentAuthor();
     result.url = identity(json["url"]);
@@ -719,9 +668,9 @@ class CommentAuthor extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(CommentAuthor value) {
+  static core.Object serialize(CommentAuthor value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["url"] = identity(value.url);
     result["image"] = CommentAuthorImage.serialize(value.image);
     result["displayName"] = identity(value.displayName);
@@ -734,19 +683,19 @@ class CommentAuthor extends IdentityHash {
 // Schema Comment.CommentAuthor.CommentAuthorImage
 class CommentAuthorImage extends IdentityHash {
   /** The comment creator's avatar URL. */
-  String url;
+  core.String url;
 
   /** Parses an instance from its JSON representation. */
-  static CommentAuthorImage parse(Map<String, Object> json) {
+  static CommentAuthorImage parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new CommentAuthorImage();
     result.url = identity(json["url"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(CommentAuthorImage value) {
+  static core.Object serialize(CommentAuthorImage value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["url"] = identity(value.url);
     return result;
   }
@@ -756,19 +705,19 @@ class CommentAuthorImage extends IdentityHash {
 // Schema Comment.CommentBlog
 class CommentBlog extends IdentityHash {
   /** The identifier of the blog containing this comment. */
-  String id;
+  core.String id;
 
   /** Parses an instance from its JSON representation. */
-  static CommentBlog parse(Map<String, Object> json) {
+  static CommentBlog parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new CommentBlog();
     result.id = identity(json["id"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(CommentBlog value) {
+  static core.Object serialize(CommentBlog value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["id"] = identity(value.id);
     return result;
   }
@@ -778,19 +727,19 @@ class CommentBlog extends IdentityHash {
 // Schema Comment.CommentInReplyTo
 class CommentInReplyTo extends IdentityHash {
   /** The identified of the parent of this comment. */
-  String id;
+  core.String id;
 
   /** Parses an instance from its JSON representation. */
-  static CommentInReplyTo parse(Map<String, Object> json) {
+  static CommentInReplyTo parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new CommentInReplyTo();
     result.id = identity(json["id"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(CommentInReplyTo value) {
+  static core.Object serialize(CommentInReplyTo value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["id"] = identity(value.id);
     return result;
   }
@@ -800,19 +749,19 @@ class CommentInReplyTo extends IdentityHash {
 // Schema .CommentList
 class CommentList extends IdentityHash {
   /** Pagination token to fetch the next page, if one exists. */
-  String nextPageToken;
+  core.String nextPageToken;
 
   /** The List of Comments for a Post. */
-  List<Comment> items;
+  core.List<Comment> items;
 
   /** The kind of this entry. Always blogger#commentList */
-  String kind;
+  core.String kind;
 
   /** Pagination token to fetch the previous page, if one exists. */
-  String prevPageToken;
+  core.String prevPageToken;
 
   /** Parses an instance from its JSON representation. */
-  static CommentList parse(Map<String, Object> json) {
+  static CommentList parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new CommentList();
     result.nextPageToken = identity(json["nextPageToken"]);
@@ -822,9 +771,9 @@ class CommentList extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(CommentList value) {
+  static core.Object serialize(CommentList value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["nextPageToken"] = identity(value.nextPageToken);
     result["items"] = map(Comment.serialize)(value.items);
     result["kind"] = identity(value.kind);
@@ -837,19 +786,19 @@ class CommentList extends IdentityHash {
 // Schema Comment.CommentPost
 class CommentPost extends IdentityHash {
   /** The identifier of the post containing this comment. */
-  String id;
+  core.String id;
 
   /** Parses an instance from its JSON representation. */
-  static CommentPost parse(Map<String, Object> json) {
+  static CommentPost parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new CommentPost();
     result.id = identity(json["id"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(CommentPost value) {
+  static core.Object serialize(CommentPost value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["id"] = identity(value.id);
     return result;
   }
@@ -859,37 +808,37 @@ class CommentPost extends IdentityHash {
 // Schema .Page
 class Page extends IdentityHash {
   /** The body content of this Page, in HTML. */
-  String content;
+  core.String content;
 
   /** The kind of this entity. Always blogger#page */
-  String kind;
+  core.String kind;
 
   /** The author of this Page. */
   PageAuthor author;
 
   /** The URL that this Page is displayed at. */
-  String url;
+  core.String url;
 
   /** The title of this entity. This is the name displayed in the Admin user interface. */
-  String title;
+  core.String title;
 
   /** RFC 3339 date-time when this Page was last updated. */
-  String updated;
+  core.String updated;
 
   /** Data about the blog containing this Page. */
   PageBlog blog;
 
   /** RFC 3339 date-time when this Page was published. */
-  String published;
+  core.String published;
 
   /** The identifier for this resource. */
-  String id;
+  core.String id;
 
   /** The API REST URL to fetch this resource from. */
-  String selfLink;
+  core.String selfLink;
 
   /** Parses an instance from its JSON representation. */
-  static Page parse(Map<String, Object> json) {
+  static Page parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Page();
     result.content = identity(json["content"]);
@@ -905,9 +854,9 @@ class Page extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Page value) {
+  static core.Object serialize(Page value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["content"] = identity(value.content);
     result["kind"] = identity(value.kind);
     result["author"] = PageAuthor.serialize(value.author);
@@ -926,19 +875,19 @@ class Page extends IdentityHash {
 // Schema Page.PageAuthor
 class PageAuthor extends IdentityHash {
   /** The URL of the Page creator's Profile page. */
-  String url;
+  core.String url;
 
   /** The page author's avatar. */
   PageAuthorImage image;
 
   /** The display name. */
-  String displayName;
+  core.String displayName;
 
   /** The identifier of the Page creator. */
-  String id;
+  core.String id;
 
   /** Parses an instance from its JSON representation. */
-  static PageAuthor parse(Map<String, Object> json) {
+  static PageAuthor parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new PageAuthor();
     result.url = identity(json["url"]);
@@ -948,9 +897,9 @@ class PageAuthor extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(PageAuthor value) {
+  static core.Object serialize(PageAuthor value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["url"] = identity(value.url);
     result["image"] = PageAuthorImage.serialize(value.image);
     result["displayName"] = identity(value.displayName);
@@ -963,19 +912,19 @@ class PageAuthor extends IdentityHash {
 // Schema Page.PageAuthor.PageAuthorImage
 class PageAuthorImage extends IdentityHash {
   /** The page author's avatar URL. */
-  String url;
+  core.String url;
 
   /** Parses an instance from its JSON representation. */
-  static PageAuthorImage parse(Map<String, Object> json) {
+  static PageAuthorImage parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new PageAuthorImage();
     result.url = identity(json["url"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(PageAuthorImage value) {
+  static core.Object serialize(PageAuthorImage value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["url"] = identity(value.url);
     return result;
   }
@@ -985,19 +934,19 @@ class PageAuthorImage extends IdentityHash {
 // Schema Page.PageBlog
 class PageBlog extends IdentityHash {
   /** The identifier of the blog containing this page. */
-  String id;
+  core.String id;
 
   /** Parses an instance from its JSON representation. */
-  static PageBlog parse(Map<String, Object> json) {
+  static PageBlog parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new PageBlog();
     result.id = identity(json["id"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(PageBlog value) {
+  static core.Object serialize(PageBlog value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["id"] = identity(value.id);
     return result;
   }
@@ -1007,13 +956,13 @@ class PageBlog extends IdentityHash {
 // Schema .PageList
 class PageList extends IdentityHash {
   /** The list of Pages for a Blog. */
-  List<Page> items;
+  core.List<Page> items;
 
   /** The kind of this entity. Always blogger#pageList */
-  String kind;
+  core.String kind;
 
   /** Parses an instance from its JSON representation. */
-  static PageList parse(Map<String, Object> json) {
+  static PageList parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new PageList();
     result.items = map(Page.parse)(json["items"]);
@@ -1021,9 +970,9 @@ class PageList extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(PageList value) {
+  static core.Object serialize(PageList value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["items"] = map(Page.serialize)(value.items);
     result["kind"] = identity(value.kind);
     return result;
@@ -1034,10 +983,10 @@ class PageList extends IdentityHash {
 // Schema .Post
 class Post extends IdentityHash {
   /** The content of the Post. May contain HTML markup. */
-  String content;
+  core.String content;
 
   /** The kind of this entity. Always blogger#post */
-  String kind;
+  core.String kind;
 
   /** The author of this Post. */
   PostAuthor author;
@@ -1046,31 +995,31 @@ class Post extends IdentityHash {
   PostReplies replies;
 
   /** The list of labels this Post was tagged with. */
-  List<String> labels;
+  core.List<core.String> labels;
 
   /** RFC 3339 date-time when this Post was last updated. */
-  String updated;
+  core.String updated;
 
   /** Data about the blog containing this Post. */
   PostBlog blog;
 
   /** The URL where this Post is displayed. */
-  String url;
+  core.String url;
 
   /** RFC 3339 date-time when this Post was published. */
-  String published;
+  core.String published;
 
   /** The title of the Post. */
-  String title;
+  core.String title;
 
   /** The identifier of this Post. */
-  String id;
+  core.String id;
 
   /** The API REST URL to fetch this resource from. */
-  String selfLink;
+  core.String selfLink;
 
   /** Parses an instance from its JSON representation. */
-  static Post parse(Map<String, Object> json) {
+  static Post parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Post();
     result.content = identity(json["content"]);
@@ -1088,9 +1037,9 @@ class Post extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Post value) {
+  static core.Object serialize(Post value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["content"] = identity(value.content);
     result["kind"] = identity(value.kind);
     result["author"] = PostAuthor.serialize(value.author);
@@ -1111,19 +1060,19 @@ class Post extends IdentityHash {
 // Schema Post.PostAuthor
 class PostAuthor extends IdentityHash {
   /** The URL of the Post creator's Profile page. */
-  String url;
+  core.String url;
 
   /** The Post author's avatar. */
   PostAuthorImage image;
 
   /** The display name. */
-  String displayName;
+  core.String displayName;
 
   /** The identifier of the Post creator. */
-  String id;
+  core.String id;
 
   /** Parses an instance from its JSON representation. */
-  static PostAuthor parse(Map<String, Object> json) {
+  static PostAuthor parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new PostAuthor();
     result.url = identity(json["url"]);
@@ -1133,9 +1082,9 @@ class PostAuthor extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(PostAuthor value) {
+  static core.Object serialize(PostAuthor value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["url"] = identity(value.url);
     result["image"] = PostAuthorImage.serialize(value.image);
     result["displayName"] = identity(value.displayName);
@@ -1148,19 +1097,19 @@ class PostAuthor extends IdentityHash {
 // Schema Post.PostAuthor.PostAuthorImage
 class PostAuthorImage extends IdentityHash {
   /** The Post author's avatar URL. */
-  String url;
+  core.String url;
 
   /** Parses an instance from its JSON representation. */
-  static PostAuthorImage parse(Map<String, Object> json) {
+  static PostAuthorImage parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new PostAuthorImage();
     result.url = identity(json["url"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(PostAuthorImage value) {
+  static core.Object serialize(PostAuthorImage value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["url"] = identity(value.url);
     return result;
   }
@@ -1170,19 +1119,19 @@ class PostAuthorImage extends IdentityHash {
 // Schema Post.PostBlog
 class PostBlog extends IdentityHash {
   /** The identifier of the Blog that contains this Post. */
-  String id;
+  core.String id;
 
   /** Parses an instance from its JSON representation. */
-  static PostBlog parse(Map<String, Object> json) {
+  static PostBlog parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new PostBlog();
     result.id = identity(json["id"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(PostBlog value) {
+  static core.Object serialize(PostBlog value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["id"] = identity(value.id);
     return result;
   }
@@ -1192,19 +1141,19 @@ class PostBlog extends IdentityHash {
 // Schema .PostList
 class PostList extends IdentityHash {
   /** Pagination token to fetch the next page, if one exists. */
-  String nextPageToken;
+  core.String nextPageToken;
 
   /** The list of Posts for this Blog. */
-  List<Post> items;
+  core.List<Post> items;
 
   /** The kind of this entity. Always blogger#postList */
-  String kind;
+  core.String kind;
 
   /** Pagination token to fetch the previous page, if one exists. */
-  String prevPageToken;
+  core.String prevPageToken;
 
   /** Parses an instance from its JSON representation. */
-  static PostList parse(Map<String, Object> json) {
+  static PostList parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new PostList();
     result.nextPageToken = identity(json["nextPageToken"]);
@@ -1214,9 +1163,9 @@ class PostList extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(PostList value) {
+  static core.Object serialize(PostList value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["nextPageToken"] = identity(value.nextPageToken);
     result["items"] = map(Post.serialize)(value.items);
     result["kind"] = identity(value.kind);
@@ -1229,13 +1178,13 @@ class PostList extends IdentityHash {
 // Schema Post.PostReplies
 class PostReplies extends IdentityHash {
   /** The count of comments on this post. */
-  String totalItems;
+  core.String totalItems;
 
   /** The URL of the comments on this post. */
-  String selfLink;
+  core.String selfLink;
 
   /** Parses an instance from its JSON representation. */
-  static PostReplies parse(Map<String, Object> json) {
+  static PostReplies parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new PostReplies();
     result.totalItems = identity(json["totalItems"]);
@@ -1243,9 +1192,9 @@ class PostReplies extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(PostReplies value) {
+  static core.Object serialize(PostReplies value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["totalItems"] = identity(value.totalItems);
     result["selfLink"] = identity(value.selfLink);
     return result;
@@ -1256,13 +1205,13 @@ class PostReplies extends IdentityHash {
 // Schema .User
 class User extends IdentityHash {
   /** Profile summary information. */
-  String about;
+  core.String about;
 
   /** The display name. */
-  String displayName;
+  core.String displayName;
 
   /** The timestamp of when this profile was created, in seconds since epoch. */
-  String created;
+  core.String created;
 
   /** This user's locale */
   UserLocale locale;
@@ -1271,19 +1220,19 @@ class User extends IdentityHash {
   UserBlogs blogs;
 
   /** The kind of this entity. Always blogger#user */
-  String kind;
+  core.String kind;
 
   /** The user's profile page. */
-  String url;
+  core.String url;
 
   /** The identifier for this User. */
-  String id;
+  core.String id;
 
   /** The API REST URL to fetch this resource from. */
-  String selfLink;
+  core.String selfLink;
 
   /** Parses an instance from its JSON representation. */
-  static User parse(Map<String, Object> json) {
+  static User parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new User();
     result.about = identity(json["about"]);
@@ -1298,9 +1247,9 @@ class User extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(User value) {
+  static core.Object serialize(User value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["about"] = identity(value.about);
     result["displayName"] = identity(value.displayName);
     result["created"] = identity(value.created);
@@ -1318,19 +1267,19 @@ class User extends IdentityHash {
 // Schema User.UserBlogs
 class UserBlogs extends IdentityHash {
   /** The URL of the Blogs for this user. */
-  String selfLink;
+  core.String selfLink;
 
   /** Parses an instance from its JSON representation. */
-  static UserBlogs parse(Map<String, Object> json) {
+  static UserBlogs parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new UserBlogs();
     result.selfLink = identity(json["selfLink"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(UserBlogs value) {
+  static core.Object serialize(UserBlogs value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["selfLink"] = identity(value.selfLink);
     return result;
   }
@@ -1340,16 +1289,16 @@ class UserBlogs extends IdentityHash {
 // Schema User.UserLocale
 class UserLocale extends IdentityHash {
   /** The user's country setting. */
-  String country;
+  core.String country;
 
   /** The user's language variant setting. */
-  String variant;
+  core.String variant;
 
   /** The user's language setting. */
-  String language;
+  core.String language;
 
   /** Parses an instance from its JSON representation. */
-  static UserLocale parse(Map<String, Object> json) {
+  static UserLocale parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new UserLocale();
     result.country = identity(json["country"]);
@@ -1358,9 +1307,9 @@ class UserLocale extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(UserLocale value) {
+  static core.Object serialize(UserLocale value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["country"] = identity(value.country);
     result["variant"] = identity(value.variant);
     result["language"] = identity(value.language);
@@ -1370,12 +1319,12 @@ class UserLocale extends IdentityHash {
 }
 
 // Enum BloggerApi.Alt
-class BloggerApiAlt implements Hashable {
+class BloggerApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/json */
   static final BloggerApiAlt JSON = const BloggerApiAlt._internal("json", 0);
 
   /** All values of this enumeration */
-  static final List<BloggerApiAlt> values = const <BloggerApiAlt>[
+  static final core.List<BloggerApiAlt> values = const <BloggerApiAlt>[
     JSON,
   ];
 
@@ -1385,14 +1334,14 @@ class BloggerApiAlt implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static BloggerApiAlt valueOf(String item) => _valuesMap[item];
+  static BloggerApiAlt valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const BloggerApiAlt._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const BloggerApiAlt._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Alt".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Alt".hashCode();
 }
 

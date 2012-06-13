@@ -1,4 +1,5 @@
 #library("tasks");
+#import('dart:core', prefix: 'core');
 #import('dart:json');
 
 #import('utils.dart');
@@ -8,13 +9,15 @@
 /**
  * Lets you manage your tasks and task lists.
  */
-class TasksApi {
+class TasksApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
-  final String baseUrl;
+  final core.String baseUrl;
+  /** How we should identify ourselves to the service. */
+  Authenticator authenticator;
   /** The client library version */
-  final String clientVersion = "0.1";
+  final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
-  final String applicationName;
+  final core.String applicationName;
   TasksApi get _$service() => this;
   TasksResource _tasks;
   TasksResource get tasks() => _tasks;
@@ -22,48 +25,48 @@ class TasksApi {
   TasklistsResource get tasklists() => _tasklists;
   
   /** Returns response with indentations and line breaks. */
-  bool prettyPrint;
+  core.bool prettyPrint;
 
   /** Selector specifying which fields to include in a partial response. */
-  String fields;
+  core.String fields;
 
   /**
    * Available to use for quota purposes for server-side applications. Can be any arbitrary string
    * assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.
    */
-  String quotaUser;
+  core.String quotaUser;
 
   /** OAuth 2.0 token for the current user. */
-  String oauthToken;
+  core.String oauthToken;
 
   /**
    * API key. Your API key identifies your project and provides you with API access, quota, and
    * reports. Required unless you provide an OAuth 2.0 token.
    */
-  String key;
+  core.String key;
 
   /**
    * IP address of the site where the request originates. Use this if you want to enforce per-user
    * limits.
    */
-  String userIp;
+  core.String userIp;
 
   /** Data format for the response. */
   TasksApiAlt alt;
 
 
-  TasksApi([this.baseUrl = "https://www.googleapis.com/tasks/v1/", this.applicationName]) { 
+  TasksApi([this.baseUrl = "https://www.googleapis.com/tasks/v1/", this.applicationName, this.authenticator]) { 
     _tasks = new TasksResource._internal(this);
     _tasklists = new TasklistsResource._internal(this);
   }
-  String get userAgent() {
+  core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}tasks/v1/20111027 google-api-dart-client/${clientVersion}";
   }
 }
 
 // Resource .TasksResource
-class TasksResource {
+class TasksResource extends core.Object {
   final TasksApi _$service;
   
   TasksResource._internal(TasksApi $service) : _$service = $service;
@@ -74,7 +77,7 @@ class TasksResource {
    * [tasklist] Task list identifier.
    * [content] the Task
    */
-  Future<Task> insert(String tasklist, Task content, [String parent = UNSPECIFIED, String previous = UNSPECIFIED]) {
+  core.Future<Task> insert(core.String tasklist, Task content, [core.String parent = UNSPECIFIED, core.String previous = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -92,19 +95,13 @@ class TasksResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Task.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "lists/{tasklist}/tasks").generate($pathParams, $queryParams);
-    final $completer = new Completer<Task>();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Task.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Task.parse(JSON.parse($text)));
   }
 
   // Method TasksResource.Get
@@ -113,7 +110,7 @@ class TasksResource {
    * [tasklist] Task list identifier.
    * [task] Task identifier.
    */
-  Future<Task> get(String tasklist, String task) {
+  core.Future<Task> get(core.String tasklist, core.String task) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -128,19 +125,13 @@ class TasksResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "lists/{tasklist}/tasks/{task}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Task>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Task.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Task.parse(JSON.parse($text)));
   }
 
   // Method TasksResource.Clear
@@ -149,7 +140,7 @@ class TasksResource {
    * 'hidden' and no longer be returned by default when retrieving all tasks for a task list.
    * [tasklist] Task list identifier.
    */
-  Future clear(String tasklist) {
+  core.Future clear(core.String tasklist) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -163,19 +154,13 @@ class TasksResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "lists/{tasklist}/clear").generate($pathParams, $queryParams);
-    final $completer = new Completer();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = identity(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => identity(JSON.parse($text)));
   }
 
   // Method TasksResource.Move
@@ -185,7 +170,7 @@ class TasksResource {
    * [tasklist] Task list identifier.
    * [task] Task identifier.
    */
-  Future<Task> move(String tasklist, String task, [String parent = UNSPECIFIED, String previous = UNSPECIFIED]) {
+  core.Future<Task> move(core.String tasklist, core.String task, [core.String parent = UNSPECIFIED, core.String previous = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -202,19 +187,13 @@ class TasksResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "lists/{tasklist}/tasks/{task}/move").generate($pathParams, $queryParams);
-    final $completer = new Completer<Task>();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Task.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Task.parse(JSON.parse($text)));
   }
 
   // Method TasksResource.List
@@ -222,7 +201,7 @@ class TasksResource {
    * Returns all tasks in the specified task list.
    * [tasklist] Task list identifier.
    */
-  Future<Tasks> list(String tasklist, [String dueMax = UNSPECIFIED, bool showDeleted = UNSPECIFIED, String updatedMin = UNSPECIFIED, String completedMin = UNSPECIFIED, String maxResults = UNSPECIFIED, bool showCompleted = UNSPECIFIED, String pageToken = UNSPECIFIED, String completedMax = UNSPECIFIED, bool showHidden = UNSPECIFIED, String dueMin = UNSPECIFIED]) {
+  core.Future<Tasks> list(core.String tasklist, [core.String dueMax = UNSPECIFIED, core.bool showDeleted = UNSPECIFIED, core.String updatedMin = UNSPECIFIED, core.String completedMin = UNSPECIFIED, core.String maxResults = UNSPECIFIED, core.bool showCompleted = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.String completedMax = UNSPECIFIED, core.bool showHidden = UNSPECIFIED, core.String dueMin = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -246,19 +225,13 @@ class TasksResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "lists/{tasklist}/tasks").generate($pathParams, $queryParams);
-    final $completer = new Completer<Tasks>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Tasks.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Tasks.parse(JSON.parse($text)));
   }
 
   // Method TasksResource.Update
@@ -268,7 +241,7 @@ class TasksResource {
    * [task] Task identifier.
    * [content] the Task
    */
-  Future<Task> update(String tasklist, String task, Task content) {
+  core.Future<Task> update(core.String tasklist, core.String task, Task content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -285,19 +258,13 @@ class TasksResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Task.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "lists/{tasklist}/tasks/{task}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Task>();
     final $http = new HttpRequest($url, "PUT", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Task.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Task.parse(JSON.parse($text)));
   }
 
   // Method TasksResource.Patch
@@ -307,7 +274,7 @@ class TasksResource {
    * [task] Task identifier.
    * [content] the Task
    */
-  Future<Task> patch(String tasklist, String task, Task content) {
+  core.Future<Task> patch(core.String tasklist, core.String task, Task content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -324,19 +291,13 @@ class TasksResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Task.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "lists/{tasklist}/tasks/{task}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Task>();
     final $http = new HttpRequest($url, "PATCH", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Task.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Task.parse(JSON.parse($text)));
   }
 
   // Method TasksResource.Delete
@@ -345,7 +306,7 @@ class TasksResource {
    * [tasklist] Task list identifier.
    * [task] Task identifier.
    */
-  Future delete(String tasklist, String task) {
+  core.Future delete(core.String tasklist, core.String task) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -360,24 +321,18 @@ class TasksResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "lists/{tasklist}/tasks/{task}").generate($pathParams, $queryParams);
-    final $completer = new Completer();
     final $http = new HttpRequest($url, "DELETE", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = identity(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => identity(JSON.parse($text)));
   }
 }
 
 // Resource .TasklistsResource
-class TasklistsResource {
+class TasklistsResource extends core.Object {
   final TasksApi _$service;
   
   TasklistsResource._internal(TasksApi $service) : _$service = $service;
@@ -387,7 +342,7 @@ class TasklistsResource {
    * Creates a new task list and adds it to the authenticated user's task lists.
    * [content] the TaskList
    */
-  Future<TaskList> insert(TaskList content) {
+  core.Future<TaskList> insert(TaskList content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -402,19 +357,13 @@ class TasklistsResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(TaskList.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "users/@me/lists").generate($pathParams, $queryParams);
-    final $completer = new Completer<TaskList>();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = TaskList.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => TaskList.parse(JSON.parse($text)));
   }
 
   // Method TasklistsResource.Get
@@ -422,7 +371,7 @@ class TasklistsResource {
    * Returns the authenticated user's specified task list.
    * [tasklist] Task list identifier.
    */
-  Future<TaskList> get(String tasklist) {
+  core.Future<TaskList> get(core.String tasklist) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -436,26 +385,20 @@ class TasklistsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "users/@me/lists/{tasklist}").generate($pathParams, $queryParams);
-    final $completer = new Completer<TaskList>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = TaskList.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => TaskList.parse(JSON.parse($text)));
   }
 
   // Method TasklistsResource.List
   /**
    * Returns all the authenticated user's task lists.
    */
-  Future<TaskLists> list([String pageToken = UNSPECIFIED, String maxResults = UNSPECIFIED]) {
+  core.Future<TaskLists> list([core.String pageToken = UNSPECIFIED, core.String maxResults = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -470,19 +413,13 @@ class TasklistsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "users/@me/lists").generate($pathParams, $queryParams);
-    final $completer = new Completer<TaskLists>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = TaskLists.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => TaskLists.parse(JSON.parse($text)));
   }
 
   // Method TasklistsResource.Update
@@ -491,7 +428,7 @@ class TasklistsResource {
    * [tasklist] Task list identifier.
    * [content] the TaskList
    */
-  Future<TaskList> update(String tasklist, TaskList content) {
+  core.Future<TaskList> update(core.String tasklist, TaskList content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -507,19 +444,13 @@ class TasklistsResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(TaskList.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "users/@me/lists/{tasklist}").generate($pathParams, $queryParams);
-    final $completer = new Completer<TaskList>();
     final $http = new HttpRequest($url, "PUT", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = TaskList.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => TaskList.parse(JSON.parse($text)));
   }
 
   // Method TasklistsResource.Patch
@@ -528,7 +459,7 @@ class TasklistsResource {
    * [tasklist] Task list identifier.
    * [content] the TaskList
    */
-  Future<TaskList> patch(String tasklist, TaskList content) {
+  core.Future<TaskList> patch(core.String tasklist, TaskList content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -544,19 +475,13 @@ class TasklistsResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(TaskList.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "users/@me/lists/{tasklist}").generate($pathParams, $queryParams);
-    final $completer = new Completer<TaskList>();
     final $http = new HttpRequest($url, "PATCH", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = TaskList.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => TaskList.parse(JSON.parse($text)));
   }
 
   // Method TasklistsResource.Delete
@@ -564,7 +489,7 @@ class TasklistsResource {
    * Deletes the authenticated user's specified task list.
    * [tasklist] Task list identifier.
    */
-  Future delete(String tasklist) {
+  core.Future delete(core.String tasklist) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -578,62 +503,56 @@ class TasklistsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "users/@me/lists/{tasklist}").generate($pathParams, $queryParams);
-    final $completer = new Completer();
     final $http = new HttpRequest($url, "DELETE", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = identity(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => identity(JSON.parse($text)));
   }
 }
 
 // Schema .Task
 class Task extends IdentityHash {
   /** Status of the task. This is either "needsAction" or "completed". */
-  String status;
+  core.String status;
 
   /** Type of the resource. This is always "tasks#task". */
-  String kind;
+  core.String kind;
 
   /** Last modification time of the task (as a RFC 3339 timestamp). */
-  String updated;
+  core.String updated;
 
   /**
  * Parent task identifier. This field is omitted if it is a top-level task. This field is read-only.
  * Use the "move" method to move the task under a different parent or to the top level.
  */
-  String parent;
+  core.String parent;
 
   /** Collection of links. This collection is read-only. */
-  List<TaskLinks> links;
+  core.List<TaskLinks> links;
 
   /** Title of the task. */
-  String title;
+  core.String title;
 
   /** Flag indicating whether the task has been deleted. The default if False. */
-  bool deleted;
+  core.bool deleted;
 
   /**
  * Completion date of the task (as a RFC 3339 timestamp). This field is omitted if the task has not
  * been completed.
  */
-  String completed;
+  core.String completed;
 
   /** Due date of the task (as a RFC 3339 timestamp). Optional. */
-  String due;
+  core.String due;
 
   /** ETag of the resource. */
-  String etag;
+  core.String etag;
 
   /** Notes describing the task. Optional. */
-  String notes;
+  core.String notes;
 
   /**
  * String indicating the position of the task among its sibling tasks under the same parent task or
@@ -642,22 +561,22 @@ class Task extends IdentityHash {
  * parent task (or at the top level). This field is read-only. Use the "move" method to move the
  * task to another position.
  */
-  String position;
+  core.String position;
 
   /**
  * Flag indicating whether the task is hidden. This is the case if the task had been marked
  * completed when the task list was last cleared. The default is False. This field is read-only.
  */
-  bool hidden;
+  core.bool hidden;
 
   /** Task identifier. */
-  String id;
+  core.String id;
 
   /** URL pointing to this task. Used to retrieve, update, or delete this task. */
-  String selfLink;
+  core.String selfLink;
 
   /** Parses an instance from its JSON representation. */
-  static Task parse(Map<String, Object> json) {
+  static Task parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Task();
     result.status = identity(json["status"]);
@@ -678,9 +597,9 @@ class Task extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Task value) {
+  static core.Object serialize(Task value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["status"] = identity(value.status);
     result["kind"] = identity(value.kind);
     result["updated"] = identity(value.updated);
@@ -704,16 +623,16 @@ class Task extends IdentityHash {
 // Schema Task.TaskLinks
 class TaskLinks extends IdentityHash {
   /** Type of the link, e.g. "email". */
-  String type;
+  core.String type;
 
   /** The URL. */
-  String link;
+  core.String link;
 
   /** The description. In HTML speak: Everything between  and . */
-  String description;
+  core.String description;
 
   /** Parses an instance from its JSON representation. */
-  static TaskLinks parse(Map<String, Object> json) {
+  static TaskLinks parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new TaskLinks();
     result.type = identity(json["type"]);
@@ -722,9 +641,9 @@ class TaskLinks extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(TaskLinks value) {
+  static core.Object serialize(TaskLinks value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["type"] = identity(value.type);
     result["link"] = identity(value.link);
     result["description"] = identity(value.description);
@@ -736,25 +655,25 @@ class TaskLinks extends IdentityHash {
 // Schema .TaskList
 class TaskList extends IdentityHash {
   /** Type of the resource. This is always "tasks#taskList". */
-  String kind;
+  core.String kind;
 
   /** Title of the task list. */
-  String title;
+  core.String title;
 
   /** Last modification time of the task list (as a RFC 3339 timestamp). */
-  String updated;
+  core.String updated;
 
   /** ETag of the resource. */
-  String etag;
+  core.String etag;
 
   /** Task list identifier. */
-  String id;
+  core.String id;
 
   /** URL pointing to this task list. Used to retrieve, update, or delete this task list. */
-  String selfLink;
+  core.String selfLink;
 
   /** Parses an instance from its JSON representation. */
-  static TaskList parse(Map<String, Object> json) {
+  static TaskList parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new TaskList();
     result.kind = identity(json["kind"]);
@@ -766,9 +685,9 @@ class TaskList extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(TaskList value) {
+  static core.Object serialize(TaskList value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["kind"] = identity(value.kind);
     result["title"] = identity(value.title);
     result["updated"] = identity(value.updated);
@@ -783,19 +702,19 @@ class TaskList extends IdentityHash {
 // Schema .TaskLists
 class TaskLists extends IdentityHash {
   /** Token that can be used to request the next page of this result. */
-  String nextPageToken;
+  core.String nextPageToken;
 
   /** Collection of task lists. */
-  List<TaskList> items;
+  core.List<TaskList> items;
 
   /** Type of the resource. This is always "tasks#taskLists". */
-  String kind;
+  core.String kind;
 
   /** ETag of the resource. */
-  String etag;
+  core.String etag;
 
   /** Parses an instance from its JSON representation. */
-  static TaskLists parse(Map<String, Object> json) {
+  static TaskLists parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new TaskLists();
     result.nextPageToken = identity(json["nextPageToken"]);
@@ -805,9 +724,9 @@ class TaskLists extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(TaskLists value) {
+  static core.Object serialize(TaskLists value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["nextPageToken"] = identity(value.nextPageToken);
     result["items"] = map(TaskList.serialize)(value.items);
     result["kind"] = identity(value.kind);
@@ -820,19 +739,19 @@ class TaskLists extends IdentityHash {
 // Schema .Tasks
 class Tasks extends IdentityHash {
   /** Token used to access the next page of this result. */
-  String nextPageToken;
+  core.String nextPageToken;
 
   /** Collection of tasks. */
-  List<Task> items;
+  core.List<Task> items;
 
   /** Type of the resource. This is always "tasks#tasks". */
-  String kind;
+  core.String kind;
 
   /** ETag of the resource. */
-  String etag;
+  core.String etag;
 
   /** Parses an instance from its JSON representation. */
-  static Tasks parse(Map<String, Object> json) {
+  static Tasks parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Tasks();
     result.nextPageToken = identity(json["nextPageToken"]);
@@ -842,9 +761,9 @@ class Tasks extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Tasks value) {
+  static core.Object serialize(Tasks value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["nextPageToken"] = identity(value.nextPageToken);
     result["items"] = map(Task.serialize)(value.items);
     result["kind"] = identity(value.kind);
@@ -855,12 +774,12 @@ class Tasks extends IdentityHash {
 }
 
 // Enum TasksApi.Alt
-class TasksApiAlt implements Hashable {
+class TasksApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/json */
   static final TasksApiAlt JSON = const TasksApiAlt._internal("json", 0);
 
   /** All values of this enumeration */
-  static final List<TasksApiAlt> values = const <TasksApiAlt>[
+  static final core.List<TasksApiAlt> values = const <TasksApiAlt>[
     JSON,
   ];
 
@@ -870,14 +789,14 @@ class TasksApiAlt implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static TasksApiAlt valueOf(String item) => _valuesMap[item];
+  static TasksApiAlt valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const TasksApiAlt._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const TasksApiAlt._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Alt".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Alt".hashCode();
 }
 

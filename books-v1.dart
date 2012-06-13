@@ -1,4 +1,5 @@
 #library("books");
+#import('dart:core', prefix: 'core');
 #import('dart:json');
 
 #import('utils.dart');
@@ -8,13 +9,15 @@
 /**
  * Lets you search for books and manage your Google Books library.
  */
-class BooksApi {
+class BooksApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
-  final String baseUrl;
+  final core.String baseUrl;
+  /** How we should identify ourselves to the service. */
+  Authenticator authenticator;
   /** The client library version */
-  final String clientVersion = "0.1";
+  final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
-  final String applicationName;
+  final core.String applicationName;
   BooksApi get _$service() => this;
   LayersResource _layers;
   LayersResource get layers() => _layers;
@@ -28,51 +31,51 @@ class BooksApi {
   MylibraryResource get mylibrary() => _mylibrary;
   
   /** Returns response with indentations and line breaks. */
-  bool prettyPrint;
+  core.bool prettyPrint;
 
   /** Selector specifying which fields to include in a partial response. */
-  String fields;
+  core.String fields;
 
   /**
    * Available to use for quota purposes for server-side applications. Can be any arbitrary string
    * assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.
    */
-  String quotaUser;
+  core.String quotaUser;
 
   /** OAuth 2.0 token for the current user. */
-  String oauthToken;
+  core.String oauthToken;
 
   /**
    * API key. Your API key identifies your project and provides you with API access, quota, and
    * reports. Required unless you provide an OAuth 2.0 token.
    */
-  String key;
+  core.String key;
 
   /**
    * IP address of the site where the request originates. Use this if you want to enforce per-user
    * limits.
    */
-  String userIp;
+  core.String userIp;
 
   /** Data format for the response. */
   BooksApiAlt alt;
 
 
-  BooksApi([this.baseUrl = "https://www.googleapis.com/books/v1/", this.applicationName]) { 
+  BooksApi([this.baseUrl = "https://www.googleapis.com/books/v1/", this.applicationName, this.authenticator]) { 
     _layers = new LayersResource._internal(this);
     _bookshelves = new BookshelvesResource._internal(this);
     _myconfig = new MyconfigResource._internal(this);
     _volumes = new VolumesResource._internal(this);
     _mylibrary = new MylibraryResource._internal(this);
   }
-  String get userAgent() {
+  core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}books/v1/20120423 google-api-dart-client/${clientVersion}";
   }
 }
 
 // Resource .LayersResource
-class LayersResource {
+class LayersResource extends core.Object {
   final BooksApi _$service;
   final LayersAnnotationDataResourceResource annotationData;
   final LayersVolumeAnnotationsResourceResource volumeAnnotations;
@@ -86,7 +89,7 @@ class LayersResource {
    * List the layer summaries for a volume.
    * [volumeId] The volume to retrieve layers for.
    */
-  Future<Layersummaries> list(String volumeId, [String pageToken = UNSPECIFIED, String contentVersion = UNSPECIFIED, int maxResults = UNSPECIFIED, String source = UNSPECIFIED]) {
+  core.Future<Layersummaries> list(core.String volumeId, [core.String pageToken = UNSPECIFIED, core.String contentVersion = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String source = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -104,19 +107,13 @@ class LayersResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "volumes/{volumeId}/layersummary").generate($pathParams, $queryParams);
-    final $completer = new Completer<Layersummaries>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Layersummaries.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Layersummaries.parse(JSON.parse($text)));
   }
 
   // Method LayersResource.Get
@@ -125,7 +122,7 @@ class LayersResource {
    * [volumeId] The volume to retrieve layers for.
    * [summaryId] The ID for the layer to get the summary for.
    */
-  Future<Layersummary> get(String volumeId, String summaryId, [String source = UNSPECIFIED, String contentVersion = UNSPECIFIED]) {
+  core.Future<Layersummary> get(core.String volumeId, core.String summaryId, [core.String source = UNSPECIFIED, core.String contentVersion = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -142,25 +139,19 @@ class LayersResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "volumes/{volumeId}/layersummary/{summaryId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Layersummary>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Layersummary.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Layersummary.parse(JSON.parse($text)));
   }
 }
 
 
 // Resource LayersResource.LayersAnnotationDataResourceResource
-class LayersAnnotationDataResourceResource {
+class LayersAnnotationDataResourceResource extends core.Object {
   final BooksApi _$service;
   
   LayersAnnotationDataResourceResource._internal(BooksApi $service) : _$service = $service;
@@ -172,7 +163,7 @@ class LayersAnnotationDataResourceResource {
    * [layerId] The ID for the layer to get the annotation data.
    * [contentVersion] The content version for the requested volume.
    */
-  Future<Annotationsdata> list(String volumeId, String layerId, String contentVersion, [String source = UNSPECIFIED, String locale = UNSPECIFIED, int h = UNSPECIFIED, String updatedMax = UNSPECIFIED, int maxResults = UNSPECIFIED, List<String> annotationDataId = UNSPECIFIED, String pageToken = UNSPECIFIED, int w = UNSPECIFIED, String updatedMin = UNSPECIFIED]) {
+  core.Future<Annotationsdata> list(core.String volumeId, core.String layerId, core.String contentVersion, [core.String source = UNSPECIFIED, core.String locale = UNSPECIFIED, core.int h = UNSPECIFIED, core.String updatedMax = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.List<core.String> annotationDataId = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.int w = UNSPECIFIED, core.String updatedMin = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -197,19 +188,13 @@ class LayersAnnotationDataResourceResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "volumes/{volumeId}/layers/{layerId}/data").generate($pathParams, $queryParams);
-    final $completer = new Completer<Annotationsdata>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Annotationsdata.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Annotationsdata.parse(JSON.parse($text)));
   }
 
   // Method LayersResource.LayersAnnotationDataResourceResource.Get
@@ -220,7 +205,7 @@ class LayersAnnotationDataResourceResource {
    * [annotationDataId] The ID of the annotation data to retrieve.
    * [contentVersion] The content version for the volume you are trying to retrieve.
    */
-  Future<Annotationdata> get(String volumeId, String layerId, String annotationDataId, String contentVersion, [String locale = UNSPECIFIED, int h = UNSPECIFIED, String source = UNSPECIFIED, int w = UNSPECIFIED]) {
+  core.Future<Annotationdata> get(core.String volumeId, core.String layerId, core.String annotationDataId, core.String contentVersion, [core.String locale = UNSPECIFIED, core.int h = UNSPECIFIED, core.String source = UNSPECIFIED, core.int w = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -241,24 +226,18 @@ class LayersAnnotationDataResourceResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "volumes/{volumeId}/layers/{layerId}/data/{annotationDataId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Annotationdata>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Annotationdata.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Annotationdata.parse(JSON.parse($text)));
   }
 }
 
 // Resource LayersResource.LayersVolumeAnnotationsResourceResource
-class LayersVolumeAnnotationsResourceResource {
+class LayersVolumeAnnotationsResourceResource extends core.Object {
   final BooksApi _$service;
   
   LayersVolumeAnnotationsResourceResource._internal(BooksApi $service) : _$service = $service;
@@ -270,7 +249,7 @@ class LayersVolumeAnnotationsResourceResource {
    * [layerId] The ID for the layer to get the annotations.
    * [contentVersion] The content version for the requested volume.
    */
-  Future<Volumeannotations> list(String volumeId, String layerId, String contentVersion, [bool showDeleted = UNSPECIFIED, String endPosition = UNSPECIFIED, String endOffset = UNSPECIFIED, String locale = UNSPECIFIED, String updatedMin = UNSPECIFIED, String updatedMax = UNSPECIFIED, int maxResults = UNSPECIFIED, String pageToken = UNSPECIFIED, String source = UNSPECIFIED, String startOffset = UNSPECIFIED, String startPosition = UNSPECIFIED]) {
+  core.Future<Volumeannotations> list(core.String volumeId, core.String layerId, core.String contentVersion, [core.bool showDeleted = UNSPECIFIED, core.String endPosition = UNSPECIFIED, core.String endOffset = UNSPECIFIED, core.String locale = UNSPECIFIED, core.String updatedMin = UNSPECIFIED, core.String updatedMax = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.String source = UNSPECIFIED, core.String startOffset = UNSPECIFIED, core.String startPosition = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -297,19 +276,13 @@ class LayersVolumeAnnotationsResourceResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "volumes/{volumeId}/layers/{layerId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Volumeannotations>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Volumeannotations.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Volumeannotations.parse(JSON.parse($text)));
   }
 
   // Method LayersResource.LayersVolumeAnnotationsResourceResource.Get
@@ -319,7 +292,7 @@ class LayersVolumeAnnotationsResourceResource {
    * [layerId] The ID for the layer to get the annotations.
    * [annotationId] The ID of the volume annotation to retrieve.
    */
-  Future<Volumeannotation> get(String volumeId, String layerId, String annotationId, [String locale = UNSPECIFIED, String source = UNSPECIFIED]) {
+  core.Future<Volumeannotation> get(core.String volumeId, core.String layerId, core.String annotationId, [core.String locale = UNSPECIFIED, core.String source = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -337,24 +310,18 @@ class LayersVolumeAnnotationsResourceResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "volumes/{volumeId}/layers/{layerId}/annotations/{annotationId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Volumeannotation>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Volumeannotation.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Volumeannotation.parse(JSON.parse($text)));
   }
 }
 
 // Resource .BookshelvesResource
-class BookshelvesResource {
+class BookshelvesResource extends core.Object {
   final BooksApi _$service;
   final BookshelvesVolumesResourceResource volumes;
   
@@ -366,7 +333,7 @@ class BookshelvesResource {
    * Retrieves a list of public bookshelves for the specified user.
    * [userId] ID of user for whom to retrieve bookshelves.
    */
-  Future<Bookshelves> list(String userId, [String source = UNSPECIFIED]) {
+  core.Future<Bookshelves> list(core.String userId, [core.String source = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -381,19 +348,13 @@ class BookshelvesResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "users/{userId}/bookshelves").generate($pathParams, $queryParams);
-    final $completer = new Completer<Bookshelves>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Bookshelves.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Bookshelves.parse(JSON.parse($text)));
   }
 
   // Method BookshelvesResource.Get
@@ -402,7 +363,7 @@ class BookshelvesResource {
    * [userId] ID of user for whom to retrieve bookshelves.
    * [shelf] ID of bookshelf to retrieve.
    */
-  Future<Bookshelf> get(String userId, String shelf, [String source = UNSPECIFIED]) {
+  core.Future<Bookshelf> get(core.String userId, core.String shelf, [core.String source = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -418,25 +379,19 @@ class BookshelvesResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "users/{userId}/bookshelves/{shelf}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Bookshelf>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Bookshelf.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Bookshelf.parse(JSON.parse($text)));
   }
 }
 
 
 // Resource BookshelvesResource.BookshelvesVolumesResourceResource
-class BookshelvesVolumesResourceResource {
+class BookshelvesVolumesResourceResource extends core.Object {
   final BooksApi _$service;
   
   BookshelvesVolumesResourceResource._internal(BooksApi $service) : _$service = $service;
@@ -447,7 +402,7 @@ class BookshelvesVolumesResourceResource {
    * [userId] ID of user for whom to retrieve bookshelf volumes.
    * [shelf] ID of bookshelf to retrieve volumes.
    */
-  Future<Volumes> list(String userId, String shelf, [bool showPreorders = UNSPECIFIED, int maxResults = UNSPECIFIED, String source = UNSPECIFIED, int startIndex = UNSPECIFIED]) {
+  core.Future<Volumes> list(core.String userId, core.String shelf, [core.bool showPreorders = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String source = UNSPECIFIED, core.int startIndex = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -466,24 +421,18 @@ class BookshelvesVolumesResourceResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "users/{userId}/bookshelves/{shelf}/volumes").generate($pathParams, $queryParams);
-    final $completer = new Completer<Volumes>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Volumes.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Volumes.parse(JSON.parse($text)));
   }
 }
 
 // Resource .MyconfigResource
-class MyconfigResource {
+class MyconfigResource extends core.Object {
   final BooksApi _$service;
   
   MyconfigResource._internal(BooksApi $service) : _$service = $service;
@@ -494,7 +443,7 @@ class MyconfigResource {
    * [volumeIds] The volume(s) to release restrictions for.
    * [cpksver] The device/version ID from which to release the restriction.
    */
-  Future<DownloadAccesses> releaseDownloadAccess(List<String> volumeIds, String cpksver, [String locale = UNSPECIFIED, String source = UNSPECIFIED]) {
+  core.Future<DownloadAccesses> releaseDownloadAccess(core.List<core.String> volumeIds, core.String cpksver, [core.String locale = UNSPECIFIED, core.String source = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -511,19 +460,13 @@ class MyconfigResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "myconfig/releaseDownloadAccess").generate($pathParams, $queryParams);
-    final $completer = new Completer<DownloadAccesses>();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = DownloadAccesses.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => DownloadAccesses.parse(JSON.parse($text)));
   }
 
   // Method MyconfigResource.RequestAccess
@@ -534,7 +477,7 @@ class MyconfigResource {
    * [nonce] The client nonce value.
    * [cpksver] The device/version ID from which to request the restrictions.
    */
-  Future<RequestAccess> requestAccess(String source, String volumeId, String nonce, String cpksver, [String locale = UNSPECIFIED]) {
+  core.Future<RequestAccess> requestAccess(core.String source, core.String volumeId, core.String nonce, core.String cpksver, [core.String locale = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -552,19 +495,13 @@ class MyconfigResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "myconfig/requestAccess").generate($pathParams, $queryParams);
-    final $completer = new Completer<RequestAccess>();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = RequestAccess.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => RequestAccess.parse(JSON.parse($text)));
   }
 
   // Method MyconfigResource.SyncVolumeLicenses
@@ -574,7 +511,7 @@ class MyconfigResource {
    * [nonce] The client nonce value.
    * [cpksver] The device/version ID from which to release the restriction.
    */
-  Future<Volumes> syncVolumeLicenses(String source, String nonce, String cpksver, [String locale = UNSPECIFIED, bool showPreorders = UNSPECIFIED, List<String> volumeIds = UNSPECIFIED]) {
+  core.Future<Volumes> syncVolumeLicenses(core.String source, core.String nonce, core.String cpksver, [core.String locale = UNSPECIFIED, core.bool showPreorders = UNSPECIFIED, core.List<core.String> volumeIds = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -593,24 +530,18 @@ class MyconfigResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "myconfig/syncVolumeLicenses").generate($pathParams, $queryParams);
-    final $completer = new Completer<Volumes>();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Volumes.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Volumes.parse(JSON.parse($text)));
   }
 }
 
 // Resource .VolumesResource
-class VolumesResource {
+class VolumesResource extends core.Object {
   final BooksApi _$service;
   final VolumesAssociatedResourceResource associated;
   
@@ -622,7 +553,7 @@ class VolumesResource {
    * Performs a book search.
    * [q] Full-text search query string.
    */
-  Future<Volumes> list(String q, [VolumesResourceListOrderBy orderBy = UNSPECIFIED, VolumesResourceListProjection projection = UNSPECIFIED, VolumesResourceListLibraryRestrict libraryRestrict = UNSPECIFIED, String langRestrict = UNSPECIFIED, bool showPreorders = UNSPECIFIED, VolumesResourceListPrintType printType = UNSPECIFIED, int maxResults = UNSPECIFIED, VolumesResourceListFilter filter = UNSPECIFIED, String source = UNSPECIFIED, int startIndex = UNSPECIFIED, VolumesResourceListDownload download = UNSPECIFIED, String partner = UNSPECIFIED]) {
+  core.Future<Volumes> list(core.String q, [VolumesResourceListOrderBy orderBy = UNSPECIFIED, VolumesResourceListProjection projection = UNSPECIFIED, VolumesResourceListLibraryRestrict libraryRestrict = UNSPECIFIED, core.String langRestrict = UNSPECIFIED, core.bool showPreorders = UNSPECIFIED, VolumesResourceListPrintType printType = UNSPECIFIED, core.int maxResults = UNSPECIFIED, VolumesResourceListFilter filter = UNSPECIFIED, core.String source = UNSPECIFIED, core.int startIndex = UNSPECIFIED, VolumesResourceListDownload download = UNSPECIFIED, core.String partner = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -648,19 +579,13 @@ class VolumesResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "volumes").generate($pathParams, $queryParams);
-    final $completer = new Completer<Volumes>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Volumes.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Volumes.parse(JSON.parse($text)));
   }
 
   // Method VolumesResource.Get
@@ -668,7 +593,7 @@ class VolumesResource {
    * Gets volume information for a single volume.
    * [volumeId] ID of volume to retrieve.
    */
-  Future<Volume> get(String volumeId, [String source = UNSPECIFIED, String country = UNSPECIFIED, VolumesResourceGetProjection projection = UNSPECIFIED, String partner = UNSPECIFIED]) {
+  core.Future<Volume> get(core.String volumeId, [core.String source = UNSPECIFIED, core.String country = UNSPECIFIED, VolumesResourceGetProjection projection = UNSPECIFIED, core.String partner = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -686,31 +611,25 @@ class VolumesResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "volumes/{volumeId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Volume>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Volume.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Volume.parse(JSON.parse($text)));
   }
 }
 
 // Enum VolumesResource.List.OrderBy
-class VolumesResourceListOrderBy implements Hashable {
+class VolumesResourceListOrderBy extends core.Object implements core.Hashable {
   /** Most recently published. */
   static final VolumesResourceListOrderBy NEWEST = const VolumesResourceListOrderBy._internal("newest", 0);
   /** Relevance to search terms. */
   static final VolumesResourceListOrderBy RELEVANCE = const VolumesResourceListOrderBy._internal("relevance", 1);
 
   /** All values of this enumeration */
-  static final List<VolumesResourceListOrderBy> values = const <VolumesResourceListOrderBy>[
+  static final core.List<VolumesResourceListOrderBy> values = const <VolumesResourceListOrderBy>[
     NEWEST,
     RELEVANCE,
   ];
@@ -722,26 +641,26 @@ class VolumesResourceListOrderBy implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static VolumesResourceListOrderBy valueOf(String item) => _valuesMap[item];
+  static VolumesResourceListOrderBy valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const VolumesResourceListOrderBy._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const VolumesResourceListOrderBy._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "OrderBy".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "OrderBy".hashCode();
 }
 
 // Enum VolumesResource.List.Projection
-class VolumesResourceListProjection implements Hashable {
+class VolumesResourceListProjection extends core.Object implements core.Hashable {
   /** Includes all volume data. */
   static final VolumesResourceListProjection FULL = const VolumesResourceListProjection._internal("full", 0);
   /** Includes a subset of fields in volumeInfo and accessInfo. */
   static final VolumesResourceListProjection LITE = const VolumesResourceListProjection._internal("lite", 1);
 
   /** All values of this enumeration */
-  static final List<VolumesResourceListProjection> values = const <VolumesResourceListProjection>[
+  static final core.List<VolumesResourceListProjection> values = const <VolumesResourceListProjection>[
     FULL,
     LITE,
   ];
@@ -753,26 +672,26 @@ class VolumesResourceListProjection implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static VolumesResourceListProjection valueOf(String item) => _valuesMap[item];
+  static VolumesResourceListProjection valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const VolumesResourceListProjection._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const VolumesResourceListProjection._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Projection".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Projection".hashCode();
 }
 
 // Enum VolumesResource.List.LibraryRestrict
-class VolumesResourceListLibraryRestrict implements Hashable {
+class VolumesResourceListLibraryRestrict extends core.Object implements core.Hashable {
   /** Restrict to the user's library, any shelf. */
   static final VolumesResourceListLibraryRestrict MY_LIBRARY = const VolumesResourceListLibraryRestrict._internal("my-library", 0);
   /** Do not restrict based on user's library. */
   static final VolumesResourceListLibraryRestrict NO_RESTRICT = const VolumesResourceListLibraryRestrict._internal("no-restrict", 1);
 
   /** All values of this enumeration */
-  static final List<VolumesResourceListLibraryRestrict> values = const <VolumesResourceListLibraryRestrict>[
+  static final core.List<VolumesResourceListLibraryRestrict> values = const <VolumesResourceListLibraryRestrict>[
     MY_LIBRARY,
     NO_RESTRICT,
   ];
@@ -784,19 +703,19 @@ class VolumesResourceListLibraryRestrict implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static VolumesResourceListLibraryRestrict valueOf(String item) => _valuesMap[item];
+  static VolumesResourceListLibraryRestrict valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const VolumesResourceListLibraryRestrict._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const VolumesResourceListLibraryRestrict._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "LibraryRestrict".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "LibraryRestrict".hashCode();
 }
 
 // Enum VolumesResource.List.PrintType
-class VolumesResourceListPrintType implements Hashable {
+class VolumesResourceListPrintType extends core.Object implements core.Hashable {
   /** All volume content types. */
   static final VolumesResourceListPrintType ALL = const VolumesResourceListPrintType._internal("all", 0);
   /** Just books. */
@@ -805,7 +724,7 @@ class VolumesResourceListPrintType implements Hashable {
   static final VolumesResourceListPrintType MAGAZINES = const VolumesResourceListPrintType._internal("magazines", 2);
 
   /** All values of this enumeration */
-  static final List<VolumesResourceListPrintType> values = const <VolumesResourceListPrintType>[
+  static final core.List<VolumesResourceListPrintType> values = const <VolumesResourceListPrintType>[
     ALL,
     BOOKS,
     MAGAZINES,
@@ -819,19 +738,19 @@ class VolumesResourceListPrintType implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static VolumesResourceListPrintType valueOf(String item) => _valuesMap[item];
+  static VolumesResourceListPrintType valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const VolumesResourceListPrintType._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const VolumesResourceListPrintType._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "PrintType".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "PrintType".hashCode();
 }
 
 // Enum VolumesResource.List.Filter
-class VolumesResourceListFilter implements Hashable {
+class VolumesResourceListFilter extends core.Object implements core.Hashable {
   /** All Google eBooks. */
   static final VolumesResourceListFilter EBOOKS = const VolumesResourceListFilter._internal("ebooks", 0);
   /** Google eBook with full volume text viewability. */
@@ -844,7 +763,7 @@ class VolumesResourceListFilter implements Hashable {
   static final VolumesResourceListFilter PARTIAL = const VolumesResourceListFilter._internal("partial", 4);
 
   /** All values of this enumeration */
-  static final List<VolumesResourceListFilter> values = const <VolumesResourceListFilter>[
+  static final core.List<VolumesResourceListFilter> values = const <VolumesResourceListFilter>[
     EBOOKS,
     FREE_EBOOKS,
     FULL,
@@ -862,24 +781,24 @@ class VolumesResourceListFilter implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static VolumesResourceListFilter valueOf(String item) => _valuesMap[item];
+  static VolumesResourceListFilter valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const VolumesResourceListFilter._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const VolumesResourceListFilter._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Filter".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Filter".hashCode();
 }
 
 // Enum VolumesResource.List.Download
-class VolumesResourceListDownload implements Hashable {
+class VolumesResourceListDownload extends core.Object implements core.Hashable {
   /** All volumes with epub. */
   static final VolumesResourceListDownload EPUB = const VolumesResourceListDownload._internal("epub", 0);
 
   /** All values of this enumeration */
-  static final List<VolumesResourceListDownload> values = const <VolumesResourceListDownload>[
+  static final core.List<VolumesResourceListDownload> values = const <VolumesResourceListDownload>[
     EPUB,
   ];
 
@@ -889,26 +808,26 @@ class VolumesResourceListDownload implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static VolumesResourceListDownload valueOf(String item) => _valuesMap[item];
+  static VolumesResourceListDownload valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const VolumesResourceListDownload._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const VolumesResourceListDownload._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Download".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Download".hashCode();
 }
 
 // Enum VolumesResource.Get.Projection
-class VolumesResourceGetProjection implements Hashable {
+class VolumesResourceGetProjection extends core.Object implements core.Hashable {
   /** Includes all volume data. */
   static final VolumesResourceGetProjection FULL = const VolumesResourceGetProjection._internal("full", 0);
   /** Includes a subset of fields in volumeInfo and accessInfo. */
   static final VolumesResourceGetProjection LITE = const VolumesResourceGetProjection._internal("lite", 1);
 
   /** All values of this enumeration */
-  static final List<VolumesResourceGetProjection> values = const <VolumesResourceGetProjection>[
+  static final core.List<VolumesResourceGetProjection> values = const <VolumesResourceGetProjection>[
     FULL,
     LITE,
   ];
@@ -920,20 +839,20 @@ class VolumesResourceGetProjection implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static VolumesResourceGetProjection valueOf(String item) => _valuesMap[item];
+  static VolumesResourceGetProjection valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const VolumesResourceGetProjection._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const VolumesResourceGetProjection._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Projection".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Projection".hashCode();
 }
 
 
 // Resource VolumesResource.VolumesAssociatedResourceResource
-class VolumesAssociatedResourceResource {
+class VolumesAssociatedResourceResource extends core.Object {
   final BooksApi _$service;
   
   VolumesAssociatedResourceResource._internal(BooksApi $service) : _$service = $service;
@@ -943,7 +862,7 @@ class VolumesAssociatedResourceResource {
    * Return a list of associated books.
    * [volumeId] ID of the source volume.
    */
-  Future<Volumes> list(String volumeId, [VolumesResourceVolumesAssociatedResourceResourceListProjection projection = UNSPECIFIED, int maxResults = UNSPECIFIED, VolumesResourceVolumesAssociatedResourceResourceListFilter filter = UNSPECIFIED, String source = UNSPECIFIED, int startIndex = UNSPECIFIED, VolumesResourceVolumesAssociatedResourceResourceListAssociation association = UNSPECIFIED]) {
+  core.Future<Volumes> list(core.String volumeId, [VolumesResourceVolumesAssociatedResourceResourceListProjection projection = UNSPECIFIED, core.int maxResults = UNSPECIFIED, VolumesResourceVolumesAssociatedResourceResourceListFilter filter = UNSPECIFIED, core.String source = UNSPECIFIED, core.int startIndex = UNSPECIFIED, VolumesResourceVolumesAssociatedResourceResourceListAssociation association = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -963,31 +882,25 @@ class VolumesAssociatedResourceResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "volumes/{volumeId}/associated").generate($pathParams, $queryParams);
-    final $completer = new Completer<Volumes>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Volumes.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Volumes.parse(JSON.parse($text)));
   }
 }
 
 // Enum VolumesResource.VolumesAssociatedResourceResource.List.Projection
-class VolumesResourceVolumesAssociatedResourceResourceListProjection implements Hashable {
+class VolumesResourceVolumesAssociatedResourceResourceListProjection extends core.Object implements core.Hashable {
   /** Includes all volume data. */
   static final VolumesResourceVolumesAssociatedResourceResourceListProjection FULL = const VolumesResourceVolumesAssociatedResourceResourceListProjection._internal("full", 0);
   /** Includes a subset of fields in volumeInfo and accessInfo. */
   static final VolumesResourceVolumesAssociatedResourceResourceListProjection LITE = const VolumesResourceVolumesAssociatedResourceResourceListProjection._internal("lite", 1);
 
   /** All values of this enumeration */
-  static final List<VolumesResourceVolumesAssociatedResourceResourceListProjection> values = const <VolumesResourceVolumesAssociatedResourceResourceListProjection>[
+  static final core.List<VolumesResourceVolumesAssociatedResourceResourceListProjection> values = const <VolumesResourceVolumesAssociatedResourceResourceListProjection>[
     FULL,
     LITE,
   ];
@@ -999,19 +912,19 @@ class VolumesResourceVolumesAssociatedResourceResourceListProjection implements 
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static VolumesResourceVolumesAssociatedResourceResourceListProjection valueOf(String item) => _valuesMap[item];
+  static VolumesResourceVolumesAssociatedResourceResourceListProjection valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const VolumesResourceVolumesAssociatedResourceResourceListProjection._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const VolumesResourceVolumesAssociatedResourceResourceListProjection._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Projection".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Projection".hashCode();
 }
 
 // Enum VolumesResource.VolumesAssociatedResourceResource.List.Filter
-class VolumesResourceVolumesAssociatedResourceResourceListFilter implements Hashable {
+class VolumesResourceVolumesAssociatedResourceResourceListFilter extends core.Object implements core.Hashable {
   /** All Google eBooks. */
   static final VolumesResourceVolumesAssociatedResourceResourceListFilter EBOOKS = const VolumesResourceVolumesAssociatedResourceResourceListFilter._internal("ebooks", 0);
   /** Google eBook with full volume text viewability. */
@@ -1024,7 +937,7 @@ class VolumesResourceVolumesAssociatedResourceResourceListFilter implements Hash
   static final VolumesResourceVolumesAssociatedResourceResourceListFilter PARTIAL = const VolumesResourceVolumesAssociatedResourceResourceListFilter._internal("partial", 4);
 
   /** All values of this enumeration */
-  static final List<VolumesResourceVolumesAssociatedResourceResourceListFilter> values = const <VolumesResourceVolumesAssociatedResourceResourceListFilter>[
+  static final core.List<VolumesResourceVolumesAssociatedResourceResourceListFilter> values = const <VolumesResourceVolumesAssociatedResourceResourceListFilter>[
     EBOOKS,
     FREE_EBOOKS,
     FULL,
@@ -1042,24 +955,24 @@ class VolumesResourceVolumesAssociatedResourceResourceListFilter implements Hash
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static VolumesResourceVolumesAssociatedResourceResourceListFilter valueOf(String item) => _valuesMap[item];
+  static VolumesResourceVolumesAssociatedResourceResourceListFilter valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const VolumesResourceVolumesAssociatedResourceResourceListFilter._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const VolumesResourceVolumesAssociatedResourceResourceListFilter._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Filter".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Filter".hashCode();
 }
 
 // Enum VolumesResource.VolumesAssociatedResourceResource.List.Association
-class VolumesResourceVolumesAssociatedResourceResourceListAssociation implements Hashable {
+class VolumesResourceVolumesAssociatedResourceResourceListAssociation extends core.Object implements core.Hashable {
   /** Books that are complementary for additional reading. */
   static final VolumesResourceVolumesAssociatedResourceResourceListAssociation COMPLEMENTARY = const VolumesResourceVolumesAssociatedResourceResourceListAssociation._internal("complementary", 0);
 
   /** All values of this enumeration */
-  static final List<VolumesResourceVolumesAssociatedResourceResourceListAssociation> values = const <VolumesResourceVolumesAssociatedResourceResourceListAssociation>[
+  static final core.List<VolumesResourceVolumesAssociatedResourceResourceListAssociation> values = const <VolumesResourceVolumesAssociatedResourceResourceListAssociation>[
     COMPLEMENTARY,
   ];
 
@@ -1069,19 +982,19 @@ class VolumesResourceVolumesAssociatedResourceResourceListAssociation implements
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static VolumesResourceVolumesAssociatedResourceResourceListAssociation valueOf(String item) => _valuesMap[item];
+  static VolumesResourceVolumesAssociatedResourceResourceListAssociation valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const VolumesResourceVolumesAssociatedResourceResourceListAssociation._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const VolumesResourceVolumesAssociatedResourceResourceListAssociation._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Association".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Association".hashCode();
 }
 
 // Resource .MylibraryResource
-class MylibraryResource {
+class MylibraryResource extends core.Object {
   final BooksApi _$service;
   final MylibraryBookshelvesResourceResource bookshelves;
   final MylibraryReadingpositionsResourceResource readingpositions;
@@ -1095,7 +1008,7 @@ class MylibraryResource {
 
 
 // Resource MylibraryResource.MylibraryBookshelvesResourceResource
-class MylibraryBookshelvesResourceResource {
+class MylibraryBookshelvesResourceResource extends core.Object {
   final BooksApi _$service;
   final MylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceResourceResource volumes;
   
@@ -1108,7 +1021,7 @@ class MylibraryBookshelvesResourceResource {
    * [shelf] ID of bookshelf from which to remove a volume.
    * [volumeId] ID of volume to remove.
    */
-  Future removeVolume(String shelf, String volumeId, [String source = UNSPECIFIED]) {
+  core.Future removeVolume(core.String shelf, core.String volumeId, [core.String source = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1124,19 +1037,13 @@ class MylibraryBookshelvesResourceResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "mylibrary/bookshelves/{shelf}/removeVolume").generate($pathParams, $queryParams);
-    final $completer = new Completer();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = identity(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => identity(JSON.parse($text)));
   }
 
   // Method MylibraryResource.MylibraryBookshelvesResourceResource.Get
@@ -1144,7 +1051,7 @@ class MylibraryBookshelvesResourceResource {
    * Retrieves metadata for a specific bookshelf belonging to the authenticated user.
    * [shelf] ID of bookshelf to retrieve.
    */
-  Future<Bookshelf> get(String shelf, [String source = UNSPECIFIED]) {
+  core.Future<Bookshelf> get(core.String shelf, [core.String source = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1159,19 +1066,13 @@ class MylibraryBookshelvesResourceResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "mylibrary/bookshelves/{shelf}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Bookshelf>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Bookshelf.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Bookshelf.parse(JSON.parse($text)));
   }
 
   // Method MylibraryResource.MylibraryBookshelvesResourceResource.ClearVolumes
@@ -1179,7 +1080,7 @@ class MylibraryBookshelvesResourceResource {
    * Clears all volumes from a bookshelf.
    * [shelf] ID of bookshelf from which to remove a volume.
    */
-  Future clearVolumes(String shelf, [String source = UNSPECIFIED]) {
+  core.Future clearVolumes(core.String shelf, [core.String source = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1194,26 +1095,20 @@ class MylibraryBookshelvesResourceResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "mylibrary/bookshelves/{shelf}/clearVolumes").generate($pathParams, $queryParams);
-    final $completer = new Completer();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = identity(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => identity(JSON.parse($text)));
   }
 
   // Method MylibraryResource.MylibraryBookshelvesResourceResource.List
   /**
    * Retrieves a list of bookshelves belonging to the authenticated user.
    */
-  Future<Bookshelves> list([String source = UNSPECIFIED]) {
+  core.Future<Bookshelves> list([core.String source = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1227,19 +1122,13 @@ class MylibraryBookshelvesResourceResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "mylibrary/bookshelves").generate($pathParams, $queryParams);
-    final $completer = new Completer<Bookshelves>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Bookshelves.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Bookshelves.parse(JSON.parse($text)));
   }
 
   // Method MylibraryResource.MylibraryBookshelvesResourceResource.AddVolume
@@ -1248,7 +1137,7 @@ class MylibraryBookshelvesResourceResource {
    * [shelf] ID of bookshelf to which to add a volume.
    * [volumeId] ID of volume to add.
    */
-  Future addVolume(String shelf, String volumeId, [String source = UNSPECIFIED]) {
+  core.Future addVolume(core.String shelf, core.String volumeId, [core.String source = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1264,19 +1153,13 @@ class MylibraryBookshelvesResourceResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "mylibrary/bookshelves/{shelf}/addVolume").generate($pathParams, $queryParams);
-    final $completer = new Completer();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = identity(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => identity(JSON.parse($text)));
   }
 
   // Method MylibraryResource.MylibraryBookshelvesResourceResource.MoveVolume
@@ -1287,7 +1170,7 @@ class MylibraryBookshelvesResourceResource {
    * [volumePosition] Position on shelf to move the item (0 puts the item before the current first item, 1 puts it between
    *        the first and the second and so on.)
    */
-  Future moveVolume(String shelf, String volumeId, int volumePosition, [String source = UNSPECIFIED]) {
+  core.Future moveVolume(core.String shelf, core.String volumeId, core.int volumePosition, [core.String source = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1304,25 +1187,19 @@ class MylibraryBookshelvesResourceResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "mylibrary/bookshelves/{shelf}/moveVolume").generate($pathParams, $queryParams);
-    final $completer = new Completer();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = identity(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => identity(JSON.parse($text)));
   }
 }
 
 
 // Resource MylibraryResource.MylibraryBookshelvesResourceResource.MylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceResourceResource
-class MylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceResourceResource {
+class MylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceResourceResource extends core.Object {
   final BooksApi _$service;
   
   MylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceResourceResource._internal(BooksApi $service) : _$service = $service;
@@ -1332,7 +1209,7 @@ class MylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceRes
    * Gets volume information for volumes on a bookshelf.
    * [shelf] The bookshelf ID or name retrieve volumes for.
    */
-  Future<Volumes> list(String shelf, [MylibraryResourceMylibraryBookshelvesResourceResourceMylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceResourceResourceListProjection projection = UNSPECIFIED, String country = UNSPECIFIED, bool showPreorders = UNSPECIFIED, int maxResults = UNSPECIFIED, String q = UNSPECIFIED, String source = UNSPECIFIED, int startIndex = UNSPECIFIED]) {
+  core.Future<Volumes> list(core.String shelf, [MylibraryResourceMylibraryBookshelvesResourceResourceMylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceResourceResourceListProjection projection = UNSPECIFIED, core.String country = UNSPECIFIED, core.bool showPreorders = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String q = UNSPECIFIED, core.String source = UNSPECIFIED, core.int startIndex = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1353,31 +1230,25 @@ class MylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceRes
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "mylibrary/bookshelves/{shelf}/volumes").generate($pathParams, $queryParams);
-    final $completer = new Completer<Volumes>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Volumes.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Volumes.parse(JSON.parse($text)));
   }
 }
 
 // Enum MylibraryResource.MylibraryBookshelvesResourceResource.MylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceResourceResource.List.Projection
-class MylibraryResourceMylibraryBookshelvesResourceResourceMylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceResourceResourceListProjection implements Hashable {
+class MylibraryResourceMylibraryBookshelvesResourceResourceMylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceResourceResourceListProjection extends core.Object implements core.Hashable {
   /** Includes all volume data. */
   static final MylibraryResourceMylibraryBookshelvesResourceResourceMylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceResourceResourceListProjection FULL = const MylibraryResourceMylibraryBookshelvesResourceResourceMylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceResourceResourceListProjection._internal("full", 0);
   /** Includes a subset of fields in volumeInfo and accessInfo. */
   static final MylibraryResourceMylibraryBookshelvesResourceResourceMylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceResourceResourceListProjection LITE = const MylibraryResourceMylibraryBookshelvesResourceResourceMylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceResourceResourceListProjection._internal("lite", 1);
 
   /** All values of this enumeration */
-  static final List<MylibraryResourceMylibraryBookshelvesResourceResourceMylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceResourceResourceListProjection> values = const <MylibraryResourceMylibraryBookshelvesResourceResourceMylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceResourceResourceListProjection>[
+  static final core.List<MylibraryResourceMylibraryBookshelvesResourceResourceMylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceResourceResourceListProjection> values = const <MylibraryResourceMylibraryBookshelvesResourceResourceMylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceResourceResourceListProjection>[
     FULL,
     LITE,
   ];
@@ -1389,19 +1260,19 @@ class MylibraryResourceMylibraryBookshelvesResourceResourceMylibraryBookshelvesR
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static MylibraryResourceMylibraryBookshelvesResourceResourceMylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceResourceResourceListProjection valueOf(String item) => _valuesMap[item];
+  static MylibraryResourceMylibraryBookshelvesResourceResourceMylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceResourceResourceListProjection valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const MylibraryResourceMylibraryBookshelvesResourceResourceMylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceResourceResourceListProjection._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const MylibraryResourceMylibraryBookshelvesResourceResourceMylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceResourceResourceListProjection._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Projection".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Projection".hashCode();
 }
 
 // Resource MylibraryResource.MylibraryReadingpositionsResourceResource
-class MylibraryReadingpositionsResourceResource {
+class MylibraryReadingpositionsResourceResource extends core.Object {
   final BooksApi _$service;
   
   MylibraryReadingpositionsResourceResource._internal(BooksApi $service) : _$service = $service;
@@ -1413,7 +1284,7 @@ class MylibraryReadingpositionsResourceResource {
    * [timestamp] RFC 3339 UTC format timestamp associated with this reading position.
    * [position] Position string for the new volume reading position.
    */
-  Future setPosition(String volumeId, String timestamp, String position, [String source = UNSPECIFIED, String contentVersion = UNSPECIFIED, MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction action = UNSPECIFIED]) {
+  core.Future setPosition(core.String volumeId, core.String timestamp, core.String position, [core.String source = UNSPECIFIED, core.String contentVersion = UNSPECIFIED, MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction action = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1432,19 +1303,13 @@ class MylibraryReadingpositionsResourceResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "mylibrary/readingpositions/{volumeId}/setPosition").generate($pathParams, $queryParams);
-    final $completer = new Completer();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = identity(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => identity(JSON.parse($text)));
   }
 
   // Method MylibraryResource.MylibraryReadingpositionsResourceResource.Get
@@ -1452,7 +1317,7 @@ class MylibraryReadingpositionsResourceResource {
    * Retrieves my reading position information for a volume.
    * [volumeId] ID of volume for which to retrieve a reading position.
    */
-  Future<ReadingPosition> get(String volumeId, [String source = UNSPECIFIED, String contentVersion = UNSPECIFIED]) {
+  core.Future<ReadingPosition> get(core.String volumeId, [core.String source = UNSPECIFIED, core.String contentVersion = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1468,24 +1333,18 @@ class MylibraryReadingpositionsResourceResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "mylibrary/readingpositions/{volumeId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<ReadingPosition>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = ReadingPosition.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => ReadingPosition.parse(JSON.parse($text)));
   }
 }
 
 // Enum MylibraryResource.MylibraryReadingpositionsResourceResource.SetPosition.Action
-class MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction implements Hashable {
+class MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction extends core.Object implements core.Hashable {
   /** User chose bookmark within volume. */
   static final MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction BOOKMARK = const MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction._internal("bookmark", 0);
   /** User selected chapter from list. */
@@ -1500,7 +1359,7 @@ class MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionActio
   static final MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction SEARCH = const MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction._internal("search", 5);
 
   /** All values of this enumeration */
-  static final List<MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction> values = const <MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction>[
+  static final core.List<MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction> values = const <MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction>[
     BOOKMARK,
     CHAPTER,
     NEXT_PAGE,
@@ -1520,19 +1379,19 @@ class MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionActio
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction valueOf(String item) => _valuesMap[item];
+  static MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Action".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Action".hashCode();
 }
 
 // Resource MylibraryResource.MylibraryAnnotationsResourceResource
-class MylibraryAnnotationsResourceResource {
+class MylibraryAnnotationsResourceResource extends core.Object {
   final BooksApi _$service;
   
   MylibraryAnnotationsResourceResource._internal(BooksApi $service) : _$service = $service;
@@ -1542,7 +1401,7 @@ class MylibraryAnnotationsResourceResource {
    * Inserts a new annotation.
    * [content] the Annotation
    */
-  Future<Annotation> insert(Annotation content, [String source = UNSPECIFIED]) {
+  core.Future<Annotation> insert(Annotation content, [core.String source = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1558,19 +1417,13 @@ class MylibraryAnnotationsResourceResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Annotation.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "mylibrary/annotations").generate($pathParams, $queryParams);
-    final $completer = new Completer<Annotation>();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Annotation.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Annotation.parse(JSON.parse($text)));
   }
 
   // Method MylibraryResource.MylibraryAnnotationsResourceResource.Get
@@ -1578,7 +1431,7 @@ class MylibraryAnnotationsResourceResource {
    * Gets an annotation by its ID.
    * [annotationId] The ID for the annotation to retrieve.
    */
-  Future<Annotation> get(String annotationId, [String source = UNSPECIFIED]) {
+  core.Future<Annotation> get(core.String annotationId, [core.String source = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1593,26 +1446,20 @@ class MylibraryAnnotationsResourceResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "mylibrary/annotations/{annotationId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Annotation>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Annotation.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Annotation.parse(JSON.parse($text)));
   }
 
   // Method MylibraryResource.MylibraryAnnotationsResourceResource.List
   /**
    * Retrieves a list of annotations, possibly filtered.
    */
-  Future<Annotations> list([bool showDeleted = UNSPECIFIED, String updatedMin = UNSPECIFIED, String updatedMax = UNSPECIFIED, String volumeId = UNSPECIFIED, int maxResults = UNSPECIFIED, String pageToken = UNSPECIFIED, List<String> pageIds = UNSPECIFIED, String contentVersion = UNSPECIFIED, String source = UNSPECIFIED, String layerId = UNSPECIFIED]) {
+  core.Future<Annotations> list([core.bool showDeleted = UNSPECIFIED, core.String updatedMin = UNSPECIFIED, core.String updatedMax = UNSPECIFIED, core.String volumeId = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.List<core.String> pageIds = UNSPECIFIED, core.String contentVersion = UNSPECIFIED, core.String source = UNSPECIFIED, core.String layerId = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1635,19 +1482,13 @@ class MylibraryAnnotationsResourceResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "mylibrary/annotations").generate($pathParams, $queryParams);
-    final $completer = new Completer<Annotations>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Annotations.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Annotations.parse(JSON.parse($text)));
   }
 
   // Method MylibraryResource.MylibraryAnnotationsResourceResource.Update
@@ -1656,7 +1497,7 @@ class MylibraryAnnotationsResourceResource {
    * [annotationId] The ID for the annotation to update.
    * [content] the Annotation
    */
-  Future<Annotation> update(String annotationId, Annotation content, [String source = UNSPECIFIED]) {
+  core.Future<Annotation> update(core.String annotationId, Annotation content, [core.String source = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1673,19 +1514,13 @@ class MylibraryAnnotationsResourceResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Annotation.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "mylibrary/annotations/{annotationId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Annotation>();
     final $http = new HttpRequest($url, "PUT", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Annotation.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Annotation.parse(JSON.parse($text)));
   }
 
   // Method MylibraryResource.MylibraryAnnotationsResourceResource.Delete
@@ -1693,7 +1528,7 @@ class MylibraryAnnotationsResourceResource {
    * Deletes an annotation.
    * [annotationId] The ID for the annotation to delete.
    */
-  Future delete(String annotationId, [String source = UNSPECIFIED]) {
+  core.Future delete(core.String annotationId, [core.String source = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1708,74 +1543,68 @@ class MylibraryAnnotationsResourceResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "mylibrary/annotations/{annotationId}").generate($pathParams, $queryParams);
-    final $completer = new Completer();
     final $http = new HttpRequest($url, "DELETE", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = identity(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => identity(JSON.parse($text)));
   }
 }
 
 // Schema .Annotation
 class Annotation extends IdentityHash {
   /** Resource type. */
-  String kind;
+  core.String kind;
 
   /** Timestamp for the last time this annotation was modified. */
-  String updated;
+  core.String updated;
 
   /** Timestamp for the created time of this annotation. */
-  String created;
+  core.String created;
 
   /** Indicates that this annotation is deleted. */
-  bool deleted;
+  core.bool deleted;
 
   /** Anchor text before excerpt. */
-  String beforeSelectedText;
+  core.String beforeSelectedText;
 
   /** Selection ranges for the most recent content version. */
   AnnotationCurrentVersionRanges currentVersionRanges;
 
   /** Anchor text after excerpt. */
-  String afterSelectedText;
+  core.String afterSelectedText;
 
   /** Selection ranges sent from the client. */
   AnnotationClientVersionRanges clientVersionRanges;
 
   /** The volume that this annotation belongs to. */
-  String volumeId;
+  core.String volumeId;
 
   /** Pages that this annotation spans. */
-  List<String> pageIds;
+  core.List<core.String> pageIds;
 
   /** The layer this annotation is for. */
-  String layerId;
+  core.String layerId;
 
   /** Excerpt from the volume. */
-  String selectedText;
+  core.String selectedText;
 
   /** The highlight style for this annotation. */
-  String highlightStyle;
+  core.String highlightStyle;
 
   /** User-created data for this annotation. */
-  String data;
+  core.String data;
 
   /** Id of this annotation, in the form of a GUID. */
-  String id;
+  core.String id;
 
   /** URL to this resource. */
-  String selfLink;
+  core.String selfLink;
 
   /** Parses an instance from its JSON representation. */
-  static Annotation parse(Map<String, Object> json) {
+  static Annotation parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Annotation();
     result.kind = identity(json["kind"]);
@@ -1797,9 +1626,9 @@ class Annotation extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Annotation value) {
+  static core.Object serialize(Annotation value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["kind"] = identity(value.kind);
     result["updated"] = identity(value.updated);
     result["created"] = identity(value.created);
@@ -1824,7 +1653,7 @@ class Annotation extends IdentityHash {
 // Schema Annotation.AnnotationClientVersionRanges
 class AnnotationClientVersionRanges extends IdentityHash {
   /** Content version the client sent in. */
-  String contentVersion;
+  core.String contentVersion;
 
   /** Range in GB text format for this annotation sent by client. */
   BooksAnnotationsRange gbTextRange;
@@ -1836,7 +1665,7 @@ class AnnotationClientVersionRanges extends IdentityHash {
   BooksAnnotationsRange gbImageRange;
 
   /** Parses an instance from its JSON representation. */
-  static AnnotationClientVersionRanges parse(Map<String, Object> json) {
+  static AnnotationClientVersionRanges parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new AnnotationClientVersionRanges();
     result.contentVersion = identity(json["contentVersion"]);
@@ -1846,9 +1675,9 @@ class AnnotationClientVersionRanges extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(AnnotationClientVersionRanges value) {
+  static core.Object serialize(AnnotationClientVersionRanges value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["contentVersion"] = identity(value.contentVersion);
     result["gbTextRange"] = BooksAnnotationsRange.serialize(value.gbTextRange);
     result["cfiRange"] = BooksAnnotationsRange.serialize(value.cfiRange);
@@ -1861,7 +1690,7 @@ class AnnotationClientVersionRanges extends IdentityHash {
 // Schema Annotation.AnnotationCurrentVersionRanges
 class AnnotationCurrentVersionRanges extends IdentityHash {
   /** Content version applicable to ranges below. */
-  String contentVersion;
+  core.String contentVersion;
 
   /** Range in GB text format for this annotation for version above. */
   BooksAnnotationsRange gbTextRange;
@@ -1873,7 +1702,7 @@ class AnnotationCurrentVersionRanges extends IdentityHash {
   BooksAnnotationsRange gbImageRange;
 
   /** Parses an instance from its JSON representation. */
-  static AnnotationCurrentVersionRanges parse(Map<String, Object> json) {
+  static AnnotationCurrentVersionRanges parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new AnnotationCurrentVersionRanges();
     result.contentVersion = identity(json["contentVersion"]);
@@ -1883,9 +1712,9 @@ class AnnotationCurrentVersionRanges extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(AnnotationCurrentVersionRanges value) {
+  static core.Object serialize(AnnotationCurrentVersionRanges value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["contentVersion"] = identity(value.contentVersion);
     result["gbTextRange"] = BooksAnnotationsRange.serialize(value.gbTextRange);
     result["cfiRange"] = BooksAnnotationsRange.serialize(value.cfiRange);
@@ -1898,34 +1727,34 @@ class AnnotationCurrentVersionRanges extends IdentityHash {
 // Schema .Annotationdata
 class Annotationdata extends IdentityHash {
   /** The type of annotation this data is for. */
-  String annotationType;
+  core.String annotationType;
 
   /** Resource Type */
-  String kind;
+  core.String kind;
 
   /** Timestamp for the last time this data was updated. (RFC 3339 UTC date-time format). */
-  String updated;
+  core.String updated;
 
   /** The volume id for this data. * */
-  String volumeId;
+  core.String volumeId;
 
   /** Base64 encoded data for this annotation data. */
-  String encodedData;
+  core.String encodedData;
 
   /** The Layer id for this data. * */
-  String layerId;
+  core.String layerId;
 
   /** JSON encoded data for this annotation data. */
   BooksLayerGeoData data;
 
   /** Unique id for this annotation data. */
-  String id;
+  core.String id;
 
   /** URL for this resource. * */
-  String selfLink;
+  core.String selfLink;
 
   /** Parses an instance from its JSON representation. */
-  static Annotationdata parse(Map<String, Object> json) {
+  static Annotationdata parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Annotationdata();
     result.annotationType = identity(json["annotationType"]);
@@ -1940,9 +1769,9 @@ class Annotationdata extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Annotationdata value) {
+  static core.Object serialize(Annotationdata value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["annotationType"] = identity(value.annotationType);
     result["kind"] = identity(value.kind);
     result["updated"] = identity(value.updated);
@@ -1963,22 +1792,22 @@ class Annotations extends IdentityHash {
  * Token to pass in for pagination for the next page. This will not be present if this request does
  * not have more results.
  */
-  String nextPageToken;
+  core.String nextPageToken;
 
   /** A list of annotations. */
-  List<Annotation> items;
+  core.List<Annotation> items;
 
   /** Resource type. */
-  String kind;
+  core.String kind;
 
   /**
  * Total number of annotations found. This may be greater than the number of notes returned in this
  * response if results have been paginated.
  */
-  int totalItems;
+  core.int totalItems;
 
   /** Parses an instance from its JSON representation. */
-  static Annotations parse(Map<String, Object> json) {
+  static Annotations parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Annotations();
     result.nextPageToken = identity(json["nextPageToken"]);
@@ -1988,9 +1817,9 @@ class Annotations extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Annotations value) {
+  static core.Object serialize(Annotations value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["nextPageToken"] = identity(value.nextPageToken);
     result["items"] = map(Annotation.serialize)(value.items);
     result["kind"] = identity(value.kind);
@@ -2006,19 +1835,19 @@ class Annotationsdata extends IdentityHash {
  * Token to pass in for pagination for the next page. This will not be present if this request does
  * not have more results.
  */
-  String nextPageToken;
+  core.String nextPageToken;
 
   /** A list of Annotation Data. */
-  List<Annotationdata> items;
+  core.List<Annotationdata> items;
 
   /** Resource type */
-  String kind;
+  core.String kind;
 
   /** The total number of volume annotations found. */
-  int totalItems;
+  core.int totalItems;
 
   /** Parses an instance from its JSON representation. */
-  static Annotationsdata parse(Map<String, Object> json) {
+  static Annotationsdata parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Annotationsdata();
     result.nextPageToken = identity(json["nextPageToken"]);
@@ -2028,9 +1857,9 @@ class Annotationsdata extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Annotationsdata value) {
+  static core.Object serialize(Annotationsdata value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["nextPageToken"] = identity(value.nextPageToken);
     result["items"] = map(Annotationdata.serialize)(value.items);
     result["kind"] = identity(value.kind);
@@ -2043,19 +1872,19 @@ class Annotationsdata extends IdentityHash {
 // Schema .BooksAnnotationsRange
 class BooksAnnotationsRange extends IdentityHash {
   /** The starting position for the range. */
-  String startPosition;
+  core.String startPosition;
 
   /** The ending position for the range. */
-  String endPosition;
+  core.String endPosition;
 
   /** The offset from the starting position. */
-  String startOffset;
+  core.String startOffset;
 
   /** The offset from the ending position. */
-  String endOffset;
+  core.String endOffset;
 
   /** Parses an instance from its JSON representation. */
-  static BooksAnnotationsRange parse(Map<String, Object> json) {
+  static BooksAnnotationsRange parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new BooksAnnotationsRange();
     result.startPosition = identity(json["startPosition"]);
@@ -2065,9 +1894,9 @@ class BooksAnnotationsRange extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(BooksAnnotationsRange value) {
+  static core.Object serialize(BooksAnnotationsRange value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["startPosition"] = identity(value.startPosition);
     result["endPosition"] = identity(value.endPosition);
     result["startOffset"] = identity(value.startOffset);
@@ -2086,7 +1915,7 @@ class BooksLayerGeoData extends IdentityHash {
   BooksLayerGeoDataCommon common;
 
   /** Parses an instance from its JSON representation. */
-  static BooksLayerGeoData parse(Map<String, Object> json) {
+  static BooksLayerGeoData parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new BooksLayerGeoData();
     result.geo = BooksLayerGeoDataGeo.parse(json["geo"]);
@@ -2094,9 +1923,9 @@ class BooksLayerGeoData extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(BooksLayerGeoData value) {
+  static core.Object serialize(BooksLayerGeoData value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["geo"] = BooksLayerGeoDataGeo.serialize(value.geo);
     result["common"] = BooksLayerGeoDataCommon.serialize(value.common);
     return result;
@@ -2107,19 +1936,19 @@ class BooksLayerGeoData extends IdentityHash {
 // Schema BooksLayerGeoData.BooksLayerGeoDataCommon
 class BooksLayerGeoDataCommon extends IdentityHash {
   /** The language of the information url and description. */
-  String lang;
+  core.String lang;
 
   /** The URL for the preview image information. */
-  String previewImageUrl;
+  core.String previewImageUrl;
 
   /** The description for this location. */
-  String snippet;
+  core.String snippet;
 
   /** The URL for information for this location. Ex: wikipedia link. */
-  String snippetUrl;
+  core.String snippetUrl;
 
   /** Parses an instance from its JSON representation. */
-  static BooksLayerGeoDataCommon parse(Map<String, Object> json) {
+  static BooksLayerGeoDataCommon parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new BooksLayerGeoDataCommon();
     result.lang = identity(json["lang"]);
@@ -2129,9 +1958,9 @@ class BooksLayerGeoDataCommon extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(BooksLayerGeoDataCommon value) {
+  static core.Object serialize(BooksLayerGeoDataCommon value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["lang"] = identity(value.lang);
     result["previewImageUrl"] = identity(value.previewImageUrl);
     result["snippet"] = identity(value.snippet);
@@ -2144,43 +1973,43 @@ class BooksLayerGeoDataCommon extends IdentityHash {
 // Schema BooksLayerGeoData.BooksLayerGeoDataGeo
 class BooksLayerGeoDataGeo extends IdentityHash {
   /** The country code of the location. */
-  String countryCode;
+  core.String countryCode;
 
   /**
  * The Zoom level to use for the map. Zoom levels between 0 (the lowest zoom level, in which the
  * entire world can be seen on one map) to 21+ (down to individual buildings). See:
  * https://developers.google.com/maps/documentation/staticmaps/#Zoomlevels
  */
-  int zoom;
+  core.int zoom;
 
   /** The longitude of the location. */
-  double longitude;
+  core.double longitude;
 
   /**
  * The type of map that should be used for this location. EX: HYBRID, ROADMAP, SATELLITE, TERRAIN
  */
-  String mapType;
+  core.String mapType;
 
   /** The latitude of the location. */
-  double latitude;
+  core.double latitude;
 
   /**
  * The boundary of the location as a set of loops containing pairs of latitude, longitude
  * coordinates.
  */
-  List<List<BooksLayerGeoDataGeoBoundary>> boundary;
+  core.List<core.List<BooksLayerGeoDataGeoBoundary>> boundary;
 
   /** The resolution of the location. Ex: POI_LEVEL */
-  String resolution;
+  core.String resolution;
 
   /** The viewport for showing this location. This is a latitude, longitude rectangle. */
   BooksLayerGeoDataGeoViewport viewport;
 
   /** The cache policy active for this data. EX: UNRESTRICTED, RESTRICTED, NEVER */
-  String cachePolicy;
+  core.String cachePolicy;
 
   /** Parses an instance from its JSON representation. */
-  static BooksLayerGeoDataGeo parse(Map<String, Object> json) {
+  static BooksLayerGeoDataGeo parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new BooksLayerGeoDataGeo();
     result.countryCode = identity(json["countryCode"]);
@@ -2195,9 +2024,9 @@ class BooksLayerGeoDataGeo extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(BooksLayerGeoDataGeo value) {
+  static core.Object serialize(BooksLayerGeoDataGeo value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["countryCode"] = identity(value.countryCode);
     result["zoom"] = identity(value.zoom);
     result["longitude"] = identity(value.longitude);
@@ -2215,13 +2044,13 @@ class BooksLayerGeoDataGeo extends IdentityHash {
 // Schema BooksLayerGeoData.BooksLayerGeoDataGeo.BooksLayerGeoDataGeoBoundary
 class BooksLayerGeoDataGeoBoundary extends IdentityHash {
   
-  int latitude;
+  core.int latitude;
 
   
-  int longitude;
+  core.int longitude;
 
   /** Parses an instance from its JSON representation. */
-  static BooksLayerGeoDataGeoBoundary parse(Map<String, Object> json) {
+  static BooksLayerGeoDataGeoBoundary parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new BooksLayerGeoDataGeoBoundary();
     result.latitude = identity(json["latitude"]);
@@ -2229,9 +2058,9 @@ class BooksLayerGeoDataGeoBoundary extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(BooksLayerGeoDataGeoBoundary value) {
+  static core.Object serialize(BooksLayerGeoDataGeoBoundary value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["latitude"] = identity(value.latitude);
     result["longitude"] = identity(value.longitude);
     return result;
@@ -2248,7 +2077,7 @@ class BooksLayerGeoDataGeoViewport extends IdentityHash {
   BooksLayerGeoDataGeoViewportHi hi;
 
   /** Parses an instance from its JSON representation. */
-  static BooksLayerGeoDataGeoViewport parse(Map<String, Object> json) {
+  static BooksLayerGeoDataGeoViewport parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new BooksLayerGeoDataGeoViewport();
     result.lo = BooksLayerGeoDataGeoViewportLo.parse(json["lo"]);
@@ -2256,9 +2085,9 @@ class BooksLayerGeoDataGeoViewport extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(BooksLayerGeoDataGeoViewport value) {
+  static core.Object serialize(BooksLayerGeoDataGeoViewport value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["lo"] = BooksLayerGeoDataGeoViewportLo.serialize(value.lo);
     result["hi"] = BooksLayerGeoDataGeoViewportHi.serialize(value.hi);
     return result;
@@ -2269,13 +2098,13 @@ class BooksLayerGeoDataGeoViewport extends IdentityHash {
 // Schema BooksLayerGeoData.BooksLayerGeoDataGeo.BooksLayerGeoDataGeoViewport.BooksLayerGeoDataGeoViewportHi
 class BooksLayerGeoDataGeoViewportHi extends IdentityHash {
   
-  double latitude;
+  core.double latitude;
 
   
-  double longitude;
+  core.double longitude;
 
   /** Parses an instance from its JSON representation. */
-  static BooksLayerGeoDataGeoViewportHi parse(Map<String, Object> json) {
+  static BooksLayerGeoDataGeoViewportHi parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new BooksLayerGeoDataGeoViewportHi();
     result.latitude = identity(json["latitude"]);
@@ -2283,9 +2112,9 @@ class BooksLayerGeoDataGeoViewportHi extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(BooksLayerGeoDataGeoViewportHi value) {
+  static core.Object serialize(BooksLayerGeoDataGeoViewportHi value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["latitude"] = identity(value.latitude);
     result["longitude"] = identity(value.longitude);
     return result;
@@ -2296,13 +2125,13 @@ class BooksLayerGeoDataGeoViewportHi extends IdentityHash {
 // Schema BooksLayerGeoData.BooksLayerGeoDataGeo.BooksLayerGeoDataGeoViewport.BooksLayerGeoDataGeoViewportLo
 class BooksLayerGeoDataGeoViewportLo extends IdentityHash {
   
-  double latitude;
+  core.double latitude;
 
   
-  double longitude;
+  core.double longitude;
 
   /** Parses an instance from its JSON representation. */
-  static BooksLayerGeoDataGeoViewportLo parse(Map<String, Object> json) {
+  static BooksLayerGeoDataGeoViewportLo parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new BooksLayerGeoDataGeoViewportLo();
     result.latitude = identity(json["latitude"]);
@@ -2310,9 +2139,9 @@ class BooksLayerGeoDataGeoViewportLo extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(BooksLayerGeoDataGeoViewportLo value) {
+  static core.Object serialize(BooksLayerGeoDataGeoViewportLo value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["latitude"] = identity(value.latitude);
     result["longitude"] = identity(value.longitude);
     return result;
@@ -2323,40 +2152,40 @@ class BooksLayerGeoDataGeoViewportLo extends IdentityHash {
 // Schema .Bookshelf
 class Bookshelf extends IdentityHash {
   /** Resource type for bookshelf metadata. */
-  String kind;
+  core.String kind;
 
   /** Description of this bookshelf. */
-  String description;
+  core.String description;
 
   /** Created time for this bookshelf (formatted UTC timestamp with millisecond resolution). */
-  String created;
+  core.String created;
 
   /** Number of volumes in this bookshelf. */
-  int volumeCount;
+  core.int volumeCount;
 
   /** Title of this bookshelf. */
-  String title;
+  core.String title;
 
   /** Last modified time of this bookshelf (formatted UTC timestamp with millisecond resolution). */
-  String updated;
+  core.String updated;
 
   /** Whether this bookshelf is PUBLIC or PRIVATE. */
-  String access;
+  core.String access;
 
   /**
  * Last time a volume was added or removed from this bookshelf (formatted UTC timestamp with
  * millisecond resolution).
  */
-  String volumesLastUpdated;
+  core.String volumesLastUpdated;
 
   /** Id of this bookshelf, only unique by user. */
-  int id;
+  core.int id;
 
   /** URL to this resource. */
-  String selfLink;
+  core.String selfLink;
 
   /** Parses an instance from its JSON representation. */
-  static Bookshelf parse(Map<String, Object> json) {
+  static Bookshelf parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Bookshelf();
     result.kind = identity(json["kind"]);
@@ -2372,9 +2201,9 @@ class Bookshelf extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Bookshelf value) {
+  static core.Object serialize(Bookshelf value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["kind"] = identity(value.kind);
     result["description"] = identity(value.description);
     result["created"] = identity(value.created);
@@ -2393,13 +2222,13 @@ class Bookshelf extends IdentityHash {
 // Schema .Bookshelves
 class Bookshelves extends IdentityHash {
   /** A list of bookshelves. */
-  List<Bookshelf> items;
+  core.List<Bookshelf> items;
 
   /** Resource type. */
-  String kind;
+  core.String kind;
 
   /** Parses an instance from its JSON representation. */
-  static Bookshelves parse(Map<String, Object> json) {
+  static Bookshelves parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Bookshelves();
     result.items = map(Bookshelf.parse)(json["items"]);
@@ -2407,9 +2236,9 @@ class Bookshelves extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Bookshelves value) {
+  static core.Object serialize(Bookshelves value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["items"] = map(Bookshelf.serialize)(value.items);
     result["kind"] = identity(value.kind);
     return result;
@@ -2420,40 +2249,40 @@ class Bookshelves extends IdentityHash {
 // Schema .ConcurrentAccessRestriction
 class ConcurrentAccessRestriction extends IdentityHash {
   /** Client nonce for verification. Download access and client-validation only. */
-  String nonce;
+  core.String nonce;
 
   /** Resource type. */
-  String kind;
+  core.String kind;
 
   /** Whether this volume has any concurrent access restrictions. */
-  bool restricted;
+  core.bool restricted;
 
   /** Identifies the volume for which this entry applies. */
-  String volumeId;
+  core.String volumeId;
 
   /** The maximum number of concurrent access licenses for this volume. */
-  int maxConcurrentDevices;
+  core.int maxConcurrentDevices;
 
   /** Whether access is granted for this (user, device, volume). */
-  bool deviceAllowed;
+  core.bool deviceAllowed;
 
   /** Client app identifier for verification. Download access and client-validation only. */
-  String source;
+  core.String source;
 
   /** Time in seconds for license auto-expiration. */
-  int timeWindowSeconds;
+  core.int timeWindowSeconds;
 
   /** Response signature. */
-  String signature;
+  core.String signature;
 
   /** Error/warning reason code. */
-  String reasonCode;
+  core.String reasonCode;
 
   /** Error/warning message. */
-  String message;
+  core.String message;
 
   /** Parses an instance from its JSON representation. */
-  static ConcurrentAccessRestriction parse(Map<String, Object> json) {
+  static ConcurrentAccessRestriction parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ConcurrentAccessRestriction();
     result.nonce = identity(json["nonce"]);
@@ -2470,9 +2299,9 @@ class ConcurrentAccessRestriction extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ConcurrentAccessRestriction value) {
+  static core.Object serialize(ConcurrentAccessRestriction value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["nonce"] = identity(value.nonce);
     result["kind"] = identity(value.kind);
     result["restricted"] = identity(value.restricted);
@@ -2492,49 +2321,49 @@ class ConcurrentAccessRestriction extends IdentityHash {
 // Schema .DownloadAccessRestriction
 class DownloadAccessRestriction extends IdentityHash {
   /** Client nonce for verification. Download access and client-validation only. */
-  String nonce;
+  core.String nonce;
 
   /** Resource type. */
-  String kind;
+  core.String kind;
 
   /** If deviceAllowed, whether access was just acquired with this request. */
-  bool justAcquired;
+  core.bool justAcquired;
 
   /** If restricted, the maximum number of content download licenses for this volume. */
-  int maxDownloadDevices;
+  core.int maxDownloadDevices;
 
   /**
  * If restricted, the number of content download licenses already acquired (including the requesting
  * client, if licensed).
  */
-  int downloadsAcquired;
+  core.int downloadsAcquired;
 
   /** Response signature. */
-  String signature;
+  core.String signature;
 
   /** Identifies the volume for which this entry applies. */
-  String volumeId;
+  core.String volumeId;
 
   /** If restricted, whether access is granted for this (user, device, volume). */
-  bool deviceAllowed;
+  core.bool deviceAllowed;
 
   /** Client app identifier for verification. Download access and client-validation only. */
-  String source;
+  core.String source;
 
   /** Whether this volume has any download access restrictions. */
-  bool restricted;
+  core.bool restricted;
 
   /**
  * Error/warning reason code. Additional codes may be added in the future. 0 OK 100
  * ACCESS_DENIED_PUBLISHER_LIMIT 101 ACCESS_DENIED_LIMIT 200 WARNING_USED_LAST_ACCESS
  */
-  String reasonCode;
+  core.String reasonCode;
 
   /** Error/warning message. */
-  String message;
+  core.String message;
 
   /** Parses an instance from its JSON representation. */
-  static DownloadAccessRestriction parse(Map<String, Object> json) {
+  static DownloadAccessRestriction parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new DownloadAccessRestriction();
     result.nonce = identity(json["nonce"]);
@@ -2552,9 +2381,9 @@ class DownloadAccessRestriction extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(DownloadAccessRestriction value) {
+  static core.Object serialize(DownloadAccessRestriction value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["nonce"] = identity(value.nonce);
     result["kind"] = identity(value.kind);
     result["justAcquired"] = identity(value.justAcquired);
@@ -2575,13 +2404,13 @@ class DownloadAccessRestriction extends IdentityHash {
 // Schema .DownloadAccesses
 class DownloadAccesses extends IdentityHash {
   /** A list of download access responses. */
-  List<DownloadAccessRestriction> downloadAccessList;
+  core.List<DownloadAccessRestriction> downloadAccessList;
 
   /** Resource type. */
-  String kind;
+  core.String kind;
 
   /** Parses an instance from its JSON representation. */
-  static DownloadAccesses parse(Map<String, Object> json) {
+  static DownloadAccesses parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new DownloadAccesses();
     result.downloadAccessList = map(DownloadAccessRestriction.parse)(json["downloadAccessList"]);
@@ -2589,9 +2418,9 @@ class DownloadAccesses extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(DownloadAccesses value) {
+  static core.Object serialize(DownloadAccesses value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["downloadAccessList"] = map(DownloadAccessRestriction.serialize)(value.downloadAccessList);
     result["kind"] = identity(value.kind);
     return result;
@@ -2602,16 +2431,16 @@ class DownloadAccesses extends IdentityHash {
 // Schema .Layersummaries
 class Layersummaries extends IdentityHash {
   /** The total number of layer summaries found. */
-  int totalItems;
+  core.int totalItems;
 
   /** A list of layer summary items. */
-  List<Layersummary> items;
+  core.List<Layersummary> items;
 
   /** Resource type. */
-  String kind;
+  core.String kind;
 
   /** Parses an instance from its JSON representation. */
-  static Layersummaries parse(Map<String, Object> json) {
+  static Layersummaries parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Layersummaries();
     result.totalItems = identity(json["totalItems"]);
@@ -2620,9 +2449,9 @@ class Layersummaries extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Layersummaries value) {
+  static core.Object serialize(Layersummaries value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["totalItems"] = identity(value.totalItems);
     result["items"] = map(Layersummary.serialize)(value.items);
     result["kind"] = identity(value.kind);
@@ -2634,45 +2463,45 @@ class Layersummaries extends IdentityHash {
 // Schema .Layersummary
 class Layersummary extends IdentityHash {
   /** Resource Type */
-  String kind;
+  core.String kind;
 
   /** The number of annotations for this layer. */
-  int annotationCount;
+  core.int annotationCount;
 
   /** The number of data items for this layer. */
-  int dataCount;
+  core.int dataCount;
 
   /** The link to get the annotations for this layer. */
-  String annotationsLink;
+  core.String annotationsLink;
 
   /**
  * Timestamp for the last time an item in this layer was updated. (RFC 3339 UTC date-time format).
  */
-  String updated;
+  core.String updated;
 
   /** The volume id this resource is for. */
-  String volumeId;
+  core.String volumeId;
 
   /** Unique id of this layer summary. */
-  String id;
+  core.String id;
 
   /** The list of annotation types contained for this layer. */
-  List<String> annotationTypes;
+  core.List<core.String> annotationTypes;
 
   /** The content version this resource is for. */
-  String contentVersion;
+  core.String contentVersion;
 
   /** The layer id for this summary. */
-  String layerId;
+  core.String layerId;
 
   /** Link to get data for this annotation. */
-  String annotationsDataLink;
+  core.String annotationsDataLink;
 
   /** URL to this resource. */
-  String selfLink;
+  core.String selfLink;
 
   /** Parses an instance from its JSON representation. */
-  static Layersummary parse(Map<String, Object> json) {
+  static Layersummary parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Layersummary();
     result.kind = identity(json["kind"]);
@@ -2690,9 +2519,9 @@ class Layersummary extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Layersummary value) {
+  static core.Object serialize(Layersummary value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["kind"] = identity(value.kind);
     result["annotationCount"] = identity(value.annotationCount);
     result["dataCount"] = identity(value.dataCount);
@@ -2713,31 +2542,31 @@ class Layersummary extends IdentityHash {
 // Schema .ReadingPosition
 class ReadingPosition extends IdentityHash {
   /** Resource type for a reading position. */
-  String kind;
+  core.String kind;
 
   /** Position in a volume for image-based content. */
-  String gbImagePosition;
+  core.String gbImagePosition;
 
   /** Position in an EPUB as a CFI. */
-  String epubCfiPosition;
+  core.String epubCfiPosition;
 
   /**
  * Timestamp when this reading position was last updated (formatted UTC timestamp with millisecond
  * resolution).
  */
-  String updated;
+  core.String updated;
 
   /** Volume id associated with this reading position. */
-  String volumeId;
+  core.String volumeId;
 
   /** Position in a PDF file. */
-  String pdfPosition;
+  core.String pdfPosition;
 
   /** Position in a volume for text-based content. */
-  String gbTextPosition;
+  core.String gbTextPosition;
 
   /** Parses an instance from its JSON representation. */
-  static ReadingPosition parse(Map<String, Object> json) {
+  static ReadingPosition parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ReadingPosition();
     result.kind = identity(json["kind"]);
@@ -2750,9 +2579,9 @@ class ReadingPosition extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ReadingPosition value) {
+  static core.Object serialize(ReadingPosition value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["kind"] = identity(value.kind);
     result["gbImagePosition"] = identity(value.gbImagePosition);
     result["epubCfiPosition"] = identity(value.epubCfiPosition);
@@ -2771,13 +2600,13 @@ class RequestAccess extends IdentityHash {
   DownloadAccessRestriction downloadAccess;
 
   /** Resource type. */
-  String kind;
+  core.String kind;
 
   /** A concurrent access response. */
   ConcurrentAccessRestriction concurrentAccess;
 
   /** Parses an instance from its JSON representation. */
-  static RequestAccess parse(Map<String, Object> json) {
+  static RequestAccess parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new RequestAccess();
     result.downloadAccess = DownloadAccessRestriction.parse(json["downloadAccess"]);
@@ -2786,9 +2615,9 @@ class RequestAccess extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(RequestAccess value) {
+  static core.Object serialize(RequestAccess value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["downloadAccess"] = DownloadAccessRestriction.serialize(value.downloadAccess);
     result["kind"] = identity(value.kind);
     result["concurrentAccess"] = ConcurrentAccessRestriction.serialize(value.concurrentAccess);
@@ -2800,22 +2629,22 @@ class RequestAccess extends IdentityHash {
 // Schema .Review
 class Review extends IdentityHash {
   /** Star rating for this review. Possible values are ONE, TWO, THREE, FOUR, FIVE or NOT_RATED. */
-  String rating;
+  core.String rating;
 
   /** Resource type for a review. */
-  String kind;
+  core.String kind;
 
   /** Author of this review. */
   ReviewAuthor author;
 
   /** Title for this review. */
-  String title;
+  core.String title;
 
   /** Volume that this review is for. */
-  String volumeId;
+  core.String volumeId;
 
   /** Review text. */
-  String content;
+  core.String content;
 
   /**
  * Information regarding the source of this review, when the review is not from a Google Books user.
@@ -2823,16 +2652,16 @@ class Review extends IdentityHash {
   ReviewSource source;
 
   /** Date of this review. */
-  String date;
+  core.String date;
 
   /** Source type for this review. Possible values are EDITORIAL, WEB_USER or GOOGLE_USER. */
-  String type;
+  core.String type;
 
   /** URL for the full review text, for reviews gathered from the web. */
-  String fullTextUrl;
+  core.String fullTextUrl;
 
   /** Parses an instance from its JSON representation. */
-  static Review parse(Map<String, Object> json) {
+  static Review parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Review();
     result.rating = identity(json["rating"]);
@@ -2848,9 +2677,9 @@ class Review extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Review value) {
+  static core.Object serialize(Review value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["rating"] = identity(value.rating);
     result["kind"] = identity(value.kind);
     result["author"] = ReviewAuthor.serialize(value.author);
@@ -2869,19 +2698,19 @@ class Review extends IdentityHash {
 // Schema Review.ReviewAuthor
 class ReviewAuthor extends IdentityHash {
   /** Name of this person. */
-  String displayName;
+  core.String displayName;
 
   /** Parses an instance from its JSON representation. */
-  static ReviewAuthor parse(Map<String, Object> json) {
+  static ReviewAuthor parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ReviewAuthor();
     result.displayName = identity(json["displayName"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ReviewAuthor value) {
+  static core.Object serialize(ReviewAuthor value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["displayName"] = identity(value.displayName);
     return result;
   }
@@ -2891,16 +2720,16 @@ class ReviewAuthor extends IdentityHash {
 // Schema Review.ReviewSource
 class ReviewSource extends IdentityHash {
   /** Extra text about the source of the review. */
-  String extraDescription;
+  core.String extraDescription;
 
   /** URL of the source of the review. */
-  String url;
+  core.String url;
 
   /** Name of the source. */
-  String description;
+  core.String description;
 
   /** Parses an instance from its JSON representation. */
-  static ReviewSource parse(Map<String, Object> json) {
+  static ReviewSource parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ReviewSource();
     result.extraDescription = identity(json["extraDescription"]);
@@ -2909,9 +2738,9 @@ class ReviewSource extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ReviewSource value) {
+  static core.Object serialize(ReviewSource value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["extraDescription"] = identity(value.extraDescription);
     result["url"] = identity(value.url);
     result["description"] = identity(value.description);
@@ -2923,7 +2752,7 @@ class ReviewSource extends IdentityHash {
 // Schema .Volume
 class Volume extends IdentityHash {
   /** Resource type for a volume. (In LITE projection.) */
-  String kind;
+  core.String kind;
 
   /**
  * Any information about a volume related to reading or obtaining that volume text. This information
@@ -2942,7 +2771,7 @@ class Volume extends IdentityHash {
   VolumeSaleInfo saleInfo;
 
   /** Opaque identifier for a specific version of a volume resource. (In LITE projection) */
-  String etag;
+  core.String etag;
 
   /**
  * User specific information related to this volume. (e.g. page this user last read or whether they
@@ -2954,13 +2783,13 @@ class Volume extends IdentityHash {
   VolumeVolumeInfo volumeInfo;
 
   /** Unique identifier for a volume. (In LITE projection.) */
-  String id;
+  core.String id;
 
   /** URL to this resource. (In LITE projection.) */
-  String selfLink;
+  core.String selfLink;
 
   /** Parses an instance from its JSON representation. */
-  static Volume parse(Map<String, Object> json) {
+  static Volume parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Volume();
     result.kind = identity(json["kind"]);
@@ -2975,9 +2804,9 @@ class Volume extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Volume value) {
+  static core.Object serialize(Volume value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["kind"] = identity(value.kind);
     result["accessInfo"] = VolumeAccessInfo.serialize(value.accessInfo);
     result["searchInfo"] = VolumeSearchInfo.serialize(value.searchInfo);
@@ -2998,13 +2827,13 @@ class VolumeAccessInfo extends IdentityHash {
  * URL to read this volume on the Google Books site. Link will not allow users to read non-viewable
  * volumes.
  */
-  String webReaderLink;
+  core.String webReaderLink;
 
   /** Whether or not this book is public domain in the country listed above. */
-  bool publicDomain;
+  core.bool publicDomain;
 
   /** Whether this volume can be embedded in a viewport using the Embedded Viewer API. */
-  bool embeddable;
+  core.bool embeddable;
 
   /** Information about a volume's download license access restrictions. */
   DownloadAccessRestriction downloadAccess;
@@ -3013,19 +2842,19 @@ class VolumeAccessInfo extends IdentityHash {
  * The two-letter ISO_3166-1 country code for which this access information is valid. (In LITE
  * projection.)
  */
-  String country;
+  core.String country;
 
   /**
  * For ordered but not yet processed orders, we give a URL that can be used to go to the appropriate
  * Google Wallet page.
  */
-  String viewOrderUrl;
+  core.String viewOrderUrl;
 
   /**
  * Whether text-to-speech is permitted for this volume. Values can be ALLOWED,
  * ALLOWED_FOR_ACCESSIBILITY, or NOT_ALLOWED.
  */
-  String textToSpeechPermission;
+  core.String textToSpeechPermission;
 
   /** Information about pdf content. (In LITE projection.) */
   VolumeAccessInfoPdf pdf;
@@ -3036,7 +2865,7 @@ class VolumeAccessInfo extends IdentityHash {
  * allowed some portion of the volume to be viewed publicly, without purchase. This can apply to
  * eBooks as well as non-eBooks. Public domain books will always have a value of ALL_PAGES.
  */
-  String viewability;
+  core.String viewability;
 
   /** Information about epub content. (In LITE projection.) */
   VolumeAccessInfoEpub epub;
@@ -3045,10 +2874,10 @@ class VolumeAccessInfo extends IdentityHash {
  * Combines the access and viewability of this volume into a single status field for this user.
  * Values can be FULL_PURCHASED, FULL_PUBLIC_DOMAIN, SAMPLE or NONE. (In LITE projection.)
  */
-  String accessViewStatus;
+  core.String accessViewStatus;
 
   /** Parses an instance from its JSON representation. */
-  static VolumeAccessInfo parse(Map<String, Object> json) {
+  static VolumeAccessInfo parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new VolumeAccessInfo();
     result.webReaderLink = identity(json["webReaderLink"]);
@@ -3065,9 +2894,9 @@ class VolumeAccessInfo extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(VolumeAccessInfo value) {
+  static core.Object serialize(VolumeAccessInfo value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["webReaderLink"] = identity(value.webReaderLink);
     result["publicDomain"] = identity(value.publicDomain);
     result["embeddable"] = identity(value.embeddable);
@@ -3089,16 +2918,16 @@ class VolumeAccessInfoEpub extends IdentityHash {
   /**
  * Is a flowing text epub available either as public domain or for purchase. (In LITE projection.)
  */
-  bool isAvailable;
+  core.bool isAvailable;
 
   /** URL to download epub. (In LITE projection.) */
-  String downloadLink;
+  core.String downloadLink;
 
   /** URL to retrieve ACS token for epub download. (In LITE projection.) */
-  String acsTokenLink;
+  core.String acsTokenLink;
 
   /** Parses an instance from its JSON representation. */
-  static VolumeAccessInfoEpub parse(Map<String, Object> json) {
+  static VolumeAccessInfoEpub parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new VolumeAccessInfoEpub();
     result.isAvailable = identity(json["isAvailable"]);
@@ -3107,9 +2936,9 @@ class VolumeAccessInfoEpub extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(VolumeAccessInfoEpub value) {
+  static core.Object serialize(VolumeAccessInfoEpub value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["isAvailable"] = identity(value.isAvailable);
     result["downloadLink"] = identity(value.downloadLink);
     result["acsTokenLink"] = identity(value.acsTokenLink);
@@ -3123,16 +2952,16 @@ class VolumeAccessInfoPdf extends IdentityHash {
   /**
  * Is a scanned image pdf available either as public domain or for purchase. (In LITE projection.)
  */
-  bool isAvailable;
+  core.bool isAvailable;
 
   /** URL to download pdf. (In LITE projection.) */
-  String downloadLink;
+  core.String downloadLink;
 
   /** URL to retrieve ACS token for pdf download. (In LITE projection.) */
-  String acsTokenLink;
+  core.String acsTokenLink;
 
   /** Parses an instance from its JSON representation. */
-  static VolumeAccessInfoPdf parse(Map<String, Object> json) {
+  static VolumeAccessInfoPdf parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new VolumeAccessInfoPdf();
     result.isAvailable = identity(json["isAvailable"]);
@@ -3141,9 +2970,9 @@ class VolumeAccessInfoPdf extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(VolumeAccessInfoPdf value) {
+  static core.Object serialize(VolumeAccessInfoPdf value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["isAvailable"] = identity(value.isAvailable);
     result["downloadLink"] = identity(value.downloadLink);
     result["acsTokenLink"] = identity(value.acsTokenLink);
@@ -3158,7 +2987,7 @@ class VolumeSaleInfo extends IdentityHash {
  * The two-letter ISO_3166-1 country code for which this sale information is valid. (In LITE
  * projection.)
  */
-  String country;
+  core.String country;
 
   /**
  * The actual selling price of the book. This is the same as the suggested retail or list price
@@ -3167,25 +2996,25 @@ class VolumeSaleInfo extends IdentityHash {
   VolumeSaleInfoRetailPrice retailPrice;
 
   /** Whether or not this volume is an eBook (can be added to the My eBooks shelf). */
-  bool isEbook;
+  core.bool isEbook;
 
   /**
  * Whether or not this book is available for sale or offered for free in the Google eBookstore for
  * the country listed above. Possible values are FOR_SALE, FREE, NOT_FOR_SALE, or FOR_PREORDER.
  */
-  String saleability;
+  core.String saleability;
 
   /** URL to purchase this volume on the Google Books site. (In LITE projection) */
-  String buyLink;
+  core.String buyLink;
 
   /** The date on which this book is available for sale. */
-  String onSaleDate;
+  core.String onSaleDate;
 
   /** Suggested retail price. (In LITE projection.) */
   VolumeSaleInfoListPrice listPrice;
 
   /** Parses an instance from its JSON representation. */
-  static VolumeSaleInfo parse(Map<String, Object> json) {
+  static VolumeSaleInfo parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new VolumeSaleInfo();
     result.country = identity(json["country"]);
@@ -3198,9 +3027,9 @@ class VolumeSaleInfo extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(VolumeSaleInfo value) {
+  static core.Object serialize(VolumeSaleInfo value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["country"] = identity(value.country);
     result["retailPrice"] = VolumeSaleInfoRetailPrice.serialize(value.retailPrice);
     result["isEbook"] = identity(value.isEbook);
@@ -3216,13 +3045,13 @@ class VolumeSaleInfo extends IdentityHash {
 // Schema Volume.VolumeSaleInfo.VolumeSaleInfoListPrice
 class VolumeSaleInfoListPrice extends IdentityHash {
   /** Amount in the currency listed below. (In LITE projection.) */
-  double amount;
+  core.double amount;
 
   /** An ISO 4217, three-letter currency code. (In LITE projection.) */
-  String currencyCode;
+  core.String currencyCode;
 
   /** Parses an instance from its JSON representation. */
-  static VolumeSaleInfoListPrice parse(Map<String, Object> json) {
+  static VolumeSaleInfoListPrice parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new VolumeSaleInfoListPrice();
     result.amount = identity(json["amount"]);
@@ -3230,9 +3059,9 @@ class VolumeSaleInfoListPrice extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(VolumeSaleInfoListPrice value) {
+  static core.Object serialize(VolumeSaleInfoListPrice value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["amount"] = identity(value.amount);
     result["currencyCode"] = identity(value.currencyCode);
     return result;
@@ -3243,13 +3072,13 @@ class VolumeSaleInfoListPrice extends IdentityHash {
 // Schema Volume.VolumeSaleInfo.VolumeSaleInfoRetailPrice
 class VolumeSaleInfoRetailPrice extends IdentityHash {
   /** Amount in the currency listed below. (In LITE projection.) */
-  double amount;
+  core.double amount;
 
   /** An ISO 4217, three-letter currency code. (In LITE projection.) */
-  String currencyCode;
+  core.String currencyCode;
 
   /** Parses an instance from its JSON representation. */
-  static VolumeSaleInfoRetailPrice parse(Map<String, Object> json) {
+  static VolumeSaleInfoRetailPrice parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new VolumeSaleInfoRetailPrice();
     result.amount = identity(json["amount"]);
@@ -3257,9 +3086,9 @@ class VolumeSaleInfoRetailPrice extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(VolumeSaleInfoRetailPrice value) {
+  static core.Object serialize(VolumeSaleInfoRetailPrice value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["amount"] = identity(value.amount);
     result["currencyCode"] = identity(value.currencyCode);
     return result;
@@ -3270,19 +3099,19 @@ class VolumeSaleInfoRetailPrice extends IdentityHash {
 // Schema Volume.VolumeSearchInfo
 class VolumeSearchInfo extends IdentityHash {
   /** A text snippet containing the search query. */
-  String textSnippet;
+  core.String textSnippet;
 
   /** Parses an instance from its JSON representation. */
-  static VolumeSearchInfo parse(Map<String, Object> json) {
+  static VolumeSearchInfo parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new VolumeSearchInfo();
     result.textSnippet = identity(json["textSnippet"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(VolumeSearchInfo value) {
+  static core.Object serialize(VolumeSearchInfo value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["textSnippet"] = identity(value.textSnippet);
     return result;
   }
@@ -3292,13 +3121,13 @@ class VolumeSearchInfo extends IdentityHash {
 // Schema Volume.VolumeUserInfo
 class VolumeUserInfo extends IdentityHash {
   /** Whether or not this volume is currently in "my books." */
-  bool isInMyBooks;
+  core.bool isInMyBooks;
 
   /**
  * Timestamp when this volume was last modified by a user action, such as a reading position update,
  * volume purchase or writing a review. (RFC 3339 UTC date-time format).
  */
-  String updated;
+  core.String updated;
 
   /** This user's review of this volume, if one exists. */
   Review review;
@@ -3307,7 +3136,7 @@ class VolumeUserInfo extends IdentityHash {
  * Whether or not this volume was purchased by the authenticated user making the request. (In LITE
  * projection.)
  */
-  bool isPurchased;
+  core.bool isPurchased;
 
   /**
  * The user's current reading position in the volume, if one is available. (In LITE projection.)
@@ -3318,10 +3147,10 @@ class VolumeUserInfo extends IdentityHash {
  * Whether or not this volume was pre-ordered by the authenticated user making the request. (In LITE
  * projection.)
  */
-  bool isPreordered;
+  core.bool isPreordered;
 
   /** Parses an instance from its JSON representation. */
-  static VolumeUserInfo parse(Map<String, Object> json) {
+  static VolumeUserInfo parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new VolumeUserInfo();
     result.isInMyBooks = identity(json["isInMyBooks"]);
@@ -3333,9 +3162,9 @@ class VolumeUserInfo extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(VolumeUserInfo value) {
+  static core.Object serialize(VolumeUserInfo value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["isInMyBooks"] = identity(value.isInMyBooks);
     result["updated"] = identity(value.updated);
     result["review"] = Review.serialize(value.review);
@@ -3350,76 +3179,76 @@ class VolumeUserInfo extends IdentityHash {
 // Schema Volume.VolumeVolumeInfo
 class VolumeVolumeInfo extends IdentityHash {
   /** Publisher of this volume. (In LITE projection.) */
-  String publisher;
+  core.String publisher;
 
   /** Volume subtitle. (In LITE projection.) */
-  String subtitle;
+  core.String subtitle;
 
   /**
  * A synopsis of the volume. The text of the description is formatted in HTML and includes simple
  * formatting elements, such as b, i, and br tags. (In LITE projection.)
  */
-  String description;
+  core.String description;
 
   /**
  * Best language for this volume (based on content). It is the two-letter ISO 639-1 code such as
  * 'fr', 'en', etc.
  */
-  String language;
+  core.String language;
 
   /** Total number of pages. */
-  int pageCount;
+  core.int pageCount;
 
   /** A list of image links for all the sizes that are available. (In LITE projection.) */
   VolumeVolumeInfoImageLinks imageLinks;
 
   /** Date of publication. (In LITE projection.) */
-  String publishedDate;
+  core.String publishedDate;
 
   /** URL to preview this volume on the Google Books site. */
-  String previewLink;
+  core.String previewLink;
 
   /** Type of publication of this volume. Possible values are BOOK or MAGAZINE. */
-  String printType;
+  core.String printType;
 
   /** The number of review ratings for this volume. */
-  int ratingsCount;
+  core.int ratingsCount;
 
   /**
  * The main category to which this volume belongs. It will be the category from the categories list
  * returned below that has the highest weight.
  */
-  String mainCategory;
+  core.String mainCategory;
 
   /** Physical dimensions of this volume. */
   VolumeVolumeInfoDimensions dimensions;
 
   /** An identifier for the version of the volume content (text & images). (In LITE projection) */
-  String contentVersion;
+  core.String contentVersion;
 
   /** Industry standard identifiers for this volume. */
-  List<VolumeVolumeInfoIndustryIdentifiers> industryIdentifiers;
+  core.List<VolumeVolumeInfoIndustryIdentifiers> industryIdentifiers;
 
   /** The names of the authors and/or editors for this volume. (In LITE projection) */
-  List<String> authors;
+  core.List<core.String> authors;
 
   /** Volume title. (In LITE projection.) */
-  String title;
+  core.String title;
 
   /** Canonical URL for a volume. (In LITE projection.) */
-  String canonicalVolumeLink;
+  core.String canonicalVolumeLink;
 
   /** URL to view information about this volume on the Google Books site. (In LITE projection) */
-  String infoLink;
+  core.String infoLink;
 
   /** A list of subject categories, such as "Fiction", "Suspense", etc. */
-  List<String> categories;
+  core.List<core.String> categories;
 
   /** The mean review rating for this volume. (min = 1.0, max = 5.0) */
-  double averageRating;
+  core.double averageRating;
 
   /** Parses an instance from its JSON representation. */
-  static VolumeVolumeInfo parse(Map<String, Object> json) {
+  static VolumeVolumeInfo parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new VolumeVolumeInfo();
     result.publisher = identity(json["publisher"]);
@@ -3445,9 +3274,9 @@ class VolumeVolumeInfo extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(VolumeVolumeInfo value) {
+  static core.Object serialize(VolumeVolumeInfo value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["publisher"] = identity(value.publisher);
     result["subtitle"] = identity(value.subtitle);
     result["description"] = identity(value.description);
@@ -3476,16 +3305,16 @@ class VolumeVolumeInfo extends IdentityHash {
 // Schema Volume.VolumeVolumeInfo.VolumeVolumeInfoDimensions
 class VolumeVolumeInfoDimensions extends IdentityHash {
   /** Width of this volume (in cm). */
-  String width;
+  core.String width;
 
   /** Thickness of this volume (in cm). */
-  String thickness;
+  core.String thickness;
 
   /** Height or length of this volume (in cm). */
-  String height;
+  core.String height;
 
   /** Parses an instance from its JSON representation. */
-  static VolumeVolumeInfoDimensions parse(Map<String, Object> json) {
+  static VolumeVolumeInfoDimensions parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new VolumeVolumeInfoDimensions();
     result.width = identity(json["width"]);
@@ -3494,9 +3323,9 @@ class VolumeVolumeInfoDimensions extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(VolumeVolumeInfoDimensions value) {
+  static core.Object serialize(VolumeVolumeInfoDimensions value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["width"] = identity(value.width);
     result["thickness"] = identity(value.thickness);
     result["height"] = identity(value.height);
@@ -3508,25 +3337,25 @@ class VolumeVolumeInfoDimensions extends IdentityHash {
 // Schema Volume.VolumeVolumeInfo.VolumeVolumeInfoImageLinks
 class VolumeVolumeInfoImageLinks extends IdentityHash {
   /** Image link for medium size (width of ~575 pixels). (In LITE projection) */
-  String medium;
+  core.String medium;
 
   /** Image link for small thumbnail size (width of ~80 pixels). (In LITE projection) */
-  String smallThumbnail;
+  core.String smallThumbnail;
 
   /** Image link for large size (width of ~800 pixels). (In LITE projection) */
-  String large;
+  core.String large;
 
   /** Image link for extra large size (width of ~1280 pixels). (In LITE projection) */
-  String extraLarge;
+  core.String extraLarge;
 
   /** Image link for small size (width of ~300 pixels). (In LITE projection) */
-  String small;
+  core.String small;
 
   /** Image link for thumbnail size (width of ~128 pixels). (In LITE projection) */
-  String thumbnail;
+  core.String thumbnail;
 
   /** Parses an instance from its JSON representation. */
-  static VolumeVolumeInfoImageLinks parse(Map<String, Object> json) {
+  static VolumeVolumeInfoImageLinks parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new VolumeVolumeInfoImageLinks();
     result.medium = identity(json["medium"]);
@@ -3538,9 +3367,9 @@ class VolumeVolumeInfoImageLinks extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(VolumeVolumeInfoImageLinks value) {
+  static core.Object serialize(VolumeVolumeInfoImageLinks value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["medium"] = identity(value.medium);
     result["smallThumbnail"] = identity(value.smallThumbnail);
     result["large"] = identity(value.large);
@@ -3555,13 +3384,13 @@ class VolumeVolumeInfoImageLinks extends IdentityHash {
 // Schema Volume.VolumeVolumeInfo.VolumeVolumeInfoIndustryIdentifiers
 class VolumeVolumeInfoIndustryIdentifiers extends IdentityHash {
   /** Industry specific volume identifier. */
-  String identifier;
+  core.String identifier;
 
   /** Identifier type. Possible values are ISBN_10, ISBN_13, ISSN and OTHER. */
-  String type;
+  core.String type;
 
   /** Parses an instance from its JSON representation. */
-  static VolumeVolumeInfoIndustryIdentifiers parse(Map<String, Object> json) {
+  static VolumeVolumeInfoIndustryIdentifiers parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new VolumeVolumeInfoIndustryIdentifiers();
     result.identifier = identity(json["identifier"]);
@@ -3569,9 +3398,9 @@ class VolumeVolumeInfoIndustryIdentifiers extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(VolumeVolumeInfoIndustryIdentifiers value) {
+  static core.Object serialize(VolumeVolumeInfoIndustryIdentifiers value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["identifier"] = identity(value.identifier);
     result["type"] = identity(value.type);
     return result;
@@ -3582,49 +3411,49 @@ class VolumeVolumeInfoIndustryIdentifiers extends IdentityHash {
 // Schema .Volumeannotation
 class Volumeannotation extends IdentityHash {
   /** The type of annotation this is. */
-  String annotationType;
+  core.String annotationType;
 
   /** Resource Type */
-  String kind;
+  core.String kind;
 
   /** Timestamp for the last time this anntoation was updated. (RFC 3339 UTC date-time format). */
-  String updated;
+  core.String updated;
 
   /** Indicates that this annotation is deleted. */
-  bool deleted;
+  core.bool deleted;
 
   /** The content ranges to identify the selected text. */
   VolumeannotationContentRanges contentRanges;
 
   /** Excerpt from the volume. */
-  String selectedText;
+  core.String selectedText;
 
   /** The Volume this annotation is for. */
-  String volumeId;
+  core.String volumeId;
 
   /** The annotation data id for this volume annotation. */
-  String annotationDataId;
+  core.String annotationDataId;
 
   /** Link to get data for this annotation. */
-  String annotationDataLink;
+  core.String annotationDataLink;
 
   /** Pages the annotation spans. */
-  List<String> pageIds;
+  core.List<core.String> pageIds;
 
   /** The Layer this annotation is for. */
-  String layerId;
+  core.String layerId;
 
   /** Data for this annotation. */
-  String data;
+  core.String data;
 
   /** Unique id of this volume annotation. */
-  String id;
+  core.String id;
 
   /** URL to this resource. */
-  String selfLink;
+  core.String selfLink;
 
   /** Parses an instance from its JSON representation. */
-  static Volumeannotation parse(Map<String, Object> json) {
+  static Volumeannotation parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Volumeannotation();
     result.annotationType = identity(json["annotationType"]);
@@ -3644,9 +3473,9 @@ class Volumeannotation extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Volumeannotation value) {
+  static core.Object serialize(Volumeannotation value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["annotationType"] = identity(value.annotationType);
     result["kind"] = identity(value.kind);
     result["updated"] = identity(value.updated);
@@ -3669,7 +3498,7 @@ class Volumeannotation extends IdentityHash {
 // Schema Volumeannotation.VolumeannotationContentRanges
 class VolumeannotationContentRanges extends IdentityHash {
   /** Content version applicable to ranges below. */
-  String contentVersion;
+  core.String contentVersion;
 
   /** Range in GB text format for this annotation for version above. */
   BooksAnnotationsRange gbTextRange;
@@ -3681,7 +3510,7 @@ class VolumeannotationContentRanges extends IdentityHash {
   BooksAnnotationsRange gbImageRange;
 
   /** Parses an instance from its JSON representation. */
-  static VolumeannotationContentRanges parse(Map<String, Object> json) {
+  static VolumeannotationContentRanges parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new VolumeannotationContentRanges();
     result.contentVersion = identity(json["contentVersion"]);
@@ -3691,9 +3520,9 @@ class VolumeannotationContentRanges extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(VolumeannotationContentRanges value) {
+  static core.Object serialize(VolumeannotationContentRanges value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["contentVersion"] = identity(value.contentVersion);
     result["gbTextRange"] = BooksAnnotationsRange.serialize(value.gbTextRange);
     result["cfiRange"] = BooksAnnotationsRange.serialize(value.cfiRange);
@@ -3709,19 +3538,19 @@ class Volumeannotations extends IdentityHash {
  * Token to pass in for pagination for the next page. This will not be present if this request does
  * not have more results.
  */
-  String nextPageToken;
+  core.String nextPageToken;
 
   /** A list of volume annotations. */
-  List<Volumeannotation> items;
+  core.List<Volumeannotation> items;
 
   /** Resource type */
-  String kind;
+  core.String kind;
 
   /** The total number of volume annotations found. */
-  int totalItems;
+  core.int totalItems;
 
   /** Parses an instance from its JSON representation. */
-  static Volumeannotations parse(Map<String, Object> json) {
+  static Volumeannotations parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Volumeannotations();
     result.nextPageToken = identity(json["nextPageToken"]);
@@ -3731,9 +3560,9 @@ class Volumeannotations extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Volumeannotations value) {
+  static core.Object serialize(Volumeannotations value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["nextPageToken"] = identity(value.nextPageToken);
     result["items"] = map(Volumeannotation.serialize)(value.items);
     result["kind"] = identity(value.kind);
@@ -3749,16 +3578,16 @@ class Volumes extends IdentityHash {
  * Total number of volumes found. This might be greater than the number of volumes returned in this
  * response if results have been paginated.
  */
-  int totalItems;
+  core.int totalItems;
 
   /** A list of volumes. */
-  List<Volume> items;
+  core.List<Volume> items;
 
   /** Resource type. */
-  String kind;
+  core.String kind;
 
   /** Parses an instance from its JSON representation. */
-  static Volumes parse(Map<String, Object> json) {
+  static Volumes parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Volumes();
     result.totalItems = identity(json["totalItems"]);
@@ -3767,9 +3596,9 @@ class Volumes extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Volumes value) {
+  static core.Object serialize(Volumes value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["totalItems"] = identity(value.totalItems);
     result["items"] = map(Volume.serialize)(value.items);
     result["kind"] = identity(value.kind);
@@ -3779,12 +3608,12 @@ class Volumes extends IdentityHash {
 }
 
 // Enum BooksApi.Alt
-class BooksApiAlt implements Hashable {
+class BooksApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/json */
   static final BooksApiAlt JSON = const BooksApiAlt._internal("json", 0);
 
   /** All values of this enumeration */
-  static final List<BooksApiAlt> values = const <BooksApiAlt>[
+  static final core.List<BooksApiAlt> values = const <BooksApiAlt>[
     JSON,
   ];
 
@@ -3794,14 +3623,14 @@ class BooksApiAlt implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static BooksApiAlt valueOf(String item) => _valuesMap[item];
+  static BooksApiAlt valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const BooksApiAlt._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const BooksApiAlt._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Alt".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Alt".hashCode();
 }
 

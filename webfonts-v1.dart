@@ -1,4 +1,5 @@
 #library("webfonts");
+#import('dart:core', prefix: 'core');
 #import('dart:json');
 
 #import('utils.dart');
@@ -8,59 +9,61 @@
 /**
  * The Google Web Fonts Developer API.
  */
-class WebfontsApi {
+class WebfontsApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
-  final String baseUrl;
+  final core.String baseUrl;
+  /** How we should identify ourselves to the service. */
+  Authenticator authenticator;
   /** The client library version */
-  final String clientVersion = "0.1";
+  final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
-  final String applicationName;
+  final core.String applicationName;
   WebfontsApi get _$service() => this;
   WebfontsResource _webfonts;
   WebfontsResource get webfonts() => _webfonts;
   
   /** Returns response with indentations and line breaks. */
-  bool prettyPrint;
+  core.bool prettyPrint;
 
   /** Selector specifying which fields to include in a partial response. */
-  String fields;
+  core.String fields;
 
   /**
    * Available to use for quota purposes for server-side applications. Can be any arbitrary string
    * assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.
    */
-  String quotaUser;
+  core.String quotaUser;
 
   /** OAuth 2.0 token for the current user. */
-  String oauthToken;
+  core.String oauthToken;
 
   /**
    * API key. Your API key identifies your project and provides you with API access, quota, and
    * reports. Required unless you provide an OAuth 2.0 token.
    */
-  String key;
+  core.String key;
 
   /**
    * IP address of the site where the request originates. Use this if you want to enforce per-user
    * limits.
    */
-  String userIp;
+  core.String userIp;
 
   /** Data format for the response. */
   WebfontsApiAlt alt;
 
 
-  WebfontsApi([this.baseUrl = "https://www.googleapis.com/webfonts/v1/", this.applicationName]) { 
+  WebfontsApi([this.baseUrl = "https://www.googleapis.com/webfonts/v1/", this.applicationName, this.authenticator]) { 
     _webfonts = new WebfontsResource._internal(this);
   }
-  String get userAgent() {
+  core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}webfonts/v1/20111110 google-api-dart-client/${clientVersion}";
   }
 }
 
 // Resource .WebfontsResource
-class WebfontsResource {
+class WebfontsResource extends core.Object {
   final WebfontsApi _$service;
   
   WebfontsResource._internal(WebfontsApi $service) : _$service = $service;
@@ -69,7 +72,7 @@ class WebfontsResource {
   /**
    * Retrieves the list of fonts currently served by the Google Web Fonts Developer API
    */
-  Future<WebfontList> list([WebfontsResourceListSort sort = UNSPECIFIED]) {
+  core.Future<WebfontList> list([WebfontsResourceListSort sort = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -83,24 +86,18 @@ class WebfontsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "webfonts").generate($pathParams, $queryParams);
-    final $completer = new Completer<WebfontList>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = WebfontList.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => WebfontList.parse(JSON.parse($text)));
   }
 }
 
 // Enum WebfontsResource.List.Sort
-class WebfontsResourceListSort implements Hashable {
+class WebfontsResourceListSort extends core.Object implements core.Hashable {
   /** Sort alphabetically */
   static final WebfontsResourceListSort ALPHA = const WebfontsResourceListSort._internal("alpha", 0);
   /** Sort by date added */
@@ -113,7 +110,7 @@ class WebfontsResourceListSort implements Hashable {
   static final WebfontsResourceListSort TRENDING = const WebfontsResourceListSort._internal("trending", 4);
 
   /** All values of this enumeration */
-  static final List<WebfontsResourceListSort> values = const <WebfontsResourceListSort>[
+  static final core.List<WebfontsResourceListSort> values = const <WebfontsResourceListSort>[
     ALPHA,
     DATE,
     POPULARITY,
@@ -131,33 +128,33 @@ class WebfontsResourceListSort implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static WebfontsResourceListSort valueOf(String item) => _valuesMap[item];
+  static WebfontsResourceListSort valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const WebfontsResourceListSort._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const WebfontsResourceListSort._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Sort".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Sort".hashCode();
 }
 
 // Schema .Webfont
 class Webfont extends IdentityHash {
   
-  String kind;
+  core.String kind;
 
   /** The available variants for the font. */
-  Object variants;
+  core.Object variants;
 
   /** The scripts supported by the font. */
-  Object subsets;
+  core.Object subsets;
 
   /** The name of the font. */
-  Object family;
+  core.Object family;
 
   /** Parses an instance from its JSON representation. */
-  static Webfont parse(Map<String, Object> json) {
+  static Webfont parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Webfont();
     result.kind = identity(json["kind"]);
@@ -167,9 +164,9 @@ class Webfont extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Webfont value) {
+  static core.Object serialize(Webfont value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["kind"] = identity(value.kind);
     result["variants"] = identity(value.variants);
     result["subsets"] = identity(value.subsets);
@@ -182,13 +179,13 @@ class Webfont extends IdentityHash {
 // Schema .WebfontList
 class WebfontList extends IdentityHash {
   /** The list of fonts currently served by the Google Fonts API. */
-  List<Webfont> items;
+  core.List<Webfont> items;
 
   /** The object kind. */
-  String kind;
+  core.String kind;
 
   /** Parses an instance from its JSON representation. */
-  static WebfontList parse(Map<String, Object> json) {
+  static WebfontList parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new WebfontList();
     result.items = map(Webfont.parse)(json["items"]);
@@ -196,9 +193,9 @@ class WebfontList extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(WebfontList value) {
+  static core.Object serialize(WebfontList value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["items"] = map(Webfont.serialize)(value.items);
     result["kind"] = identity(value.kind);
     return result;
@@ -207,12 +204,12 @@ class WebfontList extends IdentityHash {
 }
 
 // Enum WebfontsApi.Alt
-class WebfontsApiAlt implements Hashable {
+class WebfontsApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/json */
   static final WebfontsApiAlt JSON = const WebfontsApiAlt._internal("json", 0);
 
   /** All values of this enumeration */
-  static final List<WebfontsApiAlt> values = const <WebfontsApiAlt>[
+  static final core.List<WebfontsApiAlt> values = const <WebfontsApiAlt>[
     JSON,
   ];
 
@@ -222,14 +219,14 @@ class WebfontsApiAlt implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static WebfontsApiAlt valueOf(String item) => _valuesMap[item];
+  static WebfontsApiAlt valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const WebfontsApiAlt._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const WebfontsApiAlt._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Alt".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Alt".hashCode();
 }
 

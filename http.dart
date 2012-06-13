@@ -2,6 +2,15 @@
 
 #import('dart:html');
 
+/** An Authenticator adds credentials to an HttpRequest. */
+interface Authenticator {
+  /**
+   * Adds credentials to an [HttpRequest].
+   * This method may mutate [request] and return it, or return a new HttpRequest.
+   */
+  Future<HttpRequest> authenticate(HttpRequest request);
+}
+
 /** A simple HTTP client request, wrapping XMLHttpRequest. */
 class HttpRequest {
   final String url;

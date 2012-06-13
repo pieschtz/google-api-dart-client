@@ -1,4 +1,5 @@
 #library("plus");
+#import('dart:core', prefix: 'core');
 #import('dart:json');
 
 #import('utils.dart');
@@ -8,13 +9,15 @@
 /**
  * The Google+ API enables developers to build on top of the Google+ platform.
  */
-class PlusApi {
+class PlusApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
-  final String baseUrl;
+  final core.String baseUrl;
+  /** How we should identify ourselves to the service. */
+  Authenticator authenticator;
   /** The client library version */
-  final String clientVersion = "0.1";
+  final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
-  final String applicationName;
+  final core.String applicationName;
   PlusApi get _$service() => this;
   ActivitiesResource _activities;
   ActivitiesResource get activities() => _activities;
@@ -24,49 +27,49 @@ class PlusApi {
   PeopleResource get people() => _people;
   
   /** Returns response with indentations and line breaks. */
-  bool prettyPrint;
+  core.bool prettyPrint;
 
   /** Selector specifying which fields to include in a partial response. */
-  String fields;
+  core.String fields;
 
   /**
    * Available to use for quota purposes for server-side applications. Can be any arbitrary string
    * assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.
    */
-  String quotaUser;
+  core.String quotaUser;
 
   /** OAuth 2.0 token for the current user. */
-  String oauthToken;
+  core.String oauthToken;
 
   /**
    * API key. Your API key identifies your project and provides you with API access, quota, and
    * reports. Required unless you provide an OAuth 2.0 token.
    */
-  String key;
+  core.String key;
 
   /**
    * IP address of the site where the request originates. Use this if you want to enforce per-user
    * limits.
    */
-  String userIp;
+  core.String userIp;
 
   /** Data format for the response. */
   PlusApiAlt alt;
 
 
-  PlusApi([this.baseUrl = "https://www.googleapis.com/plus/v1/", this.applicationName]) { 
+  PlusApi([this.baseUrl = "https://www.googleapis.com/plus/v1/", this.applicationName, this.authenticator]) { 
     _activities = new ActivitiesResource._internal(this);
     _comments = new CommentsResource._internal(this);
     _people = new PeopleResource._internal(this);
   }
-  String get userAgent() {
+  core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}plus/v1/20120430 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}plus/v1/20120607 google-api-dart-client/${clientVersion}";
   }
 }
 
 // Resource .ActivitiesResource
-class ActivitiesResource {
+class ActivitiesResource extends core.Object {
   final PlusApi _$service;
   
   ActivitiesResource._internal(PlusApi $service) : _$service = $service;
@@ -76,7 +79,7 @@ class ActivitiesResource {
    * Search public activities.
    * [query] Full-text search query string.
    */
-  Future<ActivityFeed> search(String query, [ActivitiesResourceSearchOrderBy orderBy = UNSPECIFIED, String pageToken = UNSPECIFIED, int maxResults = UNSPECIFIED, String language = UNSPECIFIED]) {
+  core.Future<ActivityFeed> search(core.String query, [ActivitiesResourceSearchOrderBy orderBy = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String language = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -94,19 +97,13 @@ class ActivitiesResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "activities").generate($pathParams, $queryParams);
-    final $completer = new Completer<ActivityFeed>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = ActivityFeed.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => ActivityFeed.parse(JSON.parse($text)));
   }
 
   // Method ActivitiesResource.List
@@ -116,7 +113,7 @@ class ActivitiesResource {
    *        authenticated user.
    * [collection] The collection of activities to list.
    */
-  Future<ActivityFeed> list(String userId, ActivitiesResourceListCollection collection, [String pageToken = UNSPECIFIED, int maxResults = UNSPECIFIED]) {
+  core.Future<ActivityFeed> list(core.String userId, ActivitiesResourceListCollection collection, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -133,19 +130,13 @@ class ActivitiesResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "people/{userId}/activities/{collection}").generate($pathParams, $queryParams);
-    final $completer = new Completer<ActivityFeed>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = ActivityFeed.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => ActivityFeed.parse(JSON.parse($text)));
   }
 
   // Method ActivitiesResource.Get
@@ -153,7 +144,7 @@ class ActivitiesResource {
    * Get an activity.
    * [activityId] The ID of the activity to get.
    */
-  Future<Activity> get(String activityId) {
+  core.Future<Activity> get(core.String activityId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -167,31 +158,25 @@ class ActivitiesResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "activities/{activityId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Activity>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Activity.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Activity.parse(JSON.parse($text)));
   }
 }
 
 // Enum ActivitiesResource.Search.OrderBy
-class ActivitiesResourceSearchOrderBy implements Hashable {
+class ActivitiesResourceSearchOrderBy extends core.Object implements core.Hashable {
   /** Sort activities by relevance to the user, most relevant first. */
   static final ActivitiesResourceSearchOrderBy BEST = const ActivitiesResourceSearchOrderBy._internal("best", 0);
   /** Sort activities by published date, most recent first. */
   static final ActivitiesResourceSearchOrderBy RECENT = const ActivitiesResourceSearchOrderBy._internal("recent", 1);
 
   /** All values of this enumeration */
-  static final List<ActivitiesResourceSearchOrderBy> values = const <ActivitiesResourceSearchOrderBy>[
+  static final core.List<ActivitiesResourceSearchOrderBy> values = const <ActivitiesResourceSearchOrderBy>[
     BEST,
     RECENT,
   ];
@@ -203,24 +188,24 @@ class ActivitiesResourceSearchOrderBy implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static ActivitiesResourceSearchOrderBy valueOf(String item) => _valuesMap[item];
+  static ActivitiesResourceSearchOrderBy valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const ActivitiesResourceSearchOrderBy._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const ActivitiesResourceSearchOrderBy._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "OrderBy".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "OrderBy".hashCode();
 }
 
 // Enum ActivitiesResource.List.Collection
-class ActivitiesResourceListCollection implements Hashable {
+class ActivitiesResourceListCollection extends core.Object implements core.Hashable {
   /** All public activities created by the specified user. */
   static final ActivitiesResourceListCollection PUBLIC = const ActivitiesResourceListCollection._internal("public", 0);
 
   /** All values of this enumeration */
-  static final List<ActivitiesResourceListCollection> values = const <ActivitiesResourceListCollection>[
+  static final core.List<ActivitiesResourceListCollection> values = const <ActivitiesResourceListCollection>[
     PUBLIC,
   ];
 
@@ -230,19 +215,19 @@ class ActivitiesResourceListCollection implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static ActivitiesResourceListCollection valueOf(String item) => _valuesMap[item];
+  static ActivitiesResourceListCollection valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const ActivitiesResourceListCollection._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const ActivitiesResourceListCollection._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Collection".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Collection".hashCode();
 }
 
 // Resource .CommentsResource
-class CommentsResource {
+class CommentsResource extends core.Object {
   final PlusApi _$service;
   
   CommentsResource._internal(PlusApi $service) : _$service = $service;
@@ -252,7 +237,7 @@ class CommentsResource {
    * List all of the comments for an activity.
    * [activityId] The ID of the activity to get comments for.
    */
-  Future<CommentFeed> list(String activityId, [String pageToken = UNSPECIFIED, int maxResults = UNSPECIFIED, CommentsResourceListSortOrder sortOrder = UNSPECIFIED]) {
+  core.Future<CommentFeed> list(core.String activityId, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED, CommentsResourceListSortOrder sortOrder = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -269,19 +254,13 @@ class CommentsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "activities/{activityId}/comments").generate($pathParams, $queryParams);
-    final $completer = new Completer<CommentFeed>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = CommentFeed.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => CommentFeed.parse(JSON.parse($text)));
   }
 
   // Method CommentsResource.Get
@@ -289,7 +268,7 @@ class CommentsResource {
    * Get a comment.
    * [commentId] The ID of the comment to get.
    */
-  Future<Comment> get(String commentId) {
+  core.Future<Comment> get(core.String commentId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -303,31 +282,25 @@ class CommentsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "comments/{commentId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Comment>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Comment.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Comment.parse(JSON.parse($text)));
   }
 }
 
 // Enum CommentsResource.List.SortOrder
-class CommentsResourceListSortOrder implements Hashable {
+class CommentsResourceListSortOrder extends core.Object implements core.Hashable {
   /** Sort oldest comments first. */
   static final CommentsResourceListSortOrder ASCENDING = const CommentsResourceListSortOrder._internal("ascending", 0);
   /** Sort newest comments first. */
   static final CommentsResourceListSortOrder DESCENDING = const CommentsResourceListSortOrder._internal("descending", 1);
 
   /** All values of this enumeration */
-  static final List<CommentsResourceListSortOrder> values = const <CommentsResourceListSortOrder>[
+  static final core.List<CommentsResourceListSortOrder> values = const <CommentsResourceListSortOrder>[
     ASCENDING,
     DESCENDING,
   ];
@@ -339,19 +312,19 @@ class CommentsResourceListSortOrder implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static CommentsResourceListSortOrder valueOf(String item) => _valuesMap[item];
+  static CommentsResourceListSortOrder valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const CommentsResourceListSortOrder._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const CommentsResourceListSortOrder._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "SortOrder".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "SortOrder".hashCode();
 }
 
 // Resource .PeopleResource
-class PeopleResource {
+class PeopleResource extends core.Object {
   final PlusApi _$service;
   
   PeopleResource._internal(PlusApi $service) : _$service = $service;
@@ -362,7 +335,7 @@ class PeopleResource {
    * [activityId] The ID of the activity to get the list of people for.
    * [collection] The collection of people to list.
    */
-  Future<PeopleFeed> listByActivity(String activityId, PeopleResourceListByActivityCollection collection, [String pageToken = UNSPECIFIED, int maxResults = UNSPECIFIED]) {
+  core.Future<PeopleFeed> listByActivity(core.String activityId, PeopleResourceListByActivityCollection collection, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -379,19 +352,13 @@ class PeopleResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "activities/{activityId}/people/{collection}").generate($pathParams, $queryParams);
-    final $completer = new Completer<PeopleFeed>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = PeopleFeed.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => PeopleFeed.parse(JSON.parse($text)));
   }
 
   // Method PeopleResource.Search
@@ -399,7 +366,7 @@ class PeopleResource {
    * Search all public profiles.
    * [query]
    */
-  Future<PeopleFeed> search(String query, [String pageToken = UNSPECIFIED, int maxResults = UNSPECIFIED, String language = UNSPECIFIED]) {
+  core.Future<PeopleFeed> search(core.String query, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String language = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -416,19 +383,13 @@ class PeopleResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "people").generate($pathParams, $queryParams);
-    final $completer = new Completer<PeopleFeed>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = PeopleFeed.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => PeopleFeed.parse(JSON.parse($text)));
   }
 
   // Method PeopleResource.Get
@@ -437,7 +398,7 @@ class PeopleResource {
    * [userId] The ID of the person to get the profile for. The special value "me" can be used to indicate the
    *        authenticated user.
    */
-  Future<Person> get(String userId) {
+  core.Future<Person> get(core.String userId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -451,31 +412,25 @@ class PeopleResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "people/{userId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Person>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Person.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Person.parse(JSON.parse($text)));
   }
 }
 
 // Enum PeopleResource.ListByActivity.Collection
-class PeopleResourceListByActivityCollection implements Hashable {
+class PeopleResourceListByActivityCollection extends core.Object implements core.Hashable {
   /** List all people who have +1'd this activity. */
   static final PeopleResourceListByActivityCollection PLUSONERS = const PeopleResourceListByActivityCollection._internal("plusoners", 0);
   /** List all people who have reshared this activity. */
   static final PeopleResourceListByActivityCollection RESHARERS = const PeopleResourceListByActivityCollection._internal("resharers", 1);
 
   /** All values of this enumeration */
-  static final List<PeopleResourceListByActivityCollection> values = const <PeopleResourceListByActivityCollection>[
+  static final core.List<PeopleResourceListByActivityCollection> values = const <PeopleResourceListByActivityCollection>[
     PLUSONERS,
     RESHARERS,
   ];
@@ -487,30 +442,30 @@ class PeopleResourceListByActivityCollection implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static PeopleResourceListByActivityCollection valueOf(String item) => _valuesMap[item];
+  static PeopleResourceListByActivityCollection valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const PeopleResourceListByActivityCollection._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const PeopleResourceListByActivityCollection._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Collection".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Collection".hashCode();
 }
 
 // Schema .Acl
 class Acl extends IdentityHash {
   /** The list of access entries. */
-  List<PlusAclentryResource> items;
+  core.List<PlusAclentryResource> items;
 
   /** Identifies this resource as a collection of access controls. Value: "plus#acl". */
-  String kind;
+  core.String kind;
 
   /** Description of the access granted, suitable for display. */
-  String description;
+  core.String description;
 
   /** Parses an instance from its JSON representation. */
-  static Acl parse(Map<String, Object> json) {
+  static Acl parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Acl();
     result.items = map(PlusAclentryResource.parse)(json["items"]);
@@ -519,9 +474,9 @@ class Acl extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Acl value) {
+  static core.Object serialize(Acl value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["items"] = map(PlusAclentryResource.serialize)(value.items);
     result["kind"] = identity(value.kind);
     result["description"] = identity(value.description);
@@ -533,40 +488,40 @@ class Acl extends IdentityHash {
 // Schema .Activity
 class Activity extends IdentityHash {
   /** Name of the place where this activity occurred. */
-  String placeName;
+  core.String placeName;
 
   /** Identifies this resource as an activity. Value: "plus#activity". */
-  String kind;
+  core.String kind;
 
   /** The time at which this activity was last updated. Formatted as an RFC 3339 timestamp. */
-  String updated;
+  core.String updated;
 
   /** The service provider that initially published this activity. */
   ActivityProvider provider;
 
   /** Title of this activity. */
-  String title;
+  core.String title;
 
   /** The link to this activity. */
-  String url;
+  core.String url;
 
   /**
  * Latitude and longitude where this activity occurred. Format is latitude followed by longitude,
  * space separated.
  */
-  String geocode;
+  core.String geocode;
 
   /** The object of this activity. */
   ActivityObject object;
 
   /** ID of the place where this activity occurred. */
-  String placeId;
+  core.String placeId;
 
   /** The person who performed this activity. */
   ActivityActor actor;
 
   /** The ID of this activity. */
-  String id;
+  core.String id;
 
   /** Identifies who has access to see this activity. */
   Acl access;
@@ -576,37 +531,37 @@ class Activity extends IdentityHash {
  * Publish content to the stream. - "checkin" - Check in to a location. - "share" - Reshare an
  * activity.
  */
-  String verb;
+  core.String verb;
 
   /** ETag of this response for caching purposes. */
-  String etag;
+  core.String etag;
 
   /**
  * Radius, in meters, of the region where this activity occurred, centered at the latitude and
  * longitude identified in geocode.
  */
-  String radius;
+  core.String radius;
 
   /** Street address where this activity occurred. */
-  String address;
+  core.String address;
 
   /**
  * If this activity is a crosspost from another system, this property specifies the ID of the
  * original activity.
  */
-  String crosspostSource;
+  core.String crosspostSource;
 
   /**
  * Additional content added by the person who shared this activity, applicable only when resharing
  * an activity.
  */
-  String annotation;
+  core.String annotation;
 
   /** The time at which this activity was initially published. Formatted as an RFC 3339 timestamp. */
-  String published;
+  core.String published;
 
   /** Parses an instance from its JSON representation. */
-  static Activity parse(Map<String, Object> json) {
+  static Activity parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Activity();
     result.placeName = identity(json["placeName"]);
@@ -631,9 +586,9 @@ class Activity extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Activity value) {
+  static core.Object serialize(Activity value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["placeName"] = identity(value.placeName);
     result["kind"] = identity(value.kind);
     result["updated"] = identity(value.updated);
@@ -661,22 +616,22 @@ class Activity extends IdentityHash {
 // Schema Activity.ActivityActor
 class ActivityActor extends IdentityHash {
   /** The link to the actor's Google profile. */
-  String url;
+  core.String url;
 
   /** The image representation of the actor. */
   ActivityActorImage image;
 
   /** The name of the actor, suitable for display. */
-  String displayName;
+  core.String displayName;
 
   /** The ID of the actor's person resource. */
-  String id;
+  core.String id;
 
   /** An object representation of the individual components of name. */
   ActivityActorName name;
 
   /** Parses an instance from its JSON representation. */
-  static ActivityActor parse(Map<String, Object> json) {
+  static ActivityActor parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ActivityActor();
     result.url = identity(json["url"]);
@@ -687,9 +642,9 @@ class ActivityActor extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ActivityActor value) {
+  static core.Object serialize(ActivityActor value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["url"] = identity(value.url);
     result["image"] = ActivityActorImage.serialize(value.image);
     result["displayName"] = identity(value.displayName);
@@ -706,19 +661,19 @@ class ActivityActorImage extends IdentityHash {
  * The URL of the actor's profile photo. To re-size the image and crop it to a square, append the
  * query string ?sz=x, where x is the dimension in pixels of each side.
  */
-  String url;
+  core.String url;
 
   /** Parses an instance from its JSON representation. */
-  static ActivityActorImage parse(Map<String, Object> json) {
+  static ActivityActorImage parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ActivityActorImage();
     result.url = identity(json["url"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ActivityActorImage value) {
+  static core.Object serialize(ActivityActorImage value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["url"] = identity(value.url);
     return result;
   }
@@ -728,13 +683,13 @@ class ActivityActorImage extends IdentityHash {
 // Schema Activity.ActivityActor.ActivityActorName
 class ActivityActorName extends IdentityHash {
   /** The given name (first name) of the actor. */
-  String givenName;
+  core.String givenName;
 
   /** The family name (last name) of the actor. */
-  String familyName;
+  core.String familyName;
 
   /** Parses an instance from its JSON representation. */
-  static ActivityActorName parse(Map<String, Object> json) {
+  static ActivityActorName parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ActivityActorName();
     result.givenName = identity(json["givenName"]);
@@ -742,9 +697,9 @@ class ActivityActorName extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ActivityActorName value) {
+  static core.Object serialize(ActivityActorName value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["givenName"] = identity(value.givenName);
     result["familyName"] = identity(value.familyName);
     return result;
@@ -758,37 +713,37 @@ class ActivityFeed extends IdentityHash {
  * The continuation token, used to page through large result sets. Provide this value in a
  * subsequent request to return the next page of results.
  */
-  String nextPageToken;
+  core.String nextPageToken;
 
   /** Identifies this resource as a collection of activities. Value: "plus#activityFeed". */
-  String kind;
+  core.String kind;
 
   /** The title of this collection of activities. */
-  String title;
+  core.String title;
 
   /** The activities in this page of results. */
-  List<Activity> items;
+  core.List<Activity> items;
 
   /**
  * The time at which this collection of activities was last updated. Formatted as an RFC 3339
  * timestamp.
  */
-  String updated;
+  core.String updated;
 
   /** Link to the next page of activities. */
-  String nextLink;
+  core.String nextLink;
 
   /** ETag of this response for caching purposes. */
-  String etag;
+  core.String etag;
 
   /** The ID of this collection of activities. */
-  String id;
+  core.String id;
 
   /** Link to this activity resource. */
-  String selfLink;
+  core.String selfLink;
 
   /** Parses an instance from its JSON representation. */
-  static ActivityFeed parse(Map<String, Object> json) {
+  static ActivityFeed parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ActivityFeed();
     result.nextPageToken = identity(json["nextPageToken"]);
@@ -803,9 +758,9 @@ class ActivityFeed extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ActivityFeed value) {
+  static core.Object serialize(ActivityFeed value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["nextPageToken"] = identity(value.nextPageToken);
     result["kind"] = identity(value.kind);
     result["title"] = identity(value.title);
@@ -826,14 +781,14 @@ class ActivityObject extends IdentityHash {
   ActivityObjectResharers resharers;
 
   /** The media objects attached to this activity. */
-  List<ActivityObjectAttachments> attachments;
+  core.List<ActivityObjectAttachments> attachments;
 
   /**
  * The content (text) as provided by the author, stored without any HTML formatting. When updating
  * an activity's content, use the value of originalContent as the starting point from which to make
  * edits.
  */
-  String originalContent;
+  core.String originalContent;
 
   /** People who +1'd this activity. */
   ActivityObjectPlusoners plusoners;
@@ -850,10 +805,10 @@ class ActivityObject extends IdentityHash {
  * HTML-formatted content. When updating an activity, use originalContent as the starting value,
  * then assign the updated text to this property.
  */
-  String content;
+  core.String content;
 
   /** The URL that points to the linked resource. */
-  String url;
+  core.String url;
 
   /** Comments in reply to this activity. */
   ActivityObjectReplies replies;
@@ -861,16 +816,16 @@ class ActivityObject extends IdentityHash {
   /**
  * The ID of the object. When resharing an activity, this is the ID of the activity being reshared.
  */
-  String id;
+  core.String id;
 
   /**
  * The type of the object. Possible values are: - "note" - Textual content. - "activity" - A Google+
  * activity.
  */
-  String objectType;
+  core.String objectType;
 
   /** Parses an instance from its JSON representation. */
-  static ActivityObject parse(Map<String, Object> json) {
+  static ActivityObject parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ActivityObject();
     result.resharers = ActivityObjectResharers.parse(json["resharers"]);
@@ -886,9 +841,9 @@ class ActivityObject extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ActivityObject value) {
+  static core.Object serialize(ActivityObject value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["resharers"] = ActivityObjectResharers.serialize(value.resharers);
     result["attachments"] = map(ActivityObjectAttachments.serialize)(value.attachments);
     result["originalContent"] = identity(value.originalContent);
@@ -907,19 +862,19 @@ class ActivityObject extends IdentityHash {
 // Schema Activity.ActivityObject.ActivityObjectActor
 class ActivityObjectActor extends IdentityHash {
   /** A link to the original actor's Google profile. */
-  String url;
+  core.String url;
 
   /** The image representation of the original actor. */
   ActivityObjectActorImage image;
 
   /** The original actor's name, suitable for display. */
-  String displayName;
+  core.String displayName;
 
   /** ID of the original actor. */
-  String id;
+  core.String id;
 
   /** Parses an instance from its JSON representation. */
-  static ActivityObjectActor parse(Map<String, Object> json) {
+  static ActivityObjectActor parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ActivityObjectActor();
     result.url = identity(json["url"]);
@@ -929,9 +884,9 @@ class ActivityObjectActor extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ActivityObjectActor value) {
+  static core.Object serialize(ActivityObjectActor value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["url"] = identity(value.url);
     result["image"] = ActivityObjectActorImage.serialize(value.image);
     result["displayName"] = identity(value.displayName);
@@ -944,19 +899,19 @@ class ActivityObjectActor extends IdentityHash {
 // Schema Activity.ActivityObject.ActivityObjectActor.ActivityObjectActorImage
 class ActivityObjectActorImage extends IdentityHash {
   /** A URL that points to a thumbnail photo of the original actor. */
-  String url;
+  core.String url;
 
   /** Parses an instance from its JSON representation. */
-  static ActivityObjectActorImage parse(Map<String, Object> json) {
+  static ActivityObjectActorImage parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ActivityObjectActorImage();
     result.url = identity(json["url"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ActivityObjectActorImage value) {
+  static core.Object serialize(ActivityObjectActorImage value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["url"] = identity(value.url);
     return result;
   }
@@ -966,34 +921,34 @@ class ActivityObjectActorImage extends IdentityHash {
 // Schema Activity.ActivityObject.ActivityObjectAttachments
 class ActivityObjectAttachments extends IdentityHash {
   /** The title of the attachment (such as a photo caption or an article title). */
-  String displayName;
+  core.String displayName;
 
   /** The full image url for photo attachments. */
   ActivityObjectAttachmentsFullImage fullImage;
 
   /** The link to the attachment, should be of type text/html. */
-  String url;
+  core.String url;
 
   /** The preview image for photos or videos. */
   ActivityObjectAttachmentsImage image;
 
   /** If the attachment is an article, this property contains a snippet of text from the article. */
-  String content;
+  core.String content;
 
   /** If the attachment is a video, the embeddable link. */
   ActivityObjectAttachmentsEmbed embed;
 
   /** The ID of the media object's resource. */
-  String id;
+  core.String id;
 
   /**
  * The type of media object. Possible values are: - "photo" - A photo. - "video" - A video. -
  * "article" - An article, specified by a link.
  */
-  String objectType;
+  core.String objectType;
 
   /** Parses an instance from its JSON representation. */
-  static ActivityObjectAttachments parse(Map<String, Object> json) {
+  static ActivityObjectAttachments parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ActivityObjectAttachments();
     result.displayName = identity(json["displayName"]);
@@ -1007,9 +962,9 @@ class ActivityObjectAttachments extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ActivityObjectAttachments value) {
+  static core.Object serialize(ActivityObjectAttachments value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["displayName"] = identity(value.displayName);
     result["fullImage"] = ActivityObjectAttachmentsFullImage.serialize(value.fullImage);
     result["url"] = identity(value.url);
@@ -1026,13 +981,13 @@ class ActivityObjectAttachments extends IdentityHash {
 // Schema Activity.ActivityObject.ActivityObjectAttachments.ActivityObjectAttachmentsEmbed
 class ActivityObjectAttachmentsEmbed extends IdentityHash {
   /** URL of the link. */
-  String url;
+  core.String url;
 
   /** Media type of the link. */
-  String type;
+  core.String type;
 
   /** Parses an instance from its JSON representation. */
-  static ActivityObjectAttachmentsEmbed parse(Map<String, Object> json) {
+  static ActivityObjectAttachmentsEmbed parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ActivityObjectAttachmentsEmbed();
     result.url = identity(json["url"]);
@@ -1040,9 +995,9 @@ class ActivityObjectAttachmentsEmbed extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ActivityObjectAttachmentsEmbed value) {
+  static core.Object serialize(ActivityObjectAttachmentsEmbed value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["url"] = identity(value.url);
     result["type"] = identity(value.type);
     return result;
@@ -1053,19 +1008,19 @@ class ActivityObjectAttachmentsEmbed extends IdentityHash {
 // Schema Activity.ActivityObject.ActivityObjectAttachments.ActivityObjectAttachmentsFullImage
 class ActivityObjectAttachmentsFullImage extends IdentityHash {
   /** URL of the link. */
-  String url;
+  core.String url;
 
   /** The width, in pixels, of the linked resource. */
-  int width;
+  core.int width;
 
   /** Media type of the link. */
-  String type;
+  core.String type;
 
   /** The height, in pixels, of the linked resource. */
-  int height;
+  core.int height;
 
   /** Parses an instance from its JSON representation. */
-  static ActivityObjectAttachmentsFullImage parse(Map<String, Object> json) {
+  static ActivityObjectAttachmentsFullImage parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ActivityObjectAttachmentsFullImage();
     result.url = identity(json["url"]);
@@ -1075,9 +1030,9 @@ class ActivityObjectAttachmentsFullImage extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ActivityObjectAttachmentsFullImage value) {
+  static core.Object serialize(ActivityObjectAttachmentsFullImage value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["url"] = identity(value.url);
     result["width"] = identity(value.width);
     result["type"] = identity(value.type);
@@ -1090,19 +1045,19 @@ class ActivityObjectAttachmentsFullImage extends IdentityHash {
 // Schema Activity.ActivityObject.ActivityObjectAttachments.ActivityObjectAttachmentsImage
 class ActivityObjectAttachmentsImage extends IdentityHash {
   /** URL of the link. */
-  String url;
+  core.String url;
 
   /** The width, in pixels, of the linked resource. */
-  int width;
+  core.int width;
 
   /** Media type of the link. */
-  String type;
+  core.String type;
 
   /** The height, in pixels, of the linked resource. */
-  int height;
+  core.int height;
 
   /** Parses an instance from its JSON representation. */
-  static ActivityObjectAttachmentsImage parse(Map<String, Object> json) {
+  static ActivityObjectAttachmentsImage parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ActivityObjectAttachmentsImage();
     result.url = identity(json["url"]);
@@ -1112,9 +1067,9 @@ class ActivityObjectAttachmentsImage extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ActivityObjectAttachmentsImage value) {
+  static core.Object serialize(ActivityObjectAttachmentsImage value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["url"] = identity(value.url);
     result["width"] = identity(value.width);
     result["type"] = identity(value.type);
@@ -1127,13 +1082,13 @@ class ActivityObjectAttachmentsImage extends IdentityHash {
 // Schema Activity.ActivityObject.ActivityObjectPlusoners
 class ActivityObjectPlusoners extends IdentityHash {
   /** Total number of people who +1'd this activity. */
-  int totalItems;
+  core.int totalItems;
 
   /** The URL for the collection of people who +1'd this activity. */
-  String selfLink;
+  core.String selfLink;
 
   /** Parses an instance from its JSON representation. */
-  static ActivityObjectPlusoners parse(Map<String, Object> json) {
+  static ActivityObjectPlusoners parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ActivityObjectPlusoners();
     result.totalItems = identity(json["totalItems"]);
@@ -1141,9 +1096,9 @@ class ActivityObjectPlusoners extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ActivityObjectPlusoners value) {
+  static core.Object serialize(ActivityObjectPlusoners value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["totalItems"] = identity(value.totalItems);
     result["selfLink"] = identity(value.selfLink);
     return result;
@@ -1154,13 +1109,13 @@ class ActivityObjectPlusoners extends IdentityHash {
 // Schema Activity.ActivityObject.ActivityObjectReplies
 class ActivityObjectReplies extends IdentityHash {
   /** Total number of comments on this activity. */
-  int totalItems;
+  core.int totalItems;
 
   /** The URL for the collection of comments in reply to this activity. */
-  String selfLink;
+  core.String selfLink;
 
   /** Parses an instance from its JSON representation. */
-  static ActivityObjectReplies parse(Map<String, Object> json) {
+  static ActivityObjectReplies parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ActivityObjectReplies();
     result.totalItems = identity(json["totalItems"]);
@@ -1168,9 +1123,9 @@ class ActivityObjectReplies extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ActivityObjectReplies value) {
+  static core.Object serialize(ActivityObjectReplies value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["totalItems"] = identity(value.totalItems);
     result["selfLink"] = identity(value.selfLink);
     return result;
@@ -1181,13 +1136,13 @@ class ActivityObjectReplies extends IdentityHash {
 // Schema Activity.ActivityObject.ActivityObjectResharers
 class ActivityObjectResharers extends IdentityHash {
   /** Total number of people who reshared this activity. */
-  int totalItems;
+  core.int totalItems;
 
   /** The URL for the collection of resharers. */
-  String selfLink;
+  core.String selfLink;
 
   /** Parses an instance from its JSON representation. */
-  static ActivityObjectResharers parse(Map<String, Object> json) {
+  static ActivityObjectResharers parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ActivityObjectResharers();
     result.totalItems = identity(json["totalItems"]);
@@ -1195,9 +1150,9 @@ class ActivityObjectResharers extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ActivityObjectResharers value) {
+  static core.Object serialize(ActivityObjectResharers value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["totalItems"] = identity(value.totalItems);
     result["selfLink"] = identity(value.selfLink);
     return result;
@@ -1208,19 +1163,19 @@ class ActivityObjectResharers extends IdentityHash {
 // Schema Activity.ActivityProvider
 class ActivityProvider extends IdentityHash {
   /** Name of the service provider. */
-  String title;
+  core.String title;
 
   /** Parses an instance from its JSON representation. */
-  static ActivityProvider parse(Map<String, Object> json) {
+  static ActivityProvider parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ActivityProvider();
     result.title = identity(json["title"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ActivityProvider value) {
+  static core.Object serialize(ActivityProvider value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["title"] = identity(value.title);
     return result;
   }
@@ -1230,16 +1185,16 @@ class ActivityProvider extends IdentityHash {
 // Schema .Comment
 class Comment extends IdentityHash {
   /** The activity this comment replied to. */
-  List<CommentInReplyTo> inReplyTo;
+  core.List<CommentInReplyTo> inReplyTo;
 
   /** Identifies this resource as a comment. Value: "plus#comment". */
-  String kind;
+  core.String kind;
 
   /** The object of this comment. */
   CommentObject object;
 
   /** The time at which this comment was last updated. Formatted as an RFC 3339 timestamp. */
-  String updated;
+  core.String updated;
 
   /** The person who posted this comment. */
   CommentActor actor;
@@ -1248,22 +1203,22 @@ class Comment extends IdentityHash {
  * This comment's verb, indicating what action was performed. Possible values are: - "post" -
  * Publish content to the stream.
  */
-  String verb;
+  core.String verb;
 
   /** ETag of this response for caching purposes. */
-  String etag;
+  core.String etag;
 
   /** The time at which this comment was initially published. Formatted as an RFC 3339 timestamp. */
-  String published;
+  core.String published;
 
   /** The ID of this comment. */
-  String id;
+  core.String id;
 
   /** Link to this comment resource. */
-  String selfLink;
+  core.String selfLink;
 
   /** Parses an instance from its JSON representation. */
-  static Comment parse(Map<String, Object> json) {
+  static Comment parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Comment();
     result.inReplyTo = map(CommentInReplyTo.parse)(json["inReplyTo"]);
@@ -1279,9 +1234,9 @@ class Comment extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Comment value) {
+  static core.Object serialize(Comment value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["inReplyTo"] = map(CommentInReplyTo.serialize)(value.inReplyTo);
     result["kind"] = identity(value.kind);
     result["object"] = CommentObject.serialize(value.object);
@@ -1300,19 +1255,19 @@ class Comment extends IdentityHash {
 // Schema Comment.CommentActor
 class CommentActor extends IdentityHash {
   /** A link to the person resource for this actor. */
-  String url;
+  core.String url;
 
   /** The image representation of this actor. */
   CommentActorImage image;
 
   /** The name of this actor, suitable for display. */
-  String displayName;
+  core.String displayName;
 
   /** The ID of the actor. */
-  String id;
+  core.String id;
 
   /** Parses an instance from its JSON representation. */
-  static CommentActor parse(Map<String, Object> json) {
+  static CommentActor parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new CommentActor();
     result.url = identity(json["url"]);
@@ -1322,9 +1277,9 @@ class CommentActor extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(CommentActor value) {
+  static core.Object serialize(CommentActor value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["url"] = identity(value.url);
     result["image"] = CommentActorImage.serialize(value.image);
     result["displayName"] = identity(value.displayName);
@@ -1340,19 +1295,19 @@ class CommentActorImage extends IdentityHash {
  * The URL of the actor's profile photo. To re-size the image and crop it to a square, append the
  * query string ?sz=x, where x is the dimension in pixels of each side.
  */
-  String url;
+  core.String url;
 
   /** Parses an instance from its JSON representation. */
-  static CommentActorImage parse(Map<String, Object> json) {
+  static CommentActorImage parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new CommentActorImage();
     result.url = identity(json["url"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(CommentActorImage value) {
+  static core.Object serialize(CommentActorImage value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["url"] = identity(value.url);
     return result;
   }
@@ -1365,34 +1320,34 @@ class CommentFeed extends IdentityHash {
  * The continuation token, used to page through large result sets. Provide this value in a
  * subsequent request to return the next page of results.
  */
-  String nextPageToken;
+  core.String nextPageToken;
 
   /** Identifies this resource as a collection of comments. Value: "plus#commentFeed". */
-  String kind;
+  core.String kind;
 
   /** The title of this collection of comments. */
-  String title;
+  core.String title;
 
   /** The comments in this page of results. */
-  List<Comment> items;
+  core.List<Comment> items;
 
   /**
  * The time at which this collection of comments was last updated. Formatted as an RFC 3339
  * timestamp.
  */
-  String updated;
+  core.String updated;
 
   /** Link to the next page of activities. */
-  String nextLink;
+  core.String nextLink;
 
   /** ETag of this response for caching purposes. */
-  String etag;
+  core.String etag;
 
   /** The ID of this collection of comments. */
-  String id;
+  core.String id;
 
   /** Parses an instance from its JSON representation. */
-  static CommentFeed parse(Map<String, Object> json) {
+  static CommentFeed parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new CommentFeed();
     result.nextPageToken = identity(json["nextPageToken"]);
@@ -1406,9 +1361,9 @@ class CommentFeed extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(CommentFeed value) {
+  static core.Object serialize(CommentFeed value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["nextPageToken"] = identity(value.nextPageToken);
     result["kind"] = identity(value.kind);
     result["title"] = identity(value.title);
@@ -1425,13 +1380,13 @@ class CommentFeed extends IdentityHash {
 // Schema Comment.CommentInReplyTo
 class CommentInReplyTo extends IdentityHash {
   /** The url of the activity. */
-  String url;
+  core.String url;
 
   /** The id of the activity. */
-  String id;
+  core.String id;
 
   /** Parses an instance from its JSON representation. */
-  static CommentInReplyTo parse(Map<String, Object> json) {
+  static CommentInReplyTo parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new CommentInReplyTo();
     result.url = identity(json["url"]);
@@ -1439,9 +1394,9 @@ class CommentInReplyTo extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(CommentInReplyTo value) {
+  static core.Object serialize(CommentInReplyTo value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["url"] = identity(value.url);
     result["id"] = identity(value.id);
     return result;
@@ -1452,16 +1407,16 @@ class CommentInReplyTo extends IdentityHash {
 // Schema Comment.CommentObject
 class CommentObject extends IdentityHash {
   /** The content of this comment. */
-  String content;
+  core.String content;
 
   /**
  * The object type of this comment. Possible values are: - "comment" - A comment in reply to an
  * activity.
  */
-  String objectType;
+  core.String objectType;
 
   /** Parses an instance from its JSON representation. */
-  static CommentObject parse(Map<String, Object> json) {
+  static CommentObject parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new CommentObject();
     result.content = identity(json["content"]);
@@ -1469,9 +1424,9 @@ class CommentObject extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(CommentObject value) {
+  static core.Object serialize(CommentObject value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["content"] = identity(value.content);
     result["objectType"] = identity(value.objectType);
     return result;
@@ -1485,34 +1440,34 @@ class PeopleFeed extends IdentityHash {
  * The continuation token, used to page through large result sets. Provide this value in a
  * subsequent request to return the next page of results.
  */
-  String nextPageToken;
+  core.String nextPageToken;
 
   /** Identifies this resource as a collection of people. Value: "plus#peopleFeed". */
-  String kind;
+  core.String kind;
 
   /** The title of this collection of people. */
-  String title;
+  core.String title;
 
   /**
  * The people in this page of results. Each item will include the id, displayName, image, and url
  * for the person. To retrieve additional profile data, see the people.get method.
  */
-  List<Person> items;
+  core.List<Person> items;
 
   /** ETag of this response for caching purposes. */
-  String etag;
+  core.String etag;
 
   /**
  * The total number of people available in this list. The number of people in a response may be
  * smaller due to paging. This may not be set for all collections.
  */
-  int totalItems;
+  core.int totalItems;
 
   /** Link to this resource. */
-  String selfLink;
+  core.String selfLink;
 
   /** Parses an instance from its JSON representation. */
-  static PeopleFeed parse(Map<String, Object> json) {
+  static PeopleFeed parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new PeopleFeed();
     result.nextPageToken = identity(json["nextPageToken"]);
@@ -1525,9 +1480,9 @@ class PeopleFeed extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(PeopleFeed value) {
+  static core.Object serialize(PeopleFeed value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["nextPageToken"] = identity(value.nextPageToken);
     result["kind"] = identity(value.kind);
     result["title"] = identity(value.title);
@@ -1549,52 +1504,52 @@ class Person extends IdentityHash {
  * Person is in an open relationship. - "widowed" - Person is widowed. - "in_domestic_partnership" -
  * Person is in a domestic partnership. - "in_civil_union" - Person is in a civil union.
  */
-  String relationshipStatus;
+  core.String relationshipStatus;
 
   /** A list of current or past organizations with which this person is associated. */
-  List<PersonOrganizations> organizations;
+  core.List<PersonOrganizations> organizations;
 
   /** Identifies this resource as a person. Value: "plus#person". */
-  String kind;
+  core.String kind;
 
   /** The name of this person, suitable for display. */
-  String displayName;
+  core.String displayName;
 
   /** An object representation of the individual components of a person's name. */
   PersonName name;
 
   /** The URL of this person's profile. */
-  String url;
+  core.String url;
 
   /**
  * The person's gender. Possible values are: - "male" - Male gender. - "female" - Female gender. -
  * "other" - Other.
  */
-  String gender;
+  core.String gender;
 
   /** A short biography for this person. */
-  String aboutMe;
+  core.String aboutMe;
 
   /** The brief description (tagline) of this person. */
-  String tagline;
+  core.String tagline;
 
   /** A list of URLs for this person. */
-  List<PersonUrls> urls;
+  core.List<PersonUrls> urls;
 
   /** A list of places where this person has lived. */
-  List<PersonPlacesLived> placesLived;
+  core.List<PersonPlacesLived> placesLived;
 
   /** A list of email addresses for this person. */
-  List<PersonEmails> emails;
+  core.List<PersonEmails> emails;
 
   /** The nickname of this person. */
-  String nickname;
+  core.String nickname;
 
   /** The person's date of birth, represented as YYYY-MM-DD. */
-  String birthday;
+  core.String birthday;
 
   /** ETag of this response for caching purposes. */
-  String etag;
+  core.String etag;
 
   /** The representation of the person's profile photo. */
   PersonImage image;
@@ -1605,25 +1560,25 @@ class Person extends IdentityHash {
  * state cannot be determined (it is either not installed or the person has chosen to keep this
  * information private).
  */
-  bool hasApp;
+  core.bool hasApp;
 
   /** The ID of this person. */
-  String id;
+  core.String id;
 
   /** The languages spoken by this person. */
-  List<String> languagesSpoken;
+  core.List<core.String> languagesSpoken;
 
   /** The current location for this person. */
-  String currentLocation;
+  core.String currentLocation;
 
   /**
  * Type of person within Google+. Possible values are: - "person" - represents an actual person. -
  * "page" - represents a page.
  */
-  String objectType;
+  core.String objectType;
 
   /** Parses an instance from its JSON representation. */
-  static Person parse(Map<String, Object> json) {
+  static Person parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Person();
     result.relationshipStatus = identity(json["relationshipStatus"]);
@@ -1650,9 +1605,9 @@ class Person extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Person value) {
+  static core.Object serialize(Person value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["relationshipStatus"] = identity(value.relationshipStatus);
     result["organizations"] = map(PersonOrganizations.serialize)(value.organizations);
     result["kind"] = identity(value.kind);
@@ -1685,16 +1640,16 @@ class PersonEmails extends IdentityHash {
  * The type of address. Possible values are: - "home" - Home email address. - "work" - Work email
  * address. - "other" - Other.
  */
-  String type;
+  core.String type;
 
   /** If "true", indicates this email address is the person's primary one. */
-  bool primary;
+  core.bool primary;
 
   /** The email address. */
-  String value;
+  core.String value;
 
   /** Parses an instance from its JSON representation. */
-  static PersonEmails parse(Map<String, Object> json) {
+  static PersonEmails parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new PersonEmails();
     result.type = identity(json["type"]);
@@ -1703,9 +1658,9 @@ class PersonEmails extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(PersonEmails value) {
+  static core.Object serialize(PersonEmails value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["type"] = identity(value.type);
     result["primary"] = identity(value.primary);
     result["value"] = identity(value.value);
@@ -1720,19 +1675,19 @@ class PersonImage extends IdentityHash {
  * The URL of the person's profile photo. To re-size the image and crop it to a square, append the
  * query string ?sz=x, where x is the dimension in pixels of each side.
  */
-  String url;
+  core.String url;
 
   /** Parses an instance from its JSON representation. */
-  static PersonImage parse(Map<String, Object> json) {
+  static PersonImage parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new PersonImage();
     result.url = identity(json["url"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(PersonImage value) {
+  static core.Object serialize(PersonImage value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["url"] = identity(value.url);
     return result;
   }
@@ -1742,25 +1697,25 @@ class PersonImage extends IdentityHash {
 // Schema Person.PersonName
 class PersonName extends IdentityHash {
   /** The honorific prefixes (such as "Dr." or "Mrs.") for this person. */
-  String honorificPrefix;
+  core.String honorificPrefix;
 
   /** The middle name of this person. */
-  String middleName;
+  core.String middleName;
 
   /** The family name (last name) of this person. */
-  String familyName;
+  core.String familyName;
 
   /** The full name of this person, including middle names, suffixes, etc. */
-  String formatted;
+  core.String formatted;
 
   /** The given name (first name) of this person. */
-  String givenName;
+  core.String givenName;
 
   /** The honorific suffixes (such as "Jr.") for this person. */
-  String honorificSuffix;
+  core.String honorificSuffix;
 
   /** Parses an instance from its JSON representation. */
-  static PersonName parse(Map<String, Object> json) {
+  static PersonName parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new PersonName();
     result.honorificPrefix = identity(json["honorificPrefix"]);
@@ -1772,9 +1727,9 @@ class PersonName extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(PersonName value) {
+  static core.Object serialize(PersonName value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["honorificPrefix"] = identity(value.honorificPrefix);
     result["middleName"] = identity(value.middleName);
     result["familyName"] = identity(value.familyName);
@@ -1789,39 +1744,39 @@ class PersonName extends IdentityHash {
 // Schema Person.PersonOrganizations
 class PersonOrganizations extends IdentityHash {
   /** The date the person joined this organization. */
-  String startDate;
+  core.String startDate;
 
   /** The date the person left this organization. */
-  String endDate;
+  core.String endDate;
 
   /** A short description of the person's role in this organization. */
-  String description;
+  core.String description;
 
   /** The person's job title or role within the organization. */
-  String title;
+  core.String title;
 
   /**
  * If "true", indicates this organization is the person's primary one (typically interpreted as
  * current one).
  */
-  bool primary;
+  core.bool primary;
 
   /** The location of this organization. */
-  String location;
+  core.String location;
 
   /** The department within the organization. */
-  String department;
+  core.String department;
 
   /** The type of organization. Possible values are:  
 - "work" - Work. 
 - "school" - School. */
-  String type;
+  core.String type;
 
   /** The name of the organization. */
-  String name;
+  core.String name;
 
   /** Parses an instance from its JSON representation. */
-  static PersonOrganizations parse(Map<String, Object> json) {
+  static PersonOrganizations parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new PersonOrganizations();
     result.startDate = identity(json["startDate"]);
@@ -1836,9 +1791,9 @@ class PersonOrganizations extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(PersonOrganizations value) {
+  static core.Object serialize(PersonOrganizations value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["startDate"] = identity(value.startDate);
     result["endDate"] = identity(value.endDate);
     result["description"] = identity(value.description);
@@ -1856,13 +1811,13 @@ class PersonOrganizations extends IdentityHash {
 // Schema Person.PersonPlacesLived
 class PersonPlacesLived extends IdentityHash {
   /** If "true", this place of residence is this person's primary residence. */
-  bool primary;
+  core.bool primary;
 
   /** A place where this person has lived. For example: "Seattle, WA", "Near Toronto". */
-  String value;
+  core.String value;
 
   /** Parses an instance from its JSON representation. */
-  static PersonPlacesLived parse(Map<String, Object> json) {
+  static PersonPlacesLived parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new PersonPlacesLived();
     result.primary = identity(json["primary"]);
@@ -1870,9 +1825,9 @@ class PersonPlacesLived extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(PersonPlacesLived value) {
+  static core.Object serialize(PersonPlacesLived value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["primary"] = identity(value.primary);
     result["value"] = identity(value.value);
     return result;
@@ -1886,16 +1841,16 @@ class PersonUrls extends IdentityHash {
  * The type of URL. Possible values are: - "home" - URL for home. - "work" - URL for work. - "blog"
  * - URL for blog. - "profile" - URL for profile. - "other" - Other.
  */
-  String type;
+  core.String type;
 
   /** If "true", this URL is the person's primary URL. */
-  bool primary;
+  core.bool primary;
 
   /** The URL value. */
-  String value;
+  core.String value;
 
   /** Parses an instance from its JSON representation. */
-  static PersonUrls parse(Map<String, Object> json) {
+  static PersonUrls parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new PersonUrls();
     result.type = identity(json["type"]);
@@ -1904,9 +1859,9 @@ class PersonUrls extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(PersonUrls value) {
+  static core.Object serialize(PersonUrls value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["type"] = identity(value.type);
     result["primary"] = identity(value.primary);
     result["value"] = identity(value.value);
@@ -1923,16 +1878,16 @@ class PlusAclentryResource extends IdentityHash {
  * of all the person's circles. - "extendedCircles" - Access to members of everyone in a person's
  * circles, plus all of the people in their circles. - "public" - Access to anyone on the web.
  */
-  String type;
+  core.String type;
 
   /**
  * The ID of the entry. For entries of type "person" or "circle", this is the ID of the resource.
  * For other types, this property is not set.
  */
-  String id;
+  core.String id;
 
   /** Parses an instance from its JSON representation. */
-  static PlusAclentryResource parse(Map<String, Object> json) {
+  static PlusAclentryResource parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new PlusAclentryResource();
     result.type = identity(json["type"]);
@@ -1940,9 +1895,9 @@ class PlusAclentryResource extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(PlusAclentryResource value) {
+  static core.Object serialize(PlusAclentryResource value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["type"] = identity(value.type);
     result["id"] = identity(value.id);
     return result;
@@ -1951,12 +1906,12 @@ class PlusAclentryResource extends IdentityHash {
 }
 
 // Enum PlusApi.Alt
-class PlusApiAlt implements Hashable {
+class PlusApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/json */
   static final PlusApiAlt JSON = const PlusApiAlt._internal("json", 0);
 
   /** All values of this enumeration */
-  static final List<PlusApiAlt> values = const <PlusApiAlt>[
+  static final core.List<PlusApiAlt> values = const <PlusApiAlt>[
     JSON,
   ];
 
@@ -1966,14 +1921,14 @@ class PlusApiAlt implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static PlusApiAlt valueOf(String item) => _valuesMap[item];
+  static PlusApiAlt valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const PlusApiAlt._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const PlusApiAlt._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Alt".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Alt".hashCode();
 }
 

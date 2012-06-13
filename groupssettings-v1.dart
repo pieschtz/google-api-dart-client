@@ -1,4 +1,5 @@
 #library("groupssettings");
+#import('dart:core', prefix: 'core');
 #import('dart:json');
 
 #import('utils.dart');
@@ -8,59 +9,61 @@
 /**
  * Lets you manage permission levels and related settings of a group
  */
-class GroupssettingsApi {
+class GroupssettingsApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
-  final String baseUrl;
+  final core.String baseUrl;
+  /** How we should identify ourselves to the service. */
+  Authenticator authenticator;
   /** The client library version */
-  final String clientVersion = "0.1";
+  final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
-  final String applicationName;
+  final core.String applicationName;
   GroupssettingsApi get _$service() => this;
   GroupsResource _groups;
   GroupsResource get groups() => _groups;
   
   /** Returns response with indentations and line breaks. */
-  bool prettyPrint;
+  core.bool prettyPrint;
 
   /** Selector specifying which fields to include in a partial response. */
-  String fields;
+  core.String fields;
 
   /**
    * Available to use for quota purposes for server-side applications. Can be any arbitrary string
    * assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.
    */
-  String quotaUser;
+  core.String quotaUser;
 
   /** OAuth 2.0 token for the current user. */
-  String oauthToken;
+  core.String oauthToken;
 
   /**
    * API key. Your API key identifies your project and provides you with API access, quota, and
    * reports. Required unless you provide an OAuth 2.0 token.
    */
-  String key;
+  core.String key;
 
   /**
    * IP address of the site where the request originates. Use this if you want to enforce per-user
    * limits.
    */
-  String userIp;
+  core.String userIp;
 
   /** Data format for the response. */
   GroupssettingsApiAlt alt;
 
 
-  GroupssettingsApi([this.baseUrl = "https://www.googleapis.com/groups/v1/groups/", this.applicationName]) { 
+  GroupssettingsApi([this.baseUrl = "https://www.googleapis.com/groups/v1/groups/", this.applicationName, this.authenticator]) { 
     _groups = new GroupsResource._internal(this);
   }
-  String get userAgent() {
+  core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}groupssettings/v1/20120516 google-api-dart-client/${clientVersion}";
   }
 }
 
 // Resource .GroupsResource
-class GroupsResource {
+class GroupsResource extends core.Object {
   final GroupssettingsApi _$service;
   
   GroupsResource._internal(GroupssettingsApi $service) : _$service = $service;
@@ -71,7 +74,7 @@ class GroupsResource {
    * [groupUniqueId] The resource ID
    * [content] the Groups
    */
-  Future<Groups> patch(String groupUniqueId, Groups content) {
+  core.Future<Groups> patch(core.String groupUniqueId, Groups content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -87,19 +90,13 @@ class GroupsResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Groups.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "{groupUniqueId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Groups>();
     final $http = new HttpRequest($url, "PATCH", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Groups.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Groups.parse(JSON.parse($text)));
   }
 
   // Method GroupsResource.Update
@@ -108,7 +105,7 @@ class GroupsResource {
    * [groupUniqueId] The resource ID
    * [content] the Groups
    */
-  Future<Groups> update(String groupUniqueId, Groups content) {
+  core.Future<Groups> update(core.String groupUniqueId, Groups content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -124,19 +121,13 @@ class GroupsResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Groups.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "{groupUniqueId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Groups>();
     final $http = new HttpRequest($url, "PUT", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Groups.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Groups.parse(JSON.parse($text)));
   }
 
   // Method GroupsResource.Get
@@ -144,7 +135,7 @@ class GroupsResource {
    * Gets one resource by id.
    * [groupUniqueId] The resource ID
    */
-  Future<Groups> get(String groupUniqueId) {
+  core.Future<Groups> get(core.String groupUniqueId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -158,119 +149,113 @@ class GroupsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "{groupUniqueId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Groups>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Groups.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Groups.parse(JSON.parse($text)));
   }
 }
 
 // Schema .Groups
 class Groups extends IdentityHash {
   /** Are external members allowed to join the group. */
-  String allowExternalMembers;
+  core.String allowExternalMembers;
 
   /**
  * Permissions to join the group. Possible values are: ANYONE_CAN_JOIN ALL_IN_DOMAIN_CAN_JOIN
  * INVITED_CAN_JOIN CAN_REQUEST_TO_JOIN
  */
-  String whoCanJoin;
+  core.String whoCanJoin;
 
   /** Primary language for the group. */
-  String primaryLanguage;
+  core.String primaryLanguage;
 
   /**
  * Permissions to view membership. Possbile values are: ALL_IN_DOMAIN_CAN_VIEW ALL_MEMBERS_CAN_VIEW
  * ALL_MANAGERS_CAN_VIEW
  */
-  String whoCanViewMembership;
+  core.String whoCanViewMembership;
 
   /** Default message deny notification message */
-  String defaultMessageDenyNotificationText;
+  core.String defaultMessageDenyNotificationText;
 
   /** If the group is archive only */
-  String archiveOnly;
+  core.String archiveOnly;
 
   /** If the contents of the group are archived. */
-  String isArchived;
+  core.String isArchived;
 
   /** Can members post using the group email address. */
-  String membersCanPostAsTheGroup;
+  core.String membersCanPostAsTheGroup;
 
   /** If posting from web is allowed. */
-  String allowWebPosting;
+  core.String allowWebPosting;
 
   /** Email id of the group */
-  String email;
+  core.String email;
 
   /**
  * Moderation level for messages. Possible values are: MODERATE_ALL_MESSAGES MODERATE_NON_MEMBERS
  * MODERATE_NEW_MEMBERS MODERATE_NONE
  */
-  String messageModerationLevel;
+  core.String messageModerationLevel;
 
   /** Description of the group */
-  String description;
+  core.String description;
 
   /**
  * Whome should the default reply to a message go to. Possible values are: REPLY_TO_CUSTOM
  * REPLY_TO_SENDER REPLY_TO_LIST REPLY_TO_OWNER REPLY_TO_IGNORE REPLY_TO_MANAGERS
  */
-  String replyTo;
+  core.String replyTo;
 
   /** Default email to which reply to any message should go. */
-  String customReplyTo;
+  core.String customReplyTo;
 
   /** Should the member be notified if his message is denied by owner. */
-  String sendMessageDenyNotification;
+  core.String sendMessageDenyNotification;
 
   /** Default message display font. Possible values are: DEFAULT_FONT FIXED_WIDTH_FONT */
-  String messageDisplayFont;
+  core.String messageDisplayFont;
 
   /**
  * Permissions to post messages to the group. Possible values are: NONE_CAN_POST
  * ALL_MANAGERS_CAN_POST ALL_MEMBERS_CAN_POST ALL_IN_DOMAIN_CAN_POST ANYONE_CAN_POST
  */
-  String whoCanPostMessage;
+  core.String whoCanPostMessage;
 
   /** Name of the Group */
-  String name;
+  core.String name;
 
   /** The type of the resource. */
-  String kind;
+  core.String kind;
 
   /**
  * Permissions to invite members. Possbile values are: ALL_MEMBERS_CAN_INVITE
  * ALL_MANAGERS_CAN_INVITE
  */
-  String whoCanInvite;
+  core.String whoCanInvite;
 
   /**
  * Permissions to view group. Possbile values are: ANYONE_CAN_VIEW ALL_IN_DOMAIN_CAN_VIEW
  * ALL_MEMBERS_CAN_VIEW ALL_MANAGERS_CAN_VIEW
  */
-  String whoCanViewGroup;
+  core.String whoCanViewGroup;
 
   /** Is the group listed in groups directory */
-  String showInGroupDirectory;
+  core.String showInGroupDirectory;
 
   /** Maximum message size allowed. */
-  int maxMessageBytes;
+  core.int maxMessageBytes;
 
   /** Is google allowed to contact admins. */
-  String allowGoogleCommunication;
+  core.String allowGoogleCommunication;
 
   /** Parses an instance from its JSON representation. */
-  static Groups parse(Map<String, Object> json) {
+  static Groups parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Groups();
     result.allowExternalMembers = identity(json["allowExternalMembers"]);
@@ -300,9 +285,9 @@ class Groups extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Groups value) {
+  static core.Object serialize(Groups value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["allowExternalMembers"] = identity(value.allowExternalMembers);
     result["whoCanJoin"] = identity(value.whoCanJoin);
     result["primaryLanguage"] = identity(value.primaryLanguage);
@@ -333,14 +318,14 @@ class Groups extends IdentityHash {
 }
 
 // Enum GroupssettingsApi.Alt
-class GroupssettingsApiAlt implements Hashable {
+class GroupssettingsApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/atom+xml */
   static final GroupssettingsApiAlt ATOM = const GroupssettingsApiAlt._internal("atom", 0);
   /** Responses with Content-Type of application/json */
   static final GroupssettingsApiAlt JSON = const GroupssettingsApiAlt._internal("json", 1);
 
   /** All values of this enumeration */
-  static final List<GroupssettingsApiAlt> values = const <GroupssettingsApiAlt>[
+  static final core.List<GroupssettingsApiAlt> values = const <GroupssettingsApiAlt>[
     ATOM,
     JSON,
   ];
@@ -352,14 +337,14 @@ class GroupssettingsApiAlt implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static GroupssettingsApiAlt valueOf(String item) => _valuesMap[item];
+  static GroupssettingsApiAlt valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const GroupssettingsApiAlt._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const GroupssettingsApiAlt._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Alt".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Alt".hashCode();
 }
 

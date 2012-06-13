@@ -1,4 +1,5 @@
 #library("adexchangebuyer");
+#import('dart:core', prefix: 'core');
 #import('dart:json');
 
 #import('utils.dart');
@@ -8,13 +9,15 @@
 /**
  * Lets you manage your Ad Exchange Buyer account
  */
-class AdexchangebuyerApi {
+class AdexchangebuyerApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
-  final String baseUrl;
+  final core.String baseUrl;
+  /** How we should identify ourselves to the service. */
+  Authenticator authenticator;
   /** The client library version */
-  final String clientVersion = "0.1";
+  final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
-  final String applicationName;
+  final core.String applicationName;
   AdexchangebuyerApi get _$service() => this;
   DirectDealsResource _directDeals;
   DirectDealsResource get directDeals() => _directDeals;
@@ -24,49 +27,49 @@ class AdexchangebuyerApi {
   CreativesResource get creatives() => _creatives;
   
   /** Returns response with indentations and line breaks. */
-  bool prettyPrint;
+  core.bool prettyPrint;
 
   /** Selector specifying which fields to include in a partial response. */
-  String fields;
+  core.String fields;
 
   /**
    * Available to use for quota purposes for server-side applications. Can be any arbitrary string
    * assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.
    */
-  String quotaUser;
+  core.String quotaUser;
 
   /** OAuth 2.0 token for the current user. */
-  String oauthToken;
+  core.String oauthToken;
 
   /**
    * API key. Your API key identifies your project and provides you with API access, quota, and
    * reports. Required unless you provide an OAuth 2.0 token.
    */
-  String key;
+  core.String key;
 
   /**
    * IP address of the site where the request originates. Use this if you want to enforce per-user
    * limits.
    */
-  String userIp;
+  core.String userIp;
 
   /** Data format for the response. */
   AdexchangebuyerApiAlt alt;
 
 
-  AdexchangebuyerApi([this.baseUrl = "https://www.googleapis.com/adexchangebuyer/v1/", this.applicationName]) { 
+  AdexchangebuyerApi([this.baseUrl = "https://www.googleapis.com/adexchangebuyer/v1/", this.applicationName, this.authenticator]) { 
     _directDeals = new DirectDealsResource._internal(this);
     _accounts = new AccountsResource._internal(this);
     _creatives = new CreativesResource._internal(this);
   }
-  String get userAgent() {
+  core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}adexchangebuyer/v1/20120508 google-api-dart-client/${clientVersion}";
   }
 }
 
 // Resource .DirectDealsResource
-class DirectDealsResource {
+class DirectDealsResource extends core.Object {
   final AdexchangebuyerApi _$service;
   
   DirectDealsResource._internal(AdexchangebuyerApi $service) : _$service = $service;
@@ -75,7 +78,7 @@ class DirectDealsResource {
   /**
    * Retrieves the authenticated user's list of direct deals.
    */
-  Future<DirectDealsList> list() {
+  core.Future<DirectDealsList> list() {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -88,19 +91,13 @@ class DirectDealsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "directdeals").generate($pathParams, $queryParams);
-    final $completer = new Completer<DirectDealsList>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = DirectDealsList.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => DirectDealsList.parse(JSON.parse($text)));
   }
 
   // Method DirectDealsResource.Get
@@ -108,7 +105,7 @@ class DirectDealsResource {
    * Gets one direct deal by ID.
    * [id] The direct deal id
    */
-  Future<DirectDeal> get(String id) {
+  core.Future<DirectDeal> get(core.String id) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -122,24 +119,18 @@ class DirectDealsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "directdeals/{id}").generate($pathParams, $queryParams);
-    final $completer = new Completer<DirectDeal>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = DirectDeal.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => DirectDeal.parse(JSON.parse($text)));
   }
 }
 
 // Resource .AccountsResource
-class AccountsResource {
+class AccountsResource extends core.Object {
   final AdexchangebuyerApi _$service;
   
   AccountsResource._internal(AdexchangebuyerApi $service) : _$service = $service;
@@ -150,7 +141,7 @@ class AccountsResource {
    * [id] The account id
    * [content] the Account
    */
-  Future<Account> patch(int id, Account content) {
+  core.Future<Account> patch(core.int id, Account content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -166,26 +157,20 @@ class AccountsResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Account.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "accounts/{id}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Account>();
     final $http = new HttpRequest($url, "PATCH", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Account.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Account.parse(JSON.parse($text)));
   }
 
   // Method AccountsResource.List
   /**
    * Retrieves the authenticated user's list of accounts.
    */
-  Future<AccountsList> list() {
+  core.Future<AccountsList> list() {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -198,19 +183,13 @@ class AccountsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "accounts").generate($pathParams, $queryParams);
-    final $completer = new Completer<AccountsList>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = AccountsList.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => AccountsList.parse(JSON.parse($text)));
   }
 
   // Method AccountsResource.Update
@@ -219,7 +198,7 @@ class AccountsResource {
    * [id] The account id
    * [content] the Account
    */
-  Future<Account> update(int id, Account content) {
+  core.Future<Account> update(core.int id, Account content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -235,19 +214,13 @@ class AccountsResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Account.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "accounts/{id}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Account>();
     final $http = new HttpRequest($url, "PUT", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Account.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Account.parse(JSON.parse($text)));
   }
 
   // Method AccountsResource.Get
@@ -255,7 +228,7 @@ class AccountsResource {
    * Gets one account by ID.
    * [id] The account id
    */
-  Future<Account> get(int id) {
+  core.Future<Account> get(core.int id) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -269,24 +242,18 @@ class AccountsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "accounts/{id}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Account>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Account.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Account.parse(JSON.parse($text)));
   }
 }
 
 // Resource .CreativesResource
-class CreativesResource {
+class CreativesResource extends core.Object {
   final AdexchangebuyerApi _$service;
   
   CreativesResource._internal(AdexchangebuyerApi $service) : _$service = $service;
@@ -296,7 +263,7 @@ class CreativesResource {
    * Submit a new creative.
    * [content] the Creative
    */
-  Future<Creative> insert(Creative content) {
+  core.Future<Creative> insert(Creative content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -311,26 +278,20 @@ class CreativesResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Creative.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "creatives").generate($pathParams, $queryParams);
-    final $completer = new Completer<Creative>();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Creative.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Creative.parse(JSON.parse($text)));
   }
 
   // Method CreativesResource.List
   /**
    * Retrieves a list of the authenticated user's active creatives.
    */
-  Future<CreativesList> list([String pageToken = UNSPECIFIED, int maxResults = UNSPECIFIED]) {
+  core.Future<CreativesList> list([core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -345,19 +306,13 @@ class CreativesResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "creatives").generate($pathParams, $queryParams);
-    final $completer = new Completer<CreativesList>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = CreativesList.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => CreativesList.parse(JSON.parse($text)));
   }
 
   // Method CreativesResource.Get
@@ -367,7 +322,7 @@ class CreativesResource {
    * [buyerCreativeId] The buyer-specific id for this creative.
    * [adgroupId] The adgroup this creative belongs to.
    */
-  Future<Creative> get(int accountId, String buyerCreativeId, String adgroupId) {
+  core.Future<Creative> get(core.int accountId, core.String buyerCreativeId, core.String adgroupId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -383,50 +338,44 @@ class CreativesResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "creatives/{accountId}/{buyerCreativeId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Creative>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Creative.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Creative.parse(JSON.parse($text)));
   }
 }
 
 // Schema .Account
 class Account extends IdentityHash {
   /** Resource type. */
-  String kind;
+  core.String kind;
 
   /**
  * The sum of all bidderLocation.maximumQps values cannot exceed this. Please contact your technical
  * account manager if you need to change this.
  */
-  int maximumTotalQps;
+  core.int maximumTotalQps;
 
   /** Your bidder locations that have distinct URLs. */
-  List<AccountBidderLocation> bidderLocation;
+  core.List<AccountBidderLocation> bidderLocation;
 
   /**
  * The nid parameter value used in cookie match requests. Please contact your technical account
  * manager if you need to change this.
  */
-  String cookieMatchingNid;
+  core.String cookieMatchingNid;
 
   /** Account id. */
-  int id;
+  core.int id;
 
   /** The base URL used in cookie match requests. */
-  String cookieMatchingUrl;
+  core.String cookieMatchingUrl;
 
   /** Parses an instance from its JSON representation. */
-  static Account parse(Map<String, Object> json) {
+  static Account parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Account();
     result.kind = identity(json["kind"]);
@@ -438,9 +387,9 @@ class Account extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Account value) {
+  static core.Object serialize(Account value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["kind"] = identity(value.kind);
     result["maximumTotalQps"] = identity(value.maximumTotalQps);
     result["bidderLocation"] = map(AccountBidderLocation.serialize)(value.bidderLocation);
@@ -455,13 +404,13 @@ class Account extends IdentityHash {
 // Schema Account.AccountBidderLocation
 class AccountBidderLocation extends IdentityHash {
   /** The URL to which the Ad Exchange will send bid requests. */
-  String url;
+  core.String url;
 
   /** The maximum queries per second the Ad Exchange will send. */
-  int maximumQps;
+  core.int maximumQps;
 
   /** Parses an instance from its JSON representation. */
-  static AccountBidderLocation parse(Map<String, Object> json) {
+  static AccountBidderLocation parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new AccountBidderLocation();
     result.url = identity(json["url"]);
@@ -469,9 +418,9 @@ class AccountBidderLocation extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(AccountBidderLocation value) {
+  static core.Object serialize(AccountBidderLocation value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["url"] = identity(value.url);
     result["maximumQps"] = identity(value.maximumQps);
     return result;
@@ -482,13 +431,13 @@ class AccountBidderLocation extends IdentityHash {
 // Schema .AccountsList
 class AccountsList extends IdentityHash {
   /** A list of accounts. */
-  List<Account> items;
+  core.List<Account> items;
 
   /** Resource type. */
-  String kind;
+  core.String kind;
 
   /** Parses an instance from its JSON representation. */
-  static AccountsList parse(Map<String, Object> json) {
+  static AccountsList parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new AccountsList();
     result.items = map(Account.parse)(json["items"]);
@@ -496,9 +445,9 @@ class AccountsList extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(AccountsList value) {
+  static core.Object serialize(AccountsList value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["items"] = map(Account.serialize)(value.items);
     result["kind"] = identity(value.kind);
     return result;
@@ -509,49 +458,49 @@ class AccountsList extends IdentityHash {
 // Schema .Creative
 class Creative extends IdentityHash {
   /** Detected product categories, if any. Read-only. This field should not be set in requests. */
-  List<int> productCategories;
+  core.List<core.int> productCategories;
 
   /** The name of the company being advertised in the creative. */
-  String advertiserName;
+  core.String advertiserName;
 
   /** The pretargeting adgroup id that this creative will be associated with. */
-  String adgroupId;
+  core.String adgroupId;
 
   /** The url to fetch a video ad. If set, HTMLSnippet should not be set. */
-  String videoURL;
+  core.String videoURL;
 
   /** Ad width. */
-  int width;
+  core.int width;
 
   /** All attributes for the ads that may be shown from this snippet. */
-  List<int> attribute;
+  core.List<core.int> attribute;
 
   /** Resource type. */
-  String kind;
+  core.String kind;
 
   /** Ad height. */
-  int height;
+  core.int height;
 
   /** Detected advertiser id, if any. Read-only. This field should not be set in requests. */
-  List<String> advertiserId;
+  core.List<core.String> advertiserId;
 
   /**
  * The HTML snippet that displays the ad when inserted in the web page. If set, videoURL should not
  * be set.
  */
-  String hTMLSnippet;
+  core.String hTMLSnippet;
 
   /** Creative serving status. Read-only. This field should not be set in requests. */
-  String status;
+  core.String status;
 
   /** A buyer-specific id identifying the creative in this ad. */
-  String buyerCreativeId;
+  core.String buyerCreativeId;
 
   /** The set of destination urls for the snippet. */
-  List<String> clickThroughUrl;
+  core.List<core.String> clickThroughUrl;
 
   /** All vendor types for the ads that may be shown from this snippet. */
-  List<int> vendorType;
+  core.List<core.int> vendorType;
 
   /**
  * The reason for disapproval, if any. Note that not all disapproval reasons may be categorized, so
@@ -559,16 +508,16 @@ class Creative extends IdentityHash {
  * disapproval_reasons. In this case, please reach out to your TAM to help debug the issue. Read-
  * only. This field should not be set in requests.
  */
-  List<String> disapprovalReasons;
+  core.List<core.String> disapprovalReasons;
 
   /** Detected sensitive categories, if any. Read-only. This field should not be set in requests. */
-  List<int> sensitiveCategories;
+  core.List<core.int> sensitiveCategories;
 
   /** Account id. */
-  int accountId;
+  core.int accountId;
 
   /** Parses an instance from its JSON representation. */
-  static Creative parse(Map<String, Object> json) {
+  static Creative parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Creative();
     result.productCategories = map(identity)(json["productCategories"]);
@@ -591,9 +540,9 @@ class Creative extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Creative value) {
+  static core.Object serialize(Creative value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["productCategories"] = map(identity)(value.productCategories);
     result["advertiserName"] = identity(value.advertiserName);
     result["adgroupId"] = identity(value.adgroupId);
@@ -619,13 +568,13 @@ class Creative extends IdentityHash {
 // Schema .CreativesList
 class CreativesList extends IdentityHash {
   /** A list of creatives. */
-  List<Creative> items;
+  core.List<Creative> items;
 
   /** Resource type. */
-  String kind;
+  core.String kind;
 
   /** Parses an instance from its JSON representation. */
-  static CreativesList parse(Map<String, Object> json) {
+  static CreativesList parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new CreativesList();
     result.items = map(Creative.parse)(json["items"]);
@@ -633,9 +582,9 @@ class CreativesList extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(CreativesList value) {
+  static core.Object serialize(CreativesList value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["items"] = map(Creative.serialize)(value.items);
     result["kind"] = identity(value.kind);
     return result;
@@ -646,40 +595,40 @@ class CreativesList extends IdentityHash {
 // Schema .DirectDeal
 class DirectDeal extends IdentityHash {
   /** The name of the advertiser this deal is for. */
-  String advertiser;
+  core.String advertiser;
 
   /** Resource type. */
-  String kind;
+  core.String kind;
 
   /** The currency code that applies to the fixed_cpm value. If not set then assumed to be USD. */
-  String currencyCode;
+  core.String currencyCode;
 
   /** The fixed price for this direct deal. In cpm micros of currency according to currency_code. */
-  String fixedCpm;
+  core.String fixedCpm;
 
   /**
  * Start time for when this deal becomes active. If not set then this deal is active immediately
  * upon creation. In seconds since the epoch.
  */
-  String startTime;
+  core.String startTime;
 
   /**
  * End time for when this deal stops being active. If not set then this deal is valid until manually
  * disabled by the publisher. In seconds since the epoch.
  */
-  String endTime;
+  core.String endTime;
 
   /** The name of the publisher offering this direct deal. */
-  String sellerNetwork;
+  core.String sellerNetwork;
 
   /** Deal id. */
-  String id;
+  core.String id;
 
   /** The account id of the buyer this deal is for. */
-  int accountId;
+  core.int accountId;
 
   /** Parses an instance from its JSON representation. */
-  static DirectDeal parse(Map<String, Object> json) {
+  static DirectDeal parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new DirectDeal();
     result.advertiser = identity(json["advertiser"]);
@@ -694,9 +643,9 @@ class DirectDeal extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(DirectDeal value) {
+  static core.Object serialize(DirectDeal value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["advertiser"] = identity(value.advertiser);
     result["kind"] = identity(value.kind);
     result["currencyCode"] = identity(value.currencyCode);
@@ -714,13 +663,13 @@ class DirectDeal extends IdentityHash {
 // Schema .DirectDealsList
 class DirectDealsList extends IdentityHash {
   /** Resource type. */
-  String kind;
+  core.String kind;
 
   /** A list of direct deals relevant for your account. */
-  List<DirectDeal> directDeals;
+  core.List<DirectDeal> directDeals;
 
   /** Parses an instance from its JSON representation. */
-  static DirectDealsList parse(Map<String, Object> json) {
+  static DirectDealsList parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new DirectDealsList();
     result.kind = identity(json["kind"]);
@@ -728,9 +677,9 @@ class DirectDealsList extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(DirectDealsList value) {
+  static core.Object serialize(DirectDealsList value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["kind"] = identity(value.kind);
     result["directDeals"] = map(DirectDeal.serialize)(value.directDeals);
     return result;
@@ -739,12 +688,12 @@ class DirectDealsList extends IdentityHash {
 }
 
 // Enum AdexchangebuyerApi.Alt
-class AdexchangebuyerApiAlt implements Hashable {
+class AdexchangebuyerApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/json */
   static final AdexchangebuyerApiAlt JSON = const AdexchangebuyerApiAlt._internal("json", 0);
 
   /** All values of this enumeration */
-  static final List<AdexchangebuyerApiAlt> values = const <AdexchangebuyerApiAlt>[
+  static final core.List<AdexchangebuyerApiAlt> values = const <AdexchangebuyerApiAlt>[
     JSON,
   ];
 
@@ -754,14 +703,14 @@ class AdexchangebuyerApiAlt implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static AdexchangebuyerApiAlt valueOf(String item) => _valuesMap[item];
+  static AdexchangebuyerApiAlt valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const AdexchangebuyerApiAlt._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const AdexchangebuyerApiAlt._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Alt".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Alt".hashCode();
 }
 

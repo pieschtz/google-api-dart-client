@@ -1,4 +1,5 @@
 #library("customsearch");
+#import('dart:core', prefix: 'core');
 #import('dart:json');
 
 #import('utils.dart');
@@ -8,59 +9,61 @@
 /**
  * Lets you search over a website or collection of websites
  */
-class CustomsearchApi {
+class CustomsearchApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
-  final String baseUrl;
+  final core.String baseUrl;
+  /** How we should identify ourselves to the service. */
+  Authenticator authenticator;
   /** The client library version */
-  final String clientVersion = "0.1";
+  final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
-  final String applicationName;
+  final core.String applicationName;
   CustomsearchApi get _$service() => this;
   CseResource _cse;
   CseResource get cse() => _cse;
   
   /** Returns response with indentations and line breaks. */
-  bool prettyPrint;
+  core.bool prettyPrint;
 
   /** Selector specifying which fields to include in a partial response. */
-  String fields;
+  core.String fields;
 
   /**
    * Available to use for quota purposes for server-side applications. Can be any arbitrary string
    * assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.
    */
-  String quotaUser;
+  core.String quotaUser;
 
   /** OAuth 2.0 token for the current user. */
-  String oauthToken;
+  core.String oauthToken;
 
   /**
    * API key. Your API key identifies your project and provides you with API access, quota, and
    * reports. Required unless you provide an OAuth 2.0 token.
    */
-  String key;
+  core.String key;
 
   /**
    * IP address of the site where the request originates. Use this if you want to enforce per-user
    * limits.
    */
-  String userIp;
+  core.String userIp;
 
   /** Data format for the response. */
   CustomsearchApiAlt alt;
 
 
-  CustomsearchApi([this.baseUrl = "https://www.googleapis.com/customsearch/", this.applicationName]) { 
+  CustomsearchApi([this.baseUrl = "https://www.googleapis.com/customsearch/", this.applicationName, this.authenticator]) { 
     _cse = new CseResource._internal(this);
   }
-  String get userAgent() {
+  core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}customsearch/v1/20120511 google-api-dart-client/${clientVersion}";
   }
 }
 
 // Resource .CseResource
-class CseResource {
+class CseResource extends core.Object {
   final CustomsearchApi _$service;
   
   CseResource._internal(CustomsearchApi $service) : _$service = $service;
@@ -71,7 +74,7 @@ class CseResource {
    * search, and the search results.
    * [q] Query
    */
-  Future<Search> list(String q, [String sort = UNSPECIFIED, String orTerms = UNSPECIFIED, String highRange = UNSPECIFIED, int num = UNSPECIFIED, String cr = UNSPECIFIED, CseResourceListImgType imgType = UNSPECIFIED, String gl = UNSPECIFIED, String relatedSite = UNSPECIFIED, CseResourceListSearchType searchType = UNSPECIFIED, String fileType = UNSPECIFIED, int start = UNSPECIFIED, CseResourceListImgDominantColor imgDominantColor = UNSPECIFIED, CseResourceListLr lr = UNSPECIFIED, String siteSearch = UNSPECIFIED, String cref = UNSPECIFIED, String dateRestrict = UNSPECIFIED, CseResourceListSafe safe = UNSPECIFIED, String c2coff = UNSPECIFIED, String googlehost = UNSPECIFIED, String hq = UNSPECIFIED, String exactTerms = UNSPECIFIED, String hl = UNSPECIFIED, String lowRange = UNSPECIFIED, CseResourceListImgSize imgSize = UNSPECIFIED, CseResourceListImgColorType imgColorType = UNSPECIFIED, String rights = UNSPECIFIED, String excludeTerms = UNSPECIFIED, CseResourceListFilter filter = UNSPECIFIED, String linkSite = UNSPECIFIED, String cx = UNSPECIFIED, CseResourceListSiteSearchFilter siteSearchFilter = UNSPECIFIED]) {
+  core.Future<Search> list(core.String q, [core.String sort = UNSPECIFIED, core.String orTerms = UNSPECIFIED, core.String highRange = UNSPECIFIED, core.int num = UNSPECIFIED, core.String cr = UNSPECIFIED, CseResourceListImgType imgType = UNSPECIFIED, core.String gl = UNSPECIFIED, core.String relatedSite = UNSPECIFIED, CseResourceListSearchType searchType = UNSPECIFIED, core.String fileType = UNSPECIFIED, core.int start = UNSPECIFIED, CseResourceListImgDominantColor imgDominantColor = UNSPECIFIED, CseResourceListLr lr = UNSPECIFIED, core.String siteSearch = UNSPECIFIED, core.String cref = UNSPECIFIED, core.String dateRestrict = UNSPECIFIED, CseResourceListSafe safe = UNSPECIFIED, core.String c2coff = UNSPECIFIED, core.String googlehost = UNSPECIFIED, core.String hq = UNSPECIFIED, core.String exactTerms = UNSPECIFIED, core.String hl = UNSPECIFIED, core.String lowRange = UNSPECIFIED, CseResourceListImgSize imgSize = UNSPECIFIED, CseResourceListImgColorType imgColorType = UNSPECIFIED, core.String rights = UNSPECIFIED, core.String excludeTerms = UNSPECIFIED, CseResourceListFilter filter = UNSPECIFIED, core.String linkSite = UNSPECIFIED, core.String cx = UNSPECIFIED, CseResourceListSiteSearchFilter siteSearchFilter = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -116,24 +119,18 @@ class CseResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "v1").generate($pathParams, $queryParams);
-    final $completer = new Completer<Search>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Search.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Search.parse(JSON.parse($text)));
   }
 }
 
 // Enum CseResource.List.ImgType
-class CseResourceListImgType implements Hashable {
+class CseResourceListImgType extends core.Object implements core.Hashable {
   /** clipart */
   static final CseResourceListImgType CLIPART = const CseResourceListImgType._internal("clipart", 0);
   /** face */
@@ -146,7 +143,7 @@ class CseResourceListImgType implements Hashable {
   static final CseResourceListImgType PHOTO = const CseResourceListImgType._internal("photo", 4);
 
   /** All values of this enumeration */
-  static final List<CseResourceListImgType> values = const <CseResourceListImgType>[
+  static final core.List<CseResourceListImgType> values = const <CseResourceListImgType>[
     CLIPART,
     FACE,
     LINEART,
@@ -164,24 +161,24 @@ class CseResourceListImgType implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static CseResourceListImgType valueOf(String item) => _valuesMap[item];
+  static CseResourceListImgType valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const CseResourceListImgType._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const CseResourceListImgType._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "ImgType".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "ImgType".hashCode();
 }
 
 // Enum CseResource.List.SearchType
-class CseResourceListSearchType implements Hashable {
+class CseResourceListSearchType extends core.Object implements core.Hashable {
   /** custom image search */
   static final CseResourceListSearchType IMAGE = const CseResourceListSearchType._internal("image", 0);
 
   /** All values of this enumeration */
-  static final List<CseResourceListSearchType> values = const <CseResourceListSearchType>[
+  static final core.List<CseResourceListSearchType> values = const <CseResourceListSearchType>[
     IMAGE,
   ];
 
@@ -191,19 +188,19 @@ class CseResourceListSearchType implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static CseResourceListSearchType valueOf(String item) => _valuesMap[item];
+  static CseResourceListSearchType valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const CseResourceListSearchType._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const CseResourceListSearchType._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "SearchType".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "SearchType".hashCode();
 }
 
 // Enum CseResource.List.ImgDominantColor
-class CseResourceListImgDominantColor implements Hashable {
+class CseResourceListImgDominantColor extends core.Object implements core.Hashable {
   /** black */
   static final CseResourceListImgDominantColor BLACK = const CseResourceListImgDominantColor._internal("black", 0);
   /** blue */
@@ -226,7 +223,7 @@ class CseResourceListImgDominantColor implements Hashable {
   static final CseResourceListImgDominantColor YELLOW = const CseResourceListImgDominantColor._internal("yellow", 9);
 
   /** All values of this enumeration */
-  static final List<CseResourceListImgDominantColor> values = const <CseResourceListImgDominantColor>[
+  static final core.List<CseResourceListImgDominantColor> values = const <CseResourceListImgDominantColor>[
     BLACK,
     BLUE,
     BROWN,
@@ -254,19 +251,19 @@ class CseResourceListImgDominantColor implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static CseResourceListImgDominantColor valueOf(String item) => _valuesMap[item];
+  static CseResourceListImgDominantColor valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const CseResourceListImgDominantColor._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const CseResourceListImgDominantColor._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "ImgDominantColor".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "ImgDominantColor".hashCode();
 }
 
 // Enum CseResource.List.Lr
-class CseResourceListLr implements Hashable {
+class CseResourceListLr extends core.Object implements core.Hashable {
   /** Arabic */
   static final CseResourceListLr LANG_AR = const CseResourceListLr._internal("lang_ar", 0);
   /** Bulgarian */
@@ -339,7 +336,7 @@ class CseResourceListLr implements Hashable {
   static final CseResourceListLr LANG_ZH_TW = const CseResourceListLr._internal("lang_zh-TW", 34);
 
   /** All values of this enumeration */
-  static final List<CseResourceListLr> values = const <CseResourceListLr>[
+  static final core.List<CseResourceListLr> values = const <CseResourceListLr>[
     LANG_AR,
     LANG_BG,
     LANG_CA,
@@ -417,19 +414,19 @@ class CseResourceListLr implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static CseResourceListLr valueOf(String item) => _valuesMap[item];
+  static CseResourceListLr valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const CseResourceListLr._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const CseResourceListLr._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Lr".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Lr".hashCode();
 }
 
 // Enum CseResource.List.Safe
-class CseResourceListSafe implements Hashable {
+class CseResourceListSafe extends core.Object implements core.Hashable {
   /** Enables highest level of safe search filtering. */
   static final CseResourceListSafe HIGH = const CseResourceListSafe._internal("high", 0);
   /** Enables moderate safe search filtering. */
@@ -438,7 +435,7 @@ class CseResourceListSafe implements Hashable {
   static final CseResourceListSafe OFF = const CseResourceListSafe._internal("off", 2);
 
   /** All values of this enumeration */
-  static final List<CseResourceListSafe> values = const <CseResourceListSafe>[
+  static final core.List<CseResourceListSafe> values = const <CseResourceListSafe>[
     HIGH,
     MEDIUM,
     OFF,
@@ -452,19 +449,19 @@ class CseResourceListSafe implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static CseResourceListSafe valueOf(String item) => _valuesMap[item];
+  static CseResourceListSafe valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const CseResourceListSafe._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const CseResourceListSafe._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Safe".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Safe".hashCode();
 }
 
 // Enum CseResource.List.ImgSize
-class CseResourceListImgSize implements Hashable {
+class CseResourceListImgSize extends core.Object implements core.Hashable {
   /** huge */
   static final CseResourceListImgSize HUGE = const CseResourceListImgSize._internal("huge", 0);
   /** icon */
@@ -481,7 +478,7 @@ class CseResourceListImgSize implements Hashable {
   static final CseResourceListImgSize XXLARGE = const CseResourceListImgSize._internal("xxlarge", 6);
 
   /** All values of this enumeration */
-  static final List<CseResourceListImgSize> values = const <CseResourceListImgSize>[
+  static final core.List<CseResourceListImgSize> values = const <CseResourceListImgSize>[
     HUGE,
     ICON,
     LARGE,
@@ -503,19 +500,19 @@ class CseResourceListImgSize implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static CseResourceListImgSize valueOf(String item) => _valuesMap[item];
+  static CseResourceListImgSize valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const CseResourceListImgSize._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const CseResourceListImgSize._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "ImgSize".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "ImgSize".hashCode();
 }
 
 // Enum CseResource.List.ImgColorType
-class CseResourceListImgColorType implements Hashable {
+class CseResourceListImgColorType extends core.Object implements core.Hashable {
   /** color */
   static final CseResourceListImgColorType COLOR = const CseResourceListImgColorType._internal("color", 0);
   /** gray */
@@ -524,7 +521,7 @@ class CseResourceListImgColorType implements Hashable {
   static final CseResourceListImgColorType MONO = const CseResourceListImgColorType._internal("mono", 2);
 
   /** All values of this enumeration */
-  static final List<CseResourceListImgColorType> values = const <CseResourceListImgColorType>[
+  static final core.List<CseResourceListImgColorType> values = const <CseResourceListImgColorType>[
     COLOR,
     GRAY,
     MONO,
@@ -538,26 +535,26 @@ class CseResourceListImgColorType implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static CseResourceListImgColorType valueOf(String item) => _valuesMap[item];
+  static CseResourceListImgColorType valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const CseResourceListImgColorType._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const CseResourceListImgColorType._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "ImgColorType".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "ImgColorType".hashCode();
 }
 
 // Enum CseResource.List.Filter
-class CseResourceListFilter implements Hashable {
+class CseResourceListFilter extends core.Object implements core.Hashable {
   /** Turns off duplicate content filter. */
   static final CseResourceListFilter VALUE_0 = const CseResourceListFilter._internal("0", 0);
   /** Turns on duplicate content filter. */
   static final CseResourceListFilter VALUE_1 = const CseResourceListFilter._internal("1", 1);
 
   /** All values of this enumeration */
-  static final List<CseResourceListFilter> values = const <CseResourceListFilter>[
+  static final core.List<CseResourceListFilter> values = const <CseResourceListFilter>[
     VALUE_0,
     VALUE_1,
   ];
@@ -569,26 +566,26 @@ class CseResourceListFilter implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static CseResourceListFilter valueOf(String item) => _valuesMap[item];
+  static CseResourceListFilter valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const CseResourceListFilter._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const CseResourceListFilter._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Filter".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Filter".hashCode();
 }
 
 // Enum CseResource.List.SiteSearchFilter
-class CseResourceListSiteSearchFilter implements Hashable {
+class CseResourceListSiteSearchFilter extends core.Object implements core.Hashable {
   /** exclude */
   static final CseResourceListSiteSearchFilter E = const CseResourceListSiteSearchFilter._internal("e", 0);
   /** include */
   static final CseResourceListSiteSearchFilter I = const CseResourceListSiteSearchFilter._internal("i", 1);
 
   /** All values of this enumeration */
-  static final List<CseResourceListSiteSearchFilter> values = const <CseResourceListSiteSearchFilter>[
+  static final core.List<CseResourceListSiteSearchFilter> values = const <CseResourceListSiteSearchFilter>[
     E,
     I,
   ];
@@ -600,27 +597,27 @@ class CseResourceListSiteSearchFilter implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static CseResourceListSiteSearchFilter valueOf(String item) => _valuesMap[item];
+  static CseResourceListSiteSearchFilter valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const CseResourceListSiteSearchFilter._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const CseResourceListSiteSearchFilter._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "SiteSearchFilter".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "SiteSearchFilter".hashCode();
 }
 
 // Schema .Context
 class Context extends IdentityHash {
   
-  List<List<ContextFacets>> facets;
+  core.List<core.List<ContextFacets>> facets;
 
   
-  String title;
+  core.String title;
 
   /** Parses an instance from its JSON representation. */
-  static Context parse(Map<String, Object> json) {
+  static Context parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Context();
     result.facets = map(map(ContextFacets.parse))(json["facets"]);
@@ -628,9 +625,9 @@ class Context extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Context value) {
+  static core.Object serialize(Context value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["facets"] = map(map(ContextFacets.serialize))(value.facets);
     result["title"] = identity(value.title);
     return result;
@@ -641,13 +638,13 @@ class Context extends IdentityHash {
 // Schema Context.ContextFacets
 class ContextFacets extends IdentityHash {
   
-  String anchor;
+  core.String anchor;
 
   
-  String label;
+  core.String label;
 
   /** Parses an instance from its JSON representation. */
-  static ContextFacets parse(Map<String, Object> json) {
+  static ContextFacets parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ContextFacets();
     result.anchor = identity(json["anchor"]);
@@ -655,9 +652,9 @@ class ContextFacets extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ContextFacets value) {
+  static core.Object serialize(ContextFacets value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["anchor"] = identity(value.anchor);
     result["label"] = identity(value.label);
     return result;
@@ -668,25 +665,25 @@ class ContextFacets extends IdentityHash {
 // Schema .Promotion
 class Promotion extends IdentityHash {
   
-  String title;
+  core.String title;
 
   
-  String displayLink;
+  core.String displayLink;
 
   
-  String htmlTitle;
+  core.String htmlTitle;
 
   
-  String link;
+  core.String link;
 
   
-  List<PromotionBodyLines> bodyLines;
+  core.List<PromotionBodyLines> bodyLines;
 
   
   PromotionImage image;
 
   /** Parses an instance from its JSON representation. */
-  static Promotion parse(Map<String, Object> json) {
+  static Promotion parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Promotion();
     result.title = identity(json["title"]);
@@ -698,9 +695,9 @@ class Promotion extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Promotion value) {
+  static core.Object serialize(Promotion value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["title"] = identity(value.title);
     result["displayLink"] = identity(value.displayLink);
     result["htmlTitle"] = identity(value.htmlTitle);
@@ -715,19 +712,19 @@ class Promotion extends IdentityHash {
 // Schema Promotion.PromotionBodyLines
 class PromotionBodyLines extends IdentityHash {
   
-  String url;
+  core.String url;
 
   
-  String htmlTitle;
+  core.String htmlTitle;
 
   
-  String link;
+  core.String link;
 
   
-  String title;
+  core.String title;
 
   /** Parses an instance from its JSON representation. */
-  static PromotionBodyLines parse(Map<String, Object> json) {
+  static PromotionBodyLines parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new PromotionBodyLines();
     result.url = identity(json["url"]);
@@ -737,9 +734,9 @@ class PromotionBodyLines extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(PromotionBodyLines value) {
+  static core.Object serialize(PromotionBodyLines value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["url"] = identity(value.url);
     result["htmlTitle"] = identity(value.htmlTitle);
     result["link"] = identity(value.link);
@@ -752,16 +749,16 @@ class PromotionBodyLines extends IdentityHash {
 // Schema Promotion.PromotionImage
 class PromotionImage extends IdentityHash {
   
-  String source;
+  core.String source;
 
   
-  int width;
+  core.int width;
 
   
-  int height;
+  core.int height;
 
   /** Parses an instance from its JSON representation. */
-  static PromotionImage parse(Map<String, Object> json) {
+  static PromotionImage parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new PromotionImage();
     result.source = identity(json["source"]);
@@ -770,9 +767,9 @@ class PromotionImage extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(PromotionImage value) {
+  static core.Object serialize(PromotionImage value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["source"] = identity(value.source);
     result["width"] = identity(value.width);
     result["height"] = identity(value.height);
@@ -784,118 +781,118 @@ class PromotionImage extends IdentityHash {
 // Schema .Query
 class Query extends IdentityHash {
   
-  String sort;
+  core.String sort;
 
   
-  String inputEncoding;
+  core.String inputEncoding;
 
   
-  String orTerms;
+  core.String orTerms;
 
   
-  String highRange;
+  core.String highRange;
 
   
-  String cx;
+  core.String cx;
 
   
-  int startPage;
+  core.int startPage;
 
   
-  String disableCnTwTranslation;
+  core.String disableCnTwTranslation;
 
   
-  String cr;
+  core.String cr;
 
   
-  String imgType;
+  core.String imgType;
 
   
-  String gl;
+  core.String gl;
 
   
-  String relatedSite;
+  core.String relatedSite;
 
   
-  String searchType;
+  core.String searchType;
 
   
-  String title;
+  core.String title;
 
   
-  String googleHost;
+  core.String googleHost;
 
   
-  String fileType;
+  core.String fileType;
 
   
-  String imgDominantColor;
+  core.String imgDominantColor;
 
   
-  String siteSearch;
+  core.String siteSearch;
 
   
-  String cref;
+  core.String cref;
 
   
-  String dateRestrict;
+  core.String dateRestrict;
 
   
-  String safe;
+  core.String safe;
 
   
-  String outputEncoding;
+  core.String outputEncoding;
 
   
-  String hq;
+  core.String hq;
 
   
-  String searchTerms;
+  core.String searchTerms;
 
   
-  String exactTerms;
+  core.String exactTerms;
 
   
-  String language;
+  core.String language;
 
   
-  String hl;
+  core.String hl;
 
   
-  String totalResults;
+  core.String totalResults;
 
   
-  String lowRange;
+  core.String lowRange;
 
   
-  int count;
+  core.int count;
 
   
-  String imgSize;
+  core.String imgSize;
 
   
-  String imgColorType;
+  core.String imgColorType;
 
   
-  String rights;
+  core.String rights;
 
   
-  int startIndex;
+  core.int startIndex;
 
   
-  String excludeTerms;
+  core.String excludeTerms;
 
   
-  String filter;
+  core.String filter;
 
   
-  String linkSite;
+  core.String linkSite;
 
   
-  String siteSearchFilter;
+  core.String siteSearchFilter;
 
   /** Parses an instance from its JSON representation. */
-  static Query parse(Map<String, Object> json) {
+  static Query parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Query();
     result.sort = identity(json["sort"]);
@@ -938,9 +935,9 @@ class Query extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Query value) {
+  static core.Object serialize(Query value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["sort"] = identity(value.sort);
     result["inputEncoding"] = identity(value.inputEncoding);
     result["orTerms"] = identity(value.orTerms);
@@ -986,52 +983,52 @@ class Query extends IdentityHash {
 // Schema .Result
 class Result extends IdentityHash {
   
-  String snippet;
+  core.String snippet;
 
   
-  String kind;
+  core.String kind;
 
   
-  List<ResultLabels> labels;
+  core.List<ResultLabels> labels;
 
   
-  String title;
+  core.String title;
 
   
-  String displayLink;
+  core.String displayLink;
 
   
-  String cacheId;
+  core.String cacheId;
 
   
-  String formattedUrl;
+  core.String formattedUrl;
 
   
-  String htmlFormattedUrl;
+  core.String htmlFormattedUrl;
 
   
-  Map<String, List<Map<String, Object>>> pagemap;
+  core.Map<String, core.List<core.Map<String, core.Object>>> pagemap;
 
   
-  String htmlTitle;
+  core.String htmlTitle;
 
   
-  String htmlSnippet;
+  core.String htmlSnippet;
 
   
-  String link;
+  core.String link;
 
   
   ResultImage image;
 
   
-  String mime;
+  core.String mime;
 
   
-  String fileFormat;
+  core.String fileFormat;
 
   /** Parses an instance from its JSON representation. */
-  static Result parse(Map<String, Object> json) {
+  static Result parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Result();
     result.snippet = identity(json["snippet"]);
@@ -1052,9 +1049,9 @@ class Result extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Result value) {
+  static core.Object serialize(Result value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["snippet"] = identity(value.snippet);
     result["kind"] = identity(value.kind);
     result["labels"] = map(ResultLabels.serialize)(value.labels);
@@ -1078,28 +1075,28 @@ class Result extends IdentityHash {
 // Schema Result.ResultImage
 class ResultImage extends IdentityHash {
   
-  int thumbnailWidth;
+  core.int thumbnailWidth;
 
   
-  int byteSize;
+  core.int byteSize;
 
   
-  int height;
+  core.int height;
 
   
-  int width;
+  core.int width;
 
   
-  String contextLink;
+  core.String contextLink;
 
   
-  String thumbnailLink;
+  core.String thumbnailLink;
 
   
-  int thumbnailHeight;
+  core.int thumbnailHeight;
 
   /** Parses an instance from its JSON representation. */
-  static ResultImage parse(Map<String, Object> json) {
+  static ResultImage parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ResultImage();
     result.thumbnailWidth = identity(json["thumbnailWidth"]);
@@ -1112,9 +1109,9 @@ class ResultImage extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ResultImage value) {
+  static core.Object serialize(ResultImage value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["thumbnailWidth"] = identity(value.thumbnailWidth);
     result["byteSize"] = identity(value.byteSize);
     result["height"] = identity(value.height);
@@ -1130,13 +1127,13 @@ class ResultImage extends IdentityHash {
 // Schema Result.ResultLabels
 class ResultLabels extends IdentityHash {
   
-  String displayName;
+  core.String displayName;
 
   
-  String name;
+  core.String name;
 
   /** Parses an instance from its JSON representation. */
-  static ResultLabels parse(Map<String, Object> json) {
+  static ResultLabels parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ResultLabels();
     result.displayName = identity(json["displayName"]);
@@ -1144,9 +1141,9 @@ class ResultLabels extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(ResultLabels value) {
+  static core.Object serialize(ResultLabels value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["displayName"] = identity(value.displayName);
     result["name"] = identity(value.name);
     return result;
@@ -1157,22 +1154,22 @@ class ResultLabels extends IdentityHash {
 // Schema .Search
 class Search extends IdentityHash {
   
-  List<Promotion> promotions;
+  core.List<Promotion> promotions;
 
   
-  String kind;
+  core.String kind;
 
   
   SearchUrl url;
 
   
-  List<Result> items;
+  core.List<Result> items;
 
   
   Context context;
 
   
-  Map<String, List<Query>> queries;
+  core.Map<String, core.List<Query>> queries;
 
   
   SearchSpelling spelling;
@@ -1181,7 +1178,7 @@ class Search extends IdentityHash {
   SearchSearchInformation searchInformation;
 
   /** Parses an instance from its JSON representation. */
-  static Search parse(Map<String, Object> json) {
+  static Search parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Search();
     result.promotions = map(Promotion.parse)(json["promotions"]);
@@ -1195,9 +1192,9 @@ class Search extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Search value) {
+  static core.Object serialize(Search value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["promotions"] = map(Promotion.serialize)(value.promotions);
     result["kind"] = identity(value.kind);
     result["url"] = SearchUrl.serialize(value.url);
@@ -1214,19 +1211,19 @@ class Search extends IdentityHash {
 // Schema Search.SearchSearchInformation
 class SearchSearchInformation extends IdentityHash {
   
-  String formattedSearchTime;
+  core.String formattedSearchTime;
 
   
-  String formattedTotalResults;
+  core.String formattedTotalResults;
 
   
-  String totalResults;
+  core.String totalResults;
 
   
-  double searchTime;
+  core.double searchTime;
 
   /** Parses an instance from its JSON representation. */
-  static SearchSearchInformation parse(Map<String, Object> json) {
+  static SearchSearchInformation parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new SearchSearchInformation();
     result.formattedSearchTime = identity(json["formattedSearchTime"]);
@@ -1236,9 +1233,9 @@ class SearchSearchInformation extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(SearchSearchInformation value) {
+  static core.Object serialize(SearchSearchInformation value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["formattedSearchTime"] = identity(value.formattedSearchTime);
     result["formattedTotalResults"] = identity(value.formattedTotalResults);
     result["totalResults"] = identity(value.totalResults);
@@ -1251,13 +1248,13 @@ class SearchSearchInformation extends IdentityHash {
 // Schema Search.SearchSpelling
 class SearchSpelling extends IdentityHash {
   
-  String correctedQuery;
+  core.String correctedQuery;
 
   
-  String htmlCorrectedQuery;
+  core.String htmlCorrectedQuery;
 
   /** Parses an instance from its JSON representation. */
-  static SearchSpelling parse(Map<String, Object> json) {
+  static SearchSpelling parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new SearchSpelling();
     result.correctedQuery = identity(json["correctedQuery"]);
@@ -1265,9 +1262,9 @@ class SearchSpelling extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(SearchSpelling value) {
+  static core.Object serialize(SearchSpelling value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["correctedQuery"] = identity(value.correctedQuery);
     result["htmlCorrectedQuery"] = identity(value.htmlCorrectedQuery);
     return result;
@@ -1278,13 +1275,13 @@ class SearchSpelling extends IdentityHash {
 // Schema Search.SearchUrl
 class SearchUrl extends IdentityHash {
   
-  String type;
+  core.String type;
 
   
-  String template;
+  core.String template;
 
   /** Parses an instance from its JSON representation. */
-  static SearchUrl parse(Map<String, Object> json) {
+  static SearchUrl parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new SearchUrl();
     result.type = identity(json["type"]);
@@ -1292,9 +1289,9 @@ class SearchUrl extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(SearchUrl value) {
+  static core.Object serialize(SearchUrl value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["type"] = identity(value.type);
     result["template"] = identity(value.template);
     return result;
@@ -1303,14 +1300,14 @@ class SearchUrl extends IdentityHash {
 }
 
 // Enum CustomsearchApi.Alt
-class CustomsearchApiAlt implements Hashable {
+class CustomsearchApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/atom+xml */
   static final CustomsearchApiAlt ATOM = const CustomsearchApiAlt._internal("atom", 0);
   /** Responses with Content-Type of application/json */
   static final CustomsearchApiAlt JSON = const CustomsearchApiAlt._internal("json", 1);
 
   /** All values of this enumeration */
-  static final List<CustomsearchApiAlt> values = const <CustomsearchApiAlt>[
+  static final core.List<CustomsearchApiAlt> values = const <CustomsearchApiAlt>[
     ATOM,
     JSON,
   ];
@@ -1322,14 +1319,14 @@ class CustomsearchApiAlt implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static CustomsearchApiAlt valueOf(String item) => _valuesMap[item];
+  static CustomsearchApiAlt valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const CustomsearchApiAlt._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const CustomsearchApiAlt._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Alt".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Alt".hashCode();
 }
 

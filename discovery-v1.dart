@@ -1,4 +1,5 @@
 #library("discovery");
+#import('dart:core', prefix: 'core');
 #import('dart:json');
 
 #import('utils.dart');
@@ -9,59 +10,61 @@
  * Lets you discover information about other Google APIs, such as what APIs are available, the
  * resource and method details for each API
  */
-class DiscoveryApi {
+class DiscoveryApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
-  final String baseUrl;
+  final core.String baseUrl;
+  /** How we should identify ourselves to the service. */
+  Authenticator authenticator;
   /** The client library version */
-  final String clientVersion = "0.1";
+  final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
-  final String applicationName;
+  final core.String applicationName;
   DiscoveryApi get _$service() => this;
   ApisResource _apis;
   ApisResource get apis() => _apis;
   
   /** Returns response with indentations and line breaks. */
-  bool prettyPrint;
+  core.bool prettyPrint;
 
   /** Selector specifying which fields to include in a partial response. */
-  String fields;
+  core.String fields;
 
   /**
    * Available to use for quota purposes for server-side applications. Can be any arbitrary string
    * assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.
    */
-  String quotaUser;
+  core.String quotaUser;
 
   /** OAuth 2.0 token for the current user. */
-  String oauthToken;
+  core.String oauthToken;
 
   /**
    * API key. Your API key identifies your project and provides you with API access, quota, and
    * reports. Required unless you provide an OAuth 2.0 token.
    */
-  String key;
+  core.String key;
 
   /**
    * IP address of the site where the request originates. Use this if you want to enforce per-user
    * limits.
    */
-  String userIp;
+  core.String userIp;
 
   /** Data format for the response. */
   DiscoveryApiAlt alt;
 
 
-  DiscoveryApi([this.baseUrl = "https://www.googleapis.com/discovery/v1/", this.applicationName]) { 
+  DiscoveryApi([this.baseUrl = "https://www.googleapis.com/discovery/v1/", this.applicationName, this.authenticator]) { 
     _apis = new ApisResource._internal(this);
   }
-  String get userAgent() {
+  core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}discovery/v1/snapshot google-api-dart-client/${clientVersion}";
   }
 }
 
 // Resource .ApisResource
-class ApisResource {
+class ApisResource extends core.Object {
   final DiscoveryApi _$service;
   
   ApisResource._internal(DiscoveryApi $service) : _$service = $service;
@@ -72,7 +75,7 @@ class ApisResource {
    * [api] The name of the API.
    * [version] The version of the API.
    */
-  Future<RestDescription> getRest(String api, String version) {
+  core.Future<RestDescription> getRest(core.String api, core.String version) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -87,26 +90,20 @@ class ApisResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "apis/{api}/{version}/rest").generate($pathParams, $queryParams);
-    final $completer = new Completer<RestDescription>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = RestDescription.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => RestDescription.parse(JSON.parse($text)));
   }
 
   // Method ApisResource.List
   /**
    * Retrieve the list of APIs supported at this endpoint.
    */
-  Future<DirectoryList> list([String name = UNSPECIFIED, bool preferred = UNSPECIFIED, ApisResourceListLabel label = UNSPECIFIED]) {
+  core.Future<DirectoryList> list([core.String name = UNSPECIFIED, core.bool preferred = UNSPECIFIED, ApisResourceListLabel label = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -122,24 +119,18 @@ class ApisResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "apis").generate($pathParams, $queryParams);
-    final $completer = new Completer<DirectoryList>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = DirectoryList.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => DirectoryList.parse(JSON.parse($text)));
   }
 }
 
 // Enum ApisResource.List.Label
-class ApisResourceListLabel implements Hashable {
+class ApisResourceListLabel extends core.Object implements core.Hashable {
   /** APIs that have been deprecated. */
   static final ApisResourceListLabel DEPRECATED = const ApisResourceListLabel._internal("deprecated", 0);
   /** Supported APIs that have graduated from labs. */
@@ -148,7 +139,7 @@ class ApisResourceListLabel implements Hashable {
   static final ApisResourceListLabel LABS = const ApisResourceListLabel._internal("labs", 2);
 
   /** All values of this enumeration */
-  static final List<ApisResourceListLabel> values = const <ApisResourceListLabel>[
+  static final core.List<ApisResourceListLabel> values = const <ApisResourceListLabel>[
     DEPRECATED,
     GRADUATED,
     LABS,
@@ -162,30 +153,30 @@ class ApisResourceListLabel implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static ApisResourceListLabel valueOf(String item) => _valuesMap[item];
+  static ApisResourceListLabel valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const ApisResourceListLabel._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const ApisResourceListLabel._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Label".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Label".hashCode();
 }
 
 // Schema .DirectoryList
 class DirectoryList extends IdentityHash {
   /** The individual directory entries. One entry per api/version pair. */
-  List<DirectoryListItems> items;
+  core.List<DirectoryListItems> items;
 
   /** Indicate the version of the Discovery API used to generate this doc. */
-  String discoveryVersion;
+  core.String discoveryVersion;
 
   /** The kind for this response. */
-  String kind;
+  core.String kind;
 
   /** Parses an instance from its JSON representation. */
-  static DirectoryList parse(Map<String, Object> json) {
+  static DirectoryList parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new DirectoryList();
     result.items = map(DirectoryListItems.parse)(json["items"]);
@@ -194,9 +185,9 @@ class DirectoryList extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(DirectoryList value) {
+  static core.Object serialize(DirectoryList value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["items"] = map(DirectoryListItems.serialize)(value.items);
     result["discoveryVersion"] = identity(value.discoveryVersion);
     result["kind"] = identity(value.kind);
@@ -208,43 +199,43 @@ class DirectoryList extends IdentityHash {
 // Schema DirectoryList.DirectoryListItems
 class DirectoryListItems extends IdentityHash {
   /** The kind for this response. */
-  String kind;
+  core.String kind;
 
   /** Labels for the status of this API, such as labs or deprecated. */
-  List<String> labels;
+  core.List<core.String> labels;
 
   /** The description of this API. */
-  String description;
+  core.String description;
 
   /** Links to 16x16 and 32x32 icons representing the API. */
   DirectoryListItemsIcons icons;
 
   /** The url for the discovery REST document. */
-  String discoveryRestUrl;
+  core.String discoveryRestUrl;
 
   /** True if this version is the preferred version to use. */
-  bool preferred;
+  core.bool preferred;
 
   /** The name of the API. */
-  String name;
+  core.String name;
 
   /** A link to the discovery document. */
-  String discoveryLink;
+  core.String discoveryLink;
 
   /** The version of the API. */
-  String version;
+  core.String version;
 
   /** The title of this API. */
-  String title;
+  core.String title;
 
   /** The id of this API. */
-  String id;
+  core.String id;
 
   /** A link to human readable documentation for the API. */
-  String documentationLink;
+  core.String documentationLink;
 
   /** Parses an instance from its JSON representation. */
-  static DirectoryListItems parse(Map<String, Object> json) {
+  static DirectoryListItems parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new DirectoryListItems();
     result.kind = identity(json["kind"]);
@@ -262,9 +253,9 @@ class DirectoryListItems extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(DirectoryListItems value) {
+  static core.Object serialize(DirectoryListItems value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["kind"] = identity(value.kind);
     result["labels"] = map(identity)(value.labels);
     result["description"] = identity(value.description);
@@ -285,13 +276,13 @@ class DirectoryListItems extends IdentityHash {
 // Schema DirectoryList.DirectoryListItems.DirectoryListItemsIcons
 class DirectoryListItemsIcons extends IdentityHash {
   /** The url of the 32x32 icon. */
-  String x32;
+  core.String x32;
 
   /** The url of the 16x16 icon. */
-  String x16;
+  core.String x16;
 
   /** Parses an instance from its JSON representation. */
-  static DirectoryListItemsIcons parse(Map<String, Object> json) {
+  static DirectoryListItemsIcons parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new DirectoryListItemsIcons();
     result.x32 = identity(json["x32"]);
@@ -299,9 +290,9 @@ class DirectoryListItemsIcons extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(DirectoryListItemsIcons value) {
+  static core.Object serialize(DirectoryListItemsIcons value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["x32"] = identity(value.x32);
     result["x16"] = identity(value.x16);
     return result;
@@ -312,55 +303,55 @@ class DirectoryListItemsIcons extends IdentityHash {
 // Schema .JsonSchema
 class JsonSchema extends IdentityHash {
   /** If this is a schema for an object, list the schema for each property of this object. */
-  Map<String, JsonSchema> properties;
+  core.Map<String, JsonSchema> properties;
 
   /** Whether the parameter is required. */
-  bool required;
+  core.bool required;
 
   /**
  * The value type for this schema. A list of values can be found here: http://tools.ietf.org/html
  * /draft-zyp-json-schema-03#section-5.1
  */
-  String type;
+  core.String type;
 
   /** A description of this object. */
-  String description;
+  core.String description;
 
   /**
  * An additional regular expression or key that helps constrain the value. For more details see:
  * http://tools.ietf.org/html/draft-zyp-json-schema-03#section-5.23
  */
-  String format;
+  core.String format;
 
   /** The default value of this property (if one exists). */
-  String default_;
+  core.String default_;
 
   /** If this is a schema for an array, this property is the schema for each element in the array. */
   JsonSchema items;
 
   /** Values this parameter may take (if it is an enum). */
-  List<String> enum;
+  core.List<core.String> enum;
 
   /** The maximum value of this parameter. */
-  String maximum;
+  core.String maximum;
 
   /** Unique identifier for this schema. */
-  String id;
+  core.String id;
 
   /**
  * The descriptions for the enums. Each position maps to the corresponding value in the "enum"
  * array.
  */
-  List<String> enumDescriptions;
+  core.List<core.String> enumDescriptions;
 
   /** The minimum value of this parameter. */
-  String minimum;
+  core.String minimum;
 
   /** Whether this parameter goes in the query or the path for REST requests. */
-  String location;
+  core.String location;
 
   /** The regular expression this parameter must conform to. */
-  String pattern;
+  core.String pattern;
 
   /**
  * If this is a schema for an object, this property is the schema for any additional properties with
@@ -369,16 +360,16 @@ class JsonSchema extends IdentityHash {
   JsonSchema additionalProperties;
 
   /** Whether this parameter may appear multiple times. */
-  bool repeated;
+  core.bool repeated;
 
   /** Additional information about this property. */
   JsonSchemaAnnotations annotations;
 
   /** A reference to another schema. The value of this property is the "id" of another schema. */
-  String $ref;
+  core.String $ref;
 
   /** Parses an instance from its JSON representation. */
-  static JsonSchema parse(Map<String, Object> json) {
+  static JsonSchema parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new JsonSchema();
     result.properties = mapValues(JsonSchema.parse)(json["properties"]);
@@ -402,9 +393,9 @@ class JsonSchema extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(JsonSchema value) {
+  static core.Object serialize(JsonSchema value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["properties"] = mapValues(JsonSchema.serialize)(value.properties);
     result["required"] = identity(value.required);
     result["type"] = identity(value.type);
@@ -431,19 +422,19 @@ class JsonSchema extends IdentityHash {
 // Schema JsonSchema.JsonSchemaAnnotations
 class JsonSchemaAnnotations extends IdentityHash {
   /** A list of methods for which this property is required on requests. */
-  List<String> required;
+  core.List<core.String> required;
 
   /** Parses an instance from its JSON representation. */
-  static JsonSchemaAnnotations parse(Map<String, Object> json) {
+  static JsonSchemaAnnotations parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new JsonSchemaAnnotations();
     result.required = map(identity)(json["required"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(JsonSchemaAnnotations value) {
+  static core.Object serialize(JsonSchemaAnnotations value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["required"] = map(identity)(value.required);
     return result;
   }
@@ -453,76 +444,76 @@ class JsonSchemaAnnotations extends IdentityHash {
 // Schema .RestDescription
 class RestDescription extends IdentityHash {
   /** The protocol described by this document. */
-  String protocol;
+  core.String protocol;
 
   /** API-level methods for this API. */
-  Map<String, RestMethod> methods;
+  core.Map<String, RestMethod> methods;
 
   /** Labels for the status of this API, such as labs or deprecated. */
-  List<String> labels;
+  core.List<core.String> labels;
 
   /** The path for REST batch requests. */
-  String batchPath;
+  core.String batchPath;
 
   /** The id of this API. */
-  String id;
+  core.String id;
 
   /** The schemas for this API. */
-  Map<String, JsonSchema> schemas;
+  core.Map<String, JsonSchema> schemas;
 
   /** The root url under which all API services live. */
-  String rootUrl;
+  core.String rootUrl;
 
   /** Common parameters that apply across all apis. */
-  Map<String, JsonSchema> parameters;
+  core.Map<String, JsonSchema> parameters;
 
   /** Links to 16x16 and 32x32 icons representing the API. */
   RestDescriptionIcons icons;
 
   /** [DEPRECATED] The base URL for REST requests. */
-  String baseUrl;
+  core.String baseUrl;
 
   /** The version of this API. */
-  String version;
+  core.String version;
 
   /** A list of supported features for this API. */
-  List<String> features;
+  core.List<core.String> features;
 
   /** The base path for all REST requests. */
-  String servicePath;
+  core.String servicePath;
 
   /** The resources in this API. */
-  Map<String, RestResource> resources;
+  core.Map<String, RestResource> resources;
 
   /** The version of this API. */
-  String revision;
+  core.String revision;
 
   /** The description of this API. */
-  String description;
+  core.String description;
 
   /** Authentication information. */
   RestDescriptionAuth auth;
 
   /** The kind for this response. */
-  String kind;
+  core.String kind;
 
   /** The name of this API. */
-  String name;
+  core.String name;
 
   /** [DEPRECATED] The base path for REST requests. */
-  String basePath;
+  core.String basePath;
 
   /** The title of this API. */
-  String title;
+  core.String title;
 
   /** Indicate the version of the Discovery API used to generate this doc. */
-  String discoveryVersion;
+  core.String discoveryVersion;
 
   /** A link to human readable documentation for the API. */
-  String documentationLink;
+  core.String documentationLink;
 
   /** Parses an instance from its JSON representation. */
-  static RestDescription parse(Map<String, Object> json) {
+  static RestDescription parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new RestDescription();
     result.protocol = identity(json["protocol"]);
@@ -551,9 +542,9 @@ class RestDescription extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(RestDescription value) {
+  static core.Object serialize(RestDescription value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["protocol"] = identity(value.protocol);
     result["methods"] = mapValues(RestMethod.serialize)(value.methods);
     result["labels"] = map(identity)(value.labels);
@@ -588,16 +579,16 @@ class RestDescriptionAuth extends IdentityHash {
   RestDescriptionAuthOauth2 oauth2;
 
   /** Parses an instance from its JSON representation. */
-  static RestDescriptionAuth parse(Map<String, Object> json) {
+  static RestDescriptionAuth parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new RestDescriptionAuth();
     result.oauth2 = RestDescriptionAuthOauth2.parse(json["oauth2"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(RestDescriptionAuth value) {
+  static core.Object serialize(RestDescriptionAuth value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["oauth2"] = RestDescriptionAuthOauth2.serialize(value.oauth2);
     return result;
   }
@@ -607,19 +598,19 @@ class RestDescriptionAuth extends IdentityHash {
 // Schema RestDescription.RestDescriptionAuth.RestDescriptionAuthOauth2
 class RestDescriptionAuthOauth2 extends IdentityHash {
   /** Available OAuth 2.0 scopes. */
-  Map<String, RestDescriptionAuthOauth2Scopes> scopes;
+  core.Map<String, RestDescriptionAuthOauth2Scopes> scopes;
 
   /** Parses an instance from its JSON representation. */
-  static RestDescriptionAuthOauth2 parse(Map<String, Object> json) {
+  static RestDescriptionAuthOauth2 parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new RestDescriptionAuthOauth2();
     result.scopes = mapValues(RestDescriptionAuthOauth2Scopes.parse)(json["scopes"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(RestDescriptionAuthOauth2 value) {
+  static core.Object serialize(RestDescriptionAuthOauth2 value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["scopes"] = mapValues(RestDescriptionAuthOauth2Scopes.serialize)(value.scopes);
     return result;
   }
@@ -629,19 +620,19 @@ class RestDescriptionAuthOauth2 extends IdentityHash {
 // Schema RestDescription.RestDescriptionAuth.RestDescriptionAuthOauth2.RestDescriptionAuthOauth2Scopes
 class RestDescriptionAuthOauth2Scopes extends IdentityHash {
   /** Description of scope. */
-  String description;
+  core.String description;
 
   /** Parses an instance from its JSON representation. */
-  static RestDescriptionAuthOauth2Scopes parse(Map<String, Object> json) {
+  static RestDescriptionAuthOauth2Scopes parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new RestDescriptionAuthOauth2Scopes();
     result.description = identity(json["description"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(RestDescriptionAuthOauth2Scopes value) {
+  static core.Object serialize(RestDescriptionAuthOauth2Scopes value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["description"] = identity(value.description);
     return result;
   }
@@ -651,13 +642,13 @@ class RestDescriptionAuthOauth2Scopes extends IdentityHash {
 // Schema RestDescription.RestDescriptionIcons
 class RestDescriptionIcons extends IdentityHash {
   /** The url of the 32x32 icon. */
-  String x32;
+  core.String x32;
 
   /** The url of the 16x16 icon. */
-  String x16;
+  core.String x16;
 
   /** Parses an instance from its JSON representation. */
-  static RestDescriptionIcons parse(Map<String, Object> json) {
+  static RestDescriptionIcons parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new RestDescriptionIcons();
     result.x32 = identity(json["x32"]);
@@ -665,9 +656,9 @@ class RestDescriptionIcons extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(RestDescriptionIcons value) {
+  static core.Object serialize(RestDescriptionIcons value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["x32"] = identity(value.x32);
     result["x16"] = identity(value.x16);
     return result;
@@ -678,16 +669,16 @@ class RestDescriptionIcons extends IdentityHash {
 // Schema .RestMethod
 class RestMethod extends IdentityHash {
   /** OAuth 2.0 scopes applicable to this method. */
-  List<Object> scopes;
+  core.List<core.Object> scopes;
 
   /** Description of this method. */
-  String description;
+  core.String description;
 
   /** Details for all parameters in this method. */
-  Map<String, JsonSchema> parameters;
+  core.Map<String, JsonSchema> parameters;
 
   /** Whether this method supports media uploads. */
-  bool supportsMediaUpload;
+  core.bool supportsMediaUpload;
 
   /** The schema for the request. */
   RestMethodRequest request;
@@ -699,34 +690,34 @@ class RestMethod extends IdentityHash {
   RestMethodResponse response;
 
   /** HTTP method used by this method. */
-  String httpMethod;
+  core.String httpMethod;
 
   /** Whether this method supports subscriptions. */
-  bool supportsSubscription;
+  core.bool supportsSubscription;
 
   /**
  * Ordered list of required parameters, serves as a hint to clients on how to structure their method
  * signatures. The array is ordered such that the "most-significant" parameter appears first.
  */
-  List<String> parameterOrder;
+  core.List<core.String> parameterOrder;
 
   /**
  * The URI path of this REST method. Should be used in conjunction with the basePath property at the
  * api-level.
  */
-  String path;
+  core.String path;
 
   /**
  * A unique ID for this method. This property can be used to match methods between different
  * versions of Discovery.
  */
-  String id;
+  core.String id;
 
   /** Whether this method supports media downloads. */
-  bool supportsMediaDownload;
+  core.bool supportsMediaDownload;
 
   /** Parses an instance from its JSON representation. */
-  static RestMethod parse(Map<String, Object> json) {
+  static RestMethod parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new RestMethod();
     result.scopes = map(identity)(json["scopes"]);
@@ -745,9 +736,9 @@ class RestMethod extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(RestMethod value) {
+  static core.Object serialize(RestMethod value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["scopes"] = map(identity)(value.scopes);
     result["description"] = identity(value.description);
     result["parameters"] = mapValues(JsonSchema.serialize)(value.parameters);
@@ -769,16 +760,16 @@ class RestMethod extends IdentityHash {
 // Schema RestMethod.RestMethodMediaUpload
 class RestMethodMediaUpload extends IdentityHash {
   /** Maximum size of a media upload, such as "1MB", "2GB" or "3TB". */
-  String maxSize;
+  core.String maxSize;
 
   /** Supported upload protocols. */
   RestMethodMediaUploadProtocols protocols;
 
   /** MIME Media Ranges for acceptable media uploads to this method. */
-  List<String> accept;
+  core.List<core.String> accept;
 
   /** Parses an instance from its JSON representation. */
-  static RestMethodMediaUpload parse(Map<String, Object> json) {
+  static RestMethodMediaUpload parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new RestMethodMediaUpload();
     result.maxSize = identity(json["maxSize"]);
@@ -787,9 +778,9 @@ class RestMethodMediaUpload extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(RestMethodMediaUpload value) {
+  static core.Object serialize(RestMethodMediaUpload value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["maxSize"] = identity(value.maxSize);
     result["protocols"] = RestMethodMediaUploadProtocols.serialize(value.protocols);
     result["accept"] = map(identity)(value.accept);
@@ -807,7 +798,7 @@ class RestMethodMediaUploadProtocols extends IdentityHash {
   RestMethodMediaUploadProtocolsResumable resumable;
 
   /** Parses an instance from its JSON representation. */
-  static RestMethodMediaUploadProtocols parse(Map<String, Object> json) {
+  static RestMethodMediaUploadProtocols parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new RestMethodMediaUploadProtocols();
     result.simple = RestMethodMediaUploadProtocolsSimple.parse(json["simple"]);
@@ -815,9 +806,9 @@ class RestMethodMediaUploadProtocols extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(RestMethodMediaUploadProtocols value) {
+  static core.Object serialize(RestMethodMediaUploadProtocols value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["simple"] = RestMethodMediaUploadProtocolsSimple.serialize(value.simple);
     result["resumable"] = RestMethodMediaUploadProtocolsResumable.serialize(value.resumable);
     return result;
@@ -831,13 +822,13 @@ class RestMethodMediaUploadProtocolsResumable extends IdentityHash {
  * The URI path to be used for upload. Should be used in conjunction with the basePath property at
  * the api-level.
  */
-  String path;
+  core.String path;
 
   /** True if this endpoint supports uploading multipart media. */
-  bool multipart;
+  core.bool multipart;
 
   /** Parses an instance from its JSON representation. */
-  static RestMethodMediaUploadProtocolsResumable parse(Map<String, Object> json) {
+  static RestMethodMediaUploadProtocolsResumable parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new RestMethodMediaUploadProtocolsResumable();
     result.path = identity(json["path"]);
@@ -845,9 +836,9 @@ class RestMethodMediaUploadProtocolsResumable extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(RestMethodMediaUploadProtocolsResumable value) {
+  static core.Object serialize(RestMethodMediaUploadProtocolsResumable value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["path"] = identity(value.path);
     result["multipart"] = identity(value.multipart);
     return result;
@@ -861,13 +852,13 @@ class RestMethodMediaUploadProtocolsSimple extends IdentityHash {
  * The URI path to be used for upload. Should be used in conjunction with the basePath property at
  * the api-level.
  */
-  String path;
+  core.String path;
 
   /** True if this endpoint supports upload multipart media. */
-  bool multipart;
+  core.bool multipart;
 
   /** Parses an instance from its JSON representation. */
-  static RestMethodMediaUploadProtocolsSimple parse(Map<String, Object> json) {
+  static RestMethodMediaUploadProtocolsSimple parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new RestMethodMediaUploadProtocolsSimple();
     result.path = identity(json["path"]);
@@ -875,9 +866,9 @@ class RestMethodMediaUploadProtocolsSimple extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(RestMethodMediaUploadProtocolsSimple value) {
+  static core.Object serialize(RestMethodMediaUploadProtocolsSimple value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["path"] = identity(value.path);
     result["multipart"] = identity(value.multipart);
     return result;
@@ -888,19 +879,19 @@ class RestMethodMediaUploadProtocolsSimple extends IdentityHash {
 // Schema RestMethod.RestMethodRequest
 class RestMethodRequest extends IdentityHash {
   /** Schema ID for the request schema. */
-  String $ref;
+  core.String $ref;
 
   /** Parses an instance from its JSON representation. */
-  static RestMethodRequest parse(Map<String, Object> json) {
+  static RestMethodRequest parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new RestMethodRequest();
     result.$ref = identity(json["\$ref"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(RestMethodRequest value) {
+  static core.Object serialize(RestMethodRequest value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["\$ref"] = identity(value.$ref);
     return result;
   }
@@ -910,19 +901,19 @@ class RestMethodRequest extends IdentityHash {
 // Schema RestMethod.RestMethodResponse
 class RestMethodResponse extends IdentityHash {
   /** Schema ID for the response schema. */
-  String $ref;
+  core.String $ref;
 
   /** Parses an instance from its JSON representation. */
-  static RestMethodResponse parse(Map<String, Object> json) {
+  static RestMethodResponse parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new RestMethodResponse();
     result.$ref = identity(json["\$ref"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(RestMethodResponse value) {
+  static core.Object serialize(RestMethodResponse value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["\$ref"] = identity(value.$ref);
     return result;
   }
@@ -932,13 +923,13 @@ class RestMethodResponse extends IdentityHash {
 // Schema .RestResource
 class RestResource extends IdentityHash {
   /** Methods on this resource. */
-  Map<String, RestMethod> methods;
+  core.Map<String, RestMethod> methods;
 
   /** Sub-resources on this resource. */
-  Map<String, RestResource> resources;
+  core.Map<String, RestResource> resources;
 
   /** Parses an instance from its JSON representation. */
-  static RestResource parse(Map<String, Object> json) {
+  static RestResource parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new RestResource();
     result.methods = mapValues(RestMethod.parse)(json["methods"]);
@@ -946,9 +937,9 @@ class RestResource extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(RestResource value) {
+  static core.Object serialize(RestResource value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["methods"] = mapValues(RestMethod.serialize)(value.methods);
     result["resources"] = mapValues(RestResource.serialize)(value.resources);
     return result;
@@ -957,12 +948,12 @@ class RestResource extends IdentityHash {
 }
 
 // Enum DiscoveryApi.Alt
-class DiscoveryApiAlt implements Hashable {
+class DiscoveryApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/json */
   static final DiscoveryApiAlt JSON = const DiscoveryApiAlt._internal("json", 0);
 
   /** All values of this enumeration */
-  static final List<DiscoveryApiAlt> values = const <DiscoveryApiAlt>[
+  static final core.List<DiscoveryApiAlt> values = const <DiscoveryApiAlt>[
     JSON,
   ];
 
@@ -972,14 +963,14 @@ class DiscoveryApiAlt implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static DiscoveryApiAlt valueOf(String item) => _valuesMap[item];
+  static DiscoveryApiAlt valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const DiscoveryApiAlt._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const DiscoveryApiAlt._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Alt".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Alt".hashCode();
 }
 

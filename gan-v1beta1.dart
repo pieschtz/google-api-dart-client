@@ -1,4 +1,5 @@
 #library("gan");
+#import('dart:core', prefix: 'core');
 #import('dart:json');
 
 #import('utils.dart');
@@ -8,13 +9,15 @@
 /**
  * Lets you have programmatic access to your Google Affiliate Network data.
  */
-class GanApi {
+class GanApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
-  final String baseUrl;
+  final core.String baseUrl;
+  /** How we should identify ourselves to the service. */
+  Authenticator authenticator;
   /** The client library version */
-  final String clientVersion = "0.1";
+  final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
-  final String applicationName;
+  final core.String applicationName;
   GanApi get _$service() => this;
   AdvertisersResource _advertisers;
   AdvertisersResource get advertisers() => _advertisers;
@@ -28,51 +31,51 @@ class GanApi {
   PublishersResource get publishers() => _publishers;
   
   /** Returns response with indentations and line breaks. */
-  bool prettyPrint;
+  core.bool prettyPrint;
 
   /** Selector specifying which fields to include in a partial response. */
-  String fields;
+  core.String fields;
 
   /**
    * Available to use for quota purposes for server-side applications. Can be any arbitrary string
    * assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.
    */
-  String quotaUser;
+  core.String quotaUser;
 
   /** OAuth 2.0 token for the current user. */
-  String oauthToken;
+  core.String oauthToken;
 
   /**
    * API key. Your API key identifies your project and provides you with API access, quota, and
    * reports. Required unless you provide an OAuth 2.0 token.
    */
-  String key;
+  core.String key;
 
   /**
    * IP address of the site where the request originates. Use this if you want to enforce per-user
    * limits.
    */
-  String userIp;
+  core.String userIp;
 
   /** Data format for the response. */
   GanApiAlt alt;
 
 
-  GanApi([this.baseUrl = "https://www.googleapis.com/gan/v1beta1/", this.applicationName]) { 
+  GanApi([this.baseUrl = "https://www.googleapis.com/gan/v1beta1/", this.applicationName, this.authenticator]) { 
     _advertisers = new AdvertisersResource._internal(this);
     _ccOffers = new CcOffersResource._internal(this);
     _events = new EventsResource._internal(this);
     _links = new LinksResource._internal(this);
     _publishers = new PublishersResource._internal(this);
   }
-  String get userAgent() {
+  core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}gan/v1beta1/20120501 google-api-dart-client/${clientVersion}";
   }
 }
 
 // Resource .AdvertisersResource
-class AdvertisersResource {
+class AdvertisersResource extends core.Object {
   final GanApi _$service;
   
   AdvertisersResource._internal(GanApi $service) : _$service = $service;
@@ -83,7 +86,7 @@ class AdvertisersResource {
    * [role] The role of the requester. Valid values: 'advertisers' or 'publishers'.
    * [roleId] The ID of the requesting advertiser or publisher.
    */
-  Future<Advertisers> list(AdvertisersResourceListRole role, String roleId, [AdvertisersResourceListRelationshipStatus relationshipStatus = UNSPECIFIED, double minSevenDayEpc = UNSPECIFIED, String advertiserCategory = UNSPECIFIED, double minNinetyDayEpc = UNSPECIFIED, String pageToken = UNSPECIFIED, int maxResults = UNSPECIFIED, int minPayoutRank = UNSPECIFIED]) {
+  core.Future<Advertisers> list(AdvertisersResourceListRole role, core.String roleId, [AdvertisersResourceListRelationshipStatus relationshipStatus = UNSPECIFIED, core.double minSevenDayEpc = UNSPECIFIED, core.String advertiserCategory = UNSPECIFIED, core.double minNinetyDayEpc = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.int minPayoutRank = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -105,19 +108,13 @@ class AdvertisersResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "{role}/{roleId}/advertisers").generate($pathParams, $queryParams);
-    final $completer = new Completer<Advertisers>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Advertisers.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Advertisers.parse(JSON.parse($text)));
   }
 
   // Method AdvertisersResource.Get
@@ -128,7 +125,7 @@ class AdvertisersResource {
    * [role] The role of the requester. Valid values: 'advertisers' or 'publishers'.
    * [roleId] The ID of the requesting advertiser or publisher.
    */
-  Future<Advertiser> get(AdvertisersResourceGetRole role, String roleId, [String advertiserId = UNSPECIFIED]) {
+  core.Future<Advertiser> get(AdvertisersResourceGetRole role, core.String roleId, [core.String advertiserId = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -144,31 +141,25 @@ class AdvertisersResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "{role}/{roleId}/advertiser").generate($pathParams, $queryParams);
-    final $completer = new Completer<Advertiser>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Advertiser.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Advertiser.parse(JSON.parse($text)));
   }
 }
 
 // Enum AdvertisersResource.List.Role
-class AdvertisersResourceListRole implements Hashable {
+class AdvertisersResourceListRole extends core.Object implements core.Hashable {
   /** The requester is requesting as an advertiser. */
   static final AdvertisersResourceListRole ADVERTISERS = const AdvertisersResourceListRole._internal("advertisers", 0);
   /** The requester is requesting as a publisher. */
   static final AdvertisersResourceListRole PUBLISHERS = const AdvertisersResourceListRole._internal("publishers", 1);
 
   /** All values of this enumeration */
-  static final List<AdvertisersResourceListRole> values = const <AdvertisersResourceListRole>[
+  static final core.List<AdvertisersResourceListRole> values = const <AdvertisersResourceListRole>[
     ADVERTISERS,
     PUBLISHERS,
   ];
@@ -180,19 +171,19 @@ class AdvertisersResourceListRole implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static AdvertisersResourceListRole valueOf(String item) => _valuesMap[item];
+  static AdvertisersResourceListRole valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const AdvertisersResourceListRole._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const AdvertisersResourceListRole._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Role".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Role".hashCode();
 }
 
 // Enum AdvertisersResource.List.RelationshipStatus
-class AdvertisersResourceListRelationshipStatus implements Hashable {
+class AdvertisersResourceListRelationshipStatus extends core.Object implements core.Hashable {
   /** An advertiser that has approved your application. */
   static final AdvertisersResourceListRelationshipStatus APPROVED = const AdvertisersResourceListRelationshipStatus._internal("approved", 0);
   /** An advertiser program that's accepting new publishers. */
@@ -211,7 +202,7 @@ class AdvertisersResourceListRelationshipStatus implements Hashable {
   static final AdvertisersResourceListRelationshipStatus PENDING = const AdvertisersResourceListRelationshipStatus._internal("pending", 4);
 
   /** All values of this enumeration */
-  static final List<AdvertisersResourceListRelationshipStatus> values = const <AdvertisersResourceListRelationshipStatus>[
+  static final core.List<AdvertisersResourceListRelationshipStatus> values = const <AdvertisersResourceListRelationshipStatus>[
     APPROVED,
     AVAILABLE,
     DEACTIVATED,
@@ -229,26 +220,26 @@ class AdvertisersResourceListRelationshipStatus implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static AdvertisersResourceListRelationshipStatus valueOf(String item) => _valuesMap[item];
+  static AdvertisersResourceListRelationshipStatus valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const AdvertisersResourceListRelationshipStatus._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const AdvertisersResourceListRelationshipStatus._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "RelationshipStatus".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "RelationshipStatus".hashCode();
 }
 
 // Enum AdvertisersResource.Get.Role
-class AdvertisersResourceGetRole implements Hashable {
+class AdvertisersResourceGetRole extends core.Object implements core.Hashable {
   /** The requester is requesting as an advertiser. */
   static final AdvertisersResourceGetRole ADVERTISERS = const AdvertisersResourceGetRole._internal("advertisers", 0);
   /** The requester is requesting as a publisher. */
   static final AdvertisersResourceGetRole PUBLISHERS = const AdvertisersResourceGetRole._internal("publishers", 1);
 
   /** All values of this enumeration */
-  static final List<AdvertisersResourceGetRole> values = const <AdvertisersResourceGetRole>[
+  static final core.List<AdvertisersResourceGetRole> values = const <AdvertisersResourceGetRole>[
     ADVERTISERS,
     PUBLISHERS,
   ];
@@ -260,19 +251,19 @@ class AdvertisersResourceGetRole implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static AdvertisersResourceGetRole valueOf(String item) => _valuesMap[item];
+  static AdvertisersResourceGetRole valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const AdvertisersResourceGetRole._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const AdvertisersResourceGetRole._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Role".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Role".hashCode();
 }
 
 // Resource .CcOffersResource
-class CcOffersResource {
+class CcOffersResource extends core.Object {
   final GanApi _$service;
   
   CcOffersResource._internal(GanApi $service) : _$service = $service;
@@ -282,7 +273,7 @@ class CcOffersResource {
    * Retrieves credit card offers for the given publisher.
    * [publisher] The ID of the publisher in question.
    */
-  Future<CcOffers> list(String publisher, [List<String> advertiser = UNSPECIFIED, CcOffersResourceListProjection projection = UNSPECIFIED]) {
+  core.Future<CcOffers> list(core.String publisher, [core.List<core.String> advertiser = UNSPECIFIED, CcOffersResourceListProjection projection = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -298,31 +289,25 @@ class CcOffersResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "publishers/{publisher}/ccOffers").generate($pathParams, $queryParams);
-    final $completer = new Completer<CcOffers>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = CcOffers.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => CcOffers.parse(JSON.parse($text)));
   }
 }
 
 // Enum CcOffersResource.List.Projection
-class CcOffersResourceListProjection implements Hashable {
+class CcOffersResourceListProjection extends core.Object implements core.Hashable {
   /** Include all offer fields. This is the default. */
   static final CcOffersResourceListProjection FULL = const CcOffersResourceListProjection._internal("full", 0);
   /** Include only the basic fields needed to display an offer. */
   static final CcOffersResourceListProjection SUMMARY = const CcOffersResourceListProjection._internal("summary", 1);
 
   /** All values of this enumeration */
-  static final List<CcOffersResourceListProjection> values = const <CcOffersResourceListProjection>[
+  static final core.List<CcOffersResourceListProjection> values = const <CcOffersResourceListProjection>[
     FULL,
     SUMMARY,
   ];
@@ -334,19 +319,19 @@ class CcOffersResourceListProjection implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static CcOffersResourceListProjection valueOf(String item) => _valuesMap[item];
+  static CcOffersResourceListProjection valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const CcOffersResourceListProjection._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const CcOffersResourceListProjection._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Projection".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Projection".hashCode();
 }
 
 // Resource .EventsResource
-class EventsResource {
+class EventsResource extends core.Object {
   final GanApi _$service;
   
   EventsResource._internal(GanApi $service) : _$service = $service;
@@ -357,7 +342,7 @@ class EventsResource {
    * [role] The role of the requester. Valid values: 'advertisers' or 'publishers'.
    * [roleId] The ID of the requesting advertiser or publisher.
    */
-  Future<Events> list(EventsResourceListRole role, String roleId, [String orderId = UNSPECIFIED, String sku = UNSPECIFIED, String eventDateMax = UNSPECIFIED, EventsResourceListType type = UNSPECIFIED, String linkId = UNSPECIFIED, String modifyDateMin = UNSPECIFIED, String eventDateMin = UNSPECIFIED, String memberId = UNSPECIFIED, int maxResults = UNSPECIFIED, String advertiserId = UNSPECIFIED, String pageToken = UNSPECIFIED, String productCategory = UNSPECIFIED, EventsResourceListChargeType chargeType = UNSPECIFIED, String modifyDateMax = UNSPECIFIED, EventsResourceListStatus status = UNSPECIFIED, String publisherId = UNSPECIFIED]) {
+  core.Future<Events> list(EventsResourceListRole role, core.String roleId, [core.String orderId = UNSPECIFIED, core.String sku = UNSPECIFIED, core.String eventDateMax = UNSPECIFIED, EventsResourceListType type = UNSPECIFIED, core.String linkId = UNSPECIFIED, core.String modifyDateMin = UNSPECIFIED, core.String eventDateMin = UNSPECIFIED, core.String memberId = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String advertiserId = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.String productCategory = UNSPECIFIED, EventsResourceListChargeType chargeType = UNSPECIFIED, core.String modifyDateMax = UNSPECIFIED, EventsResourceListStatus status = UNSPECIFIED, core.String publisherId = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -388,31 +373,25 @@ class EventsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "{role}/{roleId}/events").generate($pathParams, $queryParams);
-    final $completer = new Completer<Events>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Events.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Events.parse(JSON.parse($text)));
   }
 }
 
 // Enum EventsResource.List.Role
-class EventsResourceListRole implements Hashable {
+class EventsResourceListRole extends core.Object implements core.Hashable {
   /** The requester is requesting as an advertiser. */
   static final EventsResourceListRole ADVERTISERS = const EventsResourceListRole._internal("advertisers", 0);
   /** The requester is requesting as a publisher. */
   static final EventsResourceListRole PUBLISHERS = const EventsResourceListRole._internal("publishers", 1);
 
   /** All values of this enumeration */
-  static final List<EventsResourceListRole> values = const <EventsResourceListRole>[
+  static final core.List<EventsResourceListRole> values = const <EventsResourceListRole>[
     ADVERTISERS,
     PUBLISHERS,
   ];
@@ -424,19 +403,19 @@ class EventsResourceListRole implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static EventsResourceListRole valueOf(String item) => _valuesMap[item];
+  static EventsResourceListRole valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const EventsResourceListRole._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const EventsResourceListRole._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Role".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Role".hashCode();
 }
 
 // Enum EventsResource.List.Type
-class EventsResourceListType implements Hashable {
+class EventsResourceListType extends core.Object implements core.Hashable {
   /**
  * The completion of an application, sign-up, or other process. For example, an action occurs if a
  * user clicks an ad for a credit card and completes an application for that card.
@@ -451,7 +430,7 @@ class EventsResourceListType implements Hashable {
   static final EventsResourceListType TRANSACTION = const EventsResourceListType._internal("transaction", 2);
 
   /** All values of this enumeration */
-  static final List<EventsResourceListType> values = const <EventsResourceListType>[
+  static final core.List<EventsResourceListType> values = const <EventsResourceListType>[
     ACTION,
     CHARGE,
     TRANSACTION,
@@ -465,19 +444,19 @@ class EventsResourceListType implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static EventsResourceListType valueOf(String item) => _valuesMap[item];
+  static EventsResourceListType valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const EventsResourceListType._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const EventsResourceListType._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Type".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Type".hashCode();
 }
 
 // Enum EventsResource.List.ChargeType
-class EventsResourceListChargeType implements Hashable {
+class EventsResourceListChargeType extends core.Object implements core.Hashable {
   /**
  * A credit increases the publisher's payout amount and decreases the advertiser's invoice amount.
  */
@@ -494,7 +473,7 @@ class EventsResourceListChargeType implements Hashable {
   static final EventsResourceListChargeType TIER_BONUS = const EventsResourceListChargeType._internal("tier_bonus", 5);
 
   /** All values of this enumeration */
-  static final List<EventsResourceListChargeType> values = const <EventsResourceListChargeType>[
+  static final core.List<EventsResourceListChargeType> values = const <EventsResourceListChargeType>[
     CREDIT,
     DEBIT,
     MONTHLY_MINIMUM,
@@ -514,26 +493,26 @@ class EventsResourceListChargeType implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static EventsResourceListChargeType valueOf(String item) => _valuesMap[item];
+  static EventsResourceListChargeType valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const EventsResourceListChargeType._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const EventsResourceListChargeType._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "ChargeType".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "ChargeType".hashCode();
 }
 
 // Enum EventsResource.List.Status
-class EventsResourceListStatus implements Hashable {
+class EventsResourceListStatus extends core.Object implements core.Hashable {
   /** Event is currently active. */
   static final EventsResourceListStatus ACTIVE = const EventsResourceListStatus._internal("active", 0);
   /** Event is currently canceled. */
   static final EventsResourceListStatus CANCELED = const EventsResourceListStatus._internal("canceled", 1);
 
   /** All values of this enumeration */
-  static final List<EventsResourceListStatus> values = const <EventsResourceListStatus>[
+  static final core.List<EventsResourceListStatus> values = const <EventsResourceListStatus>[
     ACTIVE,
     CANCELED,
   ];
@@ -545,19 +524,19 @@ class EventsResourceListStatus implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static EventsResourceListStatus valueOf(String item) => _valuesMap[item];
+  static EventsResourceListStatus valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const EventsResourceListStatus._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const EventsResourceListStatus._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Status".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Status".hashCode();
 }
 
 // Resource .LinksResource
-class LinksResource {
+class LinksResource extends core.Object {
   final GanApi _$service;
   
   LinksResource._internal(GanApi $service) : _$service = $service;
@@ -569,7 +548,7 @@ class LinksResource {
    * [roleId] The ID of the requesting advertiser or publisher.
    * [content] the Link
    */
-  Future<Link> insert(LinksResourceInsertRole role, String roleId, Link content) {
+  core.Future<Link> insert(LinksResourceInsertRole role, core.String roleId, Link content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -586,19 +565,13 @@ class LinksResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Link.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "{role}/{roleId}/link").generate($pathParams, $queryParams);
-    final $completer = new Completer<Link>();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Link.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Link.parse(JSON.parse($text)));
   }
 
   // Method LinksResource.List
@@ -607,7 +580,7 @@ class LinksResource {
    * [role] The role of the requester. Valid values: 'advertisers' or 'publishers'.
    * [roleId] The ID of the requesting advertiser or publisher.
    */
-  Future<Links> list(LinksResourceListRole role, String roleId, [LinksResourceListLinkType linkType = UNSPECIFIED, String startDateMin = UNSPECIFIED, List<String> assetSize = UNSPECIFIED, LinksResourceListRelationshipStatus relationshipStatus = UNSPECIFIED, LinksResourceListAdvertiserCategory advertiserCategory = UNSPECIFIED, int maxResults = UNSPECIFIED, List<String> advertiserId = UNSPECIFIED, String pageToken = UNSPECIFIED, String startDateMax = UNSPECIFIED, LinksResourceListPromotionType promotionType = UNSPECIFIED, LinksResourceListAuthorship authorship = UNSPECIFIED]) {
+  core.Future<Links> list(LinksResourceListRole role, core.String roleId, [LinksResourceListLinkType linkType = UNSPECIFIED, core.String startDateMin = UNSPECIFIED, core.List<core.String> assetSize = UNSPECIFIED, LinksResourceListRelationshipStatus relationshipStatus = UNSPECIFIED, LinksResourceListAdvertiserCategory advertiserCategory = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.List<core.String> advertiserId = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.String startDateMax = UNSPECIFIED, LinksResourceListPromotionType promotionType = UNSPECIFIED, LinksResourceListAuthorship authorship = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -633,19 +606,13 @@ class LinksResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "{role}/{roleId}/links").generate($pathParams, $queryParams);
-    final $completer = new Completer<Links>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Links.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Links.parse(JSON.parse($text)));
   }
 
   // Method LinksResource.Get
@@ -657,7 +624,7 @@ class LinksResource {
    * [roleId] The ID of the requesting advertiser or publisher.
    * [linkId] The ID of the link to look up.
    */
-  Future<Link> get(LinksResourceGetRole role, String roleId, String linkId) {
+  core.Future<Link> get(LinksResourceGetRole role, core.String roleId, core.String linkId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -673,31 +640,25 @@ class LinksResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "{role}/{roleId}/link/{linkId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Link>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Link.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Link.parse(JSON.parse($text)));
   }
 }
 
 // Enum LinksResource.Insert.Role
-class LinksResourceInsertRole implements Hashable {
+class LinksResourceInsertRole extends core.Object implements core.Hashable {
   /** The requester is requesting as an advertiser. */
   static final LinksResourceInsertRole ADVERTISERS = const LinksResourceInsertRole._internal("advertisers", 0);
   /** The requester is requesting as a publisher. */
   static final LinksResourceInsertRole PUBLISHERS = const LinksResourceInsertRole._internal("publishers", 1);
 
   /** All values of this enumeration */
-  static final List<LinksResourceInsertRole> values = const <LinksResourceInsertRole>[
+  static final core.List<LinksResourceInsertRole> values = const <LinksResourceInsertRole>[
     ADVERTISERS,
     PUBLISHERS,
   ];
@@ -709,26 +670,26 @@ class LinksResourceInsertRole implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static LinksResourceInsertRole valueOf(String item) => _valuesMap[item];
+  static LinksResourceInsertRole valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const LinksResourceInsertRole._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const LinksResourceInsertRole._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Role".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Role".hashCode();
 }
 
 // Enum LinksResource.List.Role
-class LinksResourceListRole implements Hashable {
+class LinksResourceListRole extends core.Object implements core.Hashable {
   /** The requester is requesting as an advertiser. */
   static final LinksResourceListRole ADVERTISERS = const LinksResourceListRole._internal("advertisers", 0);
   /** The requester is requesting as a publisher. */
   static final LinksResourceListRole PUBLISHERS = const LinksResourceListRole._internal("publishers", 1);
 
   /** All values of this enumeration */
-  static final List<LinksResourceListRole> values = const <LinksResourceListRole>[
+  static final core.List<LinksResourceListRole> values = const <LinksResourceListRole>[
     ADVERTISERS,
     PUBLISHERS,
   ];
@@ -740,26 +701,26 @@ class LinksResourceListRole implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static LinksResourceListRole valueOf(String item) => _valuesMap[item];
+  static LinksResourceListRole valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const LinksResourceListRole._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const LinksResourceListRole._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Role".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Role".hashCode();
 }
 
 // Enum LinksResource.List.LinkType
-class LinksResourceListLinkType implements Hashable {
+class LinksResourceListLinkType extends core.Object implements core.Hashable {
   
   static final LinksResourceListLinkType BANNER = const LinksResourceListLinkType._internal("banner", 0);
   
   static final LinksResourceListLinkType TEXT = const LinksResourceListLinkType._internal("text", 1);
 
   /** All values of this enumeration */
-  static final List<LinksResourceListLinkType> values = const <LinksResourceListLinkType>[
+  static final core.List<LinksResourceListLinkType> values = const <LinksResourceListLinkType>[
     BANNER,
     TEXT,
   ];
@@ -771,26 +732,26 @@ class LinksResourceListLinkType implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static LinksResourceListLinkType valueOf(String item) => _valuesMap[item];
+  static LinksResourceListLinkType valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const LinksResourceListLinkType._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const LinksResourceListLinkType._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "LinkType".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "LinkType".hashCode();
 }
 
 // Enum LinksResource.List.RelationshipStatus
-class LinksResourceListRelationshipStatus implements Hashable {
+class LinksResourceListRelationshipStatus extends core.Object implements core.Hashable {
   
   static final LinksResourceListRelationshipStatus APPROVED = const LinksResourceListRelationshipStatus._internal("approved", 0);
   
   static final LinksResourceListRelationshipStatus AVAILABLE = const LinksResourceListRelationshipStatus._internal("available", 1);
 
   /** All values of this enumeration */
-  static final List<LinksResourceListRelationshipStatus> values = const <LinksResourceListRelationshipStatus>[
+  static final core.List<LinksResourceListRelationshipStatus> values = const <LinksResourceListRelationshipStatus>[
     APPROVED,
     AVAILABLE,
   ];
@@ -802,19 +763,19 @@ class LinksResourceListRelationshipStatus implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static LinksResourceListRelationshipStatus valueOf(String item) => _valuesMap[item];
+  static LinksResourceListRelationshipStatus valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const LinksResourceListRelationshipStatus._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const LinksResourceListRelationshipStatus._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "RelationshipStatus".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "RelationshipStatus".hashCode();
 }
 
 // Enum LinksResource.List.AdvertiserCategory
-class LinksResourceListAdvertiserCategory implements Hashable {
+class LinksResourceListAdvertiserCategory extends core.Object implements core.Hashable {
   
   static final LinksResourceListAdvertiserCategory APPAREL_ACCESSORIES = const LinksResourceListAdvertiserCategory._internal("apparel_accessories", 0);
   
@@ -897,7 +858,7 @@ class LinksResourceListAdvertiserCategory implements Hashable {
   static final LinksResourceListAdvertiserCategory WINE_SPIRITS = const LinksResourceListAdvertiserCategory._internal("wine_spirits", 39);
 
   /** All values of this enumeration */
-  static final List<LinksResourceListAdvertiserCategory> values = const <LinksResourceListAdvertiserCategory>[
+  static final core.List<LinksResourceListAdvertiserCategory> values = const <LinksResourceListAdvertiserCategory>[
     APPAREL_ACCESSORIES,
     APPLIANCES_ELECTRONICS,
     AUTO_DEALER,
@@ -985,19 +946,19 @@ class LinksResourceListAdvertiserCategory implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static LinksResourceListAdvertiserCategory valueOf(String item) => _valuesMap[item];
+  static LinksResourceListAdvertiserCategory valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const LinksResourceListAdvertiserCategory._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const LinksResourceListAdvertiserCategory._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "AdvertiserCategory".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "AdvertiserCategory".hashCode();
 }
 
 // Enum LinksResource.List.PromotionType
-class LinksResourceListPromotionType implements Hashable {
+class LinksResourceListPromotionType extends core.Object implements core.Hashable {
   
   static final LinksResourceListPromotionType BUY_GET = const LinksResourceListPromotionType._internal("buy_get", 0);
   
@@ -1024,7 +985,7 @@ class LinksResourceListPromotionType implements Hashable {
   static final LinksResourceListPromotionType SWEEPSTAKES = const LinksResourceListPromotionType._internal("sweepstakes", 11);
 
   /** All values of this enumeration */
-  static final List<LinksResourceListPromotionType> values = const <LinksResourceListPromotionType>[
+  static final core.List<LinksResourceListPromotionType> values = const <LinksResourceListPromotionType>[
     BUY_GET,
     COUPON,
     FREE_GIFT,
@@ -1056,26 +1017,26 @@ class LinksResourceListPromotionType implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static LinksResourceListPromotionType valueOf(String item) => _valuesMap[item];
+  static LinksResourceListPromotionType valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const LinksResourceListPromotionType._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const LinksResourceListPromotionType._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "PromotionType".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "PromotionType".hashCode();
 }
 
 // Enum LinksResource.List.Authorship
-class LinksResourceListAuthorship implements Hashable {
+class LinksResourceListAuthorship extends core.Object implements core.Hashable {
   
   static final LinksResourceListAuthorship ADVERTISER = const LinksResourceListAuthorship._internal("advertiser", 0);
   
   static final LinksResourceListAuthorship PUBLISHER = const LinksResourceListAuthorship._internal("publisher", 1);
 
   /** All values of this enumeration */
-  static final List<LinksResourceListAuthorship> values = const <LinksResourceListAuthorship>[
+  static final core.List<LinksResourceListAuthorship> values = const <LinksResourceListAuthorship>[
     ADVERTISER,
     PUBLISHER,
   ];
@@ -1087,26 +1048,26 @@ class LinksResourceListAuthorship implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static LinksResourceListAuthorship valueOf(String item) => _valuesMap[item];
+  static LinksResourceListAuthorship valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const LinksResourceListAuthorship._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const LinksResourceListAuthorship._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Authorship".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Authorship".hashCode();
 }
 
 // Enum LinksResource.Get.Role
-class LinksResourceGetRole implements Hashable {
+class LinksResourceGetRole extends core.Object implements core.Hashable {
   /** The requester is requesting as an advertiser. */
   static final LinksResourceGetRole ADVERTISERS = const LinksResourceGetRole._internal("advertisers", 0);
   /** The requester is requesting as a publisher. */
   static final LinksResourceGetRole PUBLISHERS = const LinksResourceGetRole._internal("publishers", 1);
 
   /** All values of this enumeration */
-  static final List<LinksResourceGetRole> values = const <LinksResourceGetRole>[
+  static final core.List<LinksResourceGetRole> values = const <LinksResourceGetRole>[
     ADVERTISERS,
     PUBLISHERS,
   ];
@@ -1118,19 +1079,19 @@ class LinksResourceGetRole implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static LinksResourceGetRole valueOf(String item) => _valuesMap[item];
+  static LinksResourceGetRole valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const LinksResourceGetRole._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const LinksResourceGetRole._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Role".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Role".hashCode();
 }
 
 // Resource .PublishersResource
-class PublishersResource {
+class PublishersResource extends core.Object {
   final GanApi _$service;
   
   PublishersResource._internal(GanApi $service) : _$service = $service;
@@ -1141,7 +1102,7 @@ class PublishersResource {
    * [role] The role of the requester. Valid values: 'advertisers' or 'publishers'.
    * [roleId] The ID of the requesting advertiser or publisher.
    */
-  Future<Publishers> list(PublishersResourceListRole role, String roleId, [String publisherCategory = UNSPECIFIED, PublishersResourceListRelationshipStatus relationshipStatus = UNSPECIFIED, double minSevenDayEpc = UNSPECIFIED, double minNinetyDayEpc = UNSPECIFIED, String pageToken = UNSPECIFIED, int maxResults = UNSPECIFIED, int minPayoutRank = UNSPECIFIED]) {
+  core.Future<Publishers> list(PublishersResourceListRole role, core.String roleId, [core.String publisherCategory = UNSPECIFIED, PublishersResourceListRelationshipStatus relationshipStatus = UNSPECIFIED, core.double minSevenDayEpc = UNSPECIFIED, core.double minNinetyDayEpc = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.int minPayoutRank = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1163,19 +1124,13 @@ class PublishersResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "{role}/{roleId}/publishers").generate($pathParams, $queryParams);
-    final $completer = new Completer<Publishers>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Publishers.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Publishers.parse(JSON.parse($text)));
   }
 
   // Method PublishersResource.Get
@@ -1186,7 +1141,7 @@ class PublishersResource {
    * [role] The role of the requester. Valid values: 'advertisers' or 'publishers'.
    * [roleId] The ID of the requesting advertiser or publisher.
    */
-  Future<Publisher> get(PublishersResourceGetRole role, String roleId, [String publisherId = UNSPECIFIED]) {
+  core.Future<Publisher> get(PublishersResourceGetRole role, core.String roleId, [core.String publisherId = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -1202,31 +1157,25 @@ class PublishersResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "{role}/{roleId}/publisher").generate($pathParams, $queryParams);
-    final $completer = new Completer<Publisher>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Publisher.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Publisher.parse(JSON.parse($text)));
   }
 }
 
 // Enum PublishersResource.List.Role
-class PublishersResourceListRole implements Hashable {
+class PublishersResourceListRole extends core.Object implements core.Hashable {
   /** The requester is requesting as an advertiser. */
   static final PublishersResourceListRole ADVERTISERS = const PublishersResourceListRole._internal("advertisers", 0);
   /** The requester is requesting as a publisher. */
   static final PublishersResourceListRole PUBLISHERS = const PublishersResourceListRole._internal("publishers", 1);
 
   /** All values of this enumeration */
-  static final List<PublishersResourceListRole> values = const <PublishersResourceListRole>[
+  static final core.List<PublishersResourceListRole> values = const <PublishersResourceListRole>[
     ADVERTISERS,
     PUBLISHERS,
   ];
@@ -1238,19 +1187,19 @@ class PublishersResourceListRole implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static PublishersResourceListRole valueOf(String item) => _valuesMap[item];
+  static PublishersResourceListRole valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const PublishersResourceListRole._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const PublishersResourceListRole._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Role".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Role".hashCode();
 }
 
 // Enum PublishersResource.List.RelationshipStatus
-class PublishersResourceListRelationshipStatus implements Hashable {
+class PublishersResourceListRelationshipStatus extends core.Object implements core.Hashable {
   /** Publishers you've approved to your program. */
   static final PublishersResourceListRelationshipStatus APPROVED = const PublishersResourceListRelationshipStatus._internal("approved", 0);
   /** Publishers available for you to recruit. */
@@ -1269,7 +1218,7 @@ class PublishersResourceListRelationshipStatus implements Hashable {
   static final PublishersResourceListRelationshipStatus PENDING = const PublishersResourceListRelationshipStatus._internal("pending", 4);
 
   /** All values of this enumeration */
-  static final List<PublishersResourceListRelationshipStatus> values = const <PublishersResourceListRelationshipStatus>[
+  static final core.List<PublishersResourceListRelationshipStatus> values = const <PublishersResourceListRelationshipStatus>[
     APPROVED,
     AVAILABLE,
     DEACTIVATED,
@@ -1287,26 +1236,26 @@ class PublishersResourceListRelationshipStatus implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static PublishersResourceListRelationshipStatus valueOf(String item) => _valuesMap[item];
+  static PublishersResourceListRelationshipStatus valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const PublishersResourceListRelationshipStatus._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const PublishersResourceListRelationshipStatus._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "RelationshipStatus".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "RelationshipStatus".hashCode();
 }
 
 // Enum PublishersResource.Get.Role
-class PublishersResourceGetRole implements Hashable {
+class PublishersResourceGetRole extends core.Object implements core.Hashable {
   /** The requester is requesting as an advertiser. */
   static final PublishersResourceGetRole ADVERTISERS = const PublishersResourceGetRole._internal("advertisers", 0);
   /** The requester is requesting as a publisher. */
   static final PublishersResourceGetRole PUBLISHERS = const PublishersResourceGetRole._internal("publishers", 1);
 
   /** All values of this enumeration */
-  static final List<PublishersResourceGetRole> values = const <PublishersResourceGetRole>[
+  static final core.List<PublishersResourceGetRole> values = const <PublishersResourceGetRole>[
     ADVERTISERS,
     PUBLISHERS,
   ];
@@ -1318,15 +1267,15 @@ class PublishersResourceGetRole implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static PublishersResourceGetRole valueOf(String item) => _valuesMap[item];
+  static PublishersResourceGetRole valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const PublishersResourceGetRole._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const PublishersResourceGetRole._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Role".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Role".hashCode();
 }
 
 // Schema .Advertiser
@@ -1335,29 +1284,29 @@ class Advertiser extends IdentityHash {
  * Category that this advertiser belongs to. A valid list of categories can be found here:
  * http://www.google.com/support/affiliatenetwork/advertiser/bin/answer.py?hl=en=107581
  */
-  String category;
+  core.String category;
 
   /** Email that this advertiser would like publishers to contact them with. */
-  String contactEmail;
+  core.String contactEmail;
 
   /** The kind for an advertiser. */
-  String kind;
+  core.String kind;
 
   /** URL of the website this advertiser advertises from. */
-  String siteUrl;
+  core.String siteUrl;
 
   /** Phone that this advertiser would like publishers to contact them with. */
-  String contactPhone;
+  core.String contactPhone;
 
   /** Description of the website the advertiser advertises from. */
-  String description;
+  core.String description;
 
   /**
  * A rank based on commissions paid to publishers over the past 90 days. A number between 1 and 4
  * where 4 means the top quartile (most money paid) and 1 means the bottom quartile (least money
  * paid).
  */
-  String payoutRank;
+  core.String payoutRank;
 
   /**
  * The sum of fees paid to publishers divided by the total number of clicks over the past seven
@@ -1369,10 +1318,10 @@ class Advertiser extends IdentityHash {
  * The longest possible length of a commission (how long the cookies on the customer's browser last
  * before they expire).
  */
-  int commissionDuration;
+  core.int commissionDuration;
 
   /** The status of the requesting publisher's relationship this advertiser. */
-  String status;
+  core.String status;
 
   /**
  * The sum of fees paid to publishers divided by the total number of clicks over the past three
@@ -1381,28 +1330,28 @@ class Advertiser extends IdentityHash {
   Money epcNinetyDayAverage;
 
   /** True if the advertiser allows publisher created links, otherwise false. */
-  bool allowPublisherCreatedLinks;
+  core.bool allowPublisherCreatedLinks;
 
   /** The requested advertiser. */
   Advertiser item;
 
   /** Date that this advertiser was approved as a Google Affiliate Network advertiser. */
-  String joinDate;
+  core.String joinDate;
 
   /** URL to the logo this advertiser uses on the Google Affiliate Network. */
-  String logoUrl;
+  core.String logoUrl;
 
   /** The ID of this advertiser. */
-  String id;
+  core.String id;
 
   /** Allows advertisers to submit product listings to Google Product Search. */
-  bool productFeedsEnabled;
+  core.bool productFeedsEnabled;
 
   /** The name of this advertiser. */
-  String name;
+  core.String name;
 
   /** Parses an instance from its JSON representation. */
-  static Advertiser parse(Map<String, Object> json) {
+  static Advertiser parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Advertiser();
     result.category = identity(json["category"]);
@@ -1426,9 +1375,9 @@ class Advertiser extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Advertiser value) {
+  static core.Object serialize(Advertiser value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["category"] = identity(value.category);
     result["contactEmail"] = identity(value.contactEmail);
     result["kind"] = identity(value.kind);
@@ -1457,16 +1406,16 @@ class Advertisers extends IdentityHash {
   /**
  * The 'pageToken' to pass to the next request to get the next page, if there are more to retrieve.
  */
-  String nextPageToken;
+  core.String nextPageToken;
 
   /** The advertiser list. */
-  List<Advertiser> items;
+  core.List<Advertiser> items;
 
   /** The kind for a page of advertisers. */
-  String kind;
+  core.String kind;
 
   /** Parses an instance from its JSON representation. */
-  static Advertisers parse(Map<String, Object> json) {
+  static Advertisers parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Advertisers();
     result.nextPageToken = identity(json["nextPageToken"]);
@@ -1475,9 +1424,9 @@ class Advertisers extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Advertisers value) {
+  static core.Object serialize(Advertisers value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["nextPageToken"] = identity(value.nextPageToken);
     result["items"] = map(Advertiser.serialize)(value.items);
     result["kind"] = identity(value.kind);
@@ -1489,222 +1438,222 @@ class Advertisers extends IdentityHash {
 // Schema .CcOffer
 class CcOffer extends IdentityHash {
   /** If you get coverage when you use the card for the given activity, this field describes it. */
-  String luggageInsurance;
+  core.String luggageInsurance;
 
   /** The low end for credit limits the issuer imposes on recipients of this card. */
-  double creditLimitMin;
+  core.double creditLimitMin;
 
   /**
  * The issuer's name for the card, including any trademark or service mark designators. A summary
  * field.
  */
-  String cardName;
+  core.String cardName;
 
   /** The high end for credit limits the issuer imposes on recipients of this card. */
-  double creditLimitMax;
+  core.double creditLimitMax;
 
   /** Text describing the grace period before finance charges apply. A summary field. */
-  String gracePeriodDisplay;
+  core.String gracePeriodDisplay;
 
   /** This offer's ID. A summary field. */
-  String offerId;
+  core.String offerId;
 
   /** For cards with rewards programs, the unit of reward. For example, miles, cash back, points. */
-  String rewardUnit;
+  core.String rewardUnit;
 
   /**
  * The lowest interest rate the issuer charges on this card. Expressed as an absolute number, not as
  * a percentage.
  */
-  double minPurchaseRate;
+  core.double minPurchaseRate;
 
   /**
  * A list of what the issuer thinks are the most important benefits of the card. Usually summarizes
  * the rewards program, if there is one. A summary field.
  */
-  List<String> cardBenefits;
+  core.List<core.String> cardBenefits;
 
   /** For cards with rewards programs, detailed rules about how the program works. */
-  List<CcOfferRewards> rewards;
+  core.List<CcOfferRewards> rewards;
 
   /**
  * Whether a cash reward program lets you get cash back sooner than end of year or other longish
  * period.
  */
-  bool offersImmediateCashReward;
+  core.bool offersImmediateCashReward;
 
   /** If you get coverage when you use the card for the given activity, this field describes it. */
-  String travelInsurance;
+  core.String travelInsurance;
 
   /** Text describing the fee for a payment that doesn't clear. A summary field. */
-  String returnedPaymentFee;
+  core.String returnedPaymentFee;
 
   /** The kind for one credit card offer. A summary field. */
-  String kind;
+  core.String kind;
 
   /** Name of card issuer. A summary field. */
-  String issuer;
+  core.String issuer;
 
   /**
  * The highest interest rate the issuer charges on this card. Expressed as an absolute number, not
  * as a percentage.
  */
-  double maxPurchaseRate;
+  core.double maxPurchaseRate;
 
   /** Text describing how much missing the grace period will cost. */
-  String minimumFinanceCharge;
+  core.String minimumFinanceCharge;
 
   /** Whether this card is only available to existing customers of the issuer. */
-  bool existingCustomerOnly;
+  core.bool existingCustomerOnly;
 
   /**
  * Text describing the annual fee, including any difference for the first year. A summary field.
  */
-  String annualFeeDisplay;
+  core.String annualFeeDisplay;
 
   /** Fee for setting up the card. */
-  String initialSetupAndProcessingFee;
+  core.String initialSetupAndProcessingFee;
 
   /** The Google Affiliate Network ID of the advertiser making this offer. */
-  String issuerId;
+  core.String issuerId;
 
   /** Text describing any additional details for the purchase rate. A summary field. */
-  String purchaseRateAdditionalDetails;
+  core.String purchaseRateAdditionalDetails;
 
   /** Categories in which the issuer does not wish the card to be displayed. A summary field. */
-  List<String> prohibitedCategories;
+  core.List<core.String> prohibitedCategories;
 
   /** If you get coverage when you use the card for the given activity, this field describes it. */
-  String fraudLiability;
+  core.String fraudLiability;
 
   /** Text describing the terms for cash advances. A summary field. */
-  String cashAdvanceTerms;
+  core.String cashAdvanceTerms;
 
   /** The link to the issuer's page for this card. A summary field. */
-  String landingPageUrl;
+  core.String landingPageUrl;
 
   /** Text describing the terms for introductory period cash advances. A summary field. */
-  String introCashAdvanceTerms;
+  core.String introCashAdvanceTerms;
 
   /** Whether accumulated rewards ever expire. */
-  bool rewardsExpire;
+  core.bool rewardsExpire;
 
   /** Text describing the terms for introductory period purchases. A summary field. */
-  String introPurchaseTerms;
+  core.String introPurchaseTerms;
 
   /** Fees for defaulting on your payments. */
-  List<CcOfferDefaultFees> defaultFees;
+  core.List<CcOfferDefaultFees> defaultFees;
 
   /** If you get coverage when you use the card for the given activity, this field describes it. */
-  String extendedWarranty;
+  core.String extendedWarranty;
 
   /** If you get coverage when you use the card for the given activity, this field describes it. */
-  String emergencyInsurance;
+  core.String emergencyInsurance;
 
   /** The annual fee for the first year, if different from the ongoing fee. Optional. */
-  double firstYearAnnualFee;
+  core.double firstYearAnnualFee;
 
   /** The link to ping to register a click on this offer. A summary field. */
-  String trackingUrl;
+  core.String trackingUrl;
 
   /** Text describing how much a late payment will cost, eg "up to $35." A summary field. */
-  String latePaymentFee;
+  core.String latePaymentFee;
 
   /** Fee for exceeding the card's charge limit. */
-  String overLimitFee;
+  core.String overLimitFee;
 
   /** What kind of credit card this is, for example secured or unsecured. */
-  String cardType;
+  core.String cardType;
 
   /** Possible categories for this card, eg "Low Interest" or "Good." A summary field. */
-  List<String> approvedCategories;
+  core.List<core.String> approvedCategories;
 
   /** The company that redeems the rewards, if different from the issuer. */
-  String rewardPartner;
+  core.String rewardPartner;
 
   /** Text describing the terms for introductory period balance transfers. A summary field. */
-  String introBalanceTransferTerms;
+  core.String introBalanceTransferTerms;
 
   /** Fee for each transaction involving a foreign currency. */
-  String foreignCurrencyTransactionFee;
+  core.String foreignCurrencyTransactionFee;
 
   /** The ongoing annual fee, in dollars. */
-  double annualFee;
+  core.double annualFee;
 
   /** The generic link to the issuer's site. */
-  String issuerWebsite;
+  core.String issuerWebsite;
 
   /** How often variable rates are updated. */
-  String variableRatesUpdateFrequency;
+  core.String variableRatesUpdateFrequency;
 
   /** If you get coverage when you use the card for the given activity, this field describes it. */
-  String carRentalInsurance;
+  core.String carRentalInsurance;
 
   /** More marketing copy about the card's benefits. A summary field. */
-  List<String> additionalCardBenefits;
+  core.List<core.String> additionalCardBenefits;
 
   /** The youngest a recipient of this card may be. */
-  double ageMinimum;
+  core.double ageMinimum;
 
   /** Text describing how the balance is computed. A summary field. */
-  String balanceComputationMethod;
+  core.String balanceComputationMethod;
 
   /** Text describing the purchase APR. A summary field. */
-  String aprDisplay;
+  core.String aprDisplay;
 
   /** Any extra fees levied on card holders. */
-  String additionalCardHolderFee;
+  core.String additionalCardHolderFee;
 
   /** When variable rates were last updated. */
-  String variableRatesLastUpdated;
+  core.String variableRatesLastUpdated;
 
   /** Which network (eg Visa) the card belongs to. A summary field. */
-  String network;
+  core.String network;
 
   /** Fixed or variable. */
-  String purchaseRateType;
+  core.String purchaseRateType;
 
   /** Fee for requesting a copy of your statement. */
-  String statementCopyFee;
+  core.String statementCopyFee;
 
   /** For airline miles rewards, tells whether blackout dates apply to the miles. */
-  bool rewardsHaveBlackoutDates;
+  core.bool rewardsHaveBlackoutDates;
 
   /**
  * Text describing the credit ratings required for recipients of this card, for example
  * "Excellent/Good." A summary field.
  */
-  String creditRatingDisplay;
+  core.String creditRatingDisplay;
 
   /** If you get coverage when you use the card for the given activity, this field describes it. */
-  String flightAccidentInsurance;
+  core.String flightAccidentInsurance;
 
   /** The largest number of units you may accumulate in a year. */
-  double annualRewardMaximum;
+  core.double annualRewardMaximum;
 
   /** Text describing the terms for balance transfers. A summary field. */
-  String balanceTransferTerms;
+  core.String balanceTransferTerms;
 
   /**
  * For cards with rewards programs, extra circumstances whereby additional rewards may be granted.
  */
-  List<CcOfferBonusRewards> bonusRewards;
+  core.List<CcOfferBonusRewards> bonusRewards;
 
   /** The link to the image of the card that is shown on Connect Commerce. A summary field. */
-  String imageUrl;
+  core.String imageUrl;
 
   /** Text describing the details of the age minimum restriction. */
-  String ageMinimumDetails;
+  core.String ageMinimumDetails;
 
   /**
  * A notice that, if present, is referenced via an asterisk by many of the other summary fields. If
  * this field is present, it will always start with an asterisk ("*"), and must be prominently
  * displayed with the offer. A summary field.
  */
-  String disclaimer;
+  core.String disclaimer;
 
   /** Parses an instance from its JSON representation. */
-  static CcOffer parse(Map<String, Object> json) {
+  static CcOffer parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new CcOffer();
     result.luggageInsurance = identity(json["luggageInsurance"]);
@@ -1773,9 +1722,9 @@ class CcOffer extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(CcOffer value) {
+  static core.Object serialize(CcOffer value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["luggageInsurance"] = identity(value.luggageInsurance);
     result["creditLimitMin"] = identity(value.creditLimitMin);
     result["cardName"] = identity(value.cardName);
@@ -1847,13 +1796,13 @@ class CcOffer extends IdentityHash {
 // Schema CcOffer.CcOfferBonusRewards
 class CcOfferBonusRewards extends IdentityHash {
   /** How many units of reward will be granted. */
-  double amount;
+  core.double amount;
 
   /** The circumstances under which this rule applies, for example, booking a flight via Orbitz. */
-  String details;
+  core.String details;
 
   /** Parses an instance from its JSON representation. */
-  static CcOfferBonusRewards parse(Map<String, Object> json) {
+  static CcOfferBonusRewards parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new CcOfferBonusRewards();
     result.amount = identity(json["amount"]);
@@ -1861,9 +1810,9 @@ class CcOfferBonusRewards extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(CcOfferBonusRewards value) {
+  static core.Object serialize(CcOfferBonusRewards value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["amount"] = identity(value.amount);
     result["details"] = identity(value.details);
     return result;
@@ -1874,25 +1823,25 @@ class CcOfferBonusRewards extends IdentityHash {
 // Schema CcOffer.CcOfferDefaultFees
 class CcOfferDefaultFees extends IdentityHash {
   /** The type of charge, for example Purchases. */
-  String category;
+  core.String category;
 
   /**
  * The highest rate the issuer may charge for defaulting on debt in this category. Expressed as an
  * absolute number, not as a percentage.
  */
-  double maxRate;
+  core.double maxRate;
 
   /**
  * The lowest rate the issuer may charge for defaulting on debt in this category. Expressed as an
  * absolute number, not as a percentage.
  */
-  double minRate;
+  core.double minRate;
 
   /** Fixed or variable. */
-  String rateType;
+  core.String rateType;
 
   /** Parses an instance from its JSON representation. */
-  static CcOfferDefaultFees parse(Map<String, Object> json) {
+  static CcOfferDefaultFees parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new CcOfferDefaultFees();
     result.category = identity(json["category"]);
@@ -1902,9 +1851,9 @@ class CcOfferDefaultFees extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(CcOfferDefaultFees value) {
+  static core.Object serialize(CcOfferDefaultFees value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["category"] = identity(value.category);
     result["maxRate"] = identity(value.maxRate);
     result["minRate"] = identity(value.minRate);
@@ -1917,25 +1866,25 @@ class CcOfferDefaultFees extends IdentityHash {
 // Schema CcOffer.CcOfferRewards
 class CcOfferRewards extends IdentityHash {
   /** The kind of purchases covered by this rule. */
-  String category;
+  core.String category;
 
   /** The minimum purchase amount in the given category before this rule applies. */
-  double minRewardTier;
+  core.double minRewardTier;
 
   /** The maximum purchase amount in the given category for this rule to apply. */
-  double maxRewardTier;
+  core.double maxRewardTier;
 
   /** How long rewards granted by this rule last. */
-  double expirationMonths;
+  core.double expirationMonths;
 
   /** The number of units rewarded per purchase dollar. */
-  double amount;
+  core.double amount;
 
   /** Other limits, for example, if this rule only applies during an introductory period. */
-  String additionalDetails;
+  core.String additionalDetails;
 
   /** Parses an instance from its JSON representation. */
-  static CcOfferRewards parse(Map<String, Object> json) {
+  static CcOfferRewards parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new CcOfferRewards();
     result.category = identity(json["category"]);
@@ -1947,9 +1896,9 @@ class CcOfferRewards extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(CcOfferRewards value) {
+  static core.Object serialize(CcOfferRewards value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["category"] = identity(value.category);
     result["minRewardTier"] = identity(value.minRewardTier);
     result["maxRewardTier"] = identity(value.maxRewardTier);
@@ -1964,13 +1913,13 @@ class CcOfferRewards extends IdentityHash {
 // Schema .CcOffers
 class CcOffers extends IdentityHash {
   /** The credit card offers. */
-  List<CcOffer> items;
+  core.List<CcOffer> items;
 
   /** The kind for a page of credit card offers. */
-  String kind;
+  core.String kind;
 
   /** Parses an instance from its JSON representation. */
-  static CcOffers parse(Map<String, Object> json) {
+  static CcOffers parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new CcOffers();
     result.items = map(CcOffer.parse)(json["items"]);
@@ -1978,9 +1927,9 @@ class CcOffers extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(CcOffers value) {
+  static core.Object serialize(CcOffers value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["items"] = map(CcOffer.serialize)(value.items);
     result["kind"] = identity(value.kind);
     return result;
@@ -1994,37 +1943,37 @@ class Event extends IdentityHash {
   Money networkFee;
 
   /** The name of the advertiser for this event. */
-  String advertiserName;
+  core.String advertiserName;
 
   /** The kind for one event. */
-  String kind;
+  core.String kind;
 
   /** The date-time this event was last modified as a RFC 3339 date-time value. */
-  String modifyDate;
+  core.String modifyDate;
 
   /** Type of the event (action|transaction|charge). */
-  String type;
+  core.String type;
 
   /** The order ID for this event. Only returned for conversion events. */
-  String orderId;
+  core.String orderId;
 
   /** The name of the publisher for this event. */
-  String publisherName;
+  core.String publisherName;
 
   /** The ID of the member attached to this event. Only returned for conversion events. */
-  String memberId;
+  core.String memberId;
 
   /** The ID of advertiser for this event. */
-  String advertiserId;
+  core.String advertiserId;
 
   /** Status of the event (active|canceled). Only returned for charge and conversion events. */
-  String status;
+  core.String status;
 
   /** The charge ID for this event. Only returned for charge events. */
-  String chargeId;
+  core.String chargeId;
 
   /** Products associated with the event. */
-  List<EventProducts> products;
+  core.List<EventProducts> products;
 
   /** Earnings by the publisher. */
   Money earnings;
@@ -2033,7 +1982,7 @@ class Event extends IdentityHash {
  * Charge type of the event (other|slotting_fee|monthly_minimum|tier_bonus|debit|credit). Only
  * returned for charge events.
  */
-  String chargeType;
+  core.String chargeType;
 
   /** Fee that the advertiser paid to the publisher. */
   Money publisherFee;
@@ -2044,13 +1993,13 @@ class Event extends IdentityHash {
   Money commissionableSales;
 
   /** The ID of the publisher for this event. */
-  String publisherId;
+  core.String publisherId;
 
   /** The date-time this event was initiated as a RFC 3339 date-time value. */
-  String eventDate;
+  core.String eventDate;
 
   /** Parses an instance from its JSON representation. */
-  static Event parse(Map<String, Object> json) {
+  static Event parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Event();
     result.networkFee = Money.parse(json["networkFee"]);
@@ -2074,9 +2023,9 @@ class Event extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Event value) {
+  static core.Object serialize(Event value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["networkFee"] = Money.serialize(value.networkFee);
     result["advertiserName"] = identity(value.advertiserName);
     result["kind"] = identity(value.kind);
@@ -2106,13 +2055,13 @@ class EventProducts extends IdentityHash {
   Money networkFee;
 
   /** Sku of this product. */
-  String sku;
+  core.String sku;
 
   /** Name of the category this product belongs to. */
-  String categoryName;
+  core.String categoryName;
 
   /** Sku name of this product. */
-  String skuName;
+  core.String skuName;
 
   /** Fee that the advertiser paid to the publisehr for this product. */
   Money publisherFee;
@@ -2124,13 +2073,13 @@ class EventProducts extends IdentityHash {
   Money unitPrice;
 
   /** Id of the category this product belongs to. */
-  String categoryId;
+  core.String categoryId;
 
   /** Quantity of this product bought/exchanged. */
-  String quantity;
+  core.String quantity;
 
   /** Parses an instance from its JSON representation. */
-  static EventProducts parse(Map<String, Object> json) {
+  static EventProducts parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new EventProducts();
     result.networkFee = Money.parse(json["networkFee"]);
@@ -2145,9 +2094,9 @@ class EventProducts extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(EventProducts value) {
+  static core.Object serialize(EventProducts value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["networkFee"] = Money.serialize(value.networkFee);
     result["sku"] = identity(value.sku);
     result["categoryName"] = identity(value.categoryName);
@@ -2167,16 +2116,16 @@ class Events extends IdentityHash {
   /**
  * The 'pageToken' to pass to the next request to get the next page, if there are more to retrieve.
  */
-  String nextPageToken;
+  core.String nextPageToken;
 
   /** The event list. */
-  List<Event> items;
+  core.List<Event> items;
 
   /** The kind for a page of events. */
-  String kind;
+  core.String kind;
 
   /** Parses an instance from its JSON representation. */
-  static Events parse(Map<String, Object> json) {
+  static Events parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Events();
     result.nextPageToken = identity(json["nextPageToken"]);
@@ -2185,9 +2134,9 @@ class Events extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Events value) {
+  static core.Object serialize(Events value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["nextPageToken"] = identity(value.nextPageToken);
     result["items"] = map(Event.serialize)(value.items);
     result["kind"] = identity(value.kind);
@@ -2199,55 +2148,55 @@ class Events extends IdentityHash {
 // Schema .Link
 class Link extends IdentityHash {
   /** Date that this link becomes active. */
-  String startDate;
+  core.String startDate;
 
   /** The kind for one entity. */
-  String kind;
+  core.String kind;
 
   /** Date that this link becomes inactive. */
-  String endDate;
+  core.String endDate;
 
   /** Description. */
-  String description;
+  core.String description;
 
   /** The logical name for this link. */
-  String name;
+  core.String name;
 
   /** Date that this link was created. */
-  String createDate;
+  core.String createDate;
 
   /** image alt text. */
-  String imageAltText;
+  core.String imageAltText;
 
   /** The ID of this link. */
-  String id;
+  core.String id;
 
   /** The advertiser id for the advertiser who owns this link. */
-  String advertiserId;
+  core.String advertiserId;
 
   /** Creative Type. */
-  String creativeType;
+  core.String creativeType;
 
   /** Promotion Type */
-  String promotionType;
+  core.String promotionType;
 
   /** Duration */
-  String duration;
+  core.String duration;
 
   /** Authorship */
-  String authorship;
+  core.String authorship;
 
   /** Availability. */
-  String availability;
+  core.String availability;
 
   /** Flag for if this link is active. */
-  bool isActive;
+  core.bool isActive;
 
   /** The destination URL for the link. */
-  String destinationUrl;
+  core.String destinationUrl;
 
   /** Parses an instance from its JSON representation. */
-  static Link parse(Map<String, Object> json) {
+  static Link parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Link();
     result.startDate = identity(json["startDate"]);
@@ -2269,9 +2218,9 @@ class Link extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Link value) {
+  static core.Object serialize(Link value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["startDate"] = identity(value.startDate);
     result["kind"] = identity(value.kind);
     result["endDate"] = identity(value.endDate);
@@ -2296,16 +2245,16 @@ class Link extends IdentityHash {
 // Schema .Links
 class Links extends IdentityHash {
   /** The next page token. */
-  String nextPageToken;
+  core.String nextPageToken;
 
   /** The links. */
-  List<Link> items;
+  core.List<Link> items;
 
   /** The kind for a page of links. */
-  String kind;
+  core.String kind;
 
   /** Parses an instance from its JSON representation. */
-  static Links parse(Map<String, Object> json) {
+  static Links parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Links();
     result.nextPageToken = identity(json["nextPageToken"]);
@@ -2314,9 +2263,9 @@ class Links extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Links value) {
+  static core.Object serialize(Links value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["nextPageToken"] = identity(value.nextPageToken);
     result["items"] = map(Link.serialize)(value.items);
     result["kind"] = identity(value.kind);
@@ -2328,13 +2277,13 @@ class Links extends IdentityHash {
 // Schema .Money
 class Money extends IdentityHash {
   /** The amount of money. */
-  double amount;
+  core.double amount;
 
   /** The 3-letter code of the currency in question. */
-  String currencyCode;
+  core.String currencyCode;
 
   /** Parses an instance from its JSON representation. */
-  static Money parse(Map<String, Object> json) {
+  static Money parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Money();
     result.amount = identity(json["amount"]);
@@ -2342,9 +2291,9 @@ class Money extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Money value) {
+  static core.Object serialize(Money value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["amount"] = identity(value.amount);
     result["currencyCode"] = identity(value.currencyCode);
     return result;
@@ -2355,20 +2304,20 @@ class Money extends IdentityHash {
 // Schema .Publisher
 class Publisher extends IdentityHash {
   /** The status of the requesting advertiser's relationship with this publisher. */
-  String status;
+  core.String status;
 
   /** The kind for a publisher. */
-  String kind;
+  core.String kind;
 
   /** The name of this publisher. */
-  String name;
+  core.String name;
 
   /**
  * Classification that this publisher belongs to. See this link for all publisher classifications: h
  * ttp://www.google.com/support/affiliatenetwork/advertiser/bin/answer.py?hl=en=107625=cb=cb=-k5fihz
  * thfaik=4
  */
-  String classification;
+  core.String classification;
 
   /**
  * The sum of fees paid to this publisher divided by the total number of clicks over the past seven
@@ -2381,7 +2330,7 @@ class Publisher extends IdentityHash {
  * 4 where 4 means the top quartile (most money paid) and 1 means the bottom quartile (least money
  * paid).
  */
-  String payoutRank;
+  core.String payoutRank;
 
   /**
  * The sum of fees paid to this publisher divided by the total number of clicks over the past three
@@ -2393,16 +2342,16 @@ class Publisher extends IdentityHash {
   Publisher item;
 
   /** Date that this publisher was approved as a Google Affiliate Network publisher. */
-  String joinDate;
+  core.String joinDate;
 
   /** Websites that this publisher uses to advertise. */
-  List<String> sites;
+  core.List<core.String> sites;
 
   /** The ID of this publisher. */
-  String id;
+  core.String id;
 
   /** Parses an instance from its JSON representation. */
-  static Publisher parse(Map<String, Object> json) {
+  static Publisher parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Publisher();
     result.status = identity(json["status"]);
@@ -2419,9 +2368,9 @@ class Publisher extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Publisher value) {
+  static core.Object serialize(Publisher value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["status"] = identity(value.status);
     result["kind"] = identity(value.kind);
     result["name"] = identity(value.name);
@@ -2443,16 +2392,16 @@ class Publishers extends IdentityHash {
   /**
  * The 'pageToken' to pass to the next request to get the next page, if there are more to retrieve.
  */
-  String nextPageToken;
+  core.String nextPageToken;
 
   /** The entity list. */
-  List<Publisher> items;
+  core.List<Publisher> items;
 
   /** The kind for a page of entities. */
-  String kind;
+  core.String kind;
 
   /** Parses an instance from its JSON representation. */
-  static Publishers parse(Map<String, Object> json) {
+  static Publishers parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Publishers();
     result.nextPageToken = identity(json["nextPageToken"]);
@@ -2461,9 +2410,9 @@ class Publishers extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Publishers value) {
+  static core.Object serialize(Publishers value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["nextPageToken"] = identity(value.nextPageToken);
     result["items"] = map(Publisher.serialize)(value.items);
     result["kind"] = identity(value.kind);
@@ -2473,12 +2422,12 @@ class Publishers extends IdentityHash {
 }
 
 // Enum GanApi.Alt
-class GanApiAlt implements Hashable {
+class GanApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/json */
   static final GanApiAlt JSON = const GanApiAlt._internal("json", 0);
 
   /** All values of this enumeration */
-  static final List<GanApiAlt> values = const <GanApiAlt>[
+  static final core.List<GanApiAlt> values = const <GanApiAlt>[
     JSON,
   ];
 
@@ -2488,14 +2437,14 @@ class GanApiAlt implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static GanApiAlt valueOf(String item) => _valuesMap[item];
+  static GanApiAlt valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const GanApiAlt._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const GanApiAlt._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Alt".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Alt".hashCode();
 }
 

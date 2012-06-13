@@ -1,4 +1,5 @@
 #library("adsense");
+#import('dart:core', prefix: 'core');
 #import('dart:json');
 
 #import('utils.dart');
@@ -8,13 +9,15 @@
 /**
  * Gives AdSense publishers access to their inventory and the ability to generate reports
  */
-class AdsenseApi {
+class AdsenseApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
-  final String baseUrl;
+  final core.String baseUrl;
+  /** How we should identify ourselves to the service. */
+  Authenticator authenticator;
   /** The client library version */
-  final String clientVersion = "0.1";
+  final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
-  final String applicationName;
+  final core.String applicationName;
   AdsenseApi get _$service() => this;
   UrlchannelsResource _urlchannels;
   UrlchannelsResource get urlchannels() => _urlchannels;
@@ -30,37 +33,37 @@ class AdsenseApi {
   CustomchannelsResource get customchannels() => _customchannels;
   
   /** Returns response with indentations and line breaks. */
-  bool prettyPrint;
+  core.bool prettyPrint;
 
   /** Selector specifying which fields to include in a partial response. */
-  String fields;
+  core.String fields;
 
   /**
    * Available to use for quota purposes for server-side applications. Can be any arbitrary string
    * assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.
    */
-  String quotaUser;
+  core.String quotaUser;
 
   /** OAuth 2.0 token for the current user. */
-  String oauthToken;
+  core.String oauthToken;
 
   /**
    * API key. Your API key identifies your project and provides you with API access, quota, and
    * reports. Required unless you provide an OAuth 2.0 token.
    */
-  String key;
+  core.String key;
 
   /**
    * IP address of the site where the request originates. Use this if you want to enforce per-user
    * limits.
    */
-  String userIp;
+  core.String userIp;
 
   /** Data format for the response. */
   AdsenseApiAlt alt;
 
 
-  AdsenseApi([this.baseUrl = "https://www.googleapis.com/adsense/v1.1/", this.applicationName]) { 
+  AdsenseApi([this.baseUrl = "https://www.googleapis.com/adsense/v1.1/", this.applicationName, this.authenticator]) { 
     _urlchannels = new UrlchannelsResource._internal(this);
     _adunits = new AdunitsResource._internal(this);
     _adclients = new AdclientsResource._internal(this);
@@ -68,14 +71,14 @@ class AdsenseApi {
     _accounts = new AccountsResource._internal(this);
     _customchannels = new CustomchannelsResource._internal(this);
   }
-  String get userAgent() {
+  core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}adsense/v1.1/20120607 google-api-dart-client/${clientVersion}";
   }
 }
 
 // Resource .UrlchannelsResource
-class UrlchannelsResource {
+class UrlchannelsResource extends core.Object {
   final AdsenseApi _$service;
   
   UrlchannelsResource._internal(AdsenseApi $service) : _$service = $service;
@@ -85,7 +88,7 @@ class UrlchannelsResource {
    * List all URL channels in the specified ad client for this AdSense account.
    * [adClientId] Ad client for which to list URL channels.
    */
-  Future<UrlChannels> list(String adClientId, [String pageToken = UNSPECIFIED, int maxResults = UNSPECIFIED]) {
+  core.Future<UrlChannels> list(core.String adClientId, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -101,24 +104,18 @@ class UrlchannelsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "adclients/{adClientId}/urlchannels").generate($pathParams, $queryParams);
-    final $completer = new Completer<UrlChannels>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = UrlChannels.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => UrlChannels.parse(JSON.parse($text)));
   }
 }
 
 // Resource .AdunitsResource
-class AdunitsResource {
+class AdunitsResource extends core.Object {
   final AdsenseApi _$service;
   final AdunitsCustomchannelsResourceResource customchannels;
   
@@ -130,7 +127,7 @@ class AdunitsResource {
    * List all ad units in the specified ad client for this AdSense account.
    * [adClientId] Ad client for which to list ad units.
    */
-  Future<AdUnits> list(String adClientId, [bool includeInactive = UNSPECIFIED, String pageToken = UNSPECIFIED, int maxResults = UNSPECIFIED]) {
+  core.Future<AdUnits> list(core.String adClientId, [core.bool includeInactive = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -147,19 +144,13 @@ class AdunitsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "adclients/{adClientId}/adunits").generate($pathParams, $queryParams);
-    final $completer = new Completer<AdUnits>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = AdUnits.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => AdUnits.parse(JSON.parse($text)));
   }
 
   // Method AdunitsResource.Get
@@ -168,7 +159,7 @@ class AdunitsResource {
    * [adClientId] Ad client for which to get the ad unit.
    * [adUnitId] Ad unit to retrieve.
    */
-  Future<AdUnit> get(String adClientId, String adUnitId) {
+  core.Future<AdUnit> get(core.String adClientId, core.String adUnitId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -183,25 +174,19 @@ class AdunitsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "adclients/{adClientId}/adunits/{adUnitId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<AdUnit>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = AdUnit.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => AdUnit.parse(JSON.parse($text)));
   }
 }
 
 
 // Resource AdunitsResource.AdunitsCustomchannelsResourceResource
-class AdunitsCustomchannelsResourceResource {
+class AdunitsCustomchannelsResourceResource extends core.Object {
   final AdsenseApi _$service;
   
   AdunitsCustomchannelsResourceResource._internal(AdsenseApi $service) : _$service = $service;
@@ -212,7 +197,7 @@ class AdunitsCustomchannelsResourceResource {
    * [adClientId] Ad client which contains the ad unit.
    * [adUnitId] Ad unit for which to list custom channels.
    */
-  Future<CustomChannels> list(String adClientId, String adUnitId, [String pageToken = UNSPECIFIED, int maxResults = UNSPECIFIED]) {
+  core.Future<CustomChannels> list(core.String adClientId, core.String adUnitId, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -229,24 +214,18 @@ class AdunitsCustomchannelsResourceResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "adclients/{adClientId}/adunits/{adUnitId}/customchannels").generate($pathParams, $queryParams);
-    final $completer = new Completer<CustomChannels>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = CustomChannels.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => CustomChannels.parse(JSON.parse($text)));
   }
 }
 
 // Resource .AdclientsResource
-class AdclientsResource {
+class AdclientsResource extends core.Object {
   final AdsenseApi _$service;
   
   AdclientsResource._internal(AdsenseApi $service) : _$service = $service;
@@ -255,7 +234,7 @@ class AdclientsResource {
   /**
    * List all ad clients in this AdSense account.
    */
-  Future<AdClients> list([String pageToken = UNSPECIFIED, int maxResults = UNSPECIFIED]) {
+  core.Future<AdClients> list([core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -270,24 +249,18 @@ class AdclientsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "adclients").generate($pathParams, $queryParams);
-    final $completer = new Completer<AdClients>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = AdClients.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => AdClients.parse(JSON.parse($text)));
   }
 }
 
 // Resource .ReportsResource
-class ReportsResource {
+class ReportsResource extends core.Object {
   final AdsenseApi _$service;
   
   ReportsResource._internal(AdsenseApi $service) : _$service = $service;
@@ -299,7 +272,7 @@ class ReportsResource {
    * [startDate] Start of the date range to report on in "YYYY-MM-DD" format, inclusive.
    * [endDate] End of the date range to report on in "YYYY-MM-DD" format, inclusive.
    */
-  Future<AdsenseReportsGenerateResponse> generate(String startDate, String endDate, [List<String> sort = UNSPECIFIED, String locale = UNSPECIFIED, List<String> metric = UNSPECIFIED, int maxResults = UNSPECIFIED, List<String> filter = UNSPECIFIED, String currency = UNSPECIFIED, int startIndex = UNSPECIFIED, List<String> dimension = UNSPECIFIED, List<String> accountId = UNSPECIFIED]) {
+  core.Future<AdsenseReportsGenerateResponse> generate(core.String startDate, core.String endDate, [core.List<core.String> sort = UNSPECIFIED, core.String locale = UNSPECIFIED, core.List<core.String> metric = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.List<core.String> filter = UNSPECIFIED, core.String currency = UNSPECIFIED, core.int startIndex = UNSPECIFIED, core.List<core.String> dimension = UNSPECIFIED, core.List<core.String> accountId = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -323,24 +296,18 @@ class ReportsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "reports").generate($pathParams, $queryParams);
-    final $completer = new Completer<AdsenseReportsGenerateResponse>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = AdsenseReportsGenerateResponse.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => AdsenseReportsGenerateResponse.parse(JSON.parse($text)));
   }
 }
 
 // Resource .AccountsResource
-class AccountsResource {
+class AccountsResource extends core.Object {
   final AdsenseApi _$service;
   final AccountsUrlchannelsResourceResource urlchannels;
   final AccountsAdunitsResourceResource adunits;
@@ -359,7 +326,7 @@ class AccountsResource {
   /**
    * List all accounts available to this AdSense account.
    */
-  Future<Accounts> list([String pageToken = UNSPECIFIED, int maxResults = UNSPECIFIED]) {
+  core.Future<Accounts> list([core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -374,19 +341,13 @@ class AccountsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "accounts").generate($pathParams, $queryParams);
-    final $completer = new Completer<Accounts>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Accounts.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Accounts.parse(JSON.parse($text)));
   }
 
   // Method AccountsResource.Get
@@ -394,7 +355,7 @@ class AccountsResource {
    * Get information about the selected AdSense account.
    * [accountId] Account to get information about.
    */
-  Future<Account> get(String accountId, [bool tree = UNSPECIFIED]) {
+  core.Future<Account> get(core.String accountId, [core.bool tree = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -409,25 +370,19 @@ class AccountsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "accounts/{accountId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Account>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Account.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Account.parse(JSON.parse($text)));
   }
 }
 
 
 // Resource AccountsResource.AccountsUrlchannelsResourceResource
-class AccountsUrlchannelsResourceResource {
+class AccountsUrlchannelsResourceResource extends core.Object {
   final AdsenseApi _$service;
   
   AccountsUrlchannelsResourceResource._internal(AdsenseApi $service) : _$service = $service;
@@ -438,7 +393,7 @@ class AccountsUrlchannelsResourceResource {
    * [accountId] Account to which the ad client belongs.
    * [adClientId] Ad client for which to list URL channels.
    */
-  Future<UrlChannels> list(String accountId, String adClientId, [String pageToken = UNSPECIFIED, int maxResults = UNSPECIFIED]) {
+  core.Future<UrlChannels> list(core.String accountId, core.String adClientId, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -455,24 +410,18 @@ class AccountsUrlchannelsResourceResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "accounts/{accountId}/adclients/{adClientId}/urlchannels").generate($pathParams, $queryParams);
-    final $completer = new Completer<UrlChannels>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = UrlChannels.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => UrlChannels.parse(JSON.parse($text)));
   }
 }
 
 // Resource AccountsResource.AccountsAdunitsResourceResource
-class AccountsAdunitsResourceResource {
+class AccountsAdunitsResourceResource extends core.Object {
   final AdsenseApi _$service;
   final AccountsAdunitsResourceAccountsAdunitsCustomchannelsResourceResourceResourceResource customchannels;
   
@@ -485,7 +434,7 @@ class AccountsAdunitsResourceResource {
    * [accountId] Account to which the ad client belongs.
    * [adClientId] Ad client for which to list ad units.
    */
-  Future<AdUnits> list(String accountId, String adClientId, [bool includeInactive = UNSPECIFIED, String pageToken = UNSPECIFIED, int maxResults = UNSPECIFIED]) {
+  core.Future<AdUnits> list(core.String accountId, core.String adClientId, [core.bool includeInactive = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -503,19 +452,13 @@ class AccountsAdunitsResourceResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "accounts/{accountId}/adclients/{adClientId}/adunits").generate($pathParams, $queryParams);
-    final $completer = new Completer<AdUnits>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = AdUnits.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => AdUnits.parse(JSON.parse($text)));
   }
 
   // Method AccountsResource.AccountsAdunitsResourceResource.Get
@@ -525,7 +468,7 @@ class AccountsAdunitsResourceResource {
    * [adClientId] Ad client for which to get the ad unit.
    * [adUnitId] Ad unit to retrieve.
    */
-  Future<AdUnit> get(String accountId, String adClientId, String adUnitId) {
+  core.Future<AdUnit> get(core.String accountId, core.String adClientId, core.String adUnitId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -541,25 +484,19 @@ class AccountsAdunitsResourceResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "accounts/{accountId}/adclients/{adClientId}/adunits/{adUnitId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<AdUnit>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = AdUnit.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => AdUnit.parse(JSON.parse($text)));
   }
 }
 
 
 // Resource AccountsResource.AccountsAdunitsResourceResource.AccountsAdunitsResourceAccountsAdunitsCustomchannelsResourceResourceResourceResource
-class AccountsAdunitsResourceAccountsAdunitsCustomchannelsResourceResourceResourceResource {
+class AccountsAdunitsResourceAccountsAdunitsCustomchannelsResourceResourceResourceResource extends core.Object {
   final AdsenseApi _$service;
   
   AccountsAdunitsResourceAccountsAdunitsCustomchannelsResourceResourceResourceResource._internal(AdsenseApi $service) : _$service = $service;
@@ -571,7 +508,7 @@ class AccountsAdunitsResourceAccountsAdunitsCustomchannelsResourceResourceResour
    * [adClientId] Ad client which contains the ad unit.
    * [adUnitId] Ad unit for which to list custom channels.
    */
-  Future<CustomChannels> list(String accountId, String adClientId, String adUnitId, [String pageToken = UNSPECIFIED, int maxResults = UNSPECIFIED]) {
+  core.Future<CustomChannels> list(core.String accountId, core.String adClientId, core.String adUnitId, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -589,24 +526,18 @@ class AccountsAdunitsResourceAccountsAdunitsCustomchannelsResourceResourceResour
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "accounts/{accountId}/adclients/{adClientId}/adunits/{adUnitId}/customchannels").generate($pathParams, $queryParams);
-    final $completer = new Completer<CustomChannels>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = CustomChannels.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => CustomChannels.parse(JSON.parse($text)));
   }
 }
 
 // Resource AccountsResource.AccountsAdclientsResourceResource
-class AccountsAdclientsResourceResource {
+class AccountsAdclientsResourceResource extends core.Object {
   final AdsenseApi _$service;
   
   AccountsAdclientsResourceResource._internal(AdsenseApi $service) : _$service = $service;
@@ -616,7 +547,7 @@ class AccountsAdclientsResourceResource {
    * List all ad clients in the specified account.
    * [accountId] Account for which to list ad clients.
    */
-  Future<AdClients> list(String accountId, [String pageToken = UNSPECIFIED, int maxResults = UNSPECIFIED]) {
+  core.Future<AdClients> list(core.String accountId, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -632,24 +563,18 @@ class AccountsAdclientsResourceResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "accounts/{accountId}/adclients").generate($pathParams, $queryParams);
-    final $completer = new Completer<AdClients>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = AdClients.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => AdClients.parse(JSON.parse($text)));
   }
 }
 
 // Resource AccountsResource.AccountsReportsResourceResource
-class AccountsReportsResourceResource {
+class AccountsReportsResourceResource extends core.Object {
   final AdsenseApi _$service;
   
   AccountsReportsResourceResource._internal(AdsenseApi $service) : _$service = $service;
@@ -662,7 +587,7 @@ class AccountsReportsResourceResource {
    * [startDate] Start of the date range to report on in "YYYY-MM-DD" format, inclusive.
    * [endDate] End of the date range to report on in "YYYY-MM-DD" format, inclusive.
    */
-  Future<AdsenseReportsGenerateResponse> generate(String accountId, String startDate, String endDate, [List<String> sort = UNSPECIFIED, String locale = UNSPECIFIED, List<String> metric = UNSPECIFIED, int maxResults = UNSPECIFIED, List<String> filter = UNSPECIFIED, String currency = UNSPECIFIED, int startIndex = UNSPECIFIED, List<String> dimension = UNSPECIFIED]) {
+  core.Future<AdsenseReportsGenerateResponse> generate(core.String accountId, core.String startDate, core.String endDate, [core.List<core.String> sort = UNSPECIFIED, core.String locale = UNSPECIFIED, core.List<core.String> metric = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.List<core.String> filter = UNSPECIFIED, core.String currency = UNSPECIFIED, core.int startIndex = UNSPECIFIED, core.List<core.String> dimension = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -686,24 +611,18 @@ class AccountsReportsResourceResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "accounts/{accountId}/reports").generate($pathParams, $queryParams);
-    final $completer = new Completer<AdsenseReportsGenerateResponse>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = AdsenseReportsGenerateResponse.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => AdsenseReportsGenerateResponse.parse(JSON.parse($text)));
   }
 }
 
 // Resource AccountsResource.AccountsCustomchannelsResourceResource
-class AccountsCustomchannelsResourceResource {
+class AccountsCustomchannelsResourceResource extends core.Object {
   final AdsenseApi _$service;
   final AccountsCustomchannelsResourceAccountsCustomchannelsAdunitsResourceResourceResourceResource adunits;
   
@@ -716,7 +635,7 @@ class AccountsCustomchannelsResourceResource {
    * [accountId] Account to which the ad client belongs.
    * [adClientId] Ad client for which to list custom channels.
    */
-  Future<CustomChannels> list(String accountId, String adClientId, [String pageToken = UNSPECIFIED, int maxResults = UNSPECIFIED]) {
+  core.Future<CustomChannels> list(core.String accountId, core.String adClientId, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -733,19 +652,13 @@ class AccountsCustomchannelsResourceResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "accounts/{accountId}/adclients/{adClientId}/customchannels").generate($pathParams, $queryParams);
-    final $completer = new Completer<CustomChannels>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = CustomChannels.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => CustomChannels.parse(JSON.parse($text)));
   }
 
   // Method AccountsResource.AccountsCustomchannelsResourceResource.Get
@@ -755,7 +668,7 @@ class AccountsCustomchannelsResourceResource {
    * [adClientId] Ad client which contains the custom channel.
    * [customChannelId] Custom channel to retrieve.
    */
-  Future<CustomChannel> get(String accountId, String adClientId, String customChannelId) {
+  core.Future<CustomChannel> get(core.String accountId, core.String adClientId, core.String customChannelId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -771,25 +684,19 @@ class AccountsCustomchannelsResourceResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "accounts/{accountId}/adclients/{adClientId}/customchannels/{customChannelId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<CustomChannel>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = CustomChannel.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => CustomChannel.parse(JSON.parse($text)));
   }
 }
 
 
 // Resource AccountsResource.AccountsCustomchannelsResourceResource.AccountsCustomchannelsResourceAccountsCustomchannelsAdunitsResourceResourceResourceResource
-class AccountsCustomchannelsResourceAccountsCustomchannelsAdunitsResourceResourceResourceResource {
+class AccountsCustomchannelsResourceAccountsCustomchannelsAdunitsResourceResourceResourceResource extends core.Object {
   final AdsenseApi _$service;
   
   AccountsCustomchannelsResourceAccountsCustomchannelsAdunitsResourceResourceResourceResource._internal(AdsenseApi $service) : _$service = $service;
@@ -801,7 +708,7 @@ class AccountsCustomchannelsResourceAccountsCustomchannelsAdunitsResourceResourc
    * [adClientId] Ad client which contains the custom channel.
    * [customChannelId] Custom channel for which to list ad units.
    */
-  Future<AdUnits> list(String accountId, String adClientId, String customChannelId, [bool includeInactive = UNSPECIFIED, int maxResults = UNSPECIFIED, String pageToken = UNSPECIFIED]) {
+  core.Future<AdUnits> list(core.String accountId, core.String adClientId, core.String customChannelId, [core.bool includeInactive = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String pageToken = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -820,24 +727,18 @@ class AccountsCustomchannelsResourceAccountsCustomchannelsAdunitsResourceResourc
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "accounts/{accountId}/adclients/{adClientId}/customchannels/{customChannelId}/adunits").generate($pathParams, $queryParams);
-    final $completer = new Completer<AdUnits>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = AdUnits.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => AdUnits.parse(JSON.parse($text)));
   }
 }
 
 // Resource .CustomchannelsResource
-class CustomchannelsResource {
+class CustomchannelsResource extends core.Object {
   final AdsenseApi _$service;
   final CustomchannelsAdunitsResourceResource adunits;
   
@@ -849,7 +750,7 @@ class CustomchannelsResource {
    * List all custom channels in the specified ad client for this AdSense account.
    * [adClientId] Ad client for which to list custom channels.
    */
-  Future<CustomChannels> list(String adClientId, [String pageToken = UNSPECIFIED, int maxResults = UNSPECIFIED]) {
+  core.Future<CustomChannels> list(core.String adClientId, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -865,19 +766,13 @@ class CustomchannelsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "adclients/{adClientId}/customchannels").generate($pathParams, $queryParams);
-    final $completer = new Completer<CustomChannels>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = CustomChannels.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => CustomChannels.parse(JSON.parse($text)));
   }
 
   // Method CustomchannelsResource.Get
@@ -886,7 +781,7 @@ class CustomchannelsResource {
    * [adClientId] Ad client which contains the custom channel.
    * [customChannelId] Custom channel to retrieve.
    */
-  Future<CustomChannel> get(String adClientId, String customChannelId) {
+  core.Future<CustomChannel> get(core.String adClientId, core.String customChannelId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -901,25 +796,19 @@ class CustomchannelsResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "adclients/{adClientId}/customchannels/{customChannelId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<CustomChannel>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = CustomChannel.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => CustomChannel.parse(JSON.parse($text)));
   }
 }
 
 
 // Resource CustomchannelsResource.CustomchannelsAdunitsResourceResource
-class CustomchannelsAdunitsResourceResource {
+class CustomchannelsAdunitsResourceResource extends core.Object {
   final AdsenseApi _$service;
   
   CustomchannelsAdunitsResourceResource._internal(AdsenseApi $service) : _$service = $service;
@@ -930,7 +819,7 @@ class CustomchannelsAdunitsResourceResource {
    * [adClientId] Ad client which contains the custom channel.
    * [customChannelId] Custom channel for which to list ad units.
    */
-  Future<AdUnits> list(String adClientId, String customChannelId, [bool includeInactive = UNSPECIFIED, String pageToken = UNSPECIFIED, int maxResults = UNSPECIFIED]) {
+  core.Future<AdUnits> list(core.String adClientId, core.String customChannelId, [core.bool includeInactive = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -948,38 +837,32 @@ class CustomchannelsAdunitsResourceResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "adclients/{adClientId}/customchannels/{customChannelId}/adunits").generate($pathParams, $queryParams);
-    final $completer = new Completer<AdUnits>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = AdUnits.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => AdUnits.parse(JSON.parse($text)));
   }
 }
 
 // Schema .Account
 class Account extends IdentityHash {
   /** Kind of resource this is, in this case adsense#account. */
-  String kind;
+  core.String kind;
 
   /** Unique identifier of this account. */
-  String id;
+  core.String id;
 
   /** Sub accounts of the this account. */
-  List<Account> subAccounts;
+  core.List<Account> subAccounts;
 
   /** Name of this account. */
-  String name;
+  core.String name;
 
   /** Parses an instance from its JSON representation. */
-  static Account parse(Map<String, Object> json) {
+  static Account parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Account();
     result.kind = identity(json["kind"]);
@@ -989,9 +872,9 @@ class Account extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Account value) {
+  static core.Object serialize(Account value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["kind"] = identity(value.kind);
     result["id"] = identity(value.id);
     result["subAccounts"] = map(Account.serialize)(value.subAccounts);
@@ -1007,19 +890,19 @@ class Accounts extends IdentityHash {
  * Continuation token used to page through accounts. To retrieve the next page of results, set the
  * next request's "pageToken" value to this.
  */
-  String nextPageToken;
+  core.String nextPageToken;
 
   /** The accounts returned in this list response. */
-  List<Account> items;
+  core.List<Account> items;
 
   /** Kind of list this is, in this case adsense#accounts. */
-  String kind;
+  core.String kind;
 
   /** ETag of this response for caching purposes. */
-  String etag;
+  core.String etag;
 
   /** Parses an instance from its JSON representation. */
-  static Accounts parse(Map<String, Object> json) {
+  static Accounts parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Accounts();
     result.nextPageToken = identity(json["nextPageToken"]);
@@ -1029,9 +912,9 @@ class Accounts extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Accounts value) {
+  static core.Object serialize(Accounts value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["nextPageToken"] = identity(value.nextPageToken);
     result["items"] = map(Account.serialize)(value.items);
     result["kind"] = identity(value.kind);
@@ -1044,19 +927,19 @@ class Accounts extends IdentityHash {
 // Schema .AdClient
 class AdClient extends IdentityHash {
   /** This ad client's product code, which corresponds to the PRODUCT_CODE report dimension. */
-  String productCode;
+  core.String productCode;
 
   /** Kind of resource this is, in this case adsense#adClient. */
-  String kind;
+  core.String kind;
 
   /** Unique identifier of this ad client. */
-  String id;
+  core.String id;
 
   /** Whether this ad client supports being reported on. */
-  bool supportsReporting;
+  core.bool supportsReporting;
 
   /** Parses an instance from its JSON representation. */
-  static AdClient parse(Map<String, Object> json) {
+  static AdClient parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new AdClient();
     result.productCode = identity(json["productCode"]);
@@ -1066,9 +949,9 @@ class AdClient extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(AdClient value) {
+  static core.Object serialize(AdClient value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["productCode"] = identity(value.productCode);
     result["kind"] = identity(value.kind);
     result["id"] = identity(value.id);
@@ -1084,19 +967,19 @@ class AdClients extends IdentityHash {
  * Continuation token used to page through ad clients. To retrieve the next page of results, set the
  * next request's "pageToken" value to this.
  */
-  String nextPageToken;
+  core.String nextPageToken;
 
   /** The ad clients returned in this list response. */
-  List<AdClient> items;
+  core.List<AdClient> items;
 
   /** Kind of list this is, in this case adsense#adClients. */
-  String kind;
+  core.String kind;
 
   /** ETag of this response for caching purposes. */
-  String etag;
+  core.String etag;
 
   /** Parses an instance from its JSON representation. */
-  static AdClients parse(Map<String, Object> json) {
+  static AdClients parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new AdClients();
     result.nextPageToken = identity(json["nextPageToken"]);
@@ -1106,9 +989,9 @@ class AdClients extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(AdClients value) {
+  static core.Object serialize(AdClients value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["nextPageToken"] = identity(value.nextPageToken);
     result["items"] = map(AdClient.serialize)(value.items);
     result["kind"] = identity(value.kind);
@@ -1128,25 +1011,25 @@ class AdUnit extends IdentityHash {
  *
  * INACTIVE: Indicates that there has been no activity on this ad unit in the last seven days.
  */
-  String status;
+  core.String status;
 
   /** Kind of resource this is, in this case adsense#adUnit. */
-  String kind;
+  core.String kind;
 
   /** Identity code of this ad unit, not necessarily unique across ad clients. */
-  String code;
+  core.String code;
 
   /**
  * Unique identifier of this ad unit. This should be considered an opaque identifier; it is not safe
  * to rely on it being in any particular format.
  */
-  String id;
+  core.String id;
 
   /** Name of this ad unit. */
-  String name;
+  core.String name;
 
   /** Parses an instance from its JSON representation. */
-  static AdUnit parse(Map<String, Object> json) {
+  static AdUnit parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new AdUnit();
     result.status = identity(json["status"]);
@@ -1157,9 +1040,9 @@ class AdUnit extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(AdUnit value) {
+  static core.Object serialize(AdUnit value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["status"] = identity(value.status);
     result["kind"] = identity(value.kind);
     result["code"] = identity(value.code);
@@ -1176,19 +1059,19 @@ class AdUnits extends IdentityHash {
  * Continuation token used to page through ad units. To retrieve the next page of results, set the
  * next request's "pageToken" value to this.
  */
-  String nextPageToken;
+  core.String nextPageToken;
 
   /** The ad units returned in this list response. */
-  List<AdUnit> items;
+  core.List<AdUnit> items;
 
   /** Kind of list this is, in this case adsense#adUnits. */
-  String kind;
+  core.String kind;
 
   /** ETag of this response for caching purposes. */
-  String etag;
+  core.String etag;
 
   /** Parses an instance from its JSON representation. */
-  static AdUnits parse(Map<String, Object> json) {
+  static AdUnits parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new AdUnits();
     result.nextPageToken = identity(json["nextPageToken"]);
@@ -1198,9 +1081,9 @@ class AdUnits extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(AdUnits value) {
+  static core.Object serialize(AdUnits value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["nextPageToken"] = identity(value.nextPageToken);
     result["items"] = map(AdUnit.serialize)(value.items);
     result["kind"] = identity(value.kind);
@@ -1213,44 +1096,44 @@ class AdUnits extends IdentityHash {
 // Schema .AdsenseReportsGenerateResponse
 class AdsenseReportsGenerateResponse extends IdentityHash {
   /** Kind this is, in this case adsense#report. */
-  String kind;
+  core.String kind;
 
   /**
  * The output rows of the report. Each row is a list of cells; one for each dimension in the
  * request, followed by one for each metric in the request. The dimension cells contain strings, and
  * the metric cells contain numbers.
  */
-  List<List<String>> rows;
+  core.List<core.List<core.String>> rows;
 
   /** Any warnings associated with generation of the report. */
-  List<String> warnings;
+  core.List<core.String> warnings;
 
   /**
  * The totals of the report. This is the same length as any other row in the report; cells
  * corresponding to dimension columns are empty.
  */
-  List<String> totals;
+  core.List<core.String> totals;
 
   /**
  * The header information of the columns requested in the report. This is a list of headers; one for
  * each dimension in the request, followed by one for each metric in the request.
  */
-  List<AdsenseReportsGenerateResponseHeaders> headers;
+  core.List<AdsenseReportsGenerateResponseHeaders> headers;
 
   /**
  * The total number of rows matched by the report request. Fewer rows may be returned in the
  * response due to being limited by the row count requested or the report row limit.
  */
-  String totalMatchedRows;
+  core.String totalMatchedRows;
 
   /**
  * The averages of the report. This is the same length as any other row in the report; cells
  * corresponding to dimension columns are empty.
  */
-  List<String> averages;
+  core.List<core.String> averages;
 
   /** Parses an instance from its JSON representation. */
-  static AdsenseReportsGenerateResponse parse(Map<String, Object> json) {
+  static AdsenseReportsGenerateResponse parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new AdsenseReportsGenerateResponse();
     result.kind = identity(json["kind"]);
@@ -1263,9 +1146,9 @@ class AdsenseReportsGenerateResponse extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(AdsenseReportsGenerateResponse value) {
+  static core.Object serialize(AdsenseReportsGenerateResponse value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["kind"] = identity(value.kind);
     result["rows"] = map(map(identity))(value.rows);
     result["warnings"] = map(identity)(value.warnings);
@@ -1281,16 +1164,16 @@ class AdsenseReportsGenerateResponse extends IdentityHash {
 // Schema AdsenseReportsGenerateResponse.AdsenseReportsGenerateResponseHeaders
 class AdsenseReportsGenerateResponseHeaders extends IdentityHash {
   /** The currency of this column. Only present if the header type is METRIC_CURRENCY. */
-  String currency;
+  core.String currency;
 
   /** The type of the header; one of DIMENSION, METRIC_TALLY, METRIC_RATIO, or METRIC_CURRENCY. */
-  String type;
+  core.String type;
 
   /** The name of the header. */
-  String name;
+  core.String name;
 
   /** Parses an instance from its JSON representation. */
-  static AdsenseReportsGenerateResponseHeaders parse(Map<String, Object> json) {
+  static AdsenseReportsGenerateResponseHeaders parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new AdsenseReportsGenerateResponseHeaders();
     result.currency = identity(json["currency"]);
@@ -1299,9 +1182,9 @@ class AdsenseReportsGenerateResponseHeaders extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(AdsenseReportsGenerateResponseHeaders value) {
+  static core.Object serialize(AdsenseReportsGenerateResponseHeaders value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["currency"] = identity(value.currency);
     result["type"] = identity(value.type);
     result["name"] = identity(value.name);
@@ -1313,10 +1196,10 @@ class AdsenseReportsGenerateResponseHeaders extends IdentityHash {
 // Schema .CustomChannel
 class CustomChannel extends IdentityHash {
   /** Kind of resource this is, in this case adsense#customChannel. */
-  String kind;
+  core.String kind;
 
   /** Code of this custom channel, not necessarily unique across ad clients. */
-  String code;
+  core.String code;
 
   /** The targeting information of this custom channel, if activated. */
   CustomChannelTargetingInfo targetingInfo;
@@ -1325,13 +1208,13 @@ class CustomChannel extends IdentityHash {
  * Unique identifier of this custom channel. This should be considered an opaque identifier; it is
  * not safe to rely on it being in any particular format.
  */
-  String id;
+  core.String id;
 
   /** Name of this custom channel. */
-  String name;
+  core.String name;
 
   /** Parses an instance from its JSON representation. */
-  static CustomChannel parse(Map<String, Object> json) {
+  static CustomChannel parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new CustomChannel();
     result.kind = identity(json["kind"]);
@@ -1342,9 +1225,9 @@ class CustomChannel extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(CustomChannel value) {
+  static core.Object serialize(CustomChannel value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["kind"] = identity(value.kind);
     result["code"] = identity(value.code);
     result["targetingInfo"] = CustomChannelTargetingInfo.serialize(value.targetingInfo);
@@ -1363,19 +1246,19 @@ class CustomChannelTargetingInfo extends IdentityHash {
  * MIDDLE_RIGHT, BOTTOM_LEFT, BOTTOM_CENTER, BOTTOM_RIGHT, MULTIPLE_LOCATIONS. Acceptable values for
  * mobile content ads are: TOP, MIDDLE, BOTTOM, MULTIPLE_LOCATIONS.
  */
-  String location;
+  core.String location;
 
   /** The name used to describe this channel externally. */
-  String adsAppearOn;
+  core.String adsAppearOn;
 
   /** The language of the sites ads will be displayed on. */
-  String siteLanguage;
+  core.String siteLanguage;
 
   /** The external description of the channel. */
-  String description;
+  core.String description;
 
   /** Parses an instance from its JSON representation. */
-  static CustomChannelTargetingInfo parse(Map<String, Object> json) {
+  static CustomChannelTargetingInfo parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new CustomChannelTargetingInfo();
     result.location = identity(json["location"]);
@@ -1385,9 +1268,9 @@ class CustomChannelTargetingInfo extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(CustomChannelTargetingInfo value) {
+  static core.Object serialize(CustomChannelTargetingInfo value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["location"] = identity(value.location);
     result["adsAppearOn"] = identity(value.adsAppearOn);
     result["siteLanguage"] = identity(value.siteLanguage);
@@ -1403,19 +1286,19 @@ class CustomChannels extends IdentityHash {
  * Continuation token used to page through custom channels. To retrieve the next page of results,
  * set the next request's "pageToken" value to this.
  */
-  String nextPageToken;
+  core.String nextPageToken;
 
   /** The custom channels returned in this list response. */
-  List<CustomChannel> items;
+  core.List<CustomChannel> items;
 
   /** Kind of list this is, in this case adsense#customChannels. */
-  String kind;
+  core.String kind;
 
   /** ETag of this response for caching purposes. */
-  String etag;
+  core.String etag;
 
   /** Parses an instance from its JSON representation. */
-  static CustomChannels parse(Map<String, Object> json) {
+  static CustomChannels parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new CustomChannels();
     result.nextPageToken = identity(json["nextPageToken"]);
@@ -1425,9 +1308,9 @@ class CustomChannels extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(CustomChannels value) {
+  static core.Object serialize(CustomChannels value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["nextPageToken"] = identity(value.nextPageToken);
     result["items"] = map(CustomChannel.serialize)(value.items);
     result["kind"] = identity(value.kind);
@@ -1440,22 +1323,22 @@ class CustomChannels extends IdentityHash {
 // Schema .UrlChannel
 class UrlChannel extends IdentityHash {
   /** Kind of resource this is, in this case adsense#urlChannel. */
-  String kind;
+  core.String kind;
 
   /**
  * Unique identifier of this URL channel. This should be considered an opaque identifier; it is not
  * safe to rely on it being in any particular format.
  */
-  String id;
+  core.String id;
 
   /**
  * URL Pattern of this URL channel. Does not include "http://" or "https://". Example:
  * www.example.com/home
  */
-  String urlPattern;
+  core.String urlPattern;
 
   /** Parses an instance from its JSON representation. */
-  static UrlChannel parse(Map<String, Object> json) {
+  static UrlChannel parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new UrlChannel();
     result.kind = identity(json["kind"]);
@@ -1464,9 +1347,9 @@ class UrlChannel extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(UrlChannel value) {
+  static core.Object serialize(UrlChannel value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["kind"] = identity(value.kind);
     result["id"] = identity(value.id);
     result["urlPattern"] = identity(value.urlPattern);
@@ -1481,19 +1364,19 @@ class UrlChannels extends IdentityHash {
  * Continuation token used to page through URL channels. To retrieve the next page of results, set
  * the next request's "pageToken" value to this.
  */
-  String nextPageToken;
+  core.String nextPageToken;
 
   /** The URL channels returned in this list response. */
-  List<UrlChannel> items;
+  core.List<UrlChannel> items;
 
   /** Kind of list this is, in this case adsense#urlChannels. */
-  String kind;
+  core.String kind;
 
   /** ETag of this response for caching purposes. */
-  String etag;
+  core.String etag;
 
   /** Parses an instance from its JSON representation. */
-  static UrlChannels parse(Map<String, Object> json) {
+  static UrlChannels parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new UrlChannels();
     result.nextPageToken = identity(json["nextPageToken"]);
@@ -1503,9 +1386,9 @@ class UrlChannels extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(UrlChannels value) {
+  static core.Object serialize(UrlChannels value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["nextPageToken"] = identity(value.nextPageToken);
     result["items"] = map(UrlChannel.serialize)(value.items);
     result["kind"] = identity(value.kind);
@@ -1516,14 +1399,14 @@ class UrlChannels extends IdentityHash {
 }
 
 // Enum AdsenseApi.Alt
-class AdsenseApiAlt implements Hashable {
+class AdsenseApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of text/csv */
   static final AdsenseApiAlt CSV = const AdsenseApiAlt._internal("csv", 0);
   /** Responses with Content-Type of application/json */
   static final AdsenseApiAlt JSON = const AdsenseApiAlt._internal("json", 1);
 
   /** All values of this enumeration */
-  static final List<AdsenseApiAlt> values = const <AdsenseApiAlt>[
+  static final core.List<AdsenseApiAlt> values = const <AdsenseApiAlt>[
     CSV,
     JSON,
   ];
@@ -1535,14 +1418,14 @@ class AdsenseApiAlt implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static AdsenseApiAlt valueOf(String item) => _valuesMap[item];
+  static AdsenseApiAlt valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const AdsenseApiAlt._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const AdsenseApiAlt._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Alt".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Alt".hashCode();
 }
 

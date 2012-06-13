@@ -1,4 +1,5 @@
 #library("latitude");
+#import('dart:core', prefix: 'core');
 #import('dart:json');
 
 #import('utils.dart');
@@ -8,13 +9,15 @@
 /**
  * Lets you read and update your current location and work with your location history
  */
-class LatitudeApi {
+class LatitudeApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
-  final String baseUrl;
+  final core.String baseUrl;
+  /** How we should identify ourselves to the service. */
+  Authenticator authenticator;
   /** The client library version */
-  final String clientVersion = "0.1";
+  final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
-  final String applicationName;
+  final core.String applicationName;
   LatitudeApi get _$service() => this;
   CurrentLocationResource _currentLocation;
   CurrentLocationResource get currentLocation() => _currentLocation;
@@ -22,48 +25,48 @@ class LatitudeApi {
   LocationResource get location() => _location;
   
   /** Returns response with indentations and line breaks. */
-  bool prettyPrint;
+  core.bool prettyPrint;
 
   /** Selector specifying which fields to include in a partial response. */
-  String fields;
+  core.String fields;
 
   /**
    * Available to use for quota purposes for server-side applications. Can be any arbitrary string
    * assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.
    */
-  String quotaUser;
+  core.String quotaUser;
 
   /** OAuth 2.0 token for the current user. */
-  String oauthToken;
+  core.String oauthToken;
 
   /**
    * API key. Your API key identifies your project and provides you with API access, quota, and
    * reports. Required unless you provide an OAuth 2.0 token.
    */
-  String key;
+  core.String key;
 
   /**
    * IP address of the site where the request originates. Use this if you want to enforce per-user
    * limits.
    */
-  String userIp;
+  core.String userIp;
 
   /** Data format for the response. */
   LatitudeApiAlt alt;
 
 
-  LatitudeApi([this.baseUrl = "https://www.googleapis.com/latitude/v1/", this.applicationName]) { 
+  LatitudeApi([this.baseUrl = "https://www.googleapis.com/latitude/v1/", this.applicationName, this.authenticator]) { 
     _currentLocation = new CurrentLocationResource._internal(this);
     _location = new LocationResource._internal(this);
   }
-  String get userAgent() {
+  core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}latitude/v1/20120515 google-api-dart-client/${clientVersion}";
   }
 }
 
 // Resource .CurrentLocationResource
-class CurrentLocationResource {
+class CurrentLocationResource extends core.Object {
   final LatitudeApi _$service;
   
   CurrentLocationResource._internal(LatitudeApi $service) : _$service = $service;
@@ -73,7 +76,7 @@ class CurrentLocationResource {
    * Updates or creates the user's current location.
    * [content] the Location
    */
-  Future<Location> insert(Location content) {
+  core.Future<Location> insert(Location content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -88,26 +91,20 @@ class CurrentLocationResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Location.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "currentLocation").generate($pathParams, $queryParams);
-    final $completer = new Completer<Location>();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Location.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Location.parse(JSON.parse($text)));
   }
 
   // Method CurrentLocationResource.Get
   /**
    * Returns the authenticated user's current location.
    */
-  Future<Location> get([CurrentLocationResourceGetGranularity granularity = UNSPECIFIED]) {
+  core.Future<Location> get([CurrentLocationResourceGetGranularity granularity = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -121,26 +118,20 @@ class CurrentLocationResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "currentLocation").generate($pathParams, $queryParams);
-    final $completer = new Completer<Location>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Location.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Location.parse(JSON.parse($text)));
   }
 
   // Method CurrentLocationResource.Delete
   /**
    * Deletes the authenticated user's current location.
    */
-  Future delete() {
+  core.Future delete() {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -153,31 +144,25 @@ class CurrentLocationResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "currentLocation").generate($pathParams, $queryParams);
-    final $completer = new Completer();
     final $http = new HttpRequest($url, "DELETE", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = identity(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => identity(JSON.parse($text)));
   }
 }
 
 // Enum CurrentLocationResource.Get.Granularity
-class CurrentLocationResourceGetGranularity implements Hashable {
+class CurrentLocationResourceGetGranularity extends core.Object implements core.Hashable {
   /** Request best available granularity. */
   static final CurrentLocationResourceGetGranularity BEST = const CurrentLocationResourceGetGranularity._internal("best", 0);
   /** Request city-level granularty. */
   static final CurrentLocationResourceGetGranularity CITY = const CurrentLocationResourceGetGranularity._internal("city", 1);
 
   /** All values of this enumeration */
-  static final List<CurrentLocationResourceGetGranularity> values = const <CurrentLocationResourceGetGranularity>[
+  static final core.List<CurrentLocationResourceGetGranularity> values = const <CurrentLocationResourceGetGranularity>[
     BEST,
     CITY,
   ];
@@ -189,19 +174,19 @@ class CurrentLocationResourceGetGranularity implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static CurrentLocationResourceGetGranularity valueOf(String item) => _valuesMap[item];
+  static CurrentLocationResourceGetGranularity valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const CurrentLocationResourceGetGranularity._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const CurrentLocationResourceGetGranularity._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Granularity".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Granularity".hashCode();
 }
 
 // Resource .LocationResource
-class LocationResource {
+class LocationResource extends core.Object {
   final LatitudeApi _$service;
   
   LocationResource._internal(LatitudeApi $service) : _$service = $service;
@@ -211,7 +196,7 @@ class LocationResource {
    * Inserts or updates a location in the user's location history.
    * [content] the Location
    */
-  Future<Location> insert(Location content) {
+  core.Future<Location> insert(Location content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -226,19 +211,13 @@ class LocationResource {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Location.serialize(content));
     final $url = new UrlPattern(_$service.baseUrl + "location").generate($pathParams, $queryParams);
-    final $completer = new Completer<Location>();
     final $http = new HttpRequest($url, "POST", $headers);
-    final $request = $http.request($body);
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Location.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Location.parse(JSON.parse($text)));
   }
 
   // Method LocationResource.Get
@@ -246,7 +225,7 @@ class LocationResource {
    * Reads a location from the user's location history.
    * [locationId] Timestamp of the location to read (ms since epoch).
    */
-  Future<Location> get(String locationId, [LocationResourceGetGranularity granularity = UNSPECIFIED]) {
+  core.Future<Location> get(core.String locationId, [LocationResourceGetGranularity granularity = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -261,26 +240,20 @@ class LocationResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "location/{locationId}").generate($pathParams, $queryParams);
-    final $completer = new Completer<Location>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = Location.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Location.parse(JSON.parse($text)));
   }
 
   // Method LocationResource.List
   /**
    * Lists the user's location history.
    */
-  Future<LocationFeed> list([String maxResults = UNSPECIFIED, String maxTime = UNSPECIFIED, String minTime = UNSPECIFIED, LocationResourceListGranularity granularity = UNSPECIFIED]) {
+  core.Future<LocationFeed> list([core.String maxResults = UNSPECIFIED, core.String maxTime = UNSPECIFIED, core.String minTime = UNSPECIFIED, LocationResourceListGranularity granularity = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -297,19 +270,13 @@ class LocationResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "location").generate($pathParams, $queryParams);
-    final $completer = new Completer<LocationFeed>();
     final $http = new HttpRequest($url, "GET", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = LocationFeed.parse(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => LocationFeed.parse(JSON.parse($text)));
   }
 
   // Method LocationResource.Delete
@@ -317,7 +284,7 @@ class LocationResource {
    * Deletes a location from the user's location history.
    * [locationId] Timestamp of the location to delete (ms since epoch).
    */
-  Future delete(String locationId) {
+  core.Future delete(core.String locationId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -331,31 +298,25 @@ class LocationResource {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $url = new UrlPattern(_$service.baseUrl + "location/{locationId}").generate($pathParams, $queryParams);
-    final $completer = new Completer();
     final $http = new HttpRequest($url, "DELETE", $headers);
-    final $request = $http.request();
-    $request.handleException(($ex) { $completer.completeException($ex); return true; });
-    $request.then((final $text) {
-      var $result;
-      bool $success = false;
-      try {
-        $result = identity(JSON.parse($text)); $success = true;
-      } catch (final $ex) { $completer.completeException($ex); }
-      if ($success) $completer.complete($result);
-    });
-    return $completer.future;
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => identity(JSON.parse($text)));
   }
 }
 
 // Enum LocationResource.Get.Granularity
-class LocationResourceGetGranularity implements Hashable {
+class LocationResourceGetGranularity extends core.Object implements core.Hashable {
   /** Request best available granularity. */
   static final LocationResourceGetGranularity BEST = const LocationResourceGetGranularity._internal("best", 0);
   /** Request city-level granularty. */
   static final LocationResourceGetGranularity CITY = const LocationResourceGetGranularity._internal("city", 1);
 
   /** All values of this enumeration */
-  static final List<LocationResourceGetGranularity> values = const <LocationResourceGetGranularity>[
+  static final core.List<LocationResourceGetGranularity> values = const <LocationResourceGetGranularity>[
     BEST,
     CITY,
   ];
@@ -367,26 +328,26 @@ class LocationResourceGetGranularity implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static LocationResourceGetGranularity valueOf(String item) => _valuesMap[item];
+  static LocationResourceGetGranularity valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const LocationResourceGetGranularity._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const LocationResourceGetGranularity._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Granularity".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Granularity".hashCode();
 }
 
 // Enum LocationResource.List.Granularity
-class LocationResourceListGranularity implements Hashable {
+class LocationResourceListGranularity extends core.Object implements core.Hashable {
   /** Request best available granularity. */
   static final LocationResourceListGranularity BEST = const LocationResourceListGranularity._internal("best", 0);
   /** Request city-level granularty. */
   static final LocationResourceListGranularity CITY = const LocationResourceListGranularity._internal("city", 1);
 
   /** All values of this enumeration */
-  static final List<LocationResourceListGranularity> values = const <LocationResourceListGranularity>[
+  static final core.List<LocationResourceListGranularity> values = const <LocationResourceListGranularity>[
     BEST,
     CITY,
   ];
@@ -398,63 +359,63 @@ class LocationResourceListGranularity implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static LocationResourceListGranularity valueOf(String item) => _valuesMap[item];
+  static LocationResourceListGranularity valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const LocationResourceListGranularity._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const LocationResourceListGranularity._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Granularity".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Granularity".hashCode();
 }
 
 // Schema .Location
 class Location extends IdentityHash {
   /** Kind of this item. */
-  String kind;
+  core.String kind;
 
   /** Altitude of the location, in meters. Optional. */
-  Object altitude;
+  core.Object altitude;
 
   /** Longitude of the location, in decimal degrees. */
-  Object longitude;
+  core.Object longitude;
 
   /**
  * Unique ID of the Buzz message that corresponds to the check-in associated with this location.
  * Available only for check-in locations. Optional.
  */
-  Object activityId;
+  core.Object activityId;
 
   /** Latitude of the location, in decimal degrees. */
-  Object latitude;
+  core.Object latitude;
 
   /** Accuracy of the altitude value, in meters. Optional. */
-  Object altitudeAccuracy;
+  core.Object altitudeAccuracy;
 
   /**
  * Timestamp of the Location Resource, in milliseconds since the epoch (UTC). This is also the
  * Location Resource's unique id.
  */
-  Object timestampMs;
+  core.Object timestampMs;
 
   /**
  * Ground speed of the user at the time this location was recorded, in meters per second. Non-
  * negative. Optional.
  */
-  Object speed;
+  core.Object speed;
 
   /**
  * Direction of travel of the user when this location was recorded. In degrees, clockwise relative
  * to true north. Optional.
  */
-  Object heading;
+  core.Object heading;
 
   /** Accuracy of the latitude and longitude coordinates, in non-negative meters. Optional. */
-  Object accuracy;
+  core.Object accuracy;
 
   /** Parses an instance from its JSON representation. */
-  static Location parse(Map<String, Object> json) {
+  static Location parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Location();
     result.kind = identity(json["kind"]);
@@ -470,9 +431,9 @@ class Location extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(Location value) {
+  static core.Object serialize(Location value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["kind"] = identity(value.kind);
     result["altitude"] = identity(value.altitude);
     result["longitude"] = identity(value.longitude);
@@ -491,13 +452,13 @@ class Location extends IdentityHash {
 // Schema .LocationFeed
 class LocationFeed extends IdentityHash {
   
-  List<Location> items;
+  core.List<Location> items;
 
   
-  String kind;
+  core.String kind;
 
   /** Parses an instance from its JSON representation. */
-  static LocationFeed parse(Map<String, Object> json) {
+  static LocationFeed parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new LocationFeed();
     result.items = map(Location.parse)(json["items"]);
@@ -505,9 +466,9 @@ class LocationFeed extends IdentityHash {
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static Object serialize(LocationFeed value) {
+  static core.Object serialize(LocationFeed value) {
     if (value == null) return null;
-    Map<String, Object> result = {};
+    final result = {};
     result["items"] = map(Location.serialize)(value.items);
     result["kind"] = identity(value.kind);
     return result;
@@ -516,14 +477,14 @@ class LocationFeed extends IdentityHash {
 }
 
 // Enum LatitudeApi.Alt
-class LatitudeApiAlt implements Hashable {
+class LatitudeApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/atom+xml */
   static final LatitudeApiAlt ATOM = const LatitudeApiAlt._internal("atom", 0);
   /** Responses with Content-Type of application/json */
   static final LatitudeApiAlt JSON = const LatitudeApiAlt._internal("json", 1);
 
   /** All values of this enumeration */
-  static final List<LatitudeApiAlt> values = const <LatitudeApiAlt>[
+  static final core.List<LatitudeApiAlt> values = const <LatitudeApiAlt>[
     ATOM,
     JSON,
   ];
@@ -535,14 +496,14 @@ class LatitudeApiAlt implements Hashable {
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static LatitudeApiAlt valueOf(String item) => _valuesMap[item];
+  static LatitudeApiAlt valueOf(core.String item) => _valuesMap[item];
 
-  final int _ordinal;
-  final String _value;
-  const LatitudeApiAlt._internal(String this._value, int this._ordinal);
+  final core.int _ordinal;
+  final core.String _value;
+  const LatitudeApiAlt._internal(core.String this._value, core.int this._ordinal);
 
   /** Get the string representation of an enumeration value */
-  String toString() => _value;
-  int hashCode() => _ordinal ^ "Alt".hashCode();
+  toString() => _value;
+  hashCode() => _ordinal ^ "Alt".hashCode();
 }
 
