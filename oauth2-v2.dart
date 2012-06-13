@@ -1,4 +1,4 @@
-#library("oauth2");
+#library('oauth2-v2');
 #import('dart:core', prefix: 'core');
 #import('dart:json');
 
@@ -81,7 +81,7 @@ class Oauth2Api extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "oauth2/v2/tokeninfo").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -115,7 +115,7 @@ class UserinfoResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "oauth2/v2/userinfo").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -159,7 +159,7 @@ class UserinfoV2ResourceUserinfoV2MeResourceResourceResourceResource extends cor
     final $url = new UrlPattern(_$service.baseUrl + "userinfo/v2/me").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())

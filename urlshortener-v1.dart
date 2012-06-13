@@ -1,4 +1,4 @@
-#library("urlshortener");
+#library('urlshortener-v1');
 #import('dart:core', prefix: 'core');
 #import('dart:json');
 
@@ -90,7 +90,7 @@ class UrlResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "url").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request($body))
@@ -118,7 +118,7 @@ class UrlResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "url/history").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -147,7 +147,7 @@ class UrlResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "url").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())

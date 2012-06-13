@@ -1,4 +1,4 @@
-#library("taskqueue");
+#library('taskqueue-v1beta2');
 #import('dart:core', prefix: 'core');
 #import('dart:json');
 
@@ -95,7 +95,7 @@ class TaskqueuesResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "{project}/taskqueues/{taskqueue}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -135,7 +135,7 @@ class TasksResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "{project}/taskqueues/{taskqueue}/tasks").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request($body))
@@ -167,7 +167,7 @@ class TasksResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "{project}/taskqueues/{taskqueue}/tasks/{task}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -197,7 +197,7 @@ class TasksResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "{project}/taskqueues/{taskqueue}/tasks").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -234,7 +234,7 @@ class TasksResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "{project}/taskqueues/{taskqueue}/tasks/{task}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request($body))
@@ -271,7 +271,7 @@ class TasksResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "{project}/taskqueues/{taskqueue}/tasks/{task}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "PATCH", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request($body))
@@ -303,7 +303,7 @@ class TasksResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "{project}/taskqueues/{taskqueue}/tasks/{task}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -339,7 +339,7 @@ class TasksResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "{project}/taskqueues/{taskqueue}/tasks/lease").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())

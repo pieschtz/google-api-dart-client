@@ -1,4 +1,4 @@
-#library("groupssettings");
+#library('groupssettings-v1');
 #import('dart:core', prefix: 'core');
 #import('dart:json');
 
@@ -92,7 +92,7 @@ class GroupsResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "{groupUniqueId}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "PATCH", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request($body))
@@ -123,7 +123,7 @@ class GroupsResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "{groupUniqueId}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "PUT", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request($body))
@@ -151,7 +151,7 @@ class GroupsResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "{groupUniqueId}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())

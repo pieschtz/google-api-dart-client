@@ -1,4 +1,4 @@
-#library("adsense");
+#library('adsense-v1.1');
 #import('dart:core', prefix: 'core');
 #import('dart:json');
 
@@ -106,7 +106,7 @@ class UrlchannelsResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "adclients/{adClientId}/urlchannels").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -146,7 +146,7 @@ class AdunitsResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "adclients/{adClientId}/adunits").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -176,7 +176,7 @@ class AdunitsResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "adclients/{adClientId}/adunits/{adUnitId}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -216,7 +216,7 @@ class AdunitsCustomchannelsResourceResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "adclients/{adClientId}/adunits/{adUnitId}/customchannels").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -251,7 +251,7 @@ class AdclientsResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "adclients").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -298,7 +298,7 @@ class ReportsResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "reports").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -343,7 +343,7 @@ class AccountsResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "accounts").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -372,7 +372,7 @@ class AccountsResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "accounts/{accountId}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -412,7 +412,7 @@ class AccountsUrlchannelsResourceResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "accounts/{accountId}/adclients/{adClientId}/urlchannels").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -454,7 +454,7 @@ class AccountsAdunitsResourceResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "accounts/{accountId}/adclients/{adClientId}/adunits").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -486,7 +486,7 @@ class AccountsAdunitsResourceResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "accounts/{accountId}/adclients/{adClientId}/adunits/{adUnitId}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -528,7 +528,7 @@ class AccountsAdunitsResourceAccountsAdunitsCustomchannelsResourceResourceResour
     final $url = new UrlPattern(_$service.baseUrl + "accounts/{accountId}/adclients/{adClientId}/adunits/{adUnitId}/customchannels").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -565,7 +565,7 @@ class AccountsAdclientsResourceResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "accounts/{accountId}/adclients").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -613,7 +613,7 @@ class AccountsReportsResourceResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "accounts/{accountId}/reports").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -654,7 +654,7 @@ class AccountsCustomchannelsResourceResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "accounts/{accountId}/adclients/{adClientId}/customchannels").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -686,7 +686,7 @@ class AccountsCustomchannelsResourceResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "accounts/{accountId}/adclients/{adClientId}/customchannels/{customChannelId}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -729,7 +729,7 @@ class AccountsCustomchannelsResourceAccountsCustomchannelsAdunitsResourceResourc
     final $url = new UrlPattern(_$service.baseUrl + "accounts/{accountId}/adclients/{adClientId}/customchannels/{customChannelId}/adunits").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -768,7 +768,7 @@ class CustomchannelsResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "adclients/{adClientId}/customchannels").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -798,7 +798,7 @@ class CustomchannelsResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "adclients/{adClientId}/customchannels/{customChannelId}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -839,7 +839,7 @@ class CustomchannelsAdunitsResourceResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "adclients/{adClientId}/customchannels/{customChannelId}/adunits").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())

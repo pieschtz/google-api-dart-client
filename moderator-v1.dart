@@ -1,4 +1,4 @@
-#library("moderator");
+#library('moderator-v1');
 #import('dart:core', prefix: 'core');
 #import('dart:json');
 
@@ -126,7 +126,7 @@ class VotesResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "series/{seriesId}/submissions/{submissionId}/votes/@me").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request($body))
@@ -162,7 +162,7 @@ class VotesResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "series/{seriesId}/submissions/{submissionId}/votes/@me").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "PATCH", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request($body))
@@ -192,7 +192,7 @@ class VotesResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "series/{seriesId}/votes/@me").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -228,7 +228,7 @@ class VotesResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "series/{seriesId}/submissions/{submissionId}/votes/@me").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "PUT", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request($body))
@@ -261,7 +261,7 @@ class VotesResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "series/{seriesId}/submissions/{submissionId}/votes/@me").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -306,7 +306,7 @@ class ResponsesResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "series/{seriesId}/topics/{topicId}/submissions/{parentSubmissionId}/responses").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request($body))
@@ -343,7 +343,7 @@ class ResponsesResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "series/{seriesId}/submissions/{submissionId}/responses").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -383,7 +383,7 @@ class TagsResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "series/{seriesId}/submissions/{submissionId}/tags").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request($body))
@@ -413,7 +413,7 @@ class TagsResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "series/{seriesId}/submissions/{submissionId}/tags").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -445,7 +445,7 @@ class TagsResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "series/{seriesId}/submissions/{submissionId}/tags/{tagId}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -485,7 +485,7 @@ class SeriesResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "series").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request($body))
@@ -516,7 +516,7 @@ class SeriesResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "series/{seriesId}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "PATCH", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request($body))
@@ -545,7 +545,7 @@ class SeriesResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "series").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -576,7 +576,7 @@ class SeriesResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "series/{seriesId}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "PUT", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request($body))
@@ -604,7 +604,7 @@ class SeriesResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "series/{seriesId}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -648,7 +648,7 @@ class SeriesSubmissionsResourceResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "series/{seriesId}/submissions").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -689,7 +689,7 @@ class SeriesResponsesResourceResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "series/{seriesId}/responses").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -729,7 +729,7 @@ class TopicsResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "series/{seriesId}/topics").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request($body))
@@ -761,7 +761,7 @@ class TopicsResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "series/{seriesId}/topics").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -794,7 +794,7 @@ class TopicsResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "series/{seriesId}/topics/{topicId}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "PUT", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request($body))
@@ -824,7 +824,7 @@ class TopicsResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "series/{seriesId}/topics/{topicId}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -870,7 +870,7 @@ class TopicsSubmissionsResourceResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "series/{seriesId}/topics/{topicId}/submissions").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -916,7 +916,7 @@ class GlobalSeriesResourceResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "search").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -952,7 +952,7 @@ class ProfilesResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "profiles/@me").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "PATCH", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request($body))
@@ -981,7 +981,7 @@ class ProfilesResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "profiles/@me").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "PUT", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request($body))
@@ -1007,7 +1007,7 @@ class ProfilesResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "profiles/@me").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -1050,7 +1050,7 @@ class FeaturedSeriesResourceResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "series/featured").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -1093,7 +1093,7 @@ class MyrecentSeriesResourceResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "series/@me/recent").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -1136,7 +1136,7 @@ class MySeriesResourceResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "series/@me/mine").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -1178,7 +1178,7 @@ class SubmissionsResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "series/{seriesId}/topics/{topicId}/submissions").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request($body))
@@ -1210,7 +1210,7 @@ class SubmissionsResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "series/{seriesId}/submissions/{submissionId}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())

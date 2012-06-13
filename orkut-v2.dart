@@ -1,4 +1,4 @@
-#library("orkut");
+#library('orkut-v2');
 #import('dart:core', prefix: 'core');
 #import('dart:json');
 
@@ -136,7 +136,7 @@ class CommunityMembersResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "communities/{communityId}/members/{userId}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -167,7 +167,7 @@ class CommunityMembersResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "communities/{communityId}/members/{userId}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -201,7 +201,7 @@ class CommunityMembersResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "communities/{communityId}/members").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -231,7 +231,7 @@ class CommunityMembersResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "communities/{communityId}/members/{userId}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -272,7 +272,7 @@ class ActivitiesResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "people/{userId}/activities/{collection}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -300,7 +300,7 @@ class ActivitiesResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "activities/{activityId}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -380,7 +380,7 @@ class CommunityPollCommentsResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "communities/{communityId}/polls/{pollId}/comments").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request($body))
@@ -413,7 +413,7 @@ class CommunityPollCommentsResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "communities/{communityId}/polls/{pollId}/comments").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -451,7 +451,7 @@ class CommunityPollsResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "communities/{communityId}/polls").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -482,7 +482,7 @@ class CommunityPollsResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "communities/{communityId}/polls/{pollId}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -522,7 +522,7 @@ class CommunityMessagesResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "communities/{communityId}/topics/{topicId}/messages").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request($body))
@@ -555,7 +555,7 @@ class CommunityMessagesResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "communities/{communityId}/topics/{topicId}/messages").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -587,7 +587,7 @@ class CommunityMessagesResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "communities/{communityId}/topics/{topicId}/messages/{messageId}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -626,7 +626,7 @@ class CommunityTopicsResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "communities/{communityId}/topics").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request($body))
@@ -657,7 +657,7 @@ class CommunityTopicsResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "communities/{communityId}/topics/{topicId}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -688,7 +688,7 @@ class CommunityTopicsResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "communities/{communityId}/topics").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -718,7 +718,7 @@ class CommunityTopicsResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "communities/{communityId}/topics/{topicId}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -756,7 +756,7 @@ class CommentsResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "activities/{activityId}/comments").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request($body))
@@ -785,7 +785,7 @@ class CommentsResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "comments/{commentId}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -817,7 +817,7 @@ class CommentsResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "activities/{activityId}/comments").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -845,7 +845,7 @@ class CommentsResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "comments/{commentId}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -913,7 +913,7 @@ class AclResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "activities/{activityId}/acl/{userId}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -949,7 +949,7 @@ class CommunityRelatedResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "communities/{communityId}/related").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -985,7 +985,7 @@ class ScrapsResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "activities/scraps").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request($body))
@@ -1025,7 +1025,7 @@ class CommunityPollVotesResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "communities/{communityId}/polls/{pollId}/votes").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request($body))
@@ -1063,7 +1063,7 @@ class CommunitiesResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "people/{userId}/communities").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -1092,7 +1092,7 @@ class CommunitiesResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "communities/{communityId}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -1163,7 +1163,7 @@ class CommunityFollowResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "communities/{communityId}/followers/{userId}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -1193,7 +1193,7 @@ class CommunityFollowResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "communities/{communityId}/followers/{userId}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -1231,7 +1231,7 @@ class ActivityVisibilityResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "activities/{activityId}/visibility").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "PATCH", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request($body))
@@ -1262,7 +1262,7 @@ class ActivityVisibilityResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "activities/{activityId}/visibility").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "PUT", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request($body))
@@ -1290,7 +1290,7 @@ class ActivityVisibilityResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "activities/{activityId}/visibility").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -1325,7 +1325,7 @@ class BadgesResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "people/{userId}/badges").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -1355,7 +1355,7 @@ class BadgesResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "people/{userId}/badges/{badgeId}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -1390,7 +1390,7 @@ class CountersResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "people/{userId}/counters").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())

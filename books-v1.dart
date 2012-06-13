@@ -1,4 +1,4 @@
-#library("books");
+#library('books-v1');
 #import('dart:core', prefix: 'core');
 #import('dart:json');
 
@@ -109,7 +109,7 @@ class LayersResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "volumes/{volumeId}/layersummary").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -141,7 +141,7 @@ class LayersResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "volumes/{volumeId}/layersummary/{summaryId}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -190,7 +190,7 @@ class LayersAnnotationDataResourceResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "volumes/{volumeId}/layers/{layerId}/data").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -228,7 +228,7 @@ class LayersAnnotationDataResourceResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "volumes/{volumeId}/layers/{layerId}/data/{annotationDataId}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -278,7 +278,7 @@ class LayersVolumeAnnotationsResourceResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "volumes/{volumeId}/layers/{layerId}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -312,7 +312,7 @@ class LayersVolumeAnnotationsResourceResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "volumes/{volumeId}/layers/{layerId}/annotations/{annotationId}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -350,7 +350,7 @@ class BookshelvesResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "users/{userId}/bookshelves").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -381,7 +381,7 @@ class BookshelvesResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "users/{userId}/bookshelves/{shelf}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -423,7 +423,7 @@ class BookshelvesVolumesResourceResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "users/{userId}/bookshelves/{shelf}/volumes").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -462,7 +462,7 @@ class MyconfigResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "myconfig/releaseDownloadAccess").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -497,7 +497,7 @@ class MyconfigResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "myconfig/requestAccess").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -532,7 +532,7 @@ class MyconfigResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "myconfig/syncVolumeLicenses").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -581,7 +581,7 @@ class VolumesResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "volumes").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -613,7 +613,7 @@ class VolumesResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "volumes/{volumeId}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -884,7 +884,7 @@ class VolumesAssociatedResourceResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "volumes/{volumeId}/associated").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -1039,7 +1039,7 @@ class MylibraryBookshelvesResourceResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "mylibrary/bookshelves/{shelf}/removeVolume").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -1068,7 +1068,7 @@ class MylibraryBookshelvesResourceResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "mylibrary/bookshelves/{shelf}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -1097,7 +1097,7 @@ class MylibraryBookshelvesResourceResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "mylibrary/bookshelves/{shelf}/clearVolumes").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -1124,7 +1124,7 @@ class MylibraryBookshelvesResourceResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "mylibrary/bookshelves").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -1155,7 +1155,7 @@ class MylibraryBookshelvesResourceResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "mylibrary/bookshelves/{shelf}/addVolume").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -1189,7 +1189,7 @@ class MylibraryBookshelvesResourceResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "mylibrary/bookshelves/{shelf}/moveVolume").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -1232,7 +1232,7 @@ class MylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceRes
     final $url = new UrlPattern(_$service.baseUrl + "mylibrary/bookshelves/{shelf}/volumes").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -1305,7 +1305,7 @@ class MylibraryReadingpositionsResourceResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "mylibrary/readingpositions/{volumeId}/setPosition").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -1335,7 +1335,7 @@ class MylibraryReadingpositionsResourceResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "mylibrary/readingpositions/{volumeId}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -1419,7 +1419,7 @@ class MylibraryAnnotationsResourceResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "mylibrary/annotations").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request($body))
@@ -1448,7 +1448,7 @@ class MylibraryAnnotationsResourceResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "mylibrary/annotations/{annotationId}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -1484,7 +1484,7 @@ class MylibraryAnnotationsResourceResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "mylibrary/annotations").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -1516,7 +1516,7 @@ class MylibraryAnnotationsResourceResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "mylibrary/annotations/{annotationId}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "PUT", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request($body))
@@ -1545,7 +1545,7 @@ class MylibraryAnnotationsResourceResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "mylibrary/annotations/{annotationId}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())

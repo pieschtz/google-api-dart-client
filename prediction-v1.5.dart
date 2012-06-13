@@ -1,4 +1,4 @@
-#library("prediction");
+#library('prediction-v1.5');
 #import('dart:core', prefix: 'core');
 #import('dart:json');
 
@@ -93,7 +93,7 @@ class TrainedmodelsResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "trainedmodels").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request($body))
@@ -121,7 +121,7 @@ class TrainedmodelsResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "trainedmodels/{id}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -152,7 +152,7 @@ class TrainedmodelsResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "trainedmodels/{id}/predict").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request($body))
@@ -180,7 +180,7 @@ class TrainedmodelsResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "trainedmodels/list").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -211,7 +211,7 @@ class TrainedmodelsResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "trainedmodels/{id}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "PUT", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request($body))
@@ -239,7 +239,7 @@ class TrainedmodelsResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "trainedmodels/{id}/analyze").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -267,7 +267,7 @@ class TrainedmodelsResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "trainedmodels/{id}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -305,7 +305,7 @@ class HostedmodelsResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "hostedmodels/{hostedModelName}/predict").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request($body))

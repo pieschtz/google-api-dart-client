@@ -1,4 +1,4 @@
-#library("androidpublisher");
+#library('androidpublisher-v1');
 #import('dart:core', prefix: 'core');
 #import('dart:json');
 
@@ -94,7 +94,7 @@ class PurchasesResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "{packageName}/subscriptions/{subscriptionId}/purchases/{token}/cancel").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -127,7 +127,7 @@ class PurchasesResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "{packageName}/subscriptions/{subscriptionId}/purchases/{token}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())

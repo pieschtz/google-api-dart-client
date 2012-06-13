@@ -1,4 +1,4 @@
-#library("siteVerification");
+#library('siteVerification-v1');
 #import('dart:core', prefix: 'core');
 #import('dart:json');
 
@@ -92,7 +92,7 @@ class WebResourceResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "webResource").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request($body))
@@ -120,7 +120,7 @@ class WebResourceResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "webResource/{id}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -146,7 +146,7 @@ class WebResourceResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "webResource").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -177,7 +177,7 @@ class WebResourceResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "webResource/{id}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "PUT", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request($body))
@@ -208,7 +208,7 @@ class WebResourceResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "webResource/{id}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "PATCH", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request($body))
@@ -237,7 +237,7 @@ class WebResourceResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "token").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request($body))
@@ -265,7 +265,7 @@ class WebResourceResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "webResource/{id}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())

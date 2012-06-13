@@ -1,4 +1,4 @@
-#library("gan");
+#library('gan-v1beta1');
 #import('dart:core', prefix: 'core');
 #import('dart:json');
 
@@ -110,7 +110,7 @@ class AdvertisersResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "{role}/{roleId}/advertisers").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -143,7 +143,7 @@ class AdvertisersResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "{role}/{roleId}/advertiser").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -291,7 +291,7 @@ class CcOffersResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "publishers/{publisher}/ccOffers").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -375,7 +375,7 @@ class EventsResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "{role}/{roleId}/events").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -567,7 +567,7 @@ class LinksResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "{role}/{roleId}/link").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request($body))
@@ -608,7 +608,7 @@ class LinksResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "{role}/{roleId}/links").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -642,7 +642,7 @@ class LinksResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "{role}/{roleId}/link/{linkId}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -1126,7 +1126,7 @@ class PublishersResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "{role}/{roleId}/publishers").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
@@ -1159,7 +1159,7 @@ class PublishersResource extends core.Object {
     final $url = new UrlPattern(_$service.baseUrl + "{role}/{roleId}/publisher").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
-        ? new Future.immediate($http)
+        ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
