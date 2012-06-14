@@ -58,7 +58,7 @@ class AndroidpublisherApi extends core.Object {
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}androidpublisher/v1/20120508 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}androidpublisher/v1/20120608 google-api-dart-client/${clientVersion}";
   }
 }
 
@@ -140,7 +140,7 @@ class SubscriptionPurchase extends IdentityHash {
   /** Time at which the subscription was granted, in milliseconds since Epoch. */
   core.String initiationTimestampMsec;
 
-  /** Set to the fixed string 'androidpublisher#subscriptionPurchase'. */
+  /** This kind represents a subscriptionPurchase object in the androidpublisher service. */
   core.String kind;
 
   /**

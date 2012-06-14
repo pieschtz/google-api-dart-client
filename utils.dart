@@ -1,4 +1,5 @@
 #library('utils');
+#import('dart:uri');
 
 /** A Transform<T> is a function from T to T. */
 typedef T Transform<T>(T);
@@ -60,7 +61,9 @@ class UrlPattern {
         final close = pattern.indexOf("}", open);
         if (close < 0) throw new IllegalArgumentException("Token meets end of text: $pattern");
         String variable = pattern.substring(open + 1, close);
-        _tokens.add((params) => (params[variable] == null) ? 'null' : params[variable].toString());
+        _tokens.add((params) => (params[variable] == null) 
+            ? 'null'
+            : encodeUriComponent(params[variable].toString()));
         cursor = close + 1;
       }
     }
@@ -69,24 +72,16 @@ class UrlPattern {
   String generate(Map<String, Object> urlParams, Map<String, Object> queryParams) {
     final buffer = new StringBuffer();
     _tokens.forEach((token) => buffer.add(token(urlParams)));
-    final specifiedQueryParams =
-        queryParams.getKeys().filter((key) => queryParams[key] != null);
-    if (!specifiedQueryParams.isEmpty()) {
-      final tokens =
-          map((key) => "${_escape(key)}=${_escape(queryParams[key])}")(specifiedQueryParams);
-      buffer.add('?').add(Strings.join(tokens, "&"));
-    }
+    var first = true;
+    queryParams.forEach((key, value) {
+      if (value == null) return;
+      buffer.add(first ? '?' : '&');
+      if (first) first = false;
+      buffer.add(encodeUriComponent(key.toString()));
+      buffer.add('=');
+      buffer.add(encodeUriComponent(value.toString()));
+    });
     return buffer.toString();
-  }
-  /** Escape a token so it can be embedded in a URL. */
-  static String _escape(Object value) {
-    if (value == null) return '';
-    return value.toString().replaceAll(':', '%3A')
-                           .replaceAll('/', '%2F')
-                           .replaceAll('?', '%3F')
-                           .replaceAll('=', '%3D')
-                           .replaceAll('&', '%26')
-                           .replaceAll(' ', '%20');
   }
 }
 

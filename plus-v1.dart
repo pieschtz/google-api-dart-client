@@ -64,7 +64,7 @@ class PlusApi extends core.Object {
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}plus/v1/20120607 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}plus/v1/20120430 google-api-dart-client/${clientVersion}";
   }
 }
 
@@ -364,7 +364,7 @@ class PeopleResource extends core.Object {
   // Method PeopleResource.Search
   /**
    * Search all public profiles.
-   * [query]
+   * [query] Specify a query string for full text search of public text in all profiles.
    */
   core.Future<PeopleFeed> search(core.String query, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String language = UNSPECIFIED]) {
     final $queryParams = {};
@@ -1457,12 +1457,6 @@ class PeopleFeed extends IdentityHash {
   /** ETag of this response for caching purposes. */
   core.String etag;
 
-  /**
- * The total number of people available in this list. The number of people in a response may be
- * smaller due to paging. This may not be set for all collections.
- */
-  core.int totalItems;
-
   /** Link to this resource. */
   core.String selfLink;
 
@@ -1475,7 +1469,6 @@ class PeopleFeed extends IdentityHash {
     result.title = identity(json["title"]);
     result.items = map(Person.parse)(json["items"]);
     result.etag = identity(json["etag"]);
-    result.totalItems = identity(json["totalItems"]);
     result.selfLink = identity(json["selfLink"]);
     return result;
   }
@@ -1488,7 +1481,6 @@ class PeopleFeed extends IdentityHash {
     result["title"] = identity(value.title);
     result["items"] = map(Person.serialize)(value.items);
     result["etag"] = identity(value.etag);
-    result["totalItems"] = identity(value.totalItems);
     result["selfLink"] = identity(value.selfLink);
     return result;
   }
