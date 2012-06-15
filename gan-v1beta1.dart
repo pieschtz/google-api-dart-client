@@ -107,7 +107,8 @@ class AdvertisersResource extends core.Object {
     if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
-    final $url = new UrlPattern(_$service.baseUrl + "{role}/{roleId}/advertisers").generate($pathParams, $queryParams);
+    final $path = "{role}/{roleId}/advertisers";
+    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -140,7 +141,8 @@ class AdvertisersResource extends core.Object {
     if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
-    final $url = new UrlPattern(_$service.baseUrl + "{role}/{roleId}/advertiser").generate($pathParams, $queryParams);
+    final $path = "{role}/{roleId}/advertiser";
+    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -288,7 +290,8 @@ class CcOffersResource extends core.Object {
     if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
-    final $url = new UrlPattern(_$service.baseUrl + "publishers/{publisher}/ccOffers").generate($pathParams, $queryParams);
+    final $path = "publishers/{publisher}/ccOffers";
+    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -372,7 +375,8 @@ class EventsResource extends core.Object {
     if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
-    final $url = new UrlPattern(_$service.baseUrl + "{role}/{roleId}/events").generate($pathParams, $queryParams);
+    final $path = "{role}/{roleId}/events";
+    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -564,7 +568,8 @@ class LinksResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Link.serialize(content));
-    final $url = new UrlPattern(_$service.baseUrl + "{role}/{roleId}/link").generate($pathParams, $queryParams);
+    final $path = "{role}/{roleId}/link";
+    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -605,7 +610,8 @@ class LinksResource extends core.Object {
     if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
-    final $url = new UrlPattern(_$service.baseUrl + "{role}/{roleId}/links").generate($pathParams, $queryParams);
+    final $path = "{role}/{roleId}/links";
+    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -639,7 +645,8 @@ class LinksResource extends core.Object {
     if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
-    final $url = new UrlPattern(_$service.baseUrl + "{role}/{roleId}/link/{linkId}").generate($pathParams, $queryParams);
+    final $path = "{role}/{roleId}/link/{linkId}";
+    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -1123,7 +1130,8 @@ class PublishersResource extends core.Object {
     if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
-    final $url = new UrlPattern(_$service.baseUrl + "{role}/{roleId}/publishers").generate($pathParams, $queryParams);
+    final $path = "{role}/{roleId}/publishers";
+    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -1156,7 +1164,8 @@ class PublishersResource extends core.Object {
     if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
-    final $url = new UrlPattern(_$service.baseUrl + "{role}/{roleId}/publisher").generate($pathParams, $queryParams);
+    final $path = "{role}/{roleId}/publisher";
+    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)

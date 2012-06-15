@@ -91,7 +91,8 @@ class PurchasesResource extends core.Object {
     if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
-    final $url = new UrlPattern(_$service.baseUrl + "{packageName}/subscriptions/{subscriptionId}/purchases/{token}/cancel").generate($pathParams, $queryParams);
+    final $path = "{packageName}/subscriptions/{subscriptionId}/purchases/{token}/cancel";
+    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -124,7 +125,8 @@ class PurchasesResource extends core.Object {
     if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
-    final $url = new UrlPattern(_$service.baseUrl + "{packageName}/subscriptions/{subscriptionId}/purchases/{token}").generate($pathParams, $queryParams);
+    final $path = "{packageName}/subscriptions/{subscriptionId}/purchases/{token}";
+    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)

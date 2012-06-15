@@ -103,7 +103,8 @@ class TablesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Table.serialize(content));
-    final $url = new UrlPattern(_$service.baseUrl + "projects/{projectId}/datasets/{datasetId}/tables").generate($pathParams, $queryParams);
+    final $path = "projects/{projectId}/datasets/{datasetId}/tables";
+    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -136,7 +137,8 @@ class TablesResource extends core.Object {
     if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
-    final $url = new UrlPattern(_$service.baseUrl + "projects/{projectId}/datasets/{datasetId}/tables/{tableId}").generate($pathParams, $queryParams);
+    final $path = "projects/{projectId}/datasets/{datasetId}/tables/{tableId}";
+    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -168,7 +170,8 @@ class TablesResource extends core.Object {
     if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
-    final $url = new UrlPattern(_$service.baseUrl + "projects/{projectId}/datasets/{datasetId}/tables").generate($pathParams, $queryParams);
+    final $path = "projects/{projectId}/datasets/{datasetId}/tables";
+    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -203,7 +206,8 @@ class TablesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Table.serialize(content));
-    final $url = new UrlPattern(_$service.baseUrl + "projects/{projectId}/datasets/{datasetId}/tables/{tableId}").generate($pathParams, $queryParams);
+    final $path = "projects/{projectId}/datasets/{datasetId}/tables/{tableId}";
+    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "PUT", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -239,7 +243,8 @@ class TablesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Table.serialize(content));
-    final $url = new UrlPattern(_$service.baseUrl + "projects/{projectId}/datasets/{datasetId}/tables/{tableId}").generate($pathParams, $queryParams);
+    final $path = "projects/{projectId}/datasets/{datasetId}/tables/{tableId}";
+    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "PATCH", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -272,7 +277,8 @@ class TablesResource extends core.Object {
     if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
-    final $url = new UrlPattern(_$service.baseUrl + "projects/{projectId}/datasets/{datasetId}/tables/{tableId}").generate($pathParams, $queryParams);
+    final $path = "projects/{projectId}/datasets/{datasetId}/tables/{tableId}";
+    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -310,7 +316,8 @@ class DatasetsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Dataset.serialize(content));
-    final $url = new UrlPattern(_$service.baseUrl + "projects/{projectId}/datasets").generate($pathParams, $queryParams);
+    final $path = "projects/{projectId}/datasets";
+    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -340,7 +347,8 @@ class DatasetsResource extends core.Object {
     if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
-    final $url = new UrlPattern(_$service.baseUrl + "projects/{projectId}/datasets/{datasetId}").generate($pathParams, $queryParams);
+    final $path = "projects/{projectId}/datasets/{datasetId}";
+    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -371,7 +379,8 @@ class DatasetsResource extends core.Object {
     if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
-    final $url = new UrlPattern(_$service.baseUrl + "projects/{projectId}/datasets").generate($pathParams, $queryParams);
+    final $path = "projects/{projectId}/datasets";
+    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -406,7 +415,8 @@ class DatasetsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Dataset.serialize(content));
-    final $url = new UrlPattern(_$service.baseUrl + "projects/{projectId}/datasets/{datasetId}").generate($pathParams, $queryParams);
+    final $path = "projects/{projectId}/datasets/{datasetId}";
+    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "PUT", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -442,7 +452,8 @@ class DatasetsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Dataset.serialize(content));
-    final $url = new UrlPattern(_$service.baseUrl + "projects/{projectId}/datasets/{datasetId}").generate($pathParams, $queryParams);
+    final $path = "projects/{projectId}/datasets/{datasetId}";
+    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "PATCH", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -475,7 +486,8 @@ class DatasetsResource extends core.Object {
     if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
-    final $url = new UrlPattern(_$service.baseUrl + "projects/{projectId}/datasets/{datasetId}").generate($pathParams, $queryParams);
+    final $path = "projects/{projectId}/datasets/{datasetId}";
+    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -513,7 +525,8 @@ class JobsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Job.serialize(content));
-    final $url = new UrlPattern(_$service.baseUrl + "projects/{projectId}/jobs").generate($pathParams, $queryParams);
+    final $path = "projects/{projectId}/jobs";
+    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -545,7 +558,8 @@ class JobsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(QueryRequest.serialize(content));
-    final $url = new UrlPattern(_$service.baseUrl + "projects/{projectId}/queries").generate($pathParams, $queryParams);
+    final $path = "projects/{projectId}/queries";
+    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -578,7 +592,8 @@ class JobsResource extends core.Object {
     if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
-    final $url = new UrlPattern(_$service.baseUrl + "projects/{projectId}/jobs").generate($pathParams, $queryParams);
+    final $path = "projects/{projectId}/jobs";
+    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -611,7 +626,8 @@ class JobsResource extends core.Object {
     if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
-    final $url = new UrlPattern(_$service.baseUrl + "projects/{projectId}/queries/{jobId}").generate($pathParams, $queryParams);
+    final $path = "projects/{projectId}/queries/{jobId}";
+    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -641,7 +657,8 @@ class JobsResource extends core.Object {
     if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
-    final $url = new UrlPattern(_$service.baseUrl + "projects/{projectId}/jobs/{jobId}").generate($pathParams, $queryParams);
+    final $path = "projects/{projectId}/jobs/{jobId}";
+    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -748,7 +765,8 @@ class TabledataResource extends core.Object {
     if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
-    final $url = new UrlPattern(_$service.baseUrl + "projects/{projectId}/datasets/{datasetId}/tables/{tableId}/data").generate($pathParams, $queryParams);
+    final $path = "projects/{projectId}/datasets/{datasetId}/tables/{tableId}/data";
+    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -783,7 +801,8 @@ class ProjectsResource extends core.Object {
     if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
-    final $url = new UrlPattern(_$service.baseUrl + "projects").generate($pathParams, $queryParams);
+    final $path = "projects";
+    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)

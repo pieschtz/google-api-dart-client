@@ -85,7 +85,8 @@ class WebfontsResource extends core.Object {
     if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
-    final $url = new UrlPattern(_$service.baseUrl + "webfonts").generate($pathParams, $queryParams);
+    final $path = "webfonts";
+    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)

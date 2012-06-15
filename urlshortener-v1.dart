@@ -87,7 +87,8 @@ class UrlResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Url.serialize(content));
-    final $url = new UrlPattern(_$service.baseUrl + "url").generate($pathParams, $queryParams);
+    final $path = "url";
+    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -115,7 +116,8 @@ class UrlResource extends core.Object {
     if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
-    final $url = new UrlPattern(_$service.baseUrl + "url/history").generate($pathParams, $queryParams);
+    final $path = "url/history";
+    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -144,7 +146,8 @@ class UrlResource extends core.Object {
     if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
-    final $url = new UrlPattern(_$service.baseUrl + "url").generate($pathParams, $queryParams);
+    final $path = "url";
+    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)

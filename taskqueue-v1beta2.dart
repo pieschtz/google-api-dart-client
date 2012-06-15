@@ -92,7 +92,8 @@ class TaskqueuesResource extends core.Object {
     if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
-    final $url = new UrlPattern(_$service.baseUrl + "{project}/taskqueues/{taskqueue}").generate($pathParams, $queryParams);
+    final $path = "{project}/taskqueues/{taskqueue}";
+    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -132,7 +133,8 @@ class TasksResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Task.serialize(content));
-    final $url = new UrlPattern(_$service.baseUrl + "{project}/taskqueues/{taskqueue}/tasks").generate($pathParams, $queryParams);
+    final $path = "{project}/taskqueues/{taskqueue}/tasks";
+    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -164,7 +166,8 @@ class TasksResource extends core.Object {
     if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
-    final $url = new UrlPattern(_$service.baseUrl + "{project}/taskqueues/{taskqueue}/tasks/{task}").generate($pathParams, $queryParams);
+    final $path = "{project}/taskqueues/{taskqueue}/tasks/{task}";
+    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -194,7 +197,8 @@ class TasksResource extends core.Object {
     if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
-    final $url = new UrlPattern(_$service.baseUrl + "{project}/taskqueues/{taskqueue}/tasks").generate($pathParams, $queryParams);
+    final $path = "{project}/taskqueues/{taskqueue}/tasks";
+    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -231,7 +235,8 @@ class TasksResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Task.serialize(content));
-    final $url = new UrlPattern(_$service.baseUrl + "{project}/taskqueues/{taskqueue}/tasks/{task}").generate($pathParams, $queryParams);
+    final $path = "{project}/taskqueues/{taskqueue}/tasks/{task}";
+    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -268,7 +273,8 @@ class TasksResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Task.serialize(content));
-    final $url = new UrlPattern(_$service.baseUrl + "{project}/taskqueues/{taskqueue}/tasks/{task}").generate($pathParams, $queryParams);
+    final $path = "{project}/taskqueues/{taskqueue}/tasks/{task}";
+    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "PATCH", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -300,7 +306,8 @@ class TasksResource extends core.Object {
     if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
-    final $url = new UrlPattern(_$service.baseUrl + "{project}/taskqueues/{taskqueue}/tasks/{task}").generate($pathParams, $queryParams);
+    final $path = "{project}/taskqueues/{taskqueue}/tasks/{task}";
+    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -336,7 +343,8 @@ class TasksResource extends core.Object {
     if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
-    final $url = new UrlPattern(_$service.baseUrl + "{project}/taskqueues/{taskqueue}/tasks/lease").generate($pathParams, $queryParams);
+    final $path = "{project}/taskqueues/{taskqueue}/tasks/lease";
+    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)

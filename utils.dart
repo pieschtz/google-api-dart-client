@@ -1,8 +1,8 @@
 #library('utils');
 #import('dart:uri');
 
-/** A Transform<T> is a function from T to T. */
-typedef T Transform<T>(T);
+/// A Transform<T> is a function from T to T.
+typedef T Transform<T>(T value);
 
 /** Returns a Transform<List> that applies [:transform:] to every element. */
 Transform<List> map(Transform<Object> transform) {

@@ -150,7 +150,7 @@ class OAuth2 implements Authenticator {
       ? new Token.fromJson(window.localStorage[_storageKey])
       : null;
 
-  void set _storedToken(Token value) => (value == null)
+  set _storedToken(Token value) => (value == null)
       ? window.localStorage.remove(_storageKey)
       : window.localStorage[_storageKey] = value.toJson();
 
