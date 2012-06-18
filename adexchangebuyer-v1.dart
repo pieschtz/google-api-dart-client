@@ -91,7 +91,7 @@ class DirectDealsResource extends core.Object {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "directdeals";
-    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -120,7 +120,7 @@ class DirectDealsResource extends core.Object {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "directdeals/{id}";
-    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -159,7 +159,7 @@ class AccountsResource extends core.Object {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Account.serialize(content));
     final $path = "accounts/{id}";
-    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "PATCH", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -186,7 +186,7 @@ class AccountsResource extends core.Object {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "accounts";
-    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -218,7 +218,7 @@ class AccountsResource extends core.Object {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Account.serialize(content));
     final $path = "accounts/{id}";
-    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "PUT", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -247,7 +247,7 @@ class AccountsResource extends core.Object {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "accounts/{id}";
-    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -284,7 +284,7 @@ class CreativesResource extends core.Object {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Creative.serialize(content));
     final $path = "creatives";
-    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -313,7 +313,7 @@ class CreativesResource extends core.Object {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "creatives";
-    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -346,7 +346,7 @@ class CreativesResource extends core.Object {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "creatives/{accountId}/{buyerCreativeId}";
-    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)

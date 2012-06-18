@@ -104,7 +104,7 @@ class UrlchannelsResource extends core.Object {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "adclients/{adClientId}/urlchannels";
-    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -145,7 +145,7 @@ class AdunitsResource extends core.Object {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "adclients/{adClientId}/adunits";
-    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -176,7 +176,7 @@ class AdunitsResource extends core.Object {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "adclients/{adClientId}/adunits/{adUnitId}";
-    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -217,7 +217,7 @@ class AdunitsCustomchannelsResourceResource extends core.Object {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "adclients/{adClientId}/adunits/{adUnitId}/customchannels";
-    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -253,7 +253,7 @@ class AdclientsResource extends core.Object {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "adclients";
-    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -301,7 +301,7 @@ class ReportsResource extends core.Object {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "reports";
-    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -347,7 +347,7 @@ class AccountsResource extends core.Object {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "accounts";
-    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -377,7 +377,7 @@ class AccountsResource extends core.Object {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "accounts/{accountId}";
-    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -418,7 +418,7 @@ class AccountsUrlchannelsResourceResource extends core.Object {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "accounts/{accountId}/adclients/{adClientId}/urlchannels";
-    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -461,7 +461,7 @@ class AccountsAdunitsResourceResource extends core.Object {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "accounts/{accountId}/adclients/{adClientId}/adunits";
-    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -494,7 +494,7 @@ class AccountsAdunitsResourceResource extends core.Object {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "accounts/{accountId}/adclients/{adClientId}/adunits/{adUnitId}";
-    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -537,7 +537,7 @@ class AccountsAdunitsResourceAccountsAdunitsCustomchannelsResourceResourceResour
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "accounts/{accountId}/adclients/{adClientId}/adunits/{adUnitId}/customchannels";
-    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -575,7 +575,7 @@ class AccountsAdclientsResourceResource extends core.Object {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "accounts/{accountId}/adclients";
-    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -624,7 +624,7 @@ class AccountsReportsResourceResource extends core.Object {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "accounts/{accountId}/reports";
-    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -666,7 +666,7 @@ class AccountsCustomchannelsResourceResource extends core.Object {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "accounts/{accountId}/adclients/{adClientId}/customchannels";
-    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -699,7 +699,7 @@ class AccountsCustomchannelsResourceResource extends core.Object {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "accounts/{accountId}/adclients/{adClientId}/customchannels/{customChannelId}";
-    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -743,7 +743,7 @@ class AccountsCustomchannelsResourceAccountsCustomchannelsAdunitsResourceResourc
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "accounts/{accountId}/adclients/{adClientId}/customchannels/{customChannelId}/adunits";
-    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -783,7 +783,7 @@ class CustomchannelsResource extends core.Object {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "adclients/{adClientId}/customchannels";
-    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -814,7 +814,7 @@ class CustomchannelsResource extends core.Object {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "adclients/{adClientId}/customchannels/{customChannelId}";
-    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -856,7 +856,7 @@ class CustomchannelsAdunitsResourceResource extends core.Object {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "adclients/{adClientId}/customchannels/{customChannelId}/adunits";
-    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)

@@ -79,7 +79,7 @@ class Oauth2Api extends core.Object {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "oauth2/v2/tokeninfo";
-    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -114,7 +114,7 @@ class UserinfoResource extends core.Object {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "oauth2/v2/userinfo";
-    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -159,7 +159,7 @@ class UserinfoV2ResourceUserinfoV2MeResourceResourceResourceResource extends cor
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "userinfo/v2/me";
-    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)

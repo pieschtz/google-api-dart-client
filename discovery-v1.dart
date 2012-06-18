@@ -90,7 +90,7 @@ class ApisResource extends core.Object {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "apis/{api}/{version}/rest";
-    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -120,7 +120,7 @@ class ApisResource extends core.Object {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "apis";
-    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -305,7 +305,7 @@ class DirectoryListItemsIcons extends IdentityHash {
 // Schema .JsonSchema
 class JsonSchema extends IdentityHash {
   /** If this is a schema for an object, list the schema for each property of this object. */
-  core.Map<String, JsonSchema> properties;
+  core.Map<core.String, JsonSchema> properties;
 
   /** Whether the parameter is required. */
   core.bool required;
@@ -449,7 +449,7 @@ class RestDescription extends IdentityHash {
   core.String protocol;
 
   /** API-level methods for this API. */
-  core.Map<String, RestMethod> methods;
+  core.Map<core.String, RestMethod> methods;
 
   /** Labels for the status of this API, such as labs or deprecated. */
   core.List<core.String> labels;
@@ -461,13 +461,13 @@ class RestDescription extends IdentityHash {
   core.String id;
 
   /** The schemas for this API. */
-  core.Map<String, JsonSchema> schemas;
+  core.Map<core.String, JsonSchema> schemas;
 
   /** The root url under which all API services live. */
   core.String rootUrl;
 
   /** Common parameters that apply across all apis. */
-  core.Map<String, JsonSchema> parameters;
+  core.Map<core.String, JsonSchema> parameters;
 
   /** Links to 16x16 and 32x32 icons representing the API. */
   RestDescriptionIcons icons;
@@ -485,7 +485,7 @@ class RestDescription extends IdentityHash {
   core.String servicePath;
 
   /** The resources in this API. */
-  core.Map<String, RestResource> resources;
+  core.Map<core.String, RestResource> resources;
 
   /** The version of this API. */
   core.String revision;
@@ -600,7 +600,7 @@ class RestDescriptionAuth extends IdentityHash {
 // Schema RestDescription.RestDescriptionAuth.RestDescriptionAuthOauth2
 class RestDescriptionAuthOauth2 extends IdentityHash {
   /** Available OAuth 2.0 scopes. */
-  core.Map<String, RestDescriptionAuthOauth2Scopes> scopes;
+  core.Map<core.String, RestDescriptionAuthOauth2Scopes> scopes;
 
   /** Parses an instance from its JSON representation. */
   static RestDescriptionAuthOauth2 parse(core.Map<core.String, core.Object> json) {
@@ -677,7 +677,7 @@ class RestMethod extends IdentityHash {
   core.String description;
 
   /** Details for all parameters in this method. */
-  core.Map<String, JsonSchema> parameters;
+  core.Map<core.String, JsonSchema> parameters;
 
   /** Whether this method supports media uploads. */
   core.bool supportsMediaUpload;
@@ -925,10 +925,10 @@ class RestMethodResponse extends IdentityHash {
 // Schema .RestResource
 class RestResource extends IdentityHash {
   /** Methods on this resource. */
-  core.Map<String, RestMethod> methods;
+  core.Map<core.String, RestMethod> methods;
 
   /** Sub-resources on this resource. */
-  core.Map<String, RestResource> resources;
+  core.Map<core.String, RestResource> resources;
 
   /** Parses an instance from its JSON representation. */
   static RestResource parse(core.Map<core.String, core.Object> json) {

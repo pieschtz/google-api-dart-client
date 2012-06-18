@@ -119,7 +119,7 @@ class CseResource extends core.Object {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "v1";
-    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -1008,7 +1008,7 @@ class Result extends IdentityHash {
   core.String htmlFormattedUrl;
 
   
-  core.Map<String, core.List<core.Map<String, core.Object>>> pagemap;
+  core.Map<core.String, core.List<core.Map<core.String, core.Object>>> pagemap;
 
   
   core.String htmlTitle;
@@ -1170,7 +1170,7 @@ class Search extends IdentityHash {
   Context context;
 
   
-  core.Map<String, core.List<Query>> queries;
+  core.Map<core.String, core.List<Query>> queries;
 
   
   SearchSpelling spelling;

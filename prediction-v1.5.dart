@@ -91,7 +91,7 @@ class TrainedmodelsResource extends core.Object {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Training.serialize(content));
     final $path = "trainedmodels";
-    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -120,7 +120,7 @@ class TrainedmodelsResource extends core.Object {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "trainedmodels/{id}";
-    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -152,7 +152,7 @@ class TrainedmodelsResource extends core.Object {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Input.serialize(content));
     final $path = "trainedmodels/{id}/predict";
-    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -181,7 +181,7 @@ class TrainedmodelsResource extends core.Object {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "trainedmodels/list";
-    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -213,7 +213,7 @@ class TrainedmodelsResource extends core.Object {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Update.serialize(content));
     final $path = "trainedmodels/{id}";
-    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "PUT", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -242,7 +242,7 @@ class TrainedmodelsResource extends core.Object {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "trainedmodels/{id}/analyze";
-    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -271,7 +271,7 @@ class TrainedmodelsResource extends core.Object {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "trainedmodels/{id}";
-    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -310,7 +310,7 @@ class HostedmodelsResource extends core.Object {
     $headers["Content-Type"] = "application/json";
     final $body = JSON.stringify(Input.serialize(content));
     final $path = "hostedmodels/{hostedModelName}/predict";
-    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -327,7 +327,7 @@ class Analyze extends IdentityHash {
   core.String kind;
 
   /** List of errors with the data. */
-  core.List<core.Map<String, core.String>> errors;
+  core.List<core.Map<core.String, core.String>> errors;
 
   /** Description of the data the model was trained on. */
   AnalyzeDataDescription dataDescription;
@@ -629,7 +629,7 @@ class AnalyzeDataDescriptionOutputFeatureText extends IdentityHash {
 // Schema Analyze.AnalyzeModelDescription
 class AnalyzeModelDescription extends IdentityHash {
   /** A list of the confusion matrix row totals */
-  core.Map<String, core.double> confusionMatrixRowTotals;
+  core.Map<core.String, core.double> confusionMatrixRowTotals;
 
   /**
  * An output confusion matrix. This shows an estimate for how this model will do in predictions.
@@ -638,7 +638,7 @@ class AnalyzeModelDescription extends IdentityHash {
  * predicted label given the true label. Will not output if more then 100 classes [Categorical
  * models only].
  */
-  core.Map<String, core.Map<String, core.double>> confusionMatrix;
+  core.Map<core.String, core.Map<core.String, core.double>> confusionMatrix;
 
   /** Basic information about the model. */
   Training modelinfo;
@@ -858,7 +858,7 @@ class Training extends IdentityHash {
  * A class weighting function, which allows the importance weights for class labels to be specified
  * [Categorical models only].
  */
-  core.List<core.Map<String, core.double>> utility;
+  core.List<core.Map<core.String, core.double>> utility;
 
   /** Parses an instance from its JSON representation. */
   static Training parse(core.Map<core.String, core.Object> json) {

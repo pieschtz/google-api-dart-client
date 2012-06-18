@@ -92,7 +92,7 @@ class PagespeedapiResource extends core.Object {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "runPagespeed";
-    final $url = new UrlPattern("${_$service.baseUrl}$path").generate($pathParams, $queryParams);
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
@@ -218,7 +218,7 @@ class ResultFormattedResults extends IdentityHash {
  * Dictionary of formatted rule results, with one entry for each Page Speed rule instantiated and
  * run by the server.
  */
-  core.Map<String, ResultFormattedResultsRuleResults> ruleResults;
+  core.Map<core.String, ResultFormattedResultsRuleResults> ruleResults;
 
   /** Parses an instance from its JSON representation. */
   static ResultFormattedResults parse(core.Map<core.String, core.Object> json) {
