@@ -135,7 +135,7 @@ class OAuth2 implements Authenticator {
     });
   }
 
-  HttpRequest authenticate(HttpRequest request) => login().transform((token) {
+  Future<HttpRequest> authenticate(HttpRequest request) => login().transform((token) {
     request.headers["Authorization"] = "Bearer ${token.data}";
     return request;
   });
