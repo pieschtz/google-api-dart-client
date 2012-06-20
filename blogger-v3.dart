@@ -1,4 +1,18 @@
-#library('blogger-v2');
+// Copyright 2012 Google Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//   http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#library('blogger-v3');
 #import('dart:core', prefix: 'core');
 #import('dart:json');
 
@@ -61,7 +75,7 @@ class BloggerApi extends core.Object {
   BloggerApiAlt alt;
 
 
-  BloggerApi([this.baseUrl = "https://www.googleapis.com/blogger/v2/", this.applicationName, this.authenticator]) { 
+  BloggerApi([this.baseUrl = "https://www.googleapis.com/blogger/v3/", this.applicationName, this.authenticator]) { 
     _blogs = new BlogsResource._internal(this);
     _posts = new PostsResource._internal(this);
     _pages = new PagesResource._internal(this);
@@ -70,7 +84,7 @@ class BloggerApi extends core.Object {
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}blogger/v2/20120508 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}blogger/v3/20120508 google-api-dart-client/${clientVersion}";
   }
 }
 
@@ -80,16 +94,75 @@ class BlogsResource extends core.Object {
   
   BlogsResource._internal(BloggerApi $service) : _$service = $service;
 
+  // Method BlogsResource.ListByUser
+  /**
+   * Retrieves a list of blogs, possibly filtered.
+   * [userId] ID of the user whose blogs are to be fetched. Either the word 'self' (sans quote marks) or the
+   *        user's profile identifier.
+   */
+  core.Future<BlogList> listByUser(core.String userId) {
+    final $queryParams = {};
+    final $headers = {};
+    final $pathParams = {};
+    $pathParams["userId"] = userId;
+    if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
+    if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
+    if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
+    if (_$service.oauthToken != null) $headers["Authorization"] = "Bearer ${_$service.oauthToken}";
+    if (_$service.key != null) $queryParams["key"] = _$service.key;
+    if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
+    if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
+    $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
+    final $path = "users/{userId}/blogs";
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
+    final $http = new HttpRequest($url, "GET", $headers);
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new core.Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => BlogList.parse(JSON.parse($text)));
+  }
+
+  // Method BlogsResource.GetByUrl
+  /**
+   * Retrieve a Blog by URL.
+   */
+  core.Future<Blog> getByUrl([core.String url = UNSPECIFIED]) {
+    final $queryParams = {};
+    final $headers = {};
+    final $pathParams = {};
+    if (UNSPECIFIED != url) $queryParams["url"] = url;
+    if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
+    if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
+    if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
+    if (_$service.oauthToken != null) $headers["Authorization"] = "Bearer ${_$service.oauthToken}";
+    if (_$service.key != null) $queryParams["key"] = _$service.key;
+    if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
+    if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
+    $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
+    final $path = "blogs/byurl";
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
+    final $http = new HttpRequest($url, "GET", $headers);
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new core.Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Blog.parse(JSON.parse($text)));
+  }
+
   // Method BlogsResource.Get
   /**
    * Gets one blog by id.
    * [blogId] The ID of the blog to get.
    */
-  core.Future<Blog> get(core.String blogId) {
+  core.Future<Blog> get(core.String blogId, [core.int maxPosts = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["blogId"] = blogId;
+    if (UNSPECIFIED != maxPosts) $queryParams["maxPosts"] = maxPosts;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -116,20 +189,116 @@ class PostsResource extends core.Object {
   
   PostsResource._internal(BloggerApi $service) : _$service = $service;
 
+  // Method PostsResource.Insert
+  /**
+   * Add a post.
+   * [blogId] ID of the blog to fetch the post from.
+   * [content] the Post
+   */
+  core.Future<Post> insert(core.String blogId, Post content) {
+    final $queryParams = {};
+    final $headers = {};
+    final $pathParams = {};
+    $pathParams["blogId"] = blogId;
+    if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
+    if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
+    if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
+    if (_$service.oauthToken != null) $headers["Authorization"] = "Bearer ${_$service.oauthToken}";
+    if (_$service.key != null) $queryParams["key"] = _$service.key;
+    if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
+    if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
+    $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
+    $headers["Content-Type"] = "application/json";
+    final $body = JSON.stringify(Post.serialize(content));
+    final $path = "blogs/{blogId}/posts";
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
+    final $http = new HttpRequest($url, "POST", $headers);
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new core.Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Post.parse(JSON.parse($text)));
+  }
+
+  // Method PostsResource.Search
+  /**
+   * Search for a post.
+   * [blogId] ID of the blog to fetch the post from.
+   */
+  core.Future<PostList> search(core.String blogId, [core.String q = UNSPECIFIED]) {
+    final $queryParams = {};
+    final $headers = {};
+    final $pathParams = {};
+    $pathParams["blogId"] = blogId;
+    if (UNSPECIFIED != q) $queryParams["q"] = q;
+    if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
+    if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
+    if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
+    if (_$service.oauthToken != null) $headers["Authorization"] = "Bearer ${_$service.oauthToken}";
+    if (_$service.key != null) $queryParams["key"] = _$service.key;
+    if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
+    if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
+    $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
+    final $path = "blogs/{blogId}/posts/search";
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
+    final $http = new HttpRequest($url, "GET", $headers);
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new core.Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => PostList.parse(JSON.parse($text)));
+  }
+
+  // Method PostsResource.Get
+  /**
+   * Get a post by id.
+   * [blogId] ID of the blog to fetch the post from.
+   * [postId] The ID of the post
+   */
+  core.Future<Post> get(core.String blogId, core.String postId, [core.int maxComments = UNSPECIFIED]) {
+    final $queryParams = {};
+    final $headers = {};
+    final $pathParams = {};
+    $pathParams["blogId"] = blogId;
+    $pathParams["postId"] = postId;
+    if (UNSPECIFIED != maxComments) $queryParams["maxComments"] = maxComments;
+    if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
+    if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
+    if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
+    if (_$service.oauthToken != null) $headers["Authorization"] = "Bearer ${_$service.oauthToken}";
+    if (_$service.key != null) $queryParams["key"] = _$service.key;
+    if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
+    if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
+    $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
+    final $path = "blogs/{blogId}/posts/{postId}";
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
+    final $http = new HttpRequest($url, "GET", $headers);
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new core.Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Post.parse(JSON.parse($text)));
+  }
+
   // Method PostsResource.List
   /**
    * Retrieves a list of posts, possibly filtered.
    * [blogId] ID of the blog to fetch posts from.
    */
-  core.Future<PostList> list(core.String blogId, [core.String pageToken = UNSPECIFIED, core.bool fetchBodies = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String startDate = UNSPECIFIED]) {
+  core.Future<PostList> list(core.String blogId, [core.String startDate = UNSPECIFIED, core.String endDate = UNSPECIFIED, core.String labels = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.bool fetchBodies = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["blogId"] = blogId;
+    if (UNSPECIFIED != startDate) $queryParams["startDate"] = startDate;
+    if (UNSPECIFIED != endDate) $queryParams["endDate"] = endDate;
+    if (UNSPECIFIED != labels) $queryParams["labels"] = labels;
+    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
     if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
     if (UNSPECIFIED != fetchBodies) $queryParams["fetchBodies"] = fetchBodies;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
-    if (UNSPECIFIED != startDate) $queryParams["startDate"] = startDate;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -149,13 +318,112 @@ class PostsResource extends core.Object {
         .transform((final $text) => PostList.parse(JSON.parse($text)));
   }
 
-  // Method PostsResource.Get
+  // Method PostsResource.Update
   /**
-   * Get a post by id.
-   * [blogId] ID of the blog to fetch the post from.
-   * [postId] The ID of the post
+   * Update a post.
+   * [blogId] The ID of the Blog.
+   * [postId] The ID of the Post.
+   * [content] the Post
    */
-  core.Future<Post> get(core.String blogId, core.String postId) {
+  core.Future<Post> update(core.String blogId, core.String postId, Post content) {
+    final $queryParams = {};
+    final $headers = {};
+    final $pathParams = {};
+    $pathParams["blogId"] = blogId;
+    $pathParams["postId"] = postId;
+    if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
+    if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
+    if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
+    if (_$service.oauthToken != null) $headers["Authorization"] = "Bearer ${_$service.oauthToken}";
+    if (_$service.key != null) $queryParams["key"] = _$service.key;
+    if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
+    if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
+    $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
+    $headers["Content-Type"] = "application/json";
+    final $body = JSON.stringify(Post.serialize(content));
+    final $path = "blogs/{blogId}/posts/{postId}";
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
+    final $http = new HttpRequest($url, "PUT", $headers);
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new core.Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Post.parse(JSON.parse($text)));
+  }
+
+  // Method PostsResource.GetByPath
+  /**
+   * Retrieve a Post by Path.
+   * [blogId] ID of the blog to fetch the post from.
+   */
+  core.Future<Post> getByPath(core.String blogId, [core.String path = UNSPECIFIED, core.int maxComments = UNSPECIFIED]) {
+    final $queryParams = {};
+    final $headers = {};
+    final $pathParams = {};
+    $pathParams["blogId"] = blogId;
+    if (UNSPECIFIED != path) $queryParams["path"] = path;
+    if (UNSPECIFIED != maxComments) $queryParams["maxComments"] = maxComments;
+    if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
+    if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
+    if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
+    if (_$service.oauthToken != null) $headers["Authorization"] = "Bearer ${_$service.oauthToken}";
+    if (_$service.key != null) $queryParams["key"] = _$service.key;
+    if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
+    if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
+    $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
+    final $path = "blogs/{blogId}/posts/bypath";
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
+    final $http = new HttpRequest($url, "GET", $headers);
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new core.Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Post.parse(JSON.parse($text)));
+  }
+
+  // Method PostsResource.Patch
+  /**
+   * Update a post. This method supports patch semantics.
+   * [blogId] The ID of the Blog.
+   * [postId] The ID of the Post.
+   * [content] the Post
+   */
+  core.Future<Post> patch(core.String blogId, core.String postId, Post content) {
+    final $queryParams = {};
+    final $headers = {};
+    final $pathParams = {};
+    $pathParams["blogId"] = blogId;
+    $pathParams["postId"] = postId;
+    if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
+    if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
+    if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
+    if (_$service.oauthToken != null) $headers["Authorization"] = "Bearer ${_$service.oauthToken}";
+    if (_$service.key != null) $queryParams["key"] = _$service.key;
+    if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
+    if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
+    $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
+    $headers["Content-Type"] = "application/json";
+    final $body = JSON.stringify(Post.serialize(content));
+    final $path = "blogs/{blogId}/posts/{postId}";
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
+    final $http = new HttpRequest($url, "PATCH", $headers);
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new core.Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Post.parse(JSON.parse($text)));
+  }
+
+  // Method PostsResource.Delete
+  /**
+   * Delete a post by id.
+   * [blogId] The Id of the Blog.
+   * [postId] The ID of the Post.
+   */
+  core.Future delete(core.String blogId, core.String postId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -171,13 +439,13 @@ class PostsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "blogs/{blogId}/posts/{postId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new HttpRequest($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
-        .transform((final $text) => Post.parse(JSON.parse($text)));
+        .transform((final $text) => identity(JSON.parse($text)));
   }
 }
 
@@ -261,13 +529,14 @@ class CommentsResource extends core.Object {
    * [blogId] ID of the blog to fetch comments from.
    * [postId] ID of the post to fetch posts from.
    */
-  core.Future<CommentList> list(core.String blogId, core.String postId, [core.String startDate = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.bool fetchBodies = UNSPECIFIED]) {
+  core.Future<CommentList> list(core.String blogId, core.String postId, [core.String startDate = UNSPECIFIED, core.String endDate = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.bool fetchBodies = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["blogId"] = blogId;
     $pathParams["postId"] = postId;
     if (UNSPECIFIED != startDate) $queryParams["startDate"] = startDate;
+    if (UNSPECIFIED != endDate) $queryParams["endDate"] = endDate;
     if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
     if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
     if (UNSPECIFIED != fetchBodies) $queryParams["fetchBodies"] = fetchBodies;
@@ -327,10 +596,8 @@ class CommentsResource extends core.Object {
 // Resource .UsersResource
 class UsersResource extends core.Object {
   final BloggerApi _$service;
-  final UsersBlogsResourceResource blogs;
   
-  UsersResource._internal(BloggerApi $service) : _$service = $service,
-    blogs = new UsersBlogsResourceResource._internal($service);
+  UsersResource._internal(BloggerApi $service) : _$service = $service;
 
   // Method UsersResource.Get
   /**
@@ -362,44 +629,6 @@ class UsersResource extends core.Object {
   }
 }
 
-
-// Resource UsersResource.UsersBlogsResourceResource
-class UsersBlogsResourceResource extends core.Object {
-  final BloggerApi _$service;
-  
-  UsersBlogsResourceResource._internal(BloggerApi $service) : _$service = $service;
-
-  // Method UsersResource.UsersBlogsResourceResource.List
-  /**
-   * Retrieves a list of blogs, possibly filtered.
-   * [userId] ID of the user whose blogs are to be fetched. Either the word 'self' (sans quote marks) or the
-   *        user's profile identifier.
-   */
-  core.Future<BlogList> list(core.String userId) {
-    final $queryParams = {};
-    final $headers = {};
-    final $pathParams = {};
-    $pathParams["userId"] = userId;
-    if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
-    if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
-    if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
-    if (_$service.oauthToken != null) $headers["Authorization"] = "Bearer ${_$service.oauthToken}";
-    if (_$service.key != null) $queryParams["key"] = _$service.key;
-    if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
-    if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
-    $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
-    final $path = "users/{userId}/blogs";
-    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
-    final $authenticatedHttp = (_$service.authenticator == null)
-        ? new core.Future.immediate($http)
-        : _$service.authenticator.authenticate($http);
-    return $authenticatedHttp
-        .chain((final $req) => $req.request())
-        .transform((final $text) => BlogList.parse(JSON.parse($text)));
-  }
-}
-
 // Schema .Blog
 class Blog extends IdentityHash {
   /** The kind of this entry. Always blogger#blog */
@@ -414,11 +643,14 @@ class Blog extends IdentityHash {
   /** The container of posts in this blog. */
   BlogPosts posts;
 
+  /** The JSON custom meta-data for the Blog */
+  core.String customMetaData;
+
   /** RFC 3339 date-time when this blog was last updated. */
   core.String updated;
 
-  /** The identifier for this resource. */
-  core.String id;
+  /** The container of pages in this blog. */
+  BlogPages pages;
 
   /** The URL where this blog is published. */
   core.String url;
@@ -426,8 +658,8 @@ class Blog extends IdentityHash {
   /** RFC 3339 date-time when this blog was published. */
   core.String published;
 
-  /** The container of pages in this blog. */
-  BlogPages pages;
+  /** The identifier for this resource. */
+  core.String id;
 
   /** The API REST URL to fetch this resource from. */
   core.String selfLink;
@@ -443,11 +675,12 @@ class Blog extends IdentityHash {
     result.description = identity(json["description"]);
     result.locale = BlogLocale.parse(json["locale"]);
     result.posts = BlogPosts.parse(json["posts"]);
+    result.customMetaData = identity(json["customMetaData"]);
     result.updated = identity(json["updated"]);
-    result.id = identity(json["id"]);
+    result.pages = BlogPages.parse(json["pages"]);
     result.url = identity(json["url"]);
     result.published = identity(json["published"]);
-    result.pages = BlogPages.parse(json["pages"]);
+    result.id = identity(json["id"]);
     result.selfLink = identity(json["selfLink"]);
     result.name = identity(json["name"]);
     return result;
@@ -460,11 +693,12 @@ class Blog extends IdentityHash {
     result["description"] = identity(value.description);
     result["locale"] = BlogLocale.serialize(value.locale);
     result["posts"] = BlogPosts.serialize(value.posts);
+    result["customMetaData"] = identity(value.customMetaData);
     result["updated"] = identity(value.updated);
-    result["id"] = identity(value.id);
+    result["pages"] = BlogPages.serialize(value.pages);
     result["url"] = identity(value.url);
     result["published"] = identity(value.published);
-    result["pages"] = BlogPages.serialize(value.pages);
+    result["id"] = identity(value.id);
     result["selfLink"] = identity(value.selfLink);
     result["name"] = identity(value.name);
     return result;
@@ -563,6 +797,9 @@ class BlogPosts extends IdentityHash {
   /** The count of posts in this blog. */
   core.int totalItems;
 
+  /** The List of Posts for this Blog. */
+  core.List<Post> items;
+
   /** The URL of the container for posts in this blog. */
   core.String selfLink;
 
@@ -571,6 +808,7 @@ class BlogPosts extends IdentityHash {
     if (json == null) return null;
     final result = new BlogPosts();
     result.totalItems = identity(json["totalItems"]);
+    result.items = map(Post.parse)(json["items"]);
     result.selfLink = identity(json["selfLink"]);
     return result;
   }
@@ -579,6 +817,7 @@ class BlogPosts extends IdentityHash {
     if (value == null) return null;
     final result = {};
     result["totalItems"] = identity(value.totalItems);
+    result["items"] = map(Post.serialize)(value.items);
     result["selfLink"] = identity(value.selfLink);
     return result;
   }
@@ -1006,6 +1245,9 @@ class Post extends IdentityHash {
   /** The list of labels this Post was tagged with. */
   core.List<core.String> labels;
 
+  /** The JSON meta-data for the Post. */
+  core.String customMetaData;
+
   /** RFC 3339 date-time when this Post was last updated. */
   core.String updated;
 
@@ -1014,6 +1256,9 @@ class Post extends IdentityHash {
 
   /** The URL where this Post is displayed. */
   core.String url;
+
+  /** The location for geotagged posts. */
+  PostLocation location;
 
   /** RFC 3339 date-time when this Post was published. */
   core.String published;
@@ -1036,9 +1281,11 @@ class Post extends IdentityHash {
     result.author = PostAuthor.parse(json["author"]);
     result.replies = PostReplies.parse(json["replies"]);
     result.labels = map(identity)(json["labels"]);
+    result.customMetaData = identity(json["customMetaData"]);
     result.updated = identity(json["updated"]);
     result.blog = PostBlog.parse(json["blog"]);
     result.url = identity(json["url"]);
+    result.location = PostLocation.parse(json["location"]);
     result.published = identity(json["published"]);
     result.title = identity(json["title"]);
     result.id = identity(json["id"]);
@@ -1054,9 +1301,11 @@ class Post extends IdentityHash {
     result["author"] = PostAuthor.serialize(value.author);
     result["replies"] = PostReplies.serialize(value.replies);
     result["labels"] = map(identity)(value.labels);
+    result["customMetaData"] = identity(value.customMetaData);
     result["updated"] = identity(value.updated);
     result["blog"] = PostBlog.serialize(value.blog);
     result["url"] = identity(value.url);
+    result["location"] = PostLocation.serialize(value.location);
     result["published"] = identity(value.published);
     result["title"] = identity(value.title);
     result["id"] = identity(value.id);
@@ -1184,10 +1433,50 @@ class PostList extends IdentityHash {
   toString() => serialize(this).toString();
 }
 
+// Schema Post.PostLocation
+class PostLocation extends IdentityHash {
+  /** Location's latitude. */
+  core.double lat;
+
+  /** Location's longitude. */
+  core.double lng;
+
+  /** Location's viewport span. Can be used when rendering a map preview. */
+  core.String span;
+
+  /** Location name. */
+  core.String name;
+
+  /** Parses an instance from its JSON representation. */
+  static PostLocation parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new PostLocation();
+    result.lat = identity(json["lat"]);
+    result.lng = identity(json["lng"]);
+    result.span = identity(json["span"]);
+    result.name = identity(json["name"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(PostLocation value) {
+    if (value == null) return null;
+    final result = {};
+    result["lat"] = identity(value.lat);
+    result["lng"] = identity(value.lng);
+    result["span"] = identity(value.span);
+    result["name"] = identity(value.name);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
 // Schema Post.PostReplies
 class PostReplies extends IdentityHash {
   /** The count of comments on this post. */
   core.String totalItems;
+
+  /** The List of Comments for this Post. */
+  core.List<Comment> items;
 
   /** The URL of the comments on this post. */
   core.String selfLink;
@@ -1197,6 +1486,7 @@ class PostReplies extends IdentityHash {
     if (json == null) return null;
     final result = new PostReplies();
     result.totalItems = identity(json["totalItems"]);
+    result.items = map(Comment.parse)(json["items"]);
     result.selfLink = identity(json["selfLink"]);
     return result;
   }
@@ -1205,6 +1495,7 @@ class PostReplies extends IdentityHash {
     if (value == null) return null;
     final result = {};
     result["totalItems"] = identity(value.totalItems);
+    result["items"] = map(Comment.serialize)(value.items);
     result["selfLink"] = identity(value.selfLink);
     return result;
   }

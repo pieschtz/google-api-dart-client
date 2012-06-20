@@ -1,3 +1,17 @@
+// Copyright 2012 Google Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//   http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 #library('shopping-v1');
 #import('dart:core', prefix: 'core');
 #import('dart:json');
@@ -58,7 +72,7 @@ class ShoppingApi extends core.Object {
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}shopping/v1/20120607 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}shopping/v1/20120614 google-api-dart-client/${clientVersion}";
   }
 }
 
@@ -784,6 +798,9 @@ class ShoppingModelProductJsonV1 extends IdentityHash {
   /** Author of product. */
   ShoppingModelProductJsonV1Author author;
 
+  /** Google Internal */
+  core.double score;
+
   /** Condition of product (one of: new, refurbished, used). */
   core.String condition;
 
@@ -882,6 +899,7 @@ class ShoppingModelProductJsonV1 extends IdentityHash {
     result.images = map(ShoppingModelProductJsonV1Images.parse)(json["images"]);
     result.inventories = map(ShoppingModelProductJsonV1Inventories.parse)(json["inventories"]);
     result.author = ShoppingModelProductJsonV1Author.parse(json["author"]);
+    result.score = identity(json["score"]);
     result.condition = identity(json["condition"]);
     result.providedId = identity(json["providedId"]);
     result.internal8 = map(identity)(json["internal8"]);
@@ -922,6 +940,7 @@ class ShoppingModelProductJsonV1 extends IdentityHash {
     result["images"] = map(ShoppingModelProductJsonV1Images.serialize)(value.images);
     result["inventories"] = map(ShoppingModelProductJsonV1Inventories.serialize)(value.inventories);
     result["author"] = ShoppingModelProductJsonV1Author.serialize(value.author);
+    result["score"] = identity(value.score);
     result["condition"] = identity(value.condition);
     result["providedId"] = identity(value.providedId);
     result["internal8"] = map(identity)(value.internal8);
