@@ -75,7 +75,7 @@ class PredictionApi extends core.Object {
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}prediction/v1.5/20120423 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}prediction/v1.5/20120614 google-api-dart-client/${clientVersion}";
   }
 }
 

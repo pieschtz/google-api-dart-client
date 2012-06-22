@@ -29,9 +29,6 @@ class OAuth2 implements Authenticator {
   Future<_ProxyChannel> _channel;
 
   /// Future of the token we're waiting for.
-  /// Note that errors are signaled by an exception *value*, because exception
-  /// handling is clumsy.
-  /// See http://code.google.com/p/dart/issues/detail?id=3047
   Future<Token> _tokenFuture;
   /// Destination for not-yet-validated tokens we're waiting to receive over
   /// the proxy channel.
@@ -114,39 +111,41 @@ class OAuth2 implements Authenticator {
       // An in-progress request will satisfy an immediate request
       // (even if it's not immediate).
       if (!immediate) {
-        return _tokenFuture.chain((v) {
-          if (v is Token) return new Future.immediate(v);
-          return login(immediate:immediate);
+        Completer result = new Completer<Token>();
+        _tokenFuture.onComplete((v) {
+          if (v.hasValue) return result.complete(v.value);
+          login(immediate:immediate).onComplete((f) {
+            if (f.hasValue) return result.complete(f.value);
+            result.completeException(f.exception);
+          });
         });
+        return result.future;
       }
     } else {
       Completer<Token> tokenCompleter = new Completer();
-      _tokenFuture = _mergeErrors(tokenCompleter.future);
-      _tokenFuture.then((v) {
-        _token = (v is Token) ? v : null;
+      tokenCompleter.future.onComplete((tok) {
         _tokenFuture = null;
+        _token = tok.hasValue ? tok.value : null;
       });
-      
+      _tokenFuture = tokenCompleter.future;
       _tokenCompleter = _wrapValidation(tokenCompleter);
 
       // Synchronous if the channel is already open -> avoids popup blocker
-      _channel.then((proxyChannel) {
+      _channel.onComplete((proxyChannel) {
+        if (!proxyChannel.hasValue) {
+          return _tokenCompleter.completeException(proxyChannel.exception);
+        }
         String uri = _getAuthorizeUri(immediate);
         if (immediate) {
           IFrameElement iframe = _iframe(uri);
-          _tokenCompleter.future.then((v) => iframe.remove());
-          _tokenCompleter.future.handleException((e) { iframe.remove(); });
+          _tokenCompleter.future.onComplete((f) => iframe.remove());
         } else {
           Window popup = _popup(uri);
           new _WindowPoller(_tokenCompleter, popup).poll();
         }
       });
     }
-    // Convert back to standard exception-handling mechanism before returning.
-    return _tokenFuture.transform((v) {
-      if (v is! Token) throw v;
-      return v;
-    });
+    return _tokenFuture;
   }
 
   Future<HttpRequest> authenticate(HttpRequest request) => login().transform((token) {
@@ -156,7 +155,11 @@ class OAuth2 implements Authenticator {
 
   Token get token() => __token;
   set _token(Token value) {
-    _storedToken = value;
+    try {
+      _storedToken = value;
+    } catch (final e) {
+      print("Failed to cache OAuth2 token: $e");
+    }
     __token = value;
   }
 
@@ -177,17 +180,20 @@ class OAuth2 implements Authenticator {
   
   /// Takes a completer that accepts validated tokens, and returns a completer
   /// that accepts unvalidated tokens.
-  Completer<Token> _wrapValidation(Completer<Token> validatedTokenCompleter) {
+  Completer<Token> _wrapValidation(Completer<Token> validTokenCompleter) {
     Completer<Token> result = new Completer();
-    _chainExceptions(result.future, validatedTokenCompleter);
-    result.future.then((token) {
-      Future<bool> validation = token.validate(_clientId);
-      _chainExceptions(validation, validatedTokenCompleter);
-      validation.then((v) {
-        if (v) {
-          validatedTokenCompleter.complete(token);
+    result.future.onComplete((future) {
+      if (!future.hasValue) {
+        return validTokenCompleter.completeException(future.exception);
+      }
+      future.value.validate(_clientId).onComplete((validation) {
+        if (!validation.hasValue) {
+          return validTokenCompleter.completeException(validation.exception);
+        }
+        if (validation.value) {
+          validTokenCompleter.complete(future.value);
         } else {
-          validatedTokenCompleter.completeException(
+          validTokenCompleter.completeException(
               new Exception("Server returned token is invalid"));
         }
       });
@@ -274,7 +280,7 @@ class Token {
   factory Token.fromJson(String json) {
     var map = JSON.parse(json);
     return new Token(map['type'], map['data'],
-        new Date.fromEpoch(map['expiry']));
+        new Date.fromMillisecondsSinceEpoch(map['expiry']));
   }
 
   bool get expired() => new Date.now().compareTo(expiry) > 0;
@@ -285,27 +291,16 @@ class Token {
   /// Query whether this token is still valid.
   Future<bool> validate(String clientId,
       [String service="https://www.googleapis.com/oauth2/v1/tokeninfo"]) {
-    Completer<bool> completer = new Completer();
-    Map<String, String> params = {"access_token": data};
-    String url = new UrlPattern(service).generate({}, params);
-    Future<String> info = new HttpRequest(url, 'GET').request();
-    _chainExceptions(info, completer);
-    info.then((json) {
-      try {
-        Map<String, String> infoMap = JSON.parse(json);
-        completer.complete(clientId == infoMap['audience']);
-      } catch (Exception e) {
-        completer.completeException(e);
-      }
-    });
-    return completer.future;
+    String url = new UrlPattern(service).generate({}, {"access_token": data});
+    return new HttpRequest(url, 'GET').request()
+        .transform((json) => clientId == JSON.parse(json)['audience']);
   }
 
   String toJson() {
     return JSON.stringify({
       "type": type,
       "data": data,
-      "expiry": expiry.value,
+      "expiry": expiry.millisecondsSinceEpoch,
     });
   }
 
@@ -363,26 +358,6 @@ class AuthException implements Exception {
   final Map<String, String> data;
   AuthException(this.message, this.data);
   toString() => "AuthException: $message";
-}
-
-/// Handles all exceptions on [:future:] by passing them to [:completer:].
-void _chainExceptions(Future<Object> future, Completer<Object> completer) {
-  future.handleException((e) {
-    completer.completeException(e);
-    return true;
-  });
-}
-
-/// Returns a [Future] that always succeeds, delivering the value of [f] or 
-/// the exception if [f] failed.
-Future _mergeErrors(Future f) {
-  Completer completer = new Completer();
-  f.then(completer.complete);
-  f.handleException((e) {
-    completer.complete(e);
-    return true;
-  });
-  return completer.future;
 }
 
 /// Opens a popup centered on the screen displaying the provided URL.

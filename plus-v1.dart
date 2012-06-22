@@ -78,7 +78,7 @@ class PlusApi extends core.Object {
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}plus/v1/20120430 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}plus/v1/20120602 google-api-dart-client/${clientVersion}";
   }
 }
 

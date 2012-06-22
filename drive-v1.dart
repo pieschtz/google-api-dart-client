@@ -72,7 +72,7 @@ class DriveApi extends core.Object {
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}drive/v1/20120608 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}drive/v1/20120501 google-api-dart-client/${clientVersion}";
   }
 }
 
@@ -305,7 +305,7 @@ class File extends IdentityHash {
  */
   core.String fileExtension;
 
-  /** Last time this file was viewed by anyone (formatted RFC 3339 timestamp). */
+  /** Last time this file was viewed by the user (formatted RFC 3339 timestamp). */
   core.String lastViewedDate;
 
   /** The id of the file. */
