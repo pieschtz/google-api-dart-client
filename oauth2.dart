@@ -308,9 +308,12 @@ class Token {
   Token(String this.type, String this.data, Date this.expiry);
 
   factory Token.fromJson(String json) {
-    var map = JSON.parse(json);
-    return new Token(map['type'], map['data'],
+    final map = JSON.parse(json);
+    final token = new Token(map['type'], map['data'],
         new Date.fromMillisecondsSinceEpoch(map['expiry']));
+    token._email = map['email'];
+    token._userId = map['userId'];
+    return token;
   }
 
   bool get expired() => new Date.now().compareTo(expiry) > 0;
@@ -338,6 +341,8 @@ class Token {
       "type": type,
       "data": data,
       "expiry": expiry.millisecondsSinceEpoch,
+      "email": email,
+      "userId": userId,
     });
   }
 
