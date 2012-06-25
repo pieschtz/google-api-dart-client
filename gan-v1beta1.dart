@@ -86,6 +86,13 @@ class GanApi extends core.Object {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}gan/v1beta1/20120501 google-api-dart-client/${clientVersion}";
   }
+
+
+  /** OAuth2 scope: Manage your GAN data */
+  final core.String GAN_SCOPE = "https://www.googleapis.com/auth/gan";
+
+  /** OAuth2 scope: View your GAN data */
+  final core.String GAN_READONLY_SCOPE = "https://www.googleapis.com/auth/gan.readonly";
 }
 
 // Resource .AdvertisersResource

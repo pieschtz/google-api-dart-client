@@ -92,6 +92,13 @@ class CalendarApi extends core.Object {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}calendar/v3/20120423 google-api-dart-client/${clientVersion}";
   }
+
+
+  /** OAuth2 scope: Manage your calendars */
+  final core.String CALENDAR_SCOPE = "https://www.googleapis.com/auth/calendar";
+
+  /** OAuth2 scope: View your calendars */
+  final core.String CALENDAR_READONLY_SCOPE = "https://www.googleapis.com/auth/calendar.readonly";
 }
 
 // Resource .FreebusyResource

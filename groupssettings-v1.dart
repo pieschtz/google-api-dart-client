@@ -74,6 +74,10 @@ class GroupssettingsApi extends core.Object {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}groupssettings/v1/20120516 google-api-dart-client/${clientVersion}";
   }
+
+
+  /** OAuth2 scope: View and manage the settings of a Google Apps Group */
+  final core.String APPS_GROUPS_SETTINGS_SCOPE = "https://www.googleapis.com/auth/apps.groups.settings";
 }
 
 // Resource .GroupsResource

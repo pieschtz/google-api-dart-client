@@ -75,6 +75,7 @@ class PagespeedonlineApi extends core.Object {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}pagespeedonline/v1/20120214 google-api-dart-client/${clientVersion}";
   }
+
 }
 
 // Resource .PagespeedapiResource

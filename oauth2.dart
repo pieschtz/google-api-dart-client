@@ -25,6 +25,7 @@ class OAuth2 implements Authenticator {
   String _clientId;
   List<String> _scopes;
   String _provider;
+  Function _tokenLoaded;
 
   Future<_ProxyChannel> _channel;
 
@@ -36,12 +37,20 @@ class OAuth2 implements Authenticator {
   /// The last fetched token.
   Token __token; // Double-underscore because it has a private setter _token.
 
-  OAuth2(String this._clientId, List<String> this._scopes,
-      [String provider = "https://accounts.google.com/o/oauth2/"])
-      : _provider = provider {
+  /// Creates an OAuth2 context for the application identified by [clientId]
+  /// and the permissions described by [scopes].
+  /// If [tokenLoaded] is provided, it will be called with a [Token] when one
+  /// is available. This can be used e.g. to set up a 'logged in' view.
+  OAuth2(String clientId, List<String> scopes,
+      [String provider = "https://accounts.google.com/o/oauth2/",
+      tokenLoaded(Token token)])
+      : _clientId = clientId,
+      _scopes = scopes,
+      _provider = provider,
+      _tokenLoaded = tokenLoaded {
     _channel = _createFutureChannel();
     try {
-      __token = _storedToken;  // Pull cached token from localStorage
+      _token = _storedToken;  // Pull cached token from localStorage
     } catch (final e) {}
     // Attempt an immediate login, we may already be authorized.
     login(immediate:true);
@@ -75,12 +84,12 @@ class OAuth2 implements Authenticator {
   /// Get the URI that prompts the user for pemission (if required).
   String _getAuthorizeUri(bool immediate) {
     Map<String, String> queryParams = {
-     "response_type": "token",
-     "client_id": _clientId,
-     "origin": window.location.origin,
-     "redirect_uri": "postmessage", // Response will post to the proxy iframe
-     "scope": Strings.join(_scopes, " "),
-     "immediate": immediate,
+      "response_type": "token",
+      "client_id": _clientId,
+      "origin": window.location.origin,
+      "redirect_uri": "postmessage", // Response will post to the proxy iframe
+      "scope": Strings.join(_scopes, " "),
+      "immediate": immediate,
     };
     return new UrlPattern("${_provider}auth").generate({}, queryParams);
   }
@@ -149,18 +158,28 @@ class OAuth2 implements Authenticator {
   }
 
   Future<HttpRequest> authenticate(HttpRequest request) => login().transform((token) {
-    request.headers["Authorization"] = "Bearer ${token.data}";
+    request.headers["Authorization"] = "${token.type} ${token.data}";
     return request;
   });
 
+  /// Returns the OAuth2 token, if one is currently available.
   Token get token() => __token;
+
   set _token(Token value) {
+    final invokeCallbacks = (__token == null) && (value != null);
     try {
       _storedToken = value;
     } catch (final e) {
       print("Failed to cache OAuth2 token: $e");
     }
     __token = value;
+    if (invokeCallbacks && (_tokenLoaded != null)) window.setTimeout(() {
+      try {
+        _tokenLoaded(value);
+      } catch (final e) {
+        print("Failed to invoke tokenLoaded callback: $e");
+      }
+    }, 0);
   }
 
   Token get _storedToken() => window.localStorage.containsKey(_storageKey)
@@ -271,9 +290,20 @@ class _ProxyChannel {
 
 /// An OAuth2 authentication token. 
 class Token {
+  /// The token type, usually "Bearer"
   final String type;
+  /// The raw token data used for authentication
   final String data;
+  /// Time at which the token will be expired
   final Date expiry;
+  /// The email address of the user, only set if the scopes include
+  /// https://www.googleapis.com/auth/userinfo.email
+  String get email() => _email;
+  /// A unique identifier of the user, only set if the scopes include
+  /// https://www.googleapis.com/auth/userinfo.profile
+  String get userId() => _userId;
+  String _email;
+  String _userId;
 
   Token(String this.type, String this.data, Date this.expiry);
 
@@ -285,15 +315,22 @@ class Token {
 
   bool get expired() => new Date.now().compareTo(expiry) > 0;
 
-  String toString() =>
-      "[Token type=$type, data=$data, expired=$expired, expiry=$expiry]";
+  String toString() => "[Token type=$type, data=$data, expired=$expired, "
+      "expiry=$expiry, email=$email, userId=$userId]";
 
   /// Query whether this token is still valid.
   Future<bool> validate(String clientId,
       [String service="https://www.googleapis.com/oauth2/v1/tokeninfo"]) {
     String url = new UrlPattern(service).generate({}, {"access_token": data});
-    return new HttpRequest(url, 'GET').request()
-        .transform((json) => clientId == JSON.parse(json)['audience']);
+    return new HttpRequest(url, 'GET').request().transform((json) {
+      final data = JSON.parse(json);
+      final valid = clientId == data['audience'];
+      if (valid) {
+        _email = data['email'];
+        _userId = data['user_id'];
+      }
+      return valid;
+    });
   }
 
   String toJson() {

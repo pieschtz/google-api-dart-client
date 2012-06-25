@@ -80,6 +80,13 @@ class PlusApi extends core.Object {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}plus/v1/20120602 google-api-dart-client/${clientVersion}";
   }
+
+
+  /** OAuth2 scope: Know who you are on Google */
+  final core.String PLUS_ME_SCOPE = "https://www.googleapis.com/auth/plus.me";
+
+  /** OAuth2 scope: View your email address */
+  final core.String USERINFO_EMAIL_SCOPE = "https://www.googleapis.com/auth/userinfo.email";
 }
 
 // Resource .ActivitiesResource

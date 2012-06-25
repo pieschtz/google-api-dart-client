@@ -75,6 +75,7 @@ class DiscoveryApi extends core.Object {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}discovery/v1/snapshot google-api-dart-client/${clientVersion}";
   }
+
 }
 
 // Resource .ApisResource

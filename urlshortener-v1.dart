@@ -74,6 +74,10 @@ class UrlshortenerApi extends core.Object {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}urlshortener/v1/snapshot google-api-dart-client/${clientVersion}";
   }
+
+
+  /** OAuth2 scope: Manage your goo.gl short URLs */
+  final core.String URLSHORTENER_SCOPE = "https://www.googleapis.com/auth/urlshortener";
 }
 
 // Resource .UrlResource

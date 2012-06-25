@@ -77,6 +77,10 @@ class AnalyticsApi extends core.Object {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}analytics/v3/20120607 google-api-dart-client/${clientVersion}";
   }
+
+
+  /** OAuth2 scope: View your Google Analytics data */
+  final core.String ANALYTICS_READONLY_SCOPE = "https://www.googleapis.com/auth/analytics.readonly";
 }
 
 // Resource .ManagementResource

@@ -86,6 +86,10 @@ class BooksApi extends core.Object {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}books/v1/20120614 google-api-dart-client/${clientVersion}";
   }
+
+
+  /** OAuth2 scope: Manage your books */
+  final core.String BOOKS_SCOPE = "https://www.googleapis.com/auth/books";
 }
 
 // Resource .LayersResource

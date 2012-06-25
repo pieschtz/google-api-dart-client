@@ -77,6 +77,13 @@ class TaskqueueApi extends core.Object {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}taskqueue/v1beta2/20120501 google-api-dart-client/${clientVersion}";
   }
+
+
+  /** OAuth2 scope: Manage your Tasks and Taskqueues */
+  final core.String TASKQUEUE_SCOPE = "https://www.googleapis.com/auth/taskqueue";
+
+  /** OAuth2 scope: Consume Tasks from your Taskqueues */
+  final core.String TASKQUEUE_CONSUMER_SCOPE = "https://www.googleapis.com/auth/taskqueue.consumer";
 }
 
 // Resource .TaskqueuesResource

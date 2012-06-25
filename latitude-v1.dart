@@ -77,6 +77,19 @@ class LatitudeApi extends core.Object {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}latitude/v1/20120515 google-api-dart-client/${clientVersion}";
   }
+
+
+  /** OAuth2 scope: Manage your best-available location and location history */
+  final core.String LATITUDE_ALL_BEST_SCOPE = "https://www.googleapis.com/auth/latitude.all.best";
+
+  /** OAuth2 scope: Manage your city-level location and location history */
+  final core.String LATITUDE_ALL_CITY_SCOPE = "https://www.googleapis.com/auth/latitude.all.city";
+
+  /** OAuth2 scope: Manage your best-available location */
+  final core.String LATITUDE_CURRENT_BEST_SCOPE = "https://www.googleapis.com/auth/latitude.current.best";
+
+  /** OAuth2 scope: Manage your city-level location */
+  final core.String LATITUDE_CURRENT_CITY_SCOPE = "https://www.googleapis.com/auth/latitude.current.city";
 }
 
 // Resource .CurrentLocationResource

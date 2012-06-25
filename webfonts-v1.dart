@@ -72,8 +72,9 @@ class WebfontsApi extends core.Object {
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}webfonts/v1/20111110 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}webfonts/v1/20120614 google-api-dart-client/${clientVersion}";
   }
+
 }
 
 // Resource .WebfontsResource
@@ -156,7 +157,7 @@ class WebfontsResourceListSort extends core.Object implements core.Hashable {
 
 // Schema .Webfont
 class Webfont extends IdentityHash {
-  
+  /** This kind represents a webfont object in the webfonts service. */
   core.String kind;
 
   /** The available variants for the font. */
@@ -196,7 +197,7 @@ class WebfontList extends IdentityHash {
   /** The list of fonts currently served by the Google Fonts API. */
   core.List<Webfont> items;
 
-  /** The object kind. */
+  /** This kind represents a list of webfont objects in the webfonts service. */
   core.String kind;
 
   /** Parses an instance from its JSON representation. */

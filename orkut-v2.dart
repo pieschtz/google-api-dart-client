@@ -119,6 +119,13 @@ class OrkutApi extends core.Object {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}orkut/v2/20120223 google-api-dart-client/${clientVersion}";
   }
+
+
+  /** OAuth2 scope: Manage your Orkut activity */
+  final core.String ORKUT_SCOPE = "https://www.googleapis.com/auth/orkut";
+
+  /** OAuth2 scope: View your Orkut data */
+  final core.String ORKUT_READONLY_SCOPE = "https://www.googleapis.com/auth/orkut.readonly";
 }
 
 // Resource .CommunityMembersResource

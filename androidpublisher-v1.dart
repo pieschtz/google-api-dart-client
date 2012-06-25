@@ -74,6 +74,7 @@ class AndroidpublisherApi extends core.Object {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}androidpublisher/v1/20120608 google-api-dart-client/${clientVersion}";
   }
+
 }
 
 // Resource .PurchasesResource

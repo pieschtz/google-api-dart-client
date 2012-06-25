@@ -74,6 +74,10 @@ class DriveApi extends core.Object {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}drive/v1/20120501 google-api-dart-client/${clientVersion}";
   }
+
+
+  /** OAuth2 scope: View and manage Google Drive files that you have opened or created with this app */
+  final core.String DRIVE_FILE_SCOPE = "https://www.googleapis.com/auth/drive.file";
 }
 
 // Resource .FilesResource

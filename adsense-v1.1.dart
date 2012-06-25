@@ -89,6 +89,13 @@ class AdsenseApi extends core.Object {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}adsense/v1.1/20120607 google-api-dart-client/${clientVersion}";
   }
+
+
+  /** OAuth2 scope: View and manage your AdSense data */
+  final core.String ADSENSE_SCOPE = "https://www.googleapis.com/auth/adsense";
+
+  /** OAuth2 scope: View your AdSense data */
+  final core.String ADSENSE_READONLY_SCOPE = "https://www.googleapis.com/auth/adsense.readonly";
 }
 
 // Resource .UrlchannelsResource

@@ -104,6 +104,10 @@ class ModeratorApi extends core.Object {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}moderator/v1/19700115 google-api-dart-client/${clientVersion}";
   }
+
+
+  /** OAuth2 scope: Manage your activity in Google Moderator */
+  final core.String MODERATOR_SCOPE = "https://www.googleapis.com/auth/moderator";
 }
 
 // Resource .VotesResource

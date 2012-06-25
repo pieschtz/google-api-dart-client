@@ -101,7 +101,14 @@ class Oauth2Api extends core.Object {
     return $authenticatedHttp
         .chain((final $req) => $req.request())
         .transform((final $text) => Tokeninfo.parse(JSON.parse($text)));
-  }}
+  }
+
+  /** OAuth2 scope: View your email address */
+  final core.String USERINFO_EMAIL_SCOPE = "https://www.googleapis.com/auth/userinfo.email";
+
+  /** OAuth2 scope: View basic information about your account */
+  final core.String USERINFO_PROFILE_SCOPE = "https://www.googleapis.com/auth/userinfo.profile";
+}
 
 // Resource .UserinfoResource
 class UserinfoResource extends core.Object {

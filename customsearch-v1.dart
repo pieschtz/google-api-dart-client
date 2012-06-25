@@ -74,6 +74,7 @@ class CustomsearchApi extends core.Object {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}customsearch/v1/20120511 google-api-dart-client/${clientVersion}";
   }
+
 }
 
 // Resource .CseResource

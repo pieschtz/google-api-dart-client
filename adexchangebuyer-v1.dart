@@ -80,6 +80,10 @@ class AdexchangebuyerApi extends core.Object {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}adexchangebuyer/v1/20120508 google-api-dart-client/${clientVersion}";
   }
+
+
+  /** OAuth2 scope: Manage your Ad Exchange buyer account configuration */
+  final core.String ADEXCHANGE_BUYER_SCOPE = "https://www.googleapis.com/auth/adexchange.buyer";
 }
 
 // Resource .DirectDealsResource

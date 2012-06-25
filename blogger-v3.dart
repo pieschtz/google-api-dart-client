@@ -86,6 +86,13 @@ class BloggerApi extends core.Object {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}blogger/v3/20120508 google-api-dart-client/${clientVersion}";
   }
+
+
+  /** OAuth2 scope: Manage your Blogger account */
+  final core.String BLOGGER_SCOPE = "https://www.googleapis.com/auth/blogger";
+
+  /** OAuth2 scope: View your Blogger account */
+  final core.String BLOGGER_READONLY_SCOPE = "https://www.googleapis.com/auth/blogger.readonly";
 }
 
 // Resource .BlogsResource

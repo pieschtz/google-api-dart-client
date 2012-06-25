@@ -83,6 +83,10 @@ class DfareportingApi extends core.Object {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}dfareporting/v1/20120519 google-api-dart-client/${clientVersion}";
   }
+
+
+  /** OAuth2 scope: View and manage DoubleClick for Advertisers reports */
+  final core.String DFAREPORTING_SCOPE = "https://www.googleapis.com/auth/dfareporting";
 }
 
 // Resource .FilesResource

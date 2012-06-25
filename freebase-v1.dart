@@ -142,7 +142,8 @@ class FreebaseApi extends core.Object {
     return $authenticatedHttp
         .chain((final $req) => $req.request())
         .transform((final $text) => identity(JSON.parse($text)));
-  }}
+  }
+}
 
 // Resource .TextResource
 class TextResource extends core.Object {

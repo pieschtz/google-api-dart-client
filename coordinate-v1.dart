@@ -72,8 +72,9 @@ class CoordinateApi extends core.Object {
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}coordinate/v1/20120618 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}coordinate/v1/20120622 google-api-dart-client/${clientVersion}";
   }
+
 }
 
 // Resource .JobsResource

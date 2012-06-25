@@ -77,6 +77,13 @@ class PredictionApi extends core.Object {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}prediction/v1.5/20120614 google-api-dart-client/${clientVersion}";
   }
+
+
+  /** OAuth2 scope: View your data in Google Cloud Storage */
+  final core.String DEVSTORAGE_READ_ONLY_SCOPE = "https://www.googleapis.com/auth/devstorage.read_only";
+
+  /** OAuth2 scope: Manage your data in the Google Prediction API */
+  final core.String PREDICTION_SCOPE = "https://www.googleapis.com/auth/prediction";
 }
 
 // Resource .TrainedmodelsResource

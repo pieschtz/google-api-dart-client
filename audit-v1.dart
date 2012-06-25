@@ -74,6 +74,7 @@ class AuditApi extends core.Object {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}audit/v1/20111110 google-api-dart-client/${clientVersion}";
   }
+
 }
 
 // Resource .ActivitiesResource

@@ -86,6 +86,10 @@ class BigqueryApi extends core.Object {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}bigquery/v2/20120614 google-api-dart-client/${clientVersion}";
   }
+
+
+  /** OAuth2 scope: View and manage your data in Google BigQuery */
+  final core.String BIGQUERY_SCOPE = "https://www.googleapis.com/auth/bigquery";
 }
 
 // Resource .TablesResource

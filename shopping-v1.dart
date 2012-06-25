@@ -74,6 +74,10 @@ class ShoppingApi extends core.Object {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}shopping/v1/20120614 google-api-dart-client/${clientVersion}";
   }
+
+
+  /** OAuth2 scope: View your product data */
+  final core.String SHOPPINGAPI_SCOPE = "https://www.googleapis.com/auth/shoppingapi";
 }
 
 // Resource .ProductsResource
