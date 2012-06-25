@@ -89,7 +89,7 @@ class BigqueryApi extends core.Object {
 
 
   /** OAuth2 scope: View and manage your data in Google BigQuery */
-  final core.String BIGQUERY_SCOPE = "https://www.googleapis.com/auth/bigquery";
+  static final core.String BIGQUERY_SCOPE = "https://www.googleapis.com/auth/bigquery";
 }
 
 // Resource .TablesResource

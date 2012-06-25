@@ -77,7 +77,7 @@ class DriveApi extends core.Object {
 
 
   /** OAuth2 scope: View and manage Google Drive files that you have opened or created with this app */
-  final core.String DRIVE_FILE_SCOPE = "https://www.googleapis.com/auth/drive.file";
+  static final core.String DRIVE_FILE_SCOPE = "https://www.googleapis.com/auth/drive.file";
 }
 
 // Resource .FilesResource

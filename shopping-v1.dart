@@ -77,7 +77,7 @@ class ShoppingApi extends core.Object {
 
 
   /** OAuth2 scope: View your product data */
-  final core.String SHOPPINGAPI_SCOPE = "https://www.googleapis.com/auth/shoppingapi";
+  static final core.String SHOPPINGAPI_SCOPE = "https://www.googleapis.com/auth/shoppingapi";
 }
 
 // Resource .ProductsResource

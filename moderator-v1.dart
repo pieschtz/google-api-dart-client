@@ -107,7 +107,7 @@ class ModeratorApi extends core.Object {
 
 
   /** OAuth2 scope: Manage your activity in Google Moderator */
-  final core.String MODERATOR_SCOPE = "https://www.googleapis.com/auth/moderator";
+  static final core.String MODERATOR_SCOPE = "https://www.googleapis.com/auth/moderator";
 }
 
 // Resource .VotesResource

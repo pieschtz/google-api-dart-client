@@ -86,7 +86,7 @@ class DfareportingApi extends core.Object {
 
 
   /** OAuth2 scope: View and manage DoubleClick for Advertisers reports */
-  final core.String DFAREPORTING_SCOPE = "https://www.googleapis.com/auth/dfareporting";
+  static final core.String DFAREPORTING_SCOPE = "https://www.googleapis.com/auth/dfareporting";
 }
 
 // Resource .FilesResource

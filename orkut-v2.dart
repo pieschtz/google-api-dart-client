@@ -122,10 +122,10 @@ class OrkutApi extends core.Object {
 
 
   /** OAuth2 scope: Manage your Orkut activity */
-  final core.String ORKUT_SCOPE = "https://www.googleapis.com/auth/orkut";
+  static final core.String ORKUT_SCOPE = "https://www.googleapis.com/auth/orkut";
 
   /** OAuth2 scope: View your Orkut data */
-  final core.String ORKUT_READONLY_SCOPE = "https://www.googleapis.com/auth/orkut.readonly";
+  static final core.String ORKUT_READONLY_SCOPE = "https://www.googleapis.com/auth/orkut.readonly";
 }
 
 // Resource .CommunityMembersResource

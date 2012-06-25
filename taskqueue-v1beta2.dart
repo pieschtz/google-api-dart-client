@@ -80,10 +80,10 @@ class TaskqueueApi extends core.Object {
 
 
   /** OAuth2 scope: Manage your Tasks and Taskqueues */
-  final core.String TASKQUEUE_SCOPE = "https://www.googleapis.com/auth/taskqueue";
+  static final core.String TASKQUEUE_SCOPE = "https://www.googleapis.com/auth/taskqueue";
 
   /** OAuth2 scope: Consume Tasks from your Taskqueues */
-  final core.String TASKQUEUE_CONSUMER_SCOPE = "https://www.googleapis.com/auth/taskqueue.consumer";
+  static final core.String TASKQUEUE_CONSUMER_SCOPE = "https://www.googleapis.com/auth/taskqueue.consumer";
 }
 
 // Resource .TaskqueuesResource

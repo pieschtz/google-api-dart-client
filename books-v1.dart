@@ -89,7 +89,7 @@ class BooksApi extends core.Object {
 
 
   /** OAuth2 scope: Manage your books */
-  final core.String BOOKS_SCOPE = "https://www.googleapis.com/auth/books";
+  static final core.String BOOKS_SCOPE = "https://www.googleapis.com/auth/books";
 }
 
 // Resource .LayersResource

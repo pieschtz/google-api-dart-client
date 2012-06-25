@@ -89,10 +89,10 @@ class GanApi extends core.Object {
 
 
   /** OAuth2 scope: Manage your GAN data */
-  final core.String GAN_SCOPE = "https://www.googleapis.com/auth/gan";
+  static final core.String GAN_SCOPE = "https://www.googleapis.com/auth/gan";
 
   /** OAuth2 scope: View your GAN data */
-  final core.String GAN_READONLY_SCOPE = "https://www.googleapis.com/auth/gan.readonly";
+  static final core.String GAN_READONLY_SCOPE = "https://www.googleapis.com/auth/gan.readonly";
 }
 
 // Resource .AdvertisersResource

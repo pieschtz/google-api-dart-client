@@ -77,7 +77,7 @@ class UrlshortenerApi extends core.Object {
 
 
   /** OAuth2 scope: Manage your goo.gl short URLs */
-  final core.String URLSHORTENER_SCOPE = "https://www.googleapis.com/auth/urlshortener";
+  static final core.String URLSHORTENER_SCOPE = "https://www.googleapis.com/auth/urlshortener";
 }
 
 // Resource .UrlResource

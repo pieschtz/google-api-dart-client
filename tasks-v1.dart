@@ -80,10 +80,10 @@ class TasksApi extends core.Object {
 
 
   /** OAuth2 scope: Manage your tasks */
-  final core.String TASKS_SCOPE = "https://www.googleapis.com/auth/tasks";
+  static final core.String TASKS_SCOPE = "https://www.googleapis.com/auth/tasks";
 
   /** OAuth2 scope: View your tasks */
-  final core.String TASKS_READONLY_SCOPE = "https://www.googleapis.com/auth/tasks.readonly";
+  static final core.String TASKS_READONLY_SCOPE = "https://www.googleapis.com/auth/tasks.readonly";
 }
 
 // Resource .TasksResource

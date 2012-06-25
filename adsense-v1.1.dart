@@ -92,10 +92,10 @@ class AdsenseApi extends core.Object {
 
 
   /** OAuth2 scope: View and manage your AdSense data */
-  final core.String ADSENSE_SCOPE = "https://www.googleapis.com/auth/adsense";
+  static final core.String ADSENSE_SCOPE = "https://www.googleapis.com/auth/adsense";
 
   /** OAuth2 scope: View your AdSense data */
-  final core.String ADSENSE_READONLY_SCOPE = "https://www.googleapis.com/auth/adsense.readonly";
+  static final core.String ADSENSE_READONLY_SCOPE = "https://www.googleapis.com/auth/adsense.readonly";
 }
 
 // Resource .UrlchannelsResource

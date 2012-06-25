@@ -80,7 +80,7 @@ class AnalyticsApi extends core.Object {
 
 
   /** OAuth2 scope: View your Google Analytics data */
-  final core.String ANALYTICS_READONLY_SCOPE = "https://www.googleapis.com/auth/analytics.readonly";
+  static final core.String ANALYTICS_READONLY_SCOPE = "https://www.googleapis.com/auth/analytics.readonly";
 }
 
 // Resource .ManagementResource

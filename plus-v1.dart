@@ -83,10 +83,10 @@ class PlusApi extends core.Object {
 
 
   /** OAuth2 scope: Know who you are on Google */
-  final core.String PLUS_ME_SCOPE = "https://www.googleapis.com/auth/plus.me";
+  static final core.String PLUS_ME_SCOPE = "https://www.googleapis.com/auth/plus.me";
 
   /** OAuth2 scope: View your email address */
-  final core.String USERINFO_EMAIL_SCOPE = "https://www.googleapis.com/auth/userinfo.email";
+  static final core.String USERINFO_EMAIL_SCOPE = "https://www.googleapis.com/auth/userinfo.email";
 }
 
 // Resource .ActivitiesResource

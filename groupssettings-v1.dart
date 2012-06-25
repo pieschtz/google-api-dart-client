@@ -77,7 +77,7 @@ class GroupssettingsApi extends core.Object {
 
 
   /** OAuth2 scope: View and manage the settings of a Google Apps Group */
-  final core.String APPS_GROUPS_SETTINGS_SCOPE = "https://www.googleapis.com/auth/apps.groups.settings";
+  static final core.String APPS_GROUPS_SETTINGS_SCOPE = "https://www.googleapis.com/auth/apps.groups.settings";
 }
 
 // Resource .GroupsResource

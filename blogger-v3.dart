@@ -89,10 +89,10 @@ class BloggerApi extends core.Object {
 
 
   /** OAuth2 scope: Manage your Blogger account */
-  final core.String BLOGGER_SCOPE = "https://www.googleapis.com/auth/blogger";
+  static final core.String BLOGGER_SCOPE = "https://www.googleapis.com/auth/blogger";
 
   /** OAuth2 scope: View your Blogger account */
-  final core.String BLOGGER_READONLY_SCOPE = "https://www.googleapis.com/auth/blogger.readonly";
+  static final core.String BLOGGER_READONLY_SCOPE = "https://www.googleapis.com/auth/blogger.readonly";
 }
 
 // Resource .BlogsResource

@@ -77,10 +77,10 @@ class SiteVerificationApi extends core.Object {
 
 
   /** OAuth2 scope: Manage the list of sites and domains you control */
-  final core.String SITEVERIFICATION_SCOPE = "https://www.googleapis.com/auth/siteverification";
+  static final core.String SITEVERIFICATION_SCOPE = "https://www.googleapis.com/auth/siteverification";
 
   /** OAuth2 scope: Manage your new site verifications with Google */
-  final core.String SITEVERIFICATION_VERIFY_ONLY_SCOPE = "https://www.googleapis.com/auth/siteverification.verify_only";
+  static final core.String SITEVERIFICATION_VERIFY_ONLY_SCOPE = "https://www.googleapis.com/auth/siteverification.verify_only";
 }
 
 // Resource .WebResourceResource

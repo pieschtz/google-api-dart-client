@@ -95,10 +95,10 @@ class CalendarApi extends core.Object {
 
 
   /** OAuth2 scope: Manage your calendars */
-  final core.String CALENDAR_SCOPE = "https://www.googleapis.com/auth/calendar";
+  static final core.String CALENDAR_SCOPE = "https://www.googleapis.com/auth/calendar";
 
   /** OAuth2 scope: View your calendars */
-  final core.String CALENDAR_READONLY_SCOPE = "https://www.googleapis.com/auth/calendar.readonly";
+  static final core.String CALENDAR_READONLY_SCOPE = "https://www.googleapis.com/auth/calendar.readonly";
 }
 
 // Resource .FreebusyResource
