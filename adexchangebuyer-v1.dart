@@ -95,6 +95,7 @@ class DirectDealsResource extends core.Object {
   // Method DirectDealsResource.List
   /**
    * Retrieves the authenticated user's list of direct deals.
+   *
    */
   core.Future<DirectDealsList> list() {
     final $queryParams = {};
@@ -122,7 +123,8 @@ class DirectDealsResource extends core.Object {
   // Method DirectDealsResource.Get
   /**
    * Gets one direct deal by ID.
-   * [id] The direct deal id
+   *
+   *    * [id] The direct deal id
    */
   core.Future<DirectDeal> get(core.String id) {
     final $queryParams = {};
@@ -158,8 +160,9 @@ class AccountsResource extends core.Object {
   // Method AccountsResource.Patch
   /**
    * Updates an existing account. This method supports patch semantics.
-   * [id] The account id
-   * [content] the Account
+   *
+   *    * [content] the Account
+   *    * [id] The account id
    */
   core.Future<Account> patch(core.int id, Account content) {
     final $queryParams = {};
@@ -190,6 +193,7 @@ class AccountsResource extends core.Object {
   // Method AccountsResource.List
   /**
    * Retrieves the authenticated user's list of accounts.
+   *
    */
   core.Future<AccountsList> list() {
     final $queryParams = {};
@@ -217,8 +221,9 @@ class AccountsResource extends core.Object {
   // Method AccountsResource.Update
   /**
    * Updates an existing account.
-   * [id] The account id
-   * [content] the Account
+   *
+   *    * [content] the Account
+   *    * [id] The account id
    */
   core.Future<Account> update(core.int id, Account content) {
     final $queryParams = {};
@@ -249,7 +254,8 @@ class AccountsResource extends core.Object {
   // Method AccountsResource.Get
   /**
    * Gets one account by ID.
-   * [id] The account id
+   *
+   *    * [id] The account id
    */
   core.Future<Account> get(core.int id) {
     final $queryParams = {};
@@ -285,7 +291,8 @@ class CreativesResource extends core.Object {
   // Method CreativesResource.Insert
   /**
    * Submit a new creative.
-   * [content] the Creative
+   *
+   *    * [content] the Creative
    */
   core.Future<Creative> insert(Creative content) {
     final $queryParams = {};
@@ -315,6 +322,12 @@ class CreativesResource extends core.Object {
   // Method CreativesResource.List
   /**
    * Retrieves a list of the authenticated user's active creatives.
+   *
+   *    * [pageToken] A continuation token, used to page through ad clients. To retrieve the next page, set this parameter
+   *        to the value of "nextPageToken" from the previous response. Optional.
+   *    * [maxResults] Maximum number of entries returned on one result page. If not set, the default is 100. Optional.
+   *        Minimum: 1.
+  Maximum: 1000.
    */
   core.Future<CreativesList> list([core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
     final $queryParams = {};
@@ -344,9 +357,10 @@ class CreativesResource extends core.Object {
   // Method CreativesResource.Get
   /**
    * Gets the status for a single creative.
-   * [accountId] The id for the account that will serve this creative.
-   * [buyerCreativeId] The buyer-specific id for this creative.
-   * [adgroupId] The adgroup this creative belongs to.
+   *
+   *    * [accountId] The id for the account that will serve this creative.
+   *    * [buyerCreativeId] The buyer-specific id for this creative.
+   *    * [adgroupId] The adgroup this creative belongs to.
    */
   core.Future<Creative> get(core.int accountId, core.String buyerCreativeId, core.String adgroupId) {
     final $queryParams = {};

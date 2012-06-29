@@ -95,8 +95,10 @@ class TaskqueuesResource extends core.Object {
   // Method TaskqueuesResource.Get
   /**
    * Get detailed information about a TaskQueue.
-   * [project] The project under which the queue lies.
-   * [taskqueue] The id of the taskqueue to get the properties of.
+   *
+   *    * [project] The project under which the queue lies.
+   *    * [taskqueue] The id of the taskqueue to get the properties of.
+   *    * [getStats] Whether to get stats. Optional.
    */
   core.Future<TaskQueue> get(core.String project, core.String taskqueue, [core.bool getStats = UNSPECIFIED]) {
     final $queryParams = {};
@@ -134,9 +136,10 @@ class TasksResource extends core.Object {
   // Method TasksResource.Insert
   /**
    * Insert a new task in a TaskQueue
-   * [project] The project under which the queue lies
-   * [taskqueue] The taskqueue to insert the task into
-   * [content] the Task
+   *
+   *    * [content] the Task
+   *    * [project] The project under which the queue lies
+   *    * [taskqueue] The taskqueue to insert the task into
    */
   core.Future<Task> insert(core.String project, core.String taskqueue, Task content) {
     final $queryParams = {};
@@ -168,9 +171,10 @@ class TasksResource extends core.Object {
   // Method TasksResource.Get
   /**
    * Get a particular task from a TaskQueue.
-   * [project] The project under which the queue lies.
-   * [taskqueue] The taskqueue in which the task belongs.
-   * [task] The task to get properties of.
+   *
+   *    * [project] The project under which the queue lies.
+   *    * [taskqueue] The taskqueue in which the task belongs.
+   *    * [task] The task to get properties of.
    */
   core.Future<Task> get(core.String project, core.String taskqueue, core.String task) {
     final $queryParams = {};
@@ -201,8 +205,9 @@ class TasksResource extends core.Object {
   // Method TasksResource.List
   /**
    * List Tasks in a TaskQueue
-   * [project] The project under which the queue lies.
-   * [taskqueue] The id of the taskqueue to list tasks from.
+   *
+   *    * [project] The project under which the queue lies.
+   *    * [taskqueue] The id of the taskqueue to list tasks from.
    */
   core.Future<Tasks2> list(core.String project, core.String taskqueue) {
     final $queryParams = {};
@@ -232,11 +237,12 @@ class TasksResource extends core.Object {
   // Method TasksResource.Update
   /**
    * Update tasks that are leased out of a TaskQueue.
-   * [project] The project under which the queue lies.
-   * [taskqueue]
-   * [task]
-   * [newLeaseSeconds] The new lease in seconds.
-   * [content] the Task
+   *
+   *    * [content] the Task
+   *    * [project] The project under which the queue lies.
+   *    * [taskqueue]
+   *    * [task]
+   *    * [newLeaseSeconds] The new lease in seconds.
    */
   core.Future<Task> update(core.String project, core.String taskqueue, core.String task, core.int newLeaseSeconds, Task content) {
     final $queryParams = {};
@@ -270,11 +276,12 @@ class TasksResource extends core.Object {
   // Method TasksResource.Patch
   /**
    * Update tasks that are leased out of a TaskQueue. This method supports patch semantics.
-   * [project] The project under which the queue lies.
-   * [taskqueue]
-   * [task]
-   * [newLeaseSeconds] The new lease in seconds.
-   * [content] the Task
+   *
+   *    * [content] the Task
+   *    * [project] The project under which the queue lies.
+   *    * [taskqueue]
+   *    * [task]
+   *    * [newLeaseSeconds] The new lease in seconds.
    */
   core.Future<Task> patch(core.String project, core.String taskqueue, core.String task, core.int newLeaseSeconds, Task content) {
     final $queryParams = {};
@@ -308,9 +315,10 @@ class TasksResource extends core.Object {
   // Method TasksResource.Delete
   /**
    * Delete a task from a TaskQueue.
-   * [project] The project under which the queue lies.
-   * [taskqueue] The taskqueue to delete a task from.
-   * [task] The id of the task to delete.
+   *
+   *    * [project] The project under which the queue lies.
+   *    * [taskqueue] The taskqueue to delete a task from.
+   *    * [task] The id of the task to delete.
    */
   core.Future delete(core.String project, core.String taskqueue, core.String task) {
     final $queryParams = {};
@@ -341,10 +349,15 @@ class TasksResource extends core.Object {
   // Method TasksResource.Lease
   /**
    * Lease 1 or more tasks from a TaskQueue.
-   * [project] The project under which the queue lies.
-   * [taskqueue] The taskqueue to lease a task from.
-   * [numTasks] The number of tasks to lease.
-   * [leaseSecs] The lease in seconds.
+   *
+   *    * [project] The project under which the queue lies.
+   *    * [taskqueue] The taskqueue to lease a task from.
+   *    * [numTasks] The number of tasks to lease.
+   *    * [leaseSecs] The lease in seconds.
+   *    * [groupByTag] When true, all returned tasks will have the same tag
+   *    * [tag] The tag allowed for tasks in the response. Must only be specified if group_by_tag is true. If
+   *        group_by_tag is true and tag is not specified the tag will be that of the oldest task by
+   *        eta, i.e. the first available tag
    */
   core.Future<Tasks> lease(core.String project, core.String taskqueue, core.int numTasks, core.int leaseSecs, [core.bool groupByTag = UNSPECIFIED, core.String tag = UNSPECIFIED]) {
     final $queryParams = {};

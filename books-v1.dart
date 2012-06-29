@@ -105,7 +105,15 @@ class LayersResource extends core.Object {
   // Method LayersResource.List
   /**
    * List the layer summaries for a volume.
-   * [volumeId] The volume to retrieve layers for.
+   *
+   *    * [volumeId] The volume to retrieve layers for.
+   *    * [pageToken] The value of the nextToken from the previous page.
+   *    * [contentVersion] The content version for the requested volume.
+   *    * [maxResults] Maximum number of results to return
+
+  Minimum: 0.
+  Maximum: 200.
+   *    * [source] String to identify the originator of this request.
    */
   core.Future<Layersummaries> list(core.String volumeId, [core.String pageToken = UNSPECIFIED, core.String contentVersion = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String source = UNSPECIFIED]) {
     final $queryParams = {};
@@ -138,8 +146,11 @@ class LayersResource extends core.Object {
   // Method LayersResource.Get
   /**
    * Gets the layer summary for a volume.
-   * [volumeId] The volume to retrieve layers for.
-   * [summaryId] The ID for the layer to get the summary for.
+   *
+   *    * [volumeId] The volume to retrieve layers for.
+   *    * [summaryId] The ID for the layer to get the summary for.
+   *    * [source] String to identify the originator of this request.
+   *    * [contentVersion] The content version for the requested volume.
    */
   core.Future<Layersummary> get(core.String volumeId, core.String summaryId, [core.String source = UNSPECIFIED, core.String contentVersion = UNSPECIFIED]) {
     final $queryParams = {};
@@ -179,9 +190,25 @@ class LayersAnnotationDataResourceResource extends core.Object {
   // Method LayersResource.LayersAnnotationDataResourceResource.List
   /**
    * Gets the annotation data for a volume and layer.
-   * [volumeId] The volume to retrieve annotation data for.
-   * [layerId] The ID for the layer to get the annotation data.
-   * [contentVersion] The content version for the requested volume.
+   *
+   *    * [volumeId] The volume to retrieve annotation data for.
+   *    * [layerId] The ID for the layer to get the annotation data.
+   *    * [contentVersion] The content version for the requested volume.
+   *    * [scale] The requested scale for the image.
+
+  Minimum: 0.
+   *    * [source] String to identify the originator of this request.
+   *    * [locale] The locale information for the data. ISO-639-1 language and ISO-3166-1 country code. Ex: 'en_US'.
+   *    * [h] The requested pixel height for any images. If height is provided width must also be provided.
+   *    * [updatedMax] RFC 3339 timestamp to restrict to items updated prior to this timestamp (exclusive).
+   *    * [maxResults] Maximum number of results to return
+
+  Minimum: 0.
+  Maximum: 200.
+   *    * [annotationDataId] The list of Annotation Data Ids to retrieve. Pagination is ignored if this is set.
+   *    * [pageToken] The value of the nextToken from the previous page.
+   *    * [w] The requested pixel width for any images. If width is provided height must also be provided.
+   *    * [updatedMin] RFC 3339 timestamp to restrict to items updated since this timestamp (inclusive).
    */
   core.Future<Annotationsdata> list(core.String volumeId, core.String layerId, core.String contentVersion, [core.int scale = UNSPECIFIED, core.String source = UNSPECIFIED, core.String locale = UNSPECIFIED, core.int h = UNSPECIFIED, core.String updatedMax = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.List<core.String> annotationDataId = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.int w = UNSPECIFIED, core.String updatedMin = UNSPECIFIED]) {
     final $queryParams = {};
@@ -222,10 +249,18 @@ class LayersAnnotationDataResourceResource extends core.Object {
   // Method LayersResource.LayersAnnotationDataResourceResource.Get
   /**
    * Gets the annotation data.
-   * [volumeId] The volume to retrieve annotations for.
-   * [layerId] The ID for the layer to get the annotations.
-   * [annotationDataId] The ID of the annotation data to retrieve.
-   * [contentVersion] The content version for the volume you are trying to retrieve.
+   *
+   *    * [volumeId] The volume to retrieve annotations for.
+   *    * [layerId] The ID for the layer to get the annotations.
+   *    * [annotationDataId] The ID of the annotation data to retrieve.
+   *    * [contentVersion] The content version for the volume you are trying to retrieve.
+   *    * [scale] The requested scale for the image.
+
+  Minimum: 0.
+   *    * [locale] The locale information for the data. ISO-639-1 language and ISO-3166-1 country code. Ex: 'en_US'.
+   *    * [h] The requested pixel height for any images. If height is provided width must also be provided.
+   *    * [source] String to identify the originator of this request.
+   *    * [w] The requested pixel width for any images. If width is provided height must also be provided.
    */
   core.Future<Annotationdata> get(core.String volumeId, core.String layerId, core.String annotationDataId, core.String contentVersion, [core.int scale = UNSPECIFIED, core.String locale = UNSPECIFIED, core.int h = UNSPECIFIED, core.String source = UNSPECIFIED, core.int w = UNSPECIFIED]) {
     final $queryParams = {};
@@ -269,9 +304,25 @@ class LayersVolumeAnnotationsResourceResource extends core.Object {
   // Method LayersResource.LayersVolumeAnnotationsResourceResource.List
   /**
    * Gets the volume annotations for a volume and layer.
-   * [volumeId] The volume to retrieve annotations for.
-   * [layerId] The ID for the layer to get the annotations.
-   * [contentVersion] The content version for the requested volume.
+   *
+   *    * [volumeId] The volume to retrieve annotations for.
+   *    * [layerId] The ID for the layer to get the annotations.
+   *    * [contentVersion] The content version for the requested volume.
+   *    * [showDeleted] Set to true to return deleted annotations. updatedMin must be in the request to use this. Defaults
+   *        to false.
+   *    * [endPosition] The end position to end retrieving data from.
+   *    * [endOffset] The end offset to end retrieving data from.
+   *    * [locale] The locale information for the data. ISO-639-1 language and ISO-3166-1 country code. Ex: 'en_US'.
+   *    * [updatedMin] RFC 3339 timestamp to restrict to items updated since this timestamp (inclusive).
+   *    * [updatedMax] RFC 3339 timestamp to restrict to items updated prior to this timestamp (exclusive).
+   *    * [maxResults] Maximum number of results to return
+
+  Minimum: 0.
+  Maximum: 200.
+   *    * [pageToken] The value of the nextToken from the previous page.
+   *    * [source] String to identify the originator of this request.
+   *    * [startOffset] The start offset to start retrieving data from.
+   *    * [startPosition] The start position to start retrieving data from.
    */
   core.Future<Volumeannotations> list(core.String volumeId, core.String layerId, core.String contentVersion, [core.bool showDeleted = UNSPECIFIED, core.String endPosition = UNSPECIFIED, core.String endOffset = UNSPECIFIED, core.String locale = UNSPECIFIED, core.String updatedMin = UNSPECIFIED, core.String updatedMax = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.String source = UNSPECIFIED, core.String startOffset = UNSPECIFIED, core.String startPosition = UNSPECIFIED]) {
     final $queryParams = {};
@@ -313,9 +364,12 @@ class LayersVolumeAnnotationsResourceResource extends core.Object {
   // Method LayersResource.LayersVolumeAnnotationsResourceResource.Get
   /**
    * Gets the volume annotation.
-   * [volumeId] The volume to retrieve annotations for.
-   * [layerId] The ID for the layer to get the annotations.
-   * [annotationId] The ID of the volume annotation to retrieve.
+   *
+   *    * [volumeId] The volume to retrieve annotations for.
+   *    * [layerId] The ID for the layer to get the annotations.
+   *    * [annotationId] The ID of the volume annotation to retrieve.
+   *    * [locale] The locale information for the data. ISO-639-1 language and ISO-3166-1 country code. Ex: 'en_US'.
+   *    * [source] String to identify the originator of this request.
    */
   core.Future<Volumeannotation> get(core.String volumeId, core.String layerId, core.String annotationId, [core.String locale = UNSPECIFIED, core.String source = UNSPECIFIED]) {
     final $queryParams = {};
@@ -357,7 +411,9 @@ class BookshelvesResource extends core.Object {
   // Method BookshelvesResource.List
   /**
    * Retrieves a list of public bookshelves for the specified user.
-   * [userId] ID of user for whom to retrieve bookshelves.
+   *
+   *    * [userId] ID of user for whom to retrieve bookshelves.
+   *    * [source] String to identify the originator of this request.
    */
   core.Future<Bookshelves> list(core.String userId, [core.String source = UNSPECIFIED]) {
     final $queryParams = {};
@@ -387,8 +443,10 @@ class BookshelvesResource extends core.Object {
   // Method BookshelvesResource.Get
   /**
    * Retrieves metadata for a specific bookshelf for the specified user.
-   * [userId] ID of user for whom to retrieve bookshelves.
-   * [shelf] ID of bookshelf to retrieve.
+   *
+   *    * [userId] ID of user for whom to retrieve bookshelves.
+   *    * [shelf] ID of bookshelf to retrieve.
+   *    * [source] String to identify the originator of this request.
    */
   core.Future<Bookshelf> get(core.String userId, core.String shelf, [core.String source = UNSPECIFIED]) {
     final $queryParams = {};
@@ -427,8 +485,17 @@ class BookshelvesVolumesResourceResource extends core.Object {
   // Method BookshelvesResource.BookshelvesVolumesResourceResource.List
   /**
    * Retrieves volumes in a specific bookshelf for the specified user.
-   * [userId] ID of user for whom to retrieve bookshelf volumes.
-   * [shelf] ID of bookshelf to retrieve volumes.
+   *
+   *    * [userId] ID of user for whom to retrieve bookshelf volumes.
+   *    * [shelf] ID of bookshelf to retrieve volumes.
+   *    * [showPreorders] Set to true to show pre-ordered books. Defaults to false.
+   *    * [maxResults] Maximum number of results to return
+
+  Minimum: 0.
+   *    * [source] String to identify the originator of this request.
+   *    * [startIndex] Index of the first element to return (starts at 0)
+
+  Minimum: 0.
    */
   core.Future<Volumes> list(core.String userId, core.String shelf, [core.bool showPreorders = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String source = UNSPECIFIED, core.int startIndex = UNSPECIFIED]) {
     final $queryParams = {};
@@ -469,8 +536,11 @@ class MyconfigResource extends core.Object {
   // Method MyconfigResource.ReleaseDownloadAccess
   /**
    * Release downloaded content access restriction.
-   * [volumeIds] The volume(s) to release restrictions for.
-   * [cpksver] The device/version ID from which to release the restriction.
+   *
+   *    * [volumeIds] The volume(s) to release restrictions for.
+   *    * [cpksver] The device/version ID from which to release the restriction.
+   *    * [locale] ISO-639-1, ISO-3166-1 codes for message localization, i.e. en_US.
+   *    * [source] String to identify the originator of this request.
    */
   core.Future<DownloadAccesses> releaseDownloadAccess(core.List<core.String> volumeIds, core.String cpksver, [core.String locale = UNSPECIFIED, core.String source = UNSPECIFIED]) {
     final $queryParams = {};
@@ -502,10 +572,12 @@ class MyconfigResource extends core.Object {
   // Method MyconfigResource.RequestAccess
   /**
    * Request concurrent and download access restrictions.
-   * [source] String to identify the originator of this request.
-   * [volumeId] The volume to request concurrent/download restrictions for.
-   * [nonce] The client nonce value.
-   * [cpksver] The device/version ID from which to request the restrictions.
+   *
+   *    * [source] String to identify the originator of this request.
+   *    * [volumeId] The volume to request concurrent/download restrictions for.
+   *    * [nonce] The client nonce value.
+   *    * [cpksver] The device/version ID from which to request the restrictions.
+   *    * [locale] ISO-639-1, ISO-3166-1 codes for message localization, i.e. en_US.
    */
   core.Future<RequestAccess> requestAccess(core.String source, core.String volumeId, core.String nonce, core.String cpksver, [core.String locale = UNSPECIFIED]) {
     final $queryParams = {};
@@ -538,9 +610,13 @@ class MyconfigResource extends core.Object {
   // Method MyconfigResource.SyncVolumeLicenses
   /**
    * Request downloaded content access for specified volumes on the My eBooks shelf.
-   * [source] String to identify the originator of this request.
-   * [nonce] The client nonce value.
-   * [cpksver] The device/version ID from which to release the restriction.
+   *
+   *    * [source] String to identify the originator of this request.
+   *    * [nonce] The client nonce value.
+   *    * [cpksver] The device/version ID from which to release the restriction.
+   *    * [locale] ISO-639-1, ISO-3166-1 codes for message localization, i.e. en_US.
+   *    * [showPreorders] Set to true to show pre-ordered books. Defaults to false.
+   *    * [volumeIds] The volume(s) to request download restrictions for.
    */
   core.Future<Volumes> syncVolumeLicenses(core.String source, core.String nonce, core.String cpksver, [core.String locale = UNSPECIFIED, core.bool showPreorders = UNSPECIFIED, core.List<core.String> volumeIds = UNSPECIFIED]) {
     final $queryParams = {};
@@ -583,7 +659,25 @@ class VolumesResource extends core.Object {
   // Method VolumesResource.List
   /**
    * Performs a book search.
-   * [q] Full-text search query string.
+   *
+   *    * [q] Full-text search query string.
+   *    * [orderBy] Sort search results.
+   *    * [projection] Restrict information returned to a set of selected fields.
+   *    * [libraryRestrict] Restrict search to this user's library.
+   *    * [langRestrict] Restrict results to books with this language code.
+   *    * [showPreorders] Set to true to show books available for preorder. Defaults to false.
+   *    * [printType] Restrict to books or magazines.
+   *    * [maxResults] Maximum number of results to return.
+
+  Minimum: 0.
+  Maximum: 40.
+   *    * [filter] Filter search results.
+   *    * [source] String to identify the originator of this request.
+   *    * [startIndex] Index of the first result to return (starts at 0)
+
+  Minimum: 0.
+   *    * [download] Restrict to volumes by download availability.
+   *    * [partner] Restrict and brand results for partner ID.
    */
   core.Future<Volumes> list(core.String q, [VolumesResourceListOrderBy orderBy = UNSPECIFIED, VolumesResourceListProjection projection = UNSPECIFIED, VolumesResourceListLibraryRestrict libraryRestrict = UNSPECIFIED, core.String langRestrict = UNSPECIFIED, core.bool showPreorders = UNSPECIFIED, VolumesResourceListPrintType printType = UNSPECIFIED, core.int maxResults = UNSPECIFIED, VolumesResourceListFilter filter = UNSPECIFIED, core.String source = UNSPECIFIED, core.int startIndex = UNSPECIFIED, VolumesResourceListDownload download = UNSPECIFIED, core.String partner = UNSPECIFIED]) {
     final $queryParams = {};
@@ -624,7 +718,12 @@ class VolumesResource extends core.Object {
   // Method VolumesResource.Get
   /**
    * Gets volume information for a single volume.
-   * [volumeId] ID of volume to retrieve.
+   *
+   *    * [volumeId] ID of volume to retrieve.
+   *    * [source] String to identify the originator of this request.
+   *    * [country] ISO-3166-1 code to override the IP-based location.
+   *    * [projection] Restrict information returned to a set of selected fields.
+   *    * [partner] Brand results for partner ID.
    */
   core.Future<Volume> get(core.String volumeId, [core.String source = UNSPECIFIED, core.String country = UNSPECIFIED, VolumesResourceGetProjection projection = UNSPECIFIED, core.String partner = UNSPECIFIED]) {
     final $queryParams = {};
@@ -894,7 +993,19 @@ class VolumesAssociatedResourceResource extends core.Object {
   // Method VolumesResource.VolumesAssociatedResourceResource.List
   /**
    * Return a list of associated books.
-   * [volumeId] ID of the source volume.
+   *
+   *    * [volumeId] ID of the source volume.
+   *    * [projection] Restrict information returned to a set of selected fields.
+   *    * [maxResults] Maximum number of results to return.
+
+  Minimum: 0.
+  Maximum: 40.
+   *    * [filter] Filter search results.
+   *    * [source] String to identify the originator of this request.
+   *    * [startIndex] Index of the first result to return (starts at 0)
+
+  Minimum: 0.
+   *    * [association] Association type.
    */
   core.Future<Volumes> list(core.String volumeId, [VolumesResourceVolumesAssociatedResourceResourceListProjection projection = UNSPECIFIED, core.int maxResults = UNSPECIFIED, VolumesResourceVolumesAssociatedResourceResourceListFilter filter = UNSPECIFIED, core.String source = UNSPECIFIED, core.int startIndex = UNSPECIFIED, VolumesResourceVolumesAssociatedResourceResourceListAssociation association = UNSPECIFIED]) {
     final $queryParams = {};
@@ -1053,8 +1164,10 @@ class MylibraryBookshelvesResourceResource extends core.Object {
   // Method MylibraryResource.MylibraryBookshelvesResourceResource.RemoveVolume
   /**
    * Removes a volume from a bookshelf.
-   * [shelf] ID of bookshelf from which to remove a volume.
-   * [volumeId] ID of volume to remove.
+   *
+   *    * [shelf] ID of bookshelf from which to remove a volume.
+   *    * [volumeId] ID of volume to remove.
+   *    * [source] String to identify the originator of this request.
    */
   core.Future removeVolume(core.String shelf, core.String volumeId, [core.String source = UNSPECIFIED]) {
     final $queryParams = {};
@@ -1085,7 +1198,9 @@ class MylibraryBookshelvesResourceResource extends core.Object {
   // Method MylibraryResource.MylibraryBookshelvesResourceResource.Get
   /**
    * Retrieves metadata for a specific bookshelf belonging to the authenticated user.
-   * [shelf] ID of bookshelf to retrieve.
+   *
+   *    * [shelf] ID of bookshelf to retrieve.
+   *    * [source] String to identify the originator of this request.
    */
   core.Future<Bookshelf> get(core.String shelf, [core.String source = UNSPECIFIED]) {
     final $queryParams = {};
@@ -1115,7 +1230,9 @@ class MylibraryBookshelvesResourceResource extends core.Object {
   // Method MylibraryResource.MylibraryBookshelvesResourceResource.ClearVolumes
   /**
    * Clears all volumes from a bookshelf.
-   * [shelf] ID of bookshelf from which to remove a volume.
+   *
+   *    * [shelf] ID of bookshelf from which to remove a volume.
+   *    * [source] String to identify the originator of this request.
    */
   core.Future clearVolumes(core.String shelf, [core.String source = UNSPECIFIED]) {
     final $queryParams = {};
@@ -1145,6 +1262,8 @@ class MylibraryBookshelvesResourceResource extends core.Object {
   // Method MylibraryResource.MylibraryBookshelvesResourceResource.List
   /**
    * Retrieves a list of bookshelves belonging to the authenticated user.
+   *
+   *    * [source] String to identify the originator of this request.
    */
   core.Future<Bookshelves> list([core.String source = UNSPECIFIED]) {
     final $queryParams = {};
@@ -1173,8 +1292,10 @@ class MylibraryBookshelvesResourceResource extends core.Object {
   // Method MylibraryResource.MylibraryBookshelvesResourceResource.AddVolume
   /**
    * Adds a volume to a bookshelf.
-   * [shelf] ID of bookshelf to which to add a volume.
-   * [volumeId] ID of volume to add.
+   *
+   *    * [shelf] ID of bookshelf to which to add a volume.
+   *    * [volumeId] ID of volume to add.
+   *    * [source] String to identify the originator of this request.
    */
   core.Future addVolume(core.String shelf, core.String volumeId, [core.String source = UNSPECIFIED]) {
     final $queryParams = {};
@@ -1205,10 +1326,12 @@ class MylibraryBookshelvesResourceResource extends core.Object {
   // Method MylibraryResource.MylibraryBookshelvesResourceResource.MoveVolume
   /**
    * Moves a volume within a bookshelf.
-   * [shelf] ID of bookshelf with the volume.
-   * [volumeId] ID of volume to move.
-   * [volumePosition] Position on shelf to move the item (0 puts the item before the current first item, 1 puts it between
+   *
+   *    * [shelf] ID of bookshelf with the volume.
+   *    * [volumeId] ID of volume to move.
+   *    * [volumePosition] Position on shelf to move the item (0 puts the item before the current first item, 1 puts it between
    *        the first and the second and so on.)
+   *    * [source] String to identify the originator of this request.
    */
   core.Future moveVolume(core.String shelf, core.String volumeId, core.int volumePosition, [core.String source = UNSPECIFIED]) {
     final $queryParams = {};
@@ -1248,7 +1371,19 @@ class MylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceRes
   // Method MylibraryResource.MylibraryBookshelvesResourceResource.MylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceResourceResource.List
   /**
    * Gets volume information for volumes on a bookshelf.
-   * [shelf] The bookshelf ID or name retrieve volumes for.
+   *
+   *    * [shelf] The bookshelf ID or name retrieve volumes for.
+   *    * [projection] Restrict information returned to a set of selected fields.
+   *    * [country] ISO-3166-1 code to override the IP-based location.
+   *    * [showPreorders] Set to true to show pre-ordered books. Defaults to false.
+   *    * [maxResults] Maximum number of results to return
+
+  Minimum: 0.
+   *    * [q] Full-text search query string in this bookshelf.
+   *    * [source] String to identify the originator of this request.
+   *    * [startIndex] Index of the first element to return (starts at 0)
+
+  Minimum: 0.
    */
   core.Future<Volumes> list(core.String shelf, [MylibraryResourceMylibraryBookshelvesResourceResourceMylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceResourceResourceListProjection projection = UNSPECIFIED, core.String country = UNSPECIFIED, core.bool showPreorders = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String q = UNSPECIFIED, core.String source = UNSPECIFIED, core.int startIndex = UNSPECIFIED]) {
     final $queryParams = {};
@@ -1322,9 +1457,13 @@ class MylibraryReadingpositionsResourceResource extends core.Object {
   // Method MylibraryResource.MylibraryReadingpositionsResourceResource.SetPosition
   /**
    * Sets my reading position information for a volume.
-   * [volumeId] ID of volume for which to update the reading position.
-   * [timestamp] RFC 3339 UTC format timestamp associated with this reading position.
-   * [position] Position string for the new volume reading position.
+   *
+   *    * [volumeId] ID of volume for which to update the reading position.
+   *    * [timestamp] RFC 3339 UTC format timestamp associated with this reading position.
+   *    * [position] Position string for the new volume reading position.
+   *    * [source] String to identify the originator of this request.
+   *    * [contentVersion] Volume content version for which this reading position applies.
+   *    * [action] Action that caused this reading position to be set.
    */
   core.Future setPosition(core.String volumeId, core.String timestamp, core.String position, [core.String source = UNSPECIFIED, core.String contentVersion = UNSPECIFIED, MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction action = UNSPECIFIED]) {
     final $queryParams = {};
@@ -1358,7 +1497,10 @@ class MylibraryReadingpositionsResourceResource extends core.Object {
   // Method MylibraryResource.MylibraryReadingpositionsResourceResource.Get
   /**
    * Retrieves my reading position information for a volume.
-   * [volumeId] ID of volume for which to retrieve a reading position.
+   *
+   *    * [volumeId] ID of volume for which to retrieve a reading position.
+   *    * [source] String to identify the originator of this request.
+   *    * [contentVersion] Volume content version for which this reading position is requested.
    */
   core.Future<ReadingPosition> get(core.String volumeId, [core.String source = UNSPECIFIED, core.String contentVersion = UNSPECIFIED]) {
     final $queryParams = {};
@@ -1443,7 +1585,9 @@ class MylibraryAnnotationsResourceResource extends core.Object {
   // Method MylibraryResource.MylibraryAnnotationsResourceResource.Insert
   /**
    * Inserts a new annotation.
-   * [content] the Annotation
+   *
+   *    * [content] the Annotation
+   *    * [source] String to identify the originator of this request.
    */
   core.Future<Annotation> insert(Annotation content, [core.String source = UNSPECIFIED]) {
     final $queryParams = {};
@@ -1474,7 +1618,9 @@ class MylibraryAnnotationsResourceResource extends core.Object {
   // Method MylibraryResource.MylibraryAnnotationsResourceResource.Get
   /**
    * Gets an annotation by its ID.
-   * [annotationId] The ID for the annotation to retrieve.
+   *
+   *    * [annotationId] The ID for the annotation to retrieve.
+   *    * [source] String to identify the originator of this request.
    */
   core.Future<Annotation> get(core.String annotationId, [core.String source = UNSPECIFIED]) {
     final $queryParams = {};
@@ -1504,6 +1650,21 @@ class MylibraryAnnotationsResourceResource extends core.Object {
   // Method MylibraryResource.MylibraryAnnotationsResourceResource.List
   /**
    * Retrieves a list of annotations, possibly filtered.
+   *
+   *    * [showDeleted] Set to true to return deleted annotations. updatedMin must be in the request to use this. Defaults
+   *        to false.
+   *    * [updatedMin] RFC 3339 timestamp to restrict to items updated since this timestamp (inclusive).
+   *    * [updatedMax] RFC 3339 timestamp to restrict to items updated prior to this timestamp (exclusive).
+   *    * [volumeId] The volume to restrict annotations to.
+   *    * [maxResults] Maximum number of results to return
+
+  Minimum: 0.
+  Maximum: 40.
+   *    * [pageToken] The value of the nextToken from the previous page.
+   *    * [pageIds] The page ID(s) for the volume that is being queried.
+   *    * [contentVersion] The content version for the requested volume.
+   *    * [source] String to identify the originator of this request.
+   *    * [layerId] The layer ID to limit annotation by.
    */
   core.Future<Annotations> list([core.bool showDeleted = UNSPECIFIED, core.String updatedMin = UNSPECIFIED, core.String updatedMax = UNSPECIFIED, core.String volumeId = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.List<core.String> pageIds = UNSPECIFIED, core.String contentVersion = UNSPECIFIED, core.String source = UNSPECIFIED, core.String layerId = UNSPECIFIED]) {
     final $queryParams = {};
@@ -1541,8 +1702,10 @@ class MylibraryAnnotationsResourceResource extends core.Object {
   // Method MylibraryResource.MylibraryAnnotationsResourceResource.Update
   /**
    * Updates an existing annotation.
-   * [annotationId] The ID for the annotation to update.
-   * [content] the Annotation
+   *
+   *    * [content] the Annotation
+   *    * [annotationId] The ID for the annotation to update.
+   *    * [source] String to identify the originator of this request.
    */
   core.Future<Annotation> update(core.String annotationId, Annotation content, [core.String source = UNSPECIFIED]) {
     final $queryParams = {};
@@ -1574,7 +1737,9 @@ class MylibraryAnnotationsResourceResource extends core.Object {
   // Method MylibraryResource.MylibraryAnnotationsResourceResource.Delete
   /**
    * Deletes an annotation.
-   * [annotationId] The ID for the annotation to delete.
+   *
+   *    * [annotationId] The ID for the annotation to delete.
+   *    * [source] String to identify the originator of this request.
    */
   core.Future delete(core.String annotationId, [core.String source = UNSPECIFIED]) {
     final $queryParams = {};

@@ -101,7 +101,8 @@ class CurrentLocationResource extends core.Object {
   // Method CurrentLocationResource.Insert
   /**
    * Updates or creates the user's current location.
-   * [content] the Location
+   *
+   *    * [content] the Location
    */
   core.Future<Location> insert(Location content) {
     final $queryParams = {};
@@ -131,6 +132,9 @@ class CurrentLocationResource extends core.Object {
   // Method CurrentLocationResource.Get
   /**
    * Returns the authenticated user's current location.
+   *
+   *    * [granularity] Granularity of the requested location.
+  Default: city.
    */
   core.Future<Location> get([CurrentLocationResourceGetGranularity granularity = UNSPECIFIED]) {
     final $queryParams = {};
@@ -159,6 +163,7 @@ class CurrentLocationResource extends core.Object {
   // Method CurrentLocationResource.Delete
   /**
    * Deletes the authenticated user's current location.
+   *
    */
   core.Future delete() {
     final $queryParams = {};
@@ -224,7 +229,8 @@ class LocationResource extends core.Object {
   // Method LocationResource.Insert
   /**
    * Inserts or updates a location in the user's location history.
-   * [content] the Location
+   *
+   *    * [content] the Location
    */
   core.Future<Location> insert(Location content) {
     final $queryParams = {};
@@ -254,7 +260,10 @@ class LocationResource extends core.Object {
   // Method LocationResource.Get
   /**
    * Reads a location from the user's location history.
-   * [locationId] Timestamp of the location to read (ms since epoch).
+   *
+   *    * [locationId] Timestamp of the location to read (ms since epoch).
+   *    * [granularity] Granularity of the location to return.
+  Default: city.
    */
   core.Future<Location> get(core.String locationId, [LocationResourceGetGranularity granularity = UNSPECIFIED]) {
     final $queryParams = {};
@@ -284,6 +293,12 @@ class LocationResource extends core.Object {
   // Method LocationResource.List
   /**
    * Lists the user's location history.
+   *
+   *    * [maxResults] Maximum number of locations to return.
+   *    * [maxTime] Maximum timestamp of locations to return (ms since epoch).
+   *    * [minTime] Minimum timestamp of locations to return (ms since epoch).
+   *    * [granularity] Granularity of the requested locations.
+  Default: city.
    */
   core.Future<LocationFeed> list([core.String maxResults = UNSPECIFIED, core.String maxTime = UNSPECIFIED, core.String minTime = UNSPECIFIED, LocationResourceListGranularity granularity = UNSPECIFIED]) {
     final $queryParams = {};
@@ -315,7 +330,8 @@ class LocationResource extends core.Object {
   // Method LocationResource.Delete
   /**
    * Deletes a location from the user's location history.
-   * [locationId] Timestamp of the location to delete (ms since epoch).
+   *
+   *    * [locationId] Timestamp of the location to delete (ms since epoch).
    */
   core.Future delete(core.String locationId) {
     final $queryParams = {};

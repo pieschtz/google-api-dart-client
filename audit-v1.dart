@@ -86,8 +86,23 @@ class ActivitiesResource extends core.Object {
   // Method ActivitiesResource.List
   /**
    * Retrieves a list of activities for a specific customer and application.
-   * [customerId] Represents the customer who is the owner of target object on which action was performed.
-   * [applicationId] Application ID of the application on which the event was performed.
+   *
+   *    * [customerId] Represents the customer who is the owner of target object on which action was performed.
+   *    * [applicationId] Application ID of the application on which the event was performed.
+   *    * [actorEmail] Email address of the user who performed the action.
+   *    * [actorApplicationId] Application ID of the application which interacted on behalf of the user while performing the event.
+   *    * [actorIpAddress] IP Address of host where the event was performed. Supports both IPv4 and IPv6 addresses.
+   *    * [caller] Type of the caller.
+   *    * [maxResults] Number of activity records to be shown in each page.
+
+  Minimum: 1.
+  Maximum: 1000.
+   *    * [eventName] Name of the event being queried.
+   *    * [parameters] Event parameters in the form [parameter1 name]:[parameter1 value],[parameter2 name]:[parameter2
+   *        value],...
+   *    * [startTime] Return events which occured at or after this time.
+   *    * [endTime] Return events which occured at or before this time.
+   *    * [continuationToken] Next page URL.
    */
   core.Future<Activities> list(core.String customerId, core.String applicationId, [core.String actorEmail = UNSPECIFIED, core.String actorApplicationId = UNSPECIFIED, core.String actorIpAddress = UNSPECIFIED, ActivitiesResourceListCaller caller = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String eventName = UNSPECIFIED, core.String parameters = UNSPECIFIED, core.String startTime = UNSPECIFIED, core.String endTime = UNSPECIFIED, core.String continuationToken = UNSPECIFIED]) {
     final $queryParams = {};

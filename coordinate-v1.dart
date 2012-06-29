@@ -86,12 +86,17 @@ class JobsResource extends core.Object {
   // Method JobsResource.Insert
   /**
    * Inserts a new job. Only the state field of the job should be set.
-   * [teamId] Team ID
-   * [address] Job address as newline (Unix) separated string
-   * [lat] The latitude coordinate of this job's location.
-   * [lng] The longitude coordinate of this job's location.
-   * [title] Job title
-   * [content] the Job
+   *
+   *    * [content] the Job
+   *    * [teamId] Team ID
+   *    * [address] Job address as newline (Unix) separated string
+   *    * [lat] The latitude coordinate of this job's location.
+   *    * [lng] The longitude coordinate of this job's location.
+   *    * [title] Job title
+   *    * [customerName] Customer name
+   *    * [note] Job note as newline (Unix) separated string
+   *    * [assignee] Assignee email address
+   *    * [customerPhoneNumber] Customer phone number
    */
   core.Future<Job> insert(core.String teamId, core.String address, core.double lat, core.double lng, core.String title, Job content, [core.String customerName = UNSPECIFIED, core.String note = UNSPECIFIED, core.String assignee = UNSPECIFIED, core.String customerPhoneNumber = UNSPECIFIED]) {
     final $queryParams = {};
@@ -131,9 +136,19 @@ class JobsResource extends core.Object {
   /**
    * Updates a job. Fields that are set in the job state will be updated. This method supports patch
    * semantics.
-   * [teamId] Team ID
-   * [jobId] Job number
-   * [content] the Job
+   *
+   *    * [content] the Job
+   *    * [teamId] Team ID
+   *    * [jobId] Job number
+   *    * [customerName] Customer name
+   *    * [title] Job title
+   *    * [note] Job note as newline (Unix) separated string
+   *    * [assignee] Assignee email address
+   *    * [customerPhoneNumber] Customer phone number
+   *    * [address] Job address as newline (Unix) separated string
+   *    * [lat] The latitude coordinate of this job's location.
+   *    * [progress] Job progress
+   *    * [lng] The longitude coordinate of this job's location.
    */
   core.Future<Job> patch(core.String teamId, core.String jobId, Job content, [core.String customerName = UNSPECIFIED, core.String title = UNSPECIFIED, core.String note = UNSPECIFIED, core.String assignee = UNSPECIFIED, core.String customerPhoneNumber = UNSPECIFIED, core.String address = UNSPECIFIED, core.double lat = UNSPECIFIED, JobsResourcePatchProgress progress = UNSPECIFIED, core.double lng = UNSPECIFIED]) {
     final $queryParams = {};
@@ -174,7 +189,11 @@ class JobsResource extends core.Object {
   // Method JobsResource.List
   /**
    * Retrieves jobs created or modified since the given timestamp.
-   * [teamId] Team ID
+   *
+   *    * [teamId] Team ID
+   *    * [minModifiedTimestampMs] Minimum time a job was modified in milliseconds since epoch.
+   *    * [maxResults] Maximum number of results to return in one page.
+   *    * [pageToken] Continuation token
    */
   core.Future<JobListResponse> list(core.String teamId, [core.String minModifiedTimestampMs = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String pageToken = UNSPECIFIED]) {
     final $queryParams = {};
@@ -206,9 +225,19 @@ class JobsResource extends core.Object {
   // Method JobsResource.Update
   /**
    * Updates a job. Fields that are set in the job state will be updated.
-   * [teamId] Team ID
-   * [jobId] Job number
-   * [content] the Job
+   *
+   *    * [content] the Job
+   *    * [teamId] Team ID
+   *    * [jobId] Job number
+   *    * [customerName] Customer name
+   *    * [title] Job title
+   *    * [note] Job note as newline (Unix) separated string
+   *    * [assignee] Assignee email address
+   *    * [customerPhoneNumber] Customer phone number
+   *    * [address] Job address as newline (Unix) separated string
+   *    * [lat] The latitude coordinate of this job's location.
+   *    * [progress] Job progress
+   *    * [lng] The longitude coordinate of this job's location.
    */
   core.Future<Job> update(core.String teamId, core.String jobId, Job content, [core.String customerName = UNSPECIFIED, core.String title = UNSPECIFIED, core.String note = UNSPECIFIED, core.String assignee = UNSPECIFIED, core.String customerPhoneNumber = UNSPECIFIED, core.String address = UNSPECIFIED, core.double lat = UNSPECIFIED, JobsResourceUpdateProgress progress = UNSPECIFIED, core.double lng = UNSPECIFIED]) {
     final $queryParams = {};
@@ -249,8 +278,9 @@ class JobsResource extends core.Object {
   // Method JobsResource.Get
   /**
    * Retrieves a job, including all the changes made to the job.
-   * [teamId] Team ID
-   * [jobId] Job number
+   *
+   *    * [teamId] Team ID
+   *    * [jobId] Job number
    */
   core.Future<Job> get(core.String teamId, core.String jobId) {
     final $queryParams = {};

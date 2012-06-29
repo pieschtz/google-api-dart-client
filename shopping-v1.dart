@@ -89,7 +89,51 @@ class ProductsResource extends core.Object {
   // Method ProductsResource.List
   /**
    * Returns a list of products and content modules
-   * [source] Query source
+   *
+   *    * [source] Query source
+   *    * [facetsInclude] Facets to include (applies when useGcsConfig == false)
+   *    * [plusOneEnabled] Whether to return +1 button code
+   *    * [plusOneUseGcsConfig] Whether to use +1 button styles configured in the GCS account
+   *    * [facetsEnabled] Whether to return facet information
+   *    * [relatedQueriesUseGcsConfig] This parameter is currently ignored
+   *    * [promotionsEnabled] Whether to return promotion information
+   *    * [channels] Channels specification
+   *    * [currency] Currency restriction (ISO 4217)
+   *    * [categoryRecommendationsEnabled] Whether to return category recommendation information
+   *    * [facetsDiscover] Facets to discover
+   *    * [categoryRecommendationsCategory] Category for which to retrieve recommendations
+   *    * [startIndex] Index (1-based) of first product to return
+   *    * [availability] Comma separated list of availabilities (outOfStock, limited, inStock, backOrder, preOrder,
+   *        onDisplayToOrder) to return
+   *    * [crowdBy] Crowding specification
+   *    * [spellingEnabled] Whether to return spelling suggestions
+   *    * [taxonomy] Taxonomy name
+   *    * [spellingUseGcsConfig] This parameter is currently ignored
+   *    * [useCase] One of CommerceSearchUseCase, ShoppingApiUseCase
+   *    * [location] Location used to determine tax and shipping
+   *    * [maxVariants] Maximum number of variant results to return per result
+   *    * [categoriesInclude] Category specification
+   *    * [boostBy] Boosting specification
+   *    * [safe] Whether safe search is enabled. Default: true
+   *    * [categoriesUseGcsConfig] This parameter is currently ignored
+   *    * [maxResults] Maximum number of results to return
+   *    * [facetsUseGcsConfig] Whether to return facet information as configured in the GCS account
+   *    * [categoriesEnabled] Whether to return category information
+   *    * [plusOneStyles] +1 button rendering styles
+   *    * [attributeFilter] Comma separated list of attributes to return
+   *    * [clickTracking] Whether to add a click tracking parameter to offer URLs
+   *    * [thumbnails] Image thumbnails specification
+   *    * [language] Language restriction (BCP 47)
+   *    * [categoryRecommendationsInclude] Category recommendation specification
+   *    * [country] Country restriction (ISO 3166)
+   *    * [rankBy] Ranking specification
+   *    * [restrictBy] Restriction specification
+   *    * [q] Search query
+   *    * [redirectsEnabled] Whether to return redirect information
+   *    * [redirectsUseGcsConfig] Whether to return redirect information as configured in the GCS account
+   *    * [relatedQueriesEnabled] Whether to return related queries
+   *    * [categoryRecommendationsUseGcsConfig] This parameter is currently ignored
+   *    * [promotionsUseGcsConfig] Whether to return promotion information as configured in the GCS account
    */
   core.Future<Products> list(core.String source, [core.String facetsInclude = UNSPECIFIED, core.bool plusOneEnabled = UNSPECIFIED, core.bool plusOneUseGcsConfig = UNSPECIFIED, core.bool facetsEnabled = UNSPECIFIED, core.bool relatedQueriesUseGcsConfig = UNSPECIFIED, core.bool promotionsEnabled = UNSPECIFIED, core.String channels = UNSPECIFIED, core.String currency = UNSPECIFIED, core.bool categoryRecommendationsEnabled = UNSPECIFIED, core.String facetsDiscover = UNSPECIFIED, core.String categoryRecommendationsCategory = UNSPECIFIED, core.int startIndex = UNSPECIFIED, core.String availability = UNSPECIFIED, core.String crowdBy = UNSPECIFIED, core.bool spellingEnabled = UNSPECIFIED, core.String taxonomy = UNSPECIFIED, core.bool spellingUseGcsConfig = UNSPECIFIED, core.String useCase = UNSPECIFIED, core.String location = UNSPECIFIED, core.int maxVariants = UNSPECIFIED, core.String categoriesInclude = UNSPECIFIED, core.String boostBy = UNSPECIFIED, core.bool safe = UNSPECIFIED, core.bool categoriesUseGcsConfig = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.bool facetsUseGcsConfig = UNSPECIFIED, core.bool categoriesEnabled = UNSPECIFIED, core.String plusOneStyles = UNSPECIFIED, core.String attributeFilter = UNSPECIFIED, core.bool clickTracking = UNSPECIFIED, core.String thumbnails = UNSPECIFIED, core.String language = UNSPECIFIED, core.String categoryRecommendationsInclude = UNSPECIFIED, core.String country = UNSPECIFIED, core.String rankBy = UNSPECIFIED, core.String restrictBy = UNSPECIFIED, core.String q = UNSPECIFIED, core.bool redirectsEnabled = UNSPECIFIED, core.bool redirectsUseGcsConfig = UNSPECIFIED, core.bool relatedQueriesEnabled = UNSPECIFIED, core.bool categoryRecommendationsUseGcsConfig = UNSPECIFIED, core.bool promotionsUseGcsConfig = UNSPECIFIED]) {
     final $queryParams = {};
@@ -160,10 +204,24 @@ class ProductsResource extends core.Object {
   // Method ProductsResource.Get
   /**
    * Returns a single product
-   * [source] Query source
-   * [accountId] Merchant center account id
-   * [productIdType] Type of productId
-   * [productId] Id of product
+   *
+   *    * [source] Query source
+   *    * [accountId] Merchant center account id
+   *    * [productIdType] Type of productId
+   *    * [productId] Id of product
+   *    * [categoriesInclude] Category specification
+   *    * [recommendationsEnabled] Whether to return recommendation information
+   *    * [thumbnails] Thumbnail specification
+   *    * [plusOneUseGcsConfig] Whether to use +1 button styles configured in the GCS account
+   *    * [taxonomy] Merchant taxonomy
+   *    * [categoriesUseGcsConfig] This parameter is currently ignored
+   *    * [plusOneStyles] +1 button rendering styles
+   *    * [recommendationsInclude] Recommendation specification
+   *    * [categoriesEnabled] Whether to return category information
+   *    * [location] Location used to determine tax and shipping
+   *    * [plusOneEnabled] Whether to return +1 button code
+   *    * [attributeFilter] Comma separated list of attributes to return
+   *    * [recommendationsUseGcsConfig] This parameter is currently ignored
    */
   core.Future<Product> get(core.String source, core.int accountId, core.String productIdType, core.String productId, [core.String categoriesInclude = UNSPECIFIED, core.bool recommendationsEnabled = UNSPECIFIED, core.String thumbnails = UNSPECIFIED, core.bool plusOneUseGcsConfig = UNSPECIFIED, core.String taxonomy = UNSPECIFIED, core.bool categoriesUseGcsConfig = UNSPECIFIED, core.String plusOneStyles = UNSPECIFIED, core.String recommendationsInclude = UNSPECIFIED, core.bool categoriesEnabled = UNSPECIFIED, core.String location = UNSPECIFIED, core.bool plusOneEnabled = UNSPECIFIED, core.String attributeFilter = UNSPECIFIED, core.bool recommendationsUseGcsConfig = UNSPECIFIED]) {
     final $queryParams = {};

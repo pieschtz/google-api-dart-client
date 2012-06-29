@@ -86,10 +86,11 @@ class PurchasesResource extends core.Object {
   // Method PurchasesResource.Cancel
   /**
    * Cancels a user's subscription purchase. The subscription remains valid until its expiration time.
-   * [packageName] The package name of the application for which this subscription was purchased (for example,
+   *
+   *    * [packageName] The package name of the application for which this subscription was purchased (for example,
    *        'com.some.thing').
-   * [subscriptionId] The purchased subscription ID (for example, 'monthly001').
-   * [token] The token provided to the user's device when the subscription was purchased.
+   *    * [subscriptionId] The purchased subscription ID (for example, 'monthly001').
+   *    * [token] The token provided to the user's device when the subscription was purchased.
    */
   core.Future cancel(core.String packageName, core.String subscriptionId, core.String token) {
     final $queryParams = {};
@@ -120,10 +121,11 @@ class PurchasesResource extends core.Object {
   // Method PurchasesResource.Get
   /**
    * Checks whether a user's subscription purchase is valid and returns its expiry time.
-   * [packageName] The package name of the application for which this subscription was purchased (for example,
+   *
+   *    * [packageName] The package name of the application for which this subscription was purchased (for example,
    *        'com.some.thing').
-   * [subscriptionId] The purchased subscription ID (for example, 'monthly001').
-   * [token] The token provided to the user's device when the subscription was purchased.
+   *    * [subscriptionId] The purchased subscription ID (for example, 'monthly001').
+   *    * [token] The token provided to the user's device when the subscription was purchased.
    */
   core.Future<SubscriptionPurchase> get(core.String packageName, core.String subscriptionId, core.String token) {
     final $queryParams = {};

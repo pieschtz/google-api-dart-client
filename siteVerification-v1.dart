@@ -92,8 +92,9 @@ class WebResourceResource extends core.Object {
   // Method WebResourceResource.Insert
   /**
    * Attempt verification of a website or domain.
-   * [verificationMethod] The method to use for verifying a site or domain.
-   * [content] the SiteVerificationWebResourceResource
+   *
+   *    * [content] the SiteVerificationWebResourceResource
+   *    * [verificationMethod] The method to use for verifying a site or domain.
    */
   core.Future<SiteVerificationWebResourceResource> insert(core.String verificationMethod, SiteVerificationWebResourceResource content) {
     final $queryParams = {};
@@ -124,7 +125,8 @@ class WebResourceResource extends core.Object {
   // Method WebResourceResource.Get
   /**
    * Get the most current data for a website or domain.
-   * [id] The id of a verified site or domain.
+   *
+   *    * [id] The id of a verified site or domain.
    */
   core.Future<SiteVerificationWebResourceResource> get(core.String id) {
     final $queryParams = {};
@@ -153,6 +155,7 @@ class WebResourceResource extends core.Object {
   // Method WebResourceResource.List
   /**
    * Get the list of your verified websites and domains.
+   *
    */
   core.Future<SiteVerificationWebResourceListResponse> list() {
     final $queryParams = {};
@@ -180,8 +183,9 @@ class WebResourceResource extends core.Object {
   // Method WebResourceResource.Update
   /**
    * Modify the list of owners for your website or domain.
-   * [id] The id of a verified site or domain.
-   * [content] the SiteVerificationWebResourceResource
+   *
+   *    * [content] the SiteVerificationWebResourceResource
+   *    * [id] The id of a verified site or domain.
    */
   core.Future<SiteVerificationWebResourceResource> update(core.String id, SiteVerificationWebResourceResource content) {
     final $queryParams = {};
@@ -212,8 +216,9 @@ class WebResourceResource extends core.Object {
   // Method WebResourceResource.Patch
   /**
    * Modify the list of owners for your website or domain. This method supports patch semantics.
-   * [id] The id of a verified site or domain.
-   * [content] the SiteVerificationWebResourceResource
+   *
+   *    * [content] the SiteVerificationWebResourceResource
+   *    * [id] The id of a verified site or domain.
    */
   core.Future<SiteVerificationWebResourceResource> patch(core.String id, SiteVerificationWebResourceResource content) {
     final $queryParams = {};
@@ -244,7 +249,8 @@ class WebResourceResource extends core.Object {
   // Method WebResourceResource.GetToken
   /**
    * Get a verification token for placing on a website or domain.
-   * [content] the SiteVerificationWebResourceGettokenRequest
+   *
+   *    * [content] the SiteVerificationWebResourceGettokenRequest
    */
   core.Future<SiteVerificationWebResourceGettokenResponse> getToken(SiteVerificationWebResourceGettokenRequest content) {
     final $queryParams = {};
@@ -274,7 +280,8 @@ class WebResourceResource extends core.Object {
   // Method WebResourceResource.Delete
   /**
    * Relinquish ownership of a website or domain.
-   * [id] The id of a verified site or domain.
+   *
+   *    * [id] The id of a verified site or domain.
    */
   core.Future delete(core.String id) {
     final $queryParams = {};

@@ -87,8 +87,9 @@ class ApisResource extends core.Object {
   // Method ApisResource.GetRest
   /**
    * Retrieve the description of a particular version of an api.
-   * [api] The name of the API.
-   * [version] The version of the API.
+   *
+   *    * [api] The name of the API.
+   *    * [version] The version of the API.
    */
   core.Future<RestDescription> getRest(core.String api, core.String version) {
     final $queryParams = {};
@@ -118,6 +119,11 @@ class ApisResource extends core.Object {
   // Method ApisResource.List
   /**
    * Retrieve the list of APIs supported at this endpoint.
+   *
+   *    * [name] Only include APIs with the given name.
+   *    * [preferred] Return only the preferred version of an API.
+  Default: false.
+   *    * [label] Only include APIs with a matching label, such as 'graduated' or 'labs'.
    */
   core.Future<DirectoryList> list([core.String name = UNSPECIFIED, core.bool preferred = UNSPECIFIED, ApisResourceListLabel label = UNSPECIFIED]) {
     final $queryParams = {};

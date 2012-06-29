@@ -87,7 +87,7 @@ class AdsenseApi extends core.Object {
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}adsense/v1.1/20120607 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}adsense/v1.1/20120614 google-api-dart-client/${clientVersion}";
   }
 
 
@@ -107,7 +107,14 @@ class UrlchannelsResource extends core.Object {
   // Method UrlchannelsResource.List
   /**
    * List all URL channels in the specified ad client for this AdSense account.
-   * [adClientId] Ad client for which to list URL channels.
+   *
+   *    * [adClientId] Ad client for which to list URL channels.
+   *    * [pageToken] A continuation token, used to page through URL channels. To retrieve the next page, set this
+   *        parameter to the value of "nextPageToken" from the previous response.
+   *    * [maxResults] The maximum number of URL channels to include in the response, used for paging.
+
+  Minimum: 0.
+   *        Maximum: 10000.
    */
   core.Future<UrlChannels> list(core.String adClientId, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
     final $queryParams = {};
@@ -147,7 +154,16 @@ class AdunitsResource extends core.Object {
   // Method AdunitsResource.List
   /**
    * List all ad units in the specified ad client for this AdSense account.
-   * [adClientId] Ad client for which to list ad units.
+   *
+   *    * [adClientId] Ad client for which to list ad units.
+   *    * [includeInactive] Whether to include inactive ad units. Default: true.
+   *    * [pageToken] A continuation token, used to page through ad units. To retrieve the next page, set this parameter
+   *        to the value of "nextPageToken" from the previous response.
+   *    * [maxResults] The maximum number of ad units to include in the response, used for paging.
+
+  Minimum: 0.
+  Maximum:
+   *        10000.
    */
   core.Future<AdUnits> list(core.String adClientId, [core.bool includeInactive = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
     final $queryParams = {};
@@ -179,8 +195,9 @@ class AdunitsResource extends core.Object {
   // Method AdunitsResource.Get
   /**
    * Gets the specified ad unit in the specified ad client.
-   * [adClientId] Ad client for which to get the ad unit.
-   * [adUnitId] Ad unit to retrieve.
+   *
+   *    * [adClientId] Ad client for which to get the ad unit.
+   *    * [adUnitId] Ad unit to retrieve.
    */
   core.Future<AdUnit> get(core.String adClientId, core.String adUnitId) {
     final $queryParams = {};
@@ -218,8 +235,15 @@ class AdunitsCustomchannelsResourceResource extends core.Object {
   // Method AdunitsResource.AdunitsCustomchannelsResourceResource.List
   /**
    * List all custom channels which the specified ad unit belongs to.
-   * [adClientId] Ad client which contains the ad unit.
-   * [adUnitId] Ad unit for which to list custom channels.
+   *
+   *    * [adClientId] Ad client which contains the ad unit.
+   *    * [adUnitId] Ad unit for which to list custom channels.
+   *    * [pageToken] A continuation token, used to page through custom channels. To retrieve the next page, set this
+   *        parameter to the value of "nextPageToken" from the previous response.
+   *    * [maxResults] The maximum number of custom channels to include in the response, used for paging.
+
+  Minimum: 0.
+   *        Maximum: 10000.
    */
   core.Future<CustomChannels> list(core.String adClientId, core.String adUnitId, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
     final $queryParams = {};
@@ -258,6 +282,14 @@ class AdclientsResource extends core.Object {
   // Method AdclientsResource.List
   /**
    * List all ad clients in this AdSense account.
+   *
+   *    * [pageToken] A continuation token, used to page through ad clients. To retrieve the next page, set this parameter
+   *        to the value of "nextPageToken" from the previous response.
+   *    * [maxResults] The maximum number of ad clients to include in the response, used for paging.
+
+  Minimum: 0.
+  Maximum:
+   *        10000.
    */
   core.Future<AdClients> list([core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
     final $queryParams = {};
@@ -295,8 +327,28 @@ class ReportsResource extends core.Object {
   /**
    * Generate an AdSense report based on the report request sent in the query parameters. Returns the
    * result as JSON; to retrieve output in CSV format specify "alt=csv" as a query parameter.
-   * [startDate] Start of the date range to report on in "YYYY-MM-DD" format, inclusive.
-   * [endDate] End of the date range to report on in "YYYY-MM-DD" format, inclusive.
+   *
+   *    * [startDate] Start of the date range to report on in "YYYY-MM-DD" format, inclusive.
+   *    * [endDate] End of the date range to report on in "YYYY-MM-DD" format, inclusive.
+   *    * [sort] The name of a dimension or metric to sort the resulting report on, optionally prefixed with "+" to
+   *        sort ascending or "-" to sort descending. If no prefix is specified, the column is sorted
+   *        ascending.
+   *    * [locale] Optional locale to use for translating report output to a local language. Defaults to "en_US" if not
+   *        specified.
+   *    * [metric] Numeric columns to include in the report.
+   *    * [maxResults] The maximum number of rows of report data to return.
+
+  Minimum: 0.
+  Maximum: 50000.
+   *    * [filter] Filters to be run on the report.
+   *    * [currency] Optional currency to use when reporting on monetary metrics. Defaults to the account's currency if
+   *        not set.
+   *    * [startIndex] Index of the first row of report data to return.
+
+  Minimum: 0.
+  Maximum: 5000.
+   *    * [dimension] Dimensions to base the report on.
+   *    * [accountId] Accounts upon which to report.
    */
   core.Future<AdsenseReportsGenerateResponse> generate(core.String startDate, core.String endDate, [core.List<core.String> sort = UNSPECIFIED, core.String locale = UNSPECIFIED, core.List<core.String> metric = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.List<core.String> filter = UNSPECIFIED, core.String currency = UNSPECIFIED, core.int startIndex = UNSPECIFIED, core.List<core.String> dimension = UNSPECIFIED, core.List<core.String> accountId = UNSPECIFIED]) {
     final $queryParams = {};
@@ -352,6 +404,14 @@ class AccountsResource extends core.Object {
   // Method AccountsResource.List
   /**
    * List all accounts available to this AdSense account.
+   *
+   *    * [pageToken] A continuation token, used to page through accounts. To retrieve the next page, set this parameter
+   *        to the value of "nextPageToken" from the previous response.
+   *    * [maxResults] The maximum number of accounts to include in the response, used for paging.
+
+  Minimum: 0.
+  Maximum:
+   *        10000.
    */
   core.Future<Accounts> list([core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
     final $queryParams = {};
@@ -381,7 +441,9 @@ class AccountsResource extends core.Object {
   // Method AccountsResource.Get
   /**
    * Get information about the selected AdSense account.
-   * [accountId] Account to get information about.
+   *
+   *    * [accountId] Account to get information about.
+   *    * [tree] Whether the tree of sub accounts should be returned.
    */
   core.Future<Account> get(core.String accountId, [core.bool tree = UNSPECIFIED]) {
     final $queryParams = {};
@@ -419,8 +481,15 @@ class AccountsUrlchannelsResourceResource extends core.Object {
   // Method AccountsResource.AccountsUrlchannelsResourceResource.List
   /**
    * List all URL channels in the specified ad client for the specified account.
-   * [accountId] Account to which the ad client belongs.
-   * [adClientId] Ad client for which to list URL channels.
+   *
+   *    * [accountId] Account to which the ad client belongs.
+   *    * [adClientId] Ad client for which to list URL channels.
+   *    * [pageToken] A continuation token, used to page through URL channels. To retrieve the next page, set this
+   *        parameter to the value of "nextPageToken" from the previous response.
+   *    * [maxResults] The maximum number of URL channels to include in the response, used for paging.
+
+  Minimum: 0.
+   *        Maximum: 10000.
    */
   core.Future<UrlChannels> list(core.String accountId, core.String adClientId, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
     final $queryParams = {};
@@ -461,8 +530,17 @@ class AccountsAdunitsResourceResource extends core.Object {
   // Method AccountsResource.AccountsAdunitsResourceResource.List
   /**
    * List all ad units in the specified ad client for the specified account.
-   * [accountId] Account to which the ad client belongs.
-   * [adClientId] Ad client for which to list ad units.
+   *
+   *    * [accountId] Account to which the ad client belongs.
+   *    * [adClientId] Ad client for which to list ad units.
+   *    * [includeInactive] Whether to include inactive ad units. Default: true.
+   *    * [pageToken] A continuation token, used to page through ad units. To retrieve the next page, set this parameter
+   *        to the value of "nextPageToken" from the previous response.
+   *    * [maxResults] The maximum number of ad units to include in the response, used for paging.
+
+  Minimum: 0.
+  Maximum:
+   *        10000.
    */
   core.Future<AdUnits> list(core.String accountId, core.String adClientId, [core.bool includeInactive = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
     final $queryParams = {};
@@ -495,9 +573,10 @@ class AccountsAdunitsResourceResource extends core.Object {
   // Method AccountsResource.AccountsAdunitsResourceResource.Get
   /**
    * Gets the specified ad unit in the specified ad client for the specified account.
-   * [accountId] Account to which the ad client belongs.
-   * [adClientId] Ad client for which to get the ad unit.
-   * [adUnitId] Ad unit to retrieve.
+   *
+   *    * [accountId] Account to which the ad client belongs.
+   *    * [adClientId] Ad client for which to get the ad unit.
+   *    * [adUnitId] Ad unit to retrieve.
    */
   core.Future<AdUnit> get(core.String accountId, core.String adClientId, core.String adUnitId) {
     final $queryParams = {};
@@ -536,9 +615,16 @@ class AccountsAdunitsResourceAccountsAdunitsCustomchannelsResourceResourceResour
   // Method AccountsResource.AccountsAdunitsResourceResource.AccountsAdunitsResourceAccountsAdunitsCustomchannelsResourceResourceResourceResource.List
   /**
    * List all custom channels which the specified ad unit belongs to.
-   * [accountId] Account to which the ad client belongs.
-   * [adClientId] Ad client which contains the ad unit.
-   * [adUnitId] Ad unit for which to list custom channels.
+   *
+   *    * [accountId] Account to which the ad client belongs.
+   *    * [adClientId] Ad client which contains the ad unit.
+   *    * [adUnitId] Ad unit for which to list custom channels.
+   *    * [pageToken] A continuation token, used to page through custom channels. To retrieve the next page, set this
+   *        parameter to the value of "nextPageToken" from the previous response.
+   *    * [maxResults] The maximum number of custom channels to include in the response, used for paging.
+
+  Minimum: 0.
+   *        Maximum: 10000.
    */
   core.Future<CustomChannels> list(core.String accountId, core.String adClientId, core.String adUnitId, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
     final $queryParams = {};
@@ -578,7 +664,15 @@ class AccountsAdclientsResourceResource extends core.Object {
   // Method AccountsResource.AccountsAdclientsResourceResource.List
   /**
    * List all ad clients in the specified account.
-   * [accountId] Account for which to list ad clients.
+   *
+   *    * [accountId] Account for which to list ad clients.
+   *    * [pageToken] A continuation token, used to page through ad clients. To retrieve the next page, set this parameter
+   *        to the value of "nextPageToken" from the previous response.
+   *    * [maxResults] The maximum number of ad clients to include in the response, used for paging.
+
+  Minimum: 0.
+  Maximum:
+   *        10000.
    */
   core.Future<AdClients> list(core.String accountId, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
     final $queryParams = {};
@@ -617,9 +711,28 @@ class AccountsReportsResourceResource extends core.Object {
   /**
    * Generate an AdSense report based on the report request sent in the query parameters. Returns the
    * result as JSON; to retrieve output in CSV format specify "alt=csv" as a query parameter.
-   * [accountId] Account upon which to report.
-   * [startDate] Start of the date range to report on in "YYYY-MM-DD" format, inclusive.
-   * [endDate] End of the date range to report on in "YYYY-MM-DD" format, inclusive.
+   *
+   *    * [accountId] Account upon which to report.
+   *    * [startDate] Start of the date range to report on in "YYYY-MM-DD" format, inclusive.
+   *    * [endDate] End of the date range to report on in "YYYY-MM-DD" format, inclusive.
+   *    * [sort] The name of a dimension or metric to sort the resulting report on, optionally prefixed with "+" to
+   *        sort ascending or "-" to sort descending. If no prefix is specified, the column is sorted
+   *        ascending.
+   *    * [locale] Optional locale to use for translating report output to a local language. Defaults to "en_US" if not
+   *        specified.
+   *    * [metric] Numeric columns to include in the report.
+   *    * [maxResults] The maximum number of rows of report data to return.
+
+  Minimum: 0.
+  Maximum: 50000.
+   *    * [filter] Filters to be run on the report.
+   *    * [currency] Optional currency to use when reporting on monetary metrics. Defaults to the account's currency if
+   *        not set.
+   *    * [startIndex] Index of the first row of report data to return.
+
+  Minimum: 0.
+  Maximum: 5000.
+   *    * [dimension] Dimensions to base the report on.
    */
   core.Future<AdsenseReportsGenerateResponse> generate(core.String accountId, core.String startDate, core.String endDate, [core.List<core.String> sort = UNSPECIFIED, core.String locale = UNSPECIFIED, core.List<core.String> metric = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.List<core.String> filter = UNSPECIFIED, core.String currency = UNSPECIFIED, core.int startIndex = UNSPECIFIED, core.List<core.String> dimension = UNSPECIFIED]) {
     final $queryParams = {};
@@ -667,8 +780,15 @@ class AccountsCustomchannelsResourceResource extends core.Object {
   // Method AccountsResource.AccountsCustomchannelsResourceResource.List
   /**
    * List all custom channels in the specified ad client for the specified account.
-   * [accountId] Account to which the ad client belongs.
-   * [adClientId] Ad client for which to list custom channels.
+   *
+   *    * [accountId] Account to which the ad client belongs.
+   *    * [adClientId] Ad client for which to list custom channels.
+   *    * [pageToken] A continuation token, used to page through custom channels. To retrieve the next page, set this
+   *        parameter to the value of "nextPageToken" from the previous response.
+   *    * [maxResults] The maximum number of custom channels to include in the response, used for paging.
+
+  Minimum: 0.
+   *        Maximum: 10000.
    */
   core.Future<CustomChannels> list(core.String accountId, core.String adClientId, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
     final $queryParams = {};
@@ -700,9 +820,10 @@ class AccountsCustomchannelsResourceResource extends core.Object {
   // Method AccountsResource.AccountsCustomchannelsResourceResource.Get
   /**
    * Get the specified custom channel from the specified ad client for the specified account.
-   * [accountId] Account to which the ad client belongs.
-   * [adClientId] Ad client which contains the custom channel.
-   * [customChannelId] Custom channel to retrieve.
+   *
+   *    * [accountId] Account to which the ad client belongs.
+   *    * [adClientId] Ad client which contains the custom channel.
+   *    * [customChannelId] Custom channel to retrieve.
    */
   core.Future<CustomChannel> get(core.String accountId, core.String adClientId, core.String customChannelId) {
     final $queryParams = {};
@@ -741,9 +862,18 @@ class AccountsCustomchannelsResourceAccountsCustomchannelsAdunitsResourceResourc
   // Method AccountsResource.AccountsCustomchannelsResourceResource.AccountsCustomchannelsResourceAccountsCustomchannelsAdunitsResourceResourceResourceResource.List
   /**
    * List all ad units in the specified custom channel.
-   * [accountId] Account to which the ad client belongs.
-   * [adClientId] Ad client which contains the custom channel.
-   * [customChannelId] Custom channel for which to list ad units.
+   *
+   *    * [accountId] Account to which the ad client belongs.
+   *    * [adClientId] Ad client which contains the custom channel.
+   *    * [customChannelId] Custom channel for which to list ad units.
+   *    * [includeInactive] Whether to include inactive ad units. Default: true.
+   *    * [maxResults] The maximum number of ad units to include in the response, used for paging.
+
+  Minimum: 0.
+  Maximum:
+   *        10000.
+   *    * [pageToken] A continuation token, used to page through ad units. To retrieve the next page, set this parameter
+   *        to the value of "nextPageToken" from the previous response.
    */
   core.Future<AdUnits> list(core.String accountId, core.String adClientId, core.String customChannelId, [core.bool includeInactive = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String pageToken = UNSPECIFIED]) {
     final $queryParams = {};
@@ -786,7 +916,14 @@ class CustomchannelsResource extends core.Object {
   // Method CustomchannelsResource.List
   /**
    * List all custom channels in the specified ad client for this AdSense account.
-   * [adClientId] Ad client for which to list custom channels.
+   *
+   *    * [adClientId] Ad client for which to list custom channels.
+   *    * [pageToken] A continuation token, used to page through custom channels. To retrieve the next page, set this
+   *        parameter to the value of "nextPageToken" from the previous response.
+   *    * [maxResults] The maximum number of custom channels to include in the response, used for paging.
+
+  Minimum: 0.
+   *        Maximum: 10000.
    */
   core.Future<CustomChannels> list(core.String adClientId, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
     final $queryParams = {};
@@ -817,8 +954,9 @@ class CustomchannelsResource extends core.Object {
   // Method CustomchannelsResource.Get
   /**
    * Get the specified custom channel from the specified ad client.
-   * [adClientId] Ad client which contains the custom channel.
-   * [customChannelId] Custom channel to retrieve.
+   *
+   *    * [adClientId] Ad client which contains the custom channel.
+   *    * [customChannelId] Custom channel to retrieve.
    */
   core.Future<CustomChannel> get(core.String adClientId, core.String customChannelId) {
     final $queryParams = {};
@@ -856,8 +994,17 @@ class CustomchannelsAdunitsResourceResource extends core.Object {
   // Method CustomchannelsResource.CustomchannelsAdunitsResourceResource.List
   /**
    * List all ad units in the specified custom channel.
-   * [adClientId] Ad client which contains the custom channel.
-   * [customChannelId] Custom channel for which to list ad units.
+   *
+   *    * [adClientId] Ad client which contains the custom channel.
+   *    * [customChannelId] Custom channel for which to list ad units.
+   *    * [includeInactive] Whether to include inactive ad units. Default: true.
+   *    * [pageToken] A continuation token, used to page through ad units. To retrieve the next page, set this parameter
+   *        to the value of "nextPageToken" from the previous response.
+   *    * [maxResults] The maximum number of ad units to include in the response, used for paging.
+
+  Minimum: 0.
+  Maximum:
+   *        10000.
    */
   core.Future<AdUnits> list(core.String adClientId, core.String customChannelId, [core.bool includeInactive = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
     final $queryParams = {};

@@ -137,8 +137,9 @@ class CommunityMembersResource extends core.Object {
   // Method CommunityMembersResource.Insert
   /**
    * Makes the user join a community.
-   * [communityId] ID of the community.
-   * [userId] ID of the user.
+   *
+   *    * [communityId] ID of the community.
+   *    * [userId] ID of the user.
    */
   core.Future<CommunityMembers> insert(core.int communityId, core.String userId) {
     final $queryParams = {};
@@ -168,8 +169,10 @@ class CommunityMembersResource extends core.Object {
   // Method CommunityMembersResource.Get
   /**
    * Retrieves the relationship between a user and a community.
-   * [communityId] ID of the community.
-   * [userId] ID of the user.
+   *
+   *    * [communityId] ID of the community.
+   *    * [userId] ID of the user.
+   *    * [hl] Specifies the interface language (host language) of your user interface.
    */
   core.Future<CommunityMembers> get(core.int communityId, core.String userId, [core.String hl = UNSPECIFIED]) {
     final $queryParams = {};
@@ -202,7 +205,14 @@ class CommunityMembersResource extends core.Object {
    * Lists members of a community. Use the pagination tokens to retrieve the full list; do not rely on
    * the member count available in the community profile information to know when to stop iterating,
    * as that count may be approximate.
-   * [communityId] The ID of the community whose members will be listed.
+   *
+   *    * [communityId] The ID of the community whose members will be listed.
+   *    * [pageToken] A continuation token that allows pagination.
+   *    * [friendsOnly] Whether to list only community members who are friends of the user.
+   *    * [maxResults] The maximum number of members to include in the response.
+
+  Minimum: 1.
+   *    * [hl] Specifies the interface language (host language) of your user interface.
    */
   core.Future<CommunityMembersList> list(core.int communityId, [core.String pageToken = UNSPECIFIED, core.bool friendsOnly = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String hl = UNSPECIFIED]) {
     final $queryParams = {};
@@ -235,8 +245,9 @@ class CommunityMembersResource extends core.Object {
   // Method CommunityMembersResource.Delete
   /**
    * Makes the user leave a community.
-   * [communityId] ID of the community.
-   * [userId] ID of the user.
+   *
+   *    * [communityId] ID of the community.
+   *    * [userId] ID of the user.
    */
   core.Future delete(core.int communityId, core.String userId) {
     final $queryParams = {};
@@ -273,9 +284,16 @@ class ActivitiesResource extends core.Object {
   // Method ActivitiesResource.List
   /**
    * Retrieves a list of activities.
-   * [userId] The ID of the user whose activities will be listed. Can be me to refer to the viewer (i.e. the
+   *
+   *    * [userId] The ID of the user whose activities will be listed. Can be me to refer to the viewer (i.e. the
    *        authenticated user).
-   * [collection] The collection of activities to list.
+   *    * [collection] The collection of activities to list.
+   *    * [pageToken] A continuation token that allows pagination.
+   *    * [maxResults] The maximum number of activities to include in the response.
+
+  Minimum: 1.
+  Maximum: 100.
+   *    * [hl] Specifies the interface language (host language) of your user interface.
    */
   core.Future<ActivityList> list(core.String userId, ActivitiesResourceListCollection collection, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String hl = UNSPECIFIED]) {
     final $queryParams = {};
@@ -308,7 +326,8 @@ class ActivitiesResource extends core.Object {
   // Method ActivitiesResource.Delete
   /**
    * Deletes an existing activity, if the access controls allow it.
-   * [activityId] ID of the activity to remove.
+   *
+   *    * [activityId] ID of the activity to remove.
    */
   core.Future delete(core.String activityId) {
     final $queryParams = {};
@@ -384,9 +403,10 @@ class CommunityPollCommentsResource extends core.Object {
   // Method CommunityPollCommentsResource.Insert
   /**
    * Adds a comment on a community poll.
-   * [communityId] The ID of the community whose poll is being commented.
-   * [pollId] The ID of the poll being commented.
-   * [content] the CommunityPollComment
+   *
+   *    * [content] the CommunityPollComment
+   *    * [communityId] The ID of the community whose poll is being commented.
+   *    * [pollId] The ID of the poll being commented.
    */
   core.Future<CommunityPollComment> insert(core.int communityId, core.String pollId, CommunityPollComment content) {
     final $queryParams = {};
@@ -418,8 +438,14 @@ class CommunityPollCommentsResource extends core.Object {
   // Method CommunityPollCommentsResource.List
   /**
    * Retrieves the comments of a community poll.
-   * [communityId] The ID of the community whose poll is having its comments listed.
-   * [pollId] The ID of the community whose polls will be listed.
+   *
+   *    * [communityId] The ID of the community whose poll is having its comments listed.
+   *    * [pollId] The ID of the community whose polls will be listed.
+   *    * [pageToken] A continuation token that allows pagination.
+   *    * [maxResults] The maximum number of comments to include in the response.
+
+  Minimum: 1.
+   *    * [hl] Specifies the interface language (host language) of your user interface.
    */
   core.Future<CommunityPollCommentList> list(core.int communityId, core.String pollId, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String hl = UNSPECIFIED]) {
     final $queryParams = {};
@@ -459,7 +485,13 @@ class CommunityPollsResource extends core.Object {
   // Method CommunityPollsResource.List
   /**
    * Retrieves the polls of a community.
-   * [communityId] The ID of the community which polls will be listed.
+   *
+   *    * [communityId] The ID of the community which polls will be listed.
+   *    * [pageToken] A continuation token that allows pagination.
+   *    * [maxResults] The maximum number of polls to include in the response.
+
+  Minimum: 1.
+   *    * [hl] Specifies the interface language (host language) of your user interface.
    */
   core.Future<CommunityPollList> list(core.int communityId, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String hl = UNSPECIFIED]) {
     final $queryParams = {};
@@ -491,8 +523,10 @@ class CommunityPollsResource extends core.Object {
   // Method CommunityPollsResource.Get
   /**
    * Retrieves one specific poll of a community.
-   * [communityId] The ID of the community for whose poll will be retrieved.
-   * [pollId] The ID of the poll to get.
+   *
+   *    * [communityId] The ID of the community for whose poll will be retrieved.
+   *    * [pollId] The ID of the poll to get.
+   *    * [hl] Specifies the interface language (host language) of your user interface.
    */
   core.Future<CommunityPoll> get(core.int communityId, core.String pollId, [core.String hl = UNSPECIFIED]) {
     final $queryParams = {};
@@ -530,9 +564,10 @@ class CommunityMessagesResource extends core.Object {
   // Method CommunityMessagesResource.Insert
   /**
    * Adds a message to a given community topic.
-   * [communityId] The ID of the community the message should be added to.
-   * [topicId] The ID of the topic the message should be added to.
-   * [content] the CommunityMessage
+   *
+   *    * [content] the CommunityMessage
+   *    * [communityId] The ID of the community the message should be added to.
+   *    * [topicId] The ID of the topic the message should be added to.
    */
   core.Future<CommunityMessage> insert(core.int communityId, core.String topicId, CommunityMessage content) {
     final $queryParams = {};
@@ -564,8 +599,15 @@ class CommunityMessagesResource extends core.Object {
   // Method CommunityMessagesResource.List
   /**
    * Retrieves the messages of a topic of a community.
-   * [communityId] The ID of the community which messages will be listed.
-   * [topicId] The ID of the topic which messages will be listed.
+   *
+   *    * [communityId] The ID of the community which messages will be listed.
+   *    * [topicId] The ID of the topic which messages will be listed.
+   *    * [pageToken] A continuation token that allows pagination.
+   *    * [maxResults] The maximum number of messages to include in the response.
+
+  Minimum: 1.
+  Maximum: 100.
+   *    * [hl] Specifies the interface language (host language) of your user interface.
    */
   core.Future<CommunityMessageList> list(core.int communityId, core.String topicId, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String hl = UNSPECIFIED]) {
     final $queryParams = {};
@@ -598,9 +640,10 @@ class CommunityMessagesResource extends core.Object {
   // Method CommunityMessagesResource.Delete
   /**
    * Moves a message of the community to the trash folder.
-   * [communityId] The ID of the community whose message will be moved to the trash folder.
-   * [topicId] The ID of the topic whose message will be moved to the trash folder.
-   * [messageId] The ID of the message to be moved to the trash folder.
+   *
+   *    * [communityId] The ID of the community whose message will be moved to the trash folder.
+   *    * [topicId] The ID of the topic whose message will be moved to the trash folder.
+   *    * [messageId] The ID of the message to be moved to the trash folder.
    */
   core.Future delete(core.int communityId, core.String topicId, core.String messageId) {
     final $queryParams = {};
@@ -638,8 +681,10 @@ class CommunityTopicsResource extends core.Object {
   // Method CommunityTopicsResource.Insert
   /**
    * Adds a topic to a given community.
-   * [communityId] The ID of the community the topic should be added to.
-   * [content] the CommunityTopic
+   *
+   *    * [content] the CommunityTopic
+   *    * [communityId] The ID of the community the topic should be added to.
+   *    * [isShout] Whether this topic is a shout.
    */
   core.Future<CommunityTopic> insert(core.int communityId, CommunityTopic content, [core.bool isShout = UNSPECIFIED]) {
     final $queryParams = {};
@@ -671,8 +716,10 @@ class CommunityTopicsResource extends core.Object {
   // Method CommunityTopicsResource.Get
   /**
    * Retrieves a topic of a community.
-   * [communityId] The ID of the community whose topic will be retrieved.
-   * [topicId] The ID of the topic to get.
+   *
+   *    * [communityId] The ID of the community whose topic will be retrieved.
+   *    * [topicId] The ID of the topic to get.
+   *    * [hl] Specifies the interface language (host language) of your user interface.
    */
   core.Future<CommunityTopic> get(core.int communityId, core.String topicId, [core.String hl = UNSPECIFIED]) {
     final $queryParams = {};
@@ -703,7 +750,14 @@ class CommunityTopicsResource extends core.Object {
   // Method CommunityTopicsResource.List
   /**
    * Retrieves the topics of a community.
-   * [communityId] The ID of the community which topics will be listed.
+   *
+   *    * [communityId] The ID of the community which topics will be listed.
+   *    * [pageToken] A continuation token that allows pagination.
+   *    * [maxResults] The maximum number of topics to include in the response.
+
+  Minimum: 1.
+  Maximum: 100.
+   *    * [hl] Specifies the interface language (host language) of your user interface.
    */
   core.Future<CommunityTopicList> list(core.int communityId, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String hl = UNSPECIFIED]) {
     final $queryParams = {};
@@ -735,8 +789,9 @@ class CommunityTopicsResource extends core.Object {
   // Method CommunityTopicsResource.Delete
   /**
    * Moves a topic of the community to the trash folder.
-   * [communityId] The ID of the community whose topic will be moved to the trash folder.
-   * [topicId] The ID of the topic to be moved to the trash folder.
+   *
+   *    * [communityId] The ID of the community whose topic will be moved to the trash folder.
+   *    * [topicId] The ID of the topic to be moved to the trash folder.
    */
   core.Future delete(core.int communityId, core.String topicId) {
     final $queryParams = {};
@@ -773,8 +828,9 @@ class CommentsResource extends core.Object {
   // Method CommentsResource.Insert
   /**
    * Inserts a new comment to an activity.
-   * [activityId] The ID of the activity to contain the new comment.
-   * [content] the Comment
+   *
+   *    * [content] the Comment
+   *    * [activityId] The ID of the activity to contain the new comment.
    */
   core.Future<Comment> insert(core.String activityId, Comment content) {
     final $queryParams = {};
@@ -805,7 +861,9 @@ class CommentsResource extends core.Object {
   // Method CommentsResource.Get
   /**
    * Retrieves an existing comment.
-   * [commentId] ID of the comment to get.
+   *
+   *    * [commentId] ID of the comment to get.
+   *    * [hl] Specifies the interface language (host language) of your user interface.
    */
   core.Future<Comment> get(core.String commentId, [core.String hl = UNSPECIFIED]) {
     final $queryParams = {};
@@ -835,7 +893,15 @@ class CommentsResource extends core.Object {
   // Method CommentsResource.List
   /**
    * Retrieves a list of comments, possibly filtered.
-   * [activityId] The ID of the activity containing the comments.
+   *
+   *    * [activityId] The ID of the activity containing the comments.
+   *    * [orderBy] Sort search results.
+  Default: DESCENDING_SORT.
+   *    * [pageToken] A continuation token that allows pagination.
+   *    * [maxResults] The maximum number of activities to include in the response.
+
+  Minimum: 1.
+   *    * [hl] Specifies the interface language (host language) of your user interface.
    */
   core.Future<CommentList> list(core.String activityId, [CommentsResourceListOrderBy orderBy = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String hl = UNSPECIFIED]) {
     final $queryParams = {};
@@ -868,7 +934,8 @@ class CommentsResource extends core.Object {
   // Method CommentsResource.Delete
   /**
    * Deletes an existing comment.
-   * [commentId] ID of the comment to remove.
+   *
+   *    * [commentId] ID of the comment to remove.
    */
   core.Future delete(core.String commentId) {
     final $queryParams = {};
@@ -935,8 +1002,9 @@ class AclResource extends core.Object {
   // Method AclResource.Delete
   /**
    * Excludes an element from the ACL of the activity.
-   * [activityId] ID of the activity.
-   * [userId] ID of the user to be removed from the activity.
+   *
+   *    * [activityId] ID of the activity.
+   *    * [userId] ID of the user to be removed from the activity.
    */
   core.Future delete(core.String activityId, core.String userId) {
     final $queryParams = {};
@@ -973,7 +1041,9 @@ class CommunityRelatedResource extends core.Object {
   // Method CommunityRelatedResource.List
   /**
    * Retrieves the communities related to another one.
-   * [communityId] The ID of the community whose related communities will be listed.
+   *
+   *    * [communityId] The ID of the community whose related communities will be listed.
+   *    * [hl] Specifies the interface language (host language) of your user interface.
    */
   core.Future<CommunityList> list(core.int communityId, [core.String hl = UNSPECIFIED]) {
     final $queryParams = {};
@@ -1010,7 +1080,8 @@ class ScrapsResource extends core.Object {
   // Method ScrapsResource.Insert
   /**
    * Creates a new scrap.
-   * [content] the Activity
+   *
+   *    * [content] the Activity
    */
   core.Future<Activity> insert(Activity content) {
     final $queryParams = {};
@@ -1047,9 +1118,10 @@ class CommunityPollVotesResource extends core.Object {
   // Method CommunityPollVotesResource.Insert
   /**
    * Votes on a community poll.
-   * [communityId] The ID of the community whose poll is being voted.
-   * [pollId] The ID of the poll being voted.
-   * [content] the CommunityPollVote
+   *
+   *    * [content] the CommunityPollVote
+   *    * [communityId] The ID of the community whose poll is being voted.
+   *    * [pollId] The ID of the poll being voted.
    */
   core.Future<CommunityPollVote> insert(core.int communityId, core.String pollId, CommunityPollVote content) {
     final $queryParams = {};
@@ -1088,7 +1160,13 @@ class CommunitiesResource extends core.Object {
   // Method CommunitiesResource.List
   /**
    * Retrieves the list of communities the current user is a member of.
-   * [userId] The ID of the user whose communities will be listed. Can be me to refer to caller.
+   *
+   *    * [userId] The ID of the user whose communities will be listed. Can be me to refer to caller.
+   *    * [orderBy] How to order the communities by.
+   *    * [maxResults] The maximum number of communities to include in the response.
+
+  Minimum: 1.
+   *    * [hl] Specifies the interface language (host language) of your user interface.
    */
   core.Future<CommunityList> list(core.String userId, [CommunitiesResourceListOrderBy orderBy = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String hl = UNSPECIFIED]) {
     final $queryParams = {};
@@ -1120,7 +1198,9 @@ class CommunitiesResource extends core.Object {
   // Method CommunitiesResource.Get
   /**
    * Retrieves the basic information (aka. profile) of a community.
-   * [communityId] The ID of the community to get.
+   *
+   *    * [communityId] The ID of the community to get.
+   *    * [hl] Specifies the interface language (host language) of your user interface.
    */
   core.Future<Community> get(core.int communityId, [core.String hl = UNSPECIFIED]) {
     final $queryParams = {};
@@ -1191,8 +1271,9 @@ class CommunityFollowResource extends core.Object {
   // Method CommunityFollowResource.Insert
   /**
    * Adds a user as a follower of a community.
-   * [communityId] ID of the community.
-   * [userId] ID of the user.
+   *
+   *    * [communityId] ID of the community.
+   *    * [userId] ID of the user.
    */
   core.Future<CommunityMembers> insert(core.int communityId, core.String userId) {
     final $queryParams = {};
@@ -1222,8 +1303,9 @@ class CommunityFollowResource extends core.Object {
   // Method CommunityFollowResource.Delete
   /**
    * Removes a user from the followers of a community.
-   * [communityId] ID of the community.
-   * [userId] ID of the user.
+   *
+   *    * [communityId] ID of the community.
+   *    * [userId] ID of the user.
    */
   core.Future delete(core.int communityId, core.String userId) {
     final $queryParams = {};
@@ -1260,8 +1342,9 @@ class ActivityVisibilityResource extends core.Object {
   // Method ActivityVisibilityResource.Patch
   /**
    * Updates the visibility of an existing activity. This method supports patch semantics.
-   * [activityId] ID of the activity.
-   * [content] the Visibility
+   *
+   *    * [content] the Visibility
+   *    * [activityId] ID of the activity.
    */
   core.Future<Visibility> patch(core.String activityId, Visibility content) {
     final $queryParams = {};
@@ -1292,8 +1375,9 @@ class ActivityVisibilityResource extends core.Object {
   // Method ActivityVisibilityResource.Update
   /**
    * Updates the visibility of an existing activity.
-   * [activityId] ID of the activity.
-   * [content] the Visibility
+   *
+   *    * [content] the Visibility
+   *    * [activityId] ID of the activity.
    */
   core.Future<Visibility> update(core.String activityId, Visibility content) {
     final $queryParams = {};
@@ -1324,7 +1408,8 @@ class ActivityVisibilityResource extends core.Object {
   // Method ActivityVisibilityResource.Get
   /**
    * Gets the visibility of an existing activity.
-   * [activityId] ID of the activity to get the visibility.
+   *
+   *    * [activityId] ID of the activity to get the visibility.
    */
   core.Future<Visibility> get(core.String activityId) {
     final $queryParams = {};
@@ -1360,7 +1445,8 @@ class BadgesResource extends core.Object {
   // Method BadgesResource.List
   /**
    * Retrieves the list of visible badges of a user.
-   * [userId] The id of the user whose badges will be listed. Can be me to refer to caller.
+   *
+   *    * [userId] The id of the user whose badges will be listed. Can be me to refer to caller.
    */
   core.Future<BadgeList> list(core.String userId) {
     final $queryParams = {};
@@ -1389,8 +1475,9 @@ class BadgesResource extends core.Object {
   // Method BadgesResource.Get
   /**
    * Retrieves a badge from a user.
-   * [userId] The ID of the user whose badges will be listed. Can be me to refer to caller.
-   * [badgeId] The ID of the badge that will be retrieved.
+   *
+   *    * [userId] The ID of the user whose badges will be listed. Can be me to refer to caller.
+   *    * [badgeId] The ID of the badge that will be retrieved.
    */
   core.Future<Badge> get(core.String userId, core.String badgeId) {
     final $queryParams = {};
@@ -1427,7 +1514,8 @@ class CountersResource extends core.Object {
   // Method CountersResource.List
   /**
    * Retrieves the counters of a user.
-   * [userId] The ID of the user whose counters will be listed. Can be me to refer to caller.
+   *
+   *    * [userId] The ID of the user whose counters will be listed. Can be me to refer to caller.
    */
   core.Future<Counters> list(core.String userId) {
     final $queryParams = {};

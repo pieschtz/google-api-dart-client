@@ -98,7 +98,19 @@ class ActivitiesResource extends core.Object {
   // Method ActivitiesResource.Search
   /**
    * Search public activities.
-   * [query] Full-text search query string.
+   *
+   *    * [query] Full-text search query string.
+   *    * [orderBy] Specifies how to order search results.
+  Default: recent.
+   *    * [pageToken] The continuation token, used to page through large result sets. To get the next page of results, set
+   *        this parameter to the value of "nextPageToken" from the previous response. This token may
+   *        be of any length.
+   *    * [maxResults] The maximum number of activities to include in the response, used for paging. For any response, the
+   *        actual number returned may be less than the specified maxResults.
+  Default: 10.
+  Minimum: 1.
+   *        Maximum: 20.
+   *    * [language] Specify the preferred language to search with. See search language codes for available values.
    */
   core.Future<ActivityFeed> search(core.String query, [ActivitiesResourceSearchOrderBy orderBy = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String language = UNSPECIFIED]) {
     final $queryParams = {};
@@ -131,9 +143,17 @@ class ActivitiesResource extends core.Object {
   // Method ActivitiesResource.List
   /**
    * List all of the activities in the specified collection for a particular user.
-   * [userId] The ID of the user to get activities for. The special value "me" can be used to indicate the
+   *
+   *    * [userId] The ID of the user to get activities for. The special value "me" can be used to indicate the
    *        authenticated user.
-   * [collection] The collection of activities to list.
+   *    * [collection] The collection of activities to list.
+   *    * [pageToken] The continuation token, used to page through large result sets. To get the next page of results, set
+   *        this parameter to the value of "nextPageToken" from the previous response.
+   *    * [maxResults] The maximum number of activities to include in the response, used for paging. For any response, the
+   *        actual number returned may be less than the specified maxResults.
+  Default: 20.
+  Minimum: 1.
+   *        Maximum: 100.
    */
   core.Future<ActivityFeed> list(core.String userId, ActivitiesResourceListCollection collection, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
     final $queryParams = {};
@@ -165,7 +185,8 @@ class ActivitiesResource extends core.Object {
   // Method ActivitiesResource.Get
   /**
    * Get an activity.
-   * [activityId] The ID of the activity to get.
+   *
+   *    * [activityId] The ID of the activity to get.
    */
   core.Future<Activity> get(core.String activityId) {
     final $queryParams = {};
@@ -259,7 +280,17 @@ class CommentsResource extends core.Object {
   // Method CommentsResource.List
   /**
    * List all of the comments for an activity.
-   * [activityId] The ID of the activity to get comments for.
+   *
+   *    * [activityId] The ID of the activity to get comments for.
+   *    * [pageToken] The continuation token, used to page through large result sets. To get the next page of results, set
+   *        this parameter to the value of "nextPageToken" from the previous response.
+   *    * [maxResults] The maximum number of comments to include in the response, used for paging. For any response, the
+   *        actual number returned may be less than the specified maxResults.
+  Default: 20.
+  Minimum: 0.
+   *        Maximum: 100.
+   *    * [sortOrder] The order in which to sort the list of comments.
+  Default: ascending.
    */
   core.Future<CommentFeed> list(core.String activityId, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED, CommentsResourceListSortOrder sortOrder = UNSPECIFIED]) {
     final $queryParams = {};
@@ -291,7 +322,8 @@ class CommentsResource extends core.Object {
   // Method CommentsResource.Get
   /**
    * Get a comment.
-   * [commentId] The ID of the comment to get.
+   *
+   *    * [commentId] The ID of the comment to get.
    */
   core.Future<Comment> get(core.String commentId) {
     final $queryParams = {};
@@ -358,8 +390,16 @@ class PeopleResource extends core.Object {
   // Method PeopleResource.ListByActivity
   /**
    * List all of the people in the specified collection for a particular activity.
-   * [activityId] The ID of the activity to get the list of people for.
-   * [collection] The collection of people to list.
+   *
+   *    * [activityId] The ID of the activity to get the list of people for.
+   *    * [collection] The collection of people to list.
+   *    * [pageToken] The continuation token, used to page through large result sets. To get the next page of results, set
+   *        this parameter to the value of "nextPageToken" from the previous response.
+   *    * [maxResults] The maximum number of people to include in the response, used for paging. For any response, the
+   *        actual number returned may be less than the specified maxResults.
+  Default: 20.
+  Minimum: 1.
+   *        Maximum: 100.
    */
   core.Future<PeopleFeed> listByActivity(core.String activityId, PeopleResourceListByActivityCollection collection, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
     final $queryParams = {};
@@ -391,7 +431,17 @@ class PeopleResource extends core.Object {
   // Method PeopleResource.Search
   /**
    * Search all public profiles.
-   * [query] Specify a query string for full text search of public text in all profiles.
+   *
+   *    * [query] Specify a query string for full text search of public text in all profiles.
+   *    * [pageToken] The continuation token, used to page through large result sets. To get the next page of results, set
+   *        this parameter to the value of "nextPageToken" from the previous response. This token may
+   *        be of any length.
+   *    * [maxResults] The maximum number of people to include in the response, used for paging. For any response, the
+   *        actual number returned may be less than the specified maxResults.
+  Default: 10.
+  Minimum: 1.
+   *        Maximum: 20.
+   *    * [language] Specify the preferred language to search with. See search language codes for available values.
    */
   core.Future<PeopleFeed> search(core.String query, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String language = UNSPECIFIED]) {
     final $queryParams = {};
@@ -423,7 +473,8 @@ class PeopleResource extends core.Object {
   // Method PeopleResource.Get
   /**
    * Get a person's profile.
-   * [userId] The ID of the person to get the profile for. The special value "me" can be used to indicate the
+   *
+   *    * [userId] The ID of the person to get the profile for. The special value "me" can be used to indicate the
    *        authenticated user.
    */
   core.Future<Person> get(core.String userId) {

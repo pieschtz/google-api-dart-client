@@ -87,7 +87,46 @@ class CseResource extends core.Object {
   /**
    * Returns metadata about the search performed, metadata about the custom search engine used for the
    * search, and the search results.
-   * [q] Query
+   *
+   *    * [q] Query
+   *    * [sort] The sort expression to apply to the results
+   *    * [orTerms] Provides additional search terms to check for in a document, where each document in the search
+   *        results must contain at least one of the additional search terms
+   *    * [highRange] Creates a range in form as_nlo value..as_nhi value and attempts to append it to query
+   *    * [num] Number of search results to return
+  Default: 10.
+   *    * [cr] Country restrict(s).
+   *    * [imgType] Returns images of a type, which can be one of: clipart, face, lineart, news, and photo.
+   *    * [gl] Geolocation of end user.
+   *    * [relatedSite] Specifies that all search results should be pages that are related to the specified URL
+   *    * [searchType] Specifies the search type: image.
+   *    * [fileType] Returns images of a specified type. Some of the allowed values are: bmp, gif, png, jpg, svg, pdf,
+   *        ...
+   *    * [start] The index of the first result to return
+   *    * [imgDominantColor] Returns images of a specific dominant color: yellow, green, teal, blue, purple, pink, white, gray,
+   *        black and brown.
+   *    * [lr] The language restriction for the search results
+   *    * [siteSearch] Specifies all search results should be pages from a given site
+   *    * [cref] The URL of a linked custom search engine
+   *    * [dateRestrict] Specifies all search results are from a time period
+   *    * [safe] Search safety level
+  Default: off.
+   *    * [c2coff] Turns off the translation between zh-CN and zh-TW.
+   *    * [googlehost] The local Google domain to use to perform the search.
+   *    * [hq] Appends the extra query terms to the query.
+   *    * [exactTerms] Identifies a phrase that all documents in the search results must contain
+   *    * [hl] Sets the user interface language.
+   *    * [lowRange] Creates a range in form as_nlo value..as_nhi value and attempts to append it to query
+   *    * [imgSize] Returns images of a specified size, where size can be one of: icon, small, medium, large, xlarge,
+   *        xxlarge, and huge.
+   *    * [imgColorType] Returns black and white, grayscale, or color images: mono, gray, and color.
+   *    * [rights] Filters based on licensing. Supported values include: cc_publicdomain, cc_attribute, cc_sharealike,
+   *        cc_noncommercial, cc_nonderived and combinations of these.
+   *    * [excludeTerms] Identifies a word or phrase that should not appear in any documents in the search results
+   *    * [filter] Controls turning on or off the duplicate content filter.
+   *    * [linkSite] Specifies that all search results should contain a link to a particular URL
+   *    * [cx] The custom search engine ID to scope this search query
+   *    * [siteSearchFilter] Controls whether to include or exclude results from the site named in the as_sitesearch parameter
    */
   core.Future<Search> list(core.String q, [core.String sort = UNSPECIFIED, core.String orTerms = UNSPECIFIED, core.String highRange = UNSPECIFIED, core.int num = UNSPECIFIED, core.String cr = UNSPECIFIED, CseResourceListImgType imgType = UNSPECIFIED, core.String gl = UNSPECIFIED, core.String relatedSite = UNSPECIFIED, CseResourceListSearchType searchType = UNSPECIFIED, core.String fileType = UNSPECIFIED, core.int start = UNSPECIFIED, CseResourceListImgDominantColor imgDominantColor = UNSPECIFIED, CseResourceListLr lr = UNSPECIFIED, core.String siteSearch = UNSPECIFIED, core.String cref = UNSPECIFIED, core.String dateRestrict = UNSPECIFIED, CseResourceListSafe safe = UNSPECIFIED, core.String c2coff = UNSPECIFIED, core.String googlehost = UNSPECIFIED, core.String hq = UNSPECIFIED, core.String exactTerms = UNSPECIFIED, core.String hl = UNSPECIFIED, core.String lowRange = UNSPECIFIED, CseResourceListImgSize imgSize = UNSPECIFIED, CseResourceListImgColorType imgColorType = UNSPECIFIED, core.String rights = UNSPECIFIED, core.String excludeTerms = UNSPECIFIED, CseResourceListFilter filter = UNSPECIFIED, core.String linkSite = UNSPECIFIED, core.String cx = UNSPECIFIED, CseResourceListSiteSearchFilter siteSearchFilter = UNSPECIFIED]) {
     final $queryParams = {};

@@ -101,9 +101,10 @@ class TablesResource extends core.Object {
   // Method TablesResource.Insert
   /**
    * Creates a new, empty table in the dataset.
-   * [projectId] Project ID of the new table
-   * [datasetId] Dataset ID of the new table
-   * [content] the Table
+   *
+   *    * [content] the Table
+   *    * [projectId] Project ID of the new table
+   *    * [datasetId] Dataset ID of the new table
    */
   core.Future<Table> insert(core.String projectId, core.String datasetId, Table content) {
     final $queryParams = {};
@@ -136,9 +137,10 @@ class TablesResource extends core.Object {
   /**
    * Gets the specified table resource by table ID. This method does not return the data in the table,
    * it only returns the table resource, which describes the structure of this table.
-   * [projectId] Project ID of the requested table
-   * [datasetId] Dataset ID of the requested table
-   * [tableId] Table ID of the requested table
+   *
+   *    * [projectId] Project ID of the requested table
+   *    * [datasetId] Dataset ID of the requested table
+   *    * [tableId] Table ID of the requested table
    */
   core.Future<Table> get(core.String projectId, core.String datasetId, core.String tableId) {
     final $queryParams = {};
@@ -169,8 +171,11 @@ class TablesResource extends core.Object {
   // Method TablesResource.List
   /**
    * Lists all tables in the specified dataset.
-   * [projectId] Project ID of the tables to list
-   * [datasetId] Dataset ID of the tables to list
+   *
+   *    * [projectId] Project ID of the tables to list
+   *    * [datasetId] Dataset ID of the tables to list
+   *    * [pageToken] Page token, returned by a previous call, to request the next page of results
+   *    * [maxResults] Maximum number of results to return
    */
   core.Future<TableList> list(core.String projectId, core.String datasetId, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
     final $queryParams = {};
@@ -202,10 +207,11 @@ class TablesResource extends core.Object {
   // Method TablesResource.Update
   /**
    * Updates information in an existing table, specified by tableId.
-   * [projectId] Project ID of the table to update
-   * [datasetId] Dataset ID of the table to update
-   * [tableId] Table ID of the table to update
-   * [content] the Table
+   *
+   *    * [content] the Table
+   *    * [projectId] Project ID of the table to update
+   *    * [datasetId] Dataset ID of the table to update
+   *    * [tableId] Table ID of the table to update
    */
   core.Future<Table> update(core.String projectId, core.String datasetId, core.String tableId, Table content) {
     final $queryParams = {};
@@ -239,10 +245,11 @@ class TablesResource extends core.Object {
   /**
    * Updates information in an existing table, specified by tableId. This method supports patch
    * semantics.
-   * [projectId] Project ID of the table to update
-   * [datasetId] Dataset ID of the table to update
-   * [tableId] Table ID of the table to update
-   * [content] the Table
+   *
+   *    * [content] the Table
+   *    * [projectId] Project ID of the table to update
+   *    * [datasetId] Dataset ID of the table to update
+   *    * [tableId] Table ID of the table to update
    */
   core.Future<Table> patch(core.String projectId, core.String datasetId, core.String tableId, Table content) {
     final $queryParams = {};
@@ -276,9 +283,10 @@ class TablesResource extends core.Object {
   /**
    * Deletes the table specified by tableId from the dataset. If the table contains data, all the data
    * will be deleted.
-   * [projectId] Project ID of the table to delete
-   * [datasetId] Dataset ID of the table to delete
-   * [tableId] Table ID of the table to delete
+   *
+   *    * [projectId] Project ID of the table to delete
+   *    * [datasetId] Dataset ID of the table to delete
+   *    * [tableId] Table ID of the table to delete
    */
   core.Future delete(core.String projectId, core.String datasetId, core.String tableId) {
     final $queryParams = {};
@@ -316,8 +324,9 @@ class DatasetsResource extends core.Object {
   // Method DatasetsResource.Insert
   /**
    * Creates a new empty dataset.
-   * [projectId] Project ID of the new dataset
-   * [content] the Dataset
+   *
+   *    * [content] the Dataset
+   *    * [projectId] Project ID of the new dataset
    */
   core.Future<Dataset> insert(core.String projectId, Dataset content) {
     final $queryParams = {};
@@ -348,8 +357,9 @@ class DatasetsResource extends core.Object {
   // Method DatasetsResource.Get
   /**
    * Returns the dataset specified by datasetID.
-   * [projectId] Project ID of the requested dataset
-   * [datasetId] Dataset ID of the requested dataset
+   *
+   *    * [projectId] Project ID of the requested dataset
+   *    * [datasetId] Dataset ID of the requested dataset
    */
   core.Future<Dataset> get(core.String projectId, core.String datasetId) {
     final $queryParams = {};
@@ -380,7 +390,10 @@ class DatasetsResource extends core.Object {
   /**
    * Lists all the datasets in the specified project to which the caller has read access; however, a
    * project owner can list (but not necessarily get) all datasets in his project.
-   * [projectId] Project ID of the datasets to be listed
+   *
+   *    * [projectId] Project ID of the datasets to be listed
+   *    * [pageToken] Page token, returned by a previous call, to request the next page of results
+   *    * [maxResults] The maximum number of results to return
    */
   core.Future<DatasetList> list(core.String projectId, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
     final $queryParams = {};
@@ -413,9 +426,10 @@ class DatasetsResource extends core.Object {
    * Updates information in an existing dataset, specified by datasetId. Properties not included in
    * the submitted resource will not be changed. If you include the access property without any values
    * assigned, the request will fail as you must specify at least one owner for a dataset.
-   * [projectId] Project ID of the dataset being updated
-   * [datasetId] Dataset ID of the dataset being updated
-   * [content] the Dataset
+   *
+   *    * [content] the Dataset
+   *    * [projectId] Project ID of the dataset being updated
+   *    * [datasetId] Dataset ID of the dataset being updated
    */
   core.Future<Dataset> update(core.String projectId, core.String datasetId, Dataset content) {
     final $queryParams = {};
@@ -450,9 +464,10 @@ class DatasetsResource extends core.Object {
    * the submitted resource will not be changed. If you include the access property without any values
    * assigned, the request will fail as you must specify at least one owner for a dataset. This method
    * supports patch semantics.
-   * [projectId] Project ID of the dataset being updated
-   * [datasetId] Dataset ID of the dataset being updated
-   * [content] the Dataset
+   *
+   *    * [content] the Dataset
+   *    * [projectId] Project ID of the dataset being updated
+   *    * [datasetId] Dataset ID of the dataset being updated
    */
   core.Future<Dataset> patch(core.String projectId, core.String datasetId, Dataset content) {
     final $queryParams = {};
@@ -486,8 +501,11 @@ class DatasetsResource extends core.Object {
    * Deletes the dataset specified by datasetId value. Before you can delete a dataset, you must
    * delete all its tables, either manually or by specifying deleteContents. Immediately after
    * deletion, you can create another dataset with the same name.
-   * [projectId] Project ID of the dataset being deleted
-   * [datasetId] Dataset ID of dataset being deleted
+   *
+   *    * [projectId] Project ID of the dataset being deleted
+   *    * [datasetId] Dataset ID of dataset being deleted
+   *    * [deleteContents] If True, delete all the tables in the dataset. If False and the dataset contains tables, the request
+   *        will fail. Default is False
    */
   core.Future delete(core.String projectId, core.String datasetId, [core.bool deleteContents = UNSPECIFIED]) {
     final $queryParams = {};
@@ -525,8 +543,9 @@ class JobsResource extends core.Object {
   // Method JobsResource.Insert
   /**
    * Starts a new asynchronous job.
-   * [projectId] Project ID of the project that will be billed for the job
-   * [content] the Job
+   *
+   *    * [content] the Job
+   *    * [projectId] Project ID of the project that will be billed for the job
    */
   core.Future<Job> insert(core.String projectId, Job content) {
     final $queryParams = {};
@@ -558,8 +577,9 @@ class JobsResource extends core.Object {
   /**
    * Runs a BigQuery SQL query synchronously and returns query results if the query completes within a
    * specified timeout.
-   * [projectId] Project ID of the project billed for the query
-   * [content] the QueryRequest
+   *
+   *    * [content] the QueryRequest
+   *    * [projectId] Project ID of the project billed for the query
    */
   core.Future<QueryResponse> query(core.String projectId, QueryRequest content) {
     final $queryParams = {};
@@ -590,7 +610,13 @@ class JobsResource extends core.Object {
   // Method JobsResource.List
   /**
    * Lists all the Jobs in the specified project that were started by the user.
-   * [projectId] Project ID of the jobs to list
+   *
+   *    * [projectId] Project ID of the jobs to list
+   *    * [projection] Restrict information returned to a set of selected fields
+   *    * [stateFilter] Filter for job state
+   *    * [allUsers] Whether to display jobs owned by all users in the project. Default false
+   *    * [maxResults] Maximum number of results to return
+   *    * [pageToken] Page token, returned by a previous call, to request the next page of results
    */
   core.Future<JobList> list(core.String projectId, [JobsResourceListProjection projection = UNSPECIFIED, JobsResourceListStateFilter stateFilter = UNSPECIFIED, core.bool allUsers = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String pageToken = UNSPECIFIED]) {
     final $queryParams = {};
@@ -624,8 +650,14 @@ class JobsResource extends core.Object {
   // Method JobsResource.GetQueryResults
   /**
    * Retrieves the results of a query job.
-   * [projectId] Project ID of the query job
-   * [jobId] Job ID of the query job
+   *
+   *    * [projectId] Project ID of the query job
+   *    * [jobId] Job ID of the query job
+   *    * [timeoutMs] How long to wait for the query to complete, in milliseconds, before returning. Default is to return
+   *        immediately. If the timeout passes before the job completes, the request will fail with a
+   *        TIMEOUT error
+   *    * [startIndex] Zero-based index of the starting row
+   *    * [maxResults] Maximum number of results to read
    */
   core.Future<GetQueryResultsResponse> getQueryResults(core.String projectId, core.String jobId, [core.int timeoutMs = UNSPECIFIED, core.String startIndex = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
     final $queryParams = {};
@@ -658,8 +690,9 @@ class JobsResource extends core.Object {
   // Method JobsResource.Get
   /**
    * Retrieves the specified job by ID.
-   * [projectId] Project ID of the requested job
-   * [jobId] Job ID of the requested job
+   *
+   *    * [projectId] Project ID of the requested job
+   *    * [jobId] Job ID of the requested job
    */
   core.Future<Job> get(core.String projectId, core.String jobId) {
     final $queryParams = {};
@@ -762,19 +795,24 @@ class TabledataResource extends core.Object {
   // Method TabledataResource.List
   /**
    * Retrieves table data from a specified set of rows.
-   * [projectId] Project ID of the table to read
-   * [datasetId] Dataset ID of the table to read
-   * [tableId] Table ID of the table to read
+   *
+   *    * [projectId] Project ID of the table to read
+   *    * [datasetId] Dataset ID of the table to read
+   *    * [tableId] Table ID of the table to read
+   *    * [maxResults] Maximum number of results to return
+   *    * [pageToken] Page token, returned by a previous call, identifying the result set
+   *    * [startIndex] Zero-based index of the starting row to read
    */
-  core.Future<TableDataList> list(core.String projectId, core.String datasetId, core.String tableId, [core.String startIndex = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
+  core.Future<TableDataList> list(core.String projectId, core.String datasetId, core.String tableId, [core.int maxResults = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.String startIndex = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["projectId"] = projectId;
     $pathParams["datasetId"] = datasetId;
     $pathParams["tableId"] = tableId;
-    if (UNSPECIFIED != startIndex) $queryParams["startIndex"] = startIndex;
     if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
+    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
+    if (UNSPECIFIED != startIndex) $queryParams["startIndex"] = startIndex;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -804,6 +842,9 @@ class ProjectsResource extends core.Object {
   // Method ProjectsResource.List
   /**
    * Lists the projects to which you have at least read access.
+   *
+   *    * [pageToken] Page token, returned by a previous call, to request the next page of results
+   *    * [maxResults] Maximum number of results to return
    */
   core.Future<ProjectList> list([core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
     final $queryParams = {};
@@ -1427,6 +1468,15 @@ class JobConfigurationLoad extends IdentityHash {
  */
   core.String createDisposition;
 
+  /** [Experimental] Format of inlineSchema field. */
+  core.String schemaInlineFormat;
+
+  /**
+ * [Experimental] Inline schema. For CSV schemas, specify as "Field1:Type1[,Field2:Type2]*". For
+ * example, "foo:STRING, bar:INTEGER, baz:FLOAT"
+ */
+  core.String schemaInline;
+
   /** [Optional] Schema of the table being written to. */
   TableSchema schema;
 
@@ -1442,6 +1492,8 @@ class JobConfigurationLoad extends IdentityHash {
     result.sourceUris = map(identity)(json["sourceUris"]);
     result.skipLeadingRows = identity(json["skipLeadingRows"]);
     result.createDisposition = identity(json["createDisposition"]);
+    result.schemaInlineFormat = identity(json["schemaInlineFormat"]);
+    result.schemaInline = identity(json["schemaInline"]);
     result.schema = TableSchema.parse(json["schema"]);
     return result;
   }
@@ -1457,6 +1509,8 @@ class JobConfigurationLoad extends IdentityHash {
     result["sourceUris"] = map(identity)(value.sourceUris);
     result["skipLeadingRows"] = identity(value.skipLeadingRows);
     result["createDisposition"] = identity(value.createDisposition);
+    result["schemaInlineFormat"] = identity(value.schemaInlineFormat);
+    result["schemaInline"] = identity(value.schemaInline);
     result["schema"] = TableSchema.serialize(value.schema);
     return result;
   }
@@ -2069,14 +2123,20 @@ class Table extends IdentityHash {
 
 // Schema .TableDataList
 class TableDataList extends IdentityHash {
-  /** Rows of results. */
-  core.List<TableRow> rows;
+  /**
+ * A token used for paging results. Providing this token instead of the startRow parameter can help
+ * you retrieve stable results when an underlying table is changing.
+ */
+  core.String pageToken;
 
   /** The resource type of the response. */
   core.String kind;
 
   /** A hash of this page of results. */
   core.String etag;
+
+  /** Rows of results. */
+  core.List<TableRow> rows;
 
   /** The total number of rows in the complete table. */
   core.String totalRows;
@@ -2085,9 +2145,10 @@ class TableDataList extends IdentityHash {
   static TableDataList parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new TableDataList();
-    result.rows = map(TableRow.parse)(json["rows"]);
+    result.pageToken = identity(json["pageToken"]);
     result.kind = identity(json["kind"]);
     result.etag = identity(json["etag"]);
+    result.rows = map(TableRow.parse)(json["rows"]);
     result.totalRows = identity(json["totalRows"]);
     return result;
   }
@@ -2095,9 +2156,10 @@ class TableDataList extends IdentityHash {
   static core.Object serialize(TableDataList value) {
     if (value == null) return null;
     final result = {};
-    result["rows"] = map(TableRow.serialize)(value.rows);
+    result["pageToken"] = identity(value.pageToken);
     result["kind"] = identity(value.kind);
     result["etag"] = identity(value.etag);
+    result["rows"] = map(TableRow.serialize)(value.rows);
     result["totalRows"] = identity(value.totalRows);
     return result;
   }

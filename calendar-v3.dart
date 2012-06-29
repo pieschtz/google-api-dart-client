@@ -110,7 +110,8 @@ class FreebusyResource extends core.Object {
   // Method FreebusyResource.Query
   /**
    * Returns free/busy information for a set of calendars.
-   * [content] the FreeBusyRequest
+   *
+   *    * [content] the FreeBusyRequest
    */
   core.Future<FreeBusyResponse> query(FreeBusyRequest content) {
     final $queryParams = {};
@@ -147,6 +148,7 @@ class SettingsResource extends core.Object {
   // Method SettingsResource.List
   /**
    * Returns all user settings for the authenticated user.
+   *
    */
   core.Future<Settings> list() {
     final $queryParams = {};
@@ -174,7 +176,8 @@ class SettingsResource extends core.Object {
   // Method SettingsResource.Get
   /**
    * Returns a single user setting.
-   * [setting] Name of the user setting.
+   *
+   *    * [setting] Name of the user setting.
    */
   core.Future<Setting> get(core.String setting) {
     final $queryParams = {};
@@ -210,7 +213,8 @@ class CalendarListResource extends core.Object {
   // Method CalendarListResource.Insert
   /**
    * Adds an entry to the user's calendar list.
-   * [content] the CalendarListEntry
+   *
+   *    * [content] the CalendarListEntry
    */
   core.Future<CalendarListEntry> insert(CalendarListEntry content) {
     final $queryParams = {};
@@ -240,7 +244,8 @@ class CalendarListResource extends core.Object {
   // Method CalendarListResource.Get
   /**
    * Returns an entry on the user's calendar list.
-   * [calendarId] Calendar identifier.
+   *
+   *    * [calendarId] Calendar identifier.
    */
   core.Future<CalendarListEntry> get(core.String calendarId) {
     final $queryParams = {};
@@ -269,6 +274,14 @@ class CalendarListResource extends core.Object {
   // Method CalendarListResource.List
   /**
    * Returns entries on the user's calendar list.
+   *
+   *    * [pageToken] Token specifying which result page to return. Optional.
+   *    * [showHidden] Whether to show hidden entries. Optional. The default is False.
+   *    * [maxResults] Maximum number of entries returned on one result page. Optional.
+
+  Minimum: 1.
+   *    * [minAccessRole] The minimum access role for the user in the returned entires. Optional. The default is no
+   *        restriction.
    */
   core.Future<CalendarList> list([core.String pageToken = UNSPECIFIED, core.bool showHidden = UNSPECIFIED, core.int maxResults = UNSPECIFIED, CalendarListResourceListMinAccessRole minAccessRole = UNSPECIFIED]) {
     final $queryParams = {};
@@ -300,8 +313,9 @@ class CalendarListResource extends core.Object {
   // Method CalendarListResource.Update
   /**
    * Updates an entry on the user's calendar list.
-   * [calendarId] Calendar identifier.
-   * [content] the CalendarListEntry
+   *
+   *    * [content] the CalendarListEntry
+   *    * [calendarId] Calendar identifier.
    */
   core.Future<CalendarListEntry> update(core.String calendarId, CalendarListEntry content) {
     final $queryParams = {};
@@ -332,8 +346,9 @@ class CalendarListResource extends core.Object {
   // Method CalendarListResource.Patch
   /**
    * Updates an entry on the user's calendar list. This method supports patch semantics.
-   * [calendarId] Calendar identifier.
-   * [content] the CalendarListEntry
+   *
+   *    * [content] the CalendarListEntry
+   *    * [calendarId] Calendar identifier.
    */
   core.Future<CalendarListEntry> patch(core.String calendarId, CalendarListEntry content) {
     final $queryParams = {};
@@ -364,7 +379,8 @@ class CalendarListResource extends core.Object {
   // Method CalendarListResource.Delete
   /**
    * Deletes an entry on the user's calendar list.
-   * [calendarId] Calendar identifier.
+   *
+   *    * [calendarId] Calendar identifier.
    */
   core.Future delete(core.String calendarId) {
     final $queryParams = {};
@@ -439,7 +455,8 @@ class CalendarsResource extends core.Object {
   // Method CalendarsResource.Insert
   /**
    * Creates a secondary calendar.
-   * [content] the Calendar
+   *
+   *    * [content] the Calendar
    */
   core.Future<Calendar> insert(Calendar content) {
     final $queryParams = {};
@@ -469,7 +486,8 @@ class CalendarsResource extends core.Object {
   // Method CalendarsResource.Get
   /**
    * Returns metadata for a calendar.
-   * [calendarId] Calendar identifier.
+   *
+   *    * [calendarId] Calendar identifier.
    */
   core.Future<Calendar> get(core.String calendarId) {
     final $queryParams = {};
@@ -499,7 +517,8 @@ class CalendarsResource extends core.Object {
   /**
    * Clears a primary calendar. This operation deletes all data associated with the primary calendar
    * of an account and cannot be undone.
-   * [calendarId] Calendar identifier.
+   *
+   *    * [calendarId] Calendar identifier.
    */
   core.Future clear(core.String calendarId) {
     final $queryParams = {};
@@ -528,8 +547,9 @@ class CalendarsResource extends core.Object {
   // Method CalendarsResource.Update
   /**
    * Updates metadata for a calendar.
-   * [calendarId] Calendar identifier.
-   * [content] the Calendar
+   *
+   *    * [content] the Calendar
+   *    * [calendarId] Calendar identifier.
    */
   core.Future<Calendar> update(core.String calendarId, Calendar content) {
     final $queryParams = {};
@@ -560,8 +580,9 @@ class CalendarsResource extends core.Object {
   // Method CalendarsResource.Patch
   /**
    * Updates metadata for a calendar. This method supports patch semantics.
-   * [calendarId] Calendar identifier.
-   * [content] the Calendar
+   *
+   *    * [content] the Calendar
+   *    * [calendarId] Calendar identifier.
    */
   core.Future<Calendar> patch(core.String calendarId, Calendar content) {
     final $queryParams = {};
@@ -592,7 +613,8 @@ class CalendarsResource extends core.Object {
   // Method CalendarsResource.Delete
   /**
    * Deletes a secondary calendar.
-   * [calendarId] Calendar identifier.
+   *
+   *    * [calendarId] Calendar identifier.
    */
   core.Future delete(core.String calendarId) {
     final $queryParams = {};
@@ -628,8 +650,9 @@ class AclResource extends core.Object {
   // Method AclResource.Insert
   /**
    * Creates an access control rule.
-   * [calendarId] Calendar identifier.
-   * [content] the AclRule
+   *
+   *    * [content] the AclRule
+   *    * [calendarId] Calendar identifier.
    */
   core.Future<AclRule> insert(core.String calendarId, AclRule content) {
     final $queryParams = {};
@@ -660,8 +683,9 @@ class AclResource extends core.Object {
   // Method AclResource.Get
   /**
    * Returns an access control rule.
-   * [calendarId] Calendar identifier.
-   * [ruleId] ACL rule identifier.
+   *
+   *    * [calendarId] Calendar identifier.
+   *    * [ruleId] ACL rule identifier.
    */
   core.Future<AclRule> get(core.String calendarId, core.String ruleId) {
     final $queryParams = {};
@@ -691,7 +715,8 @@ class AclResource extends core.Object {
   // Method AclResource.List
   /**
    * Returns the rules in the access control list for the calendar.
-   * [calendarId] Calendar identifier.
+   *
+   *    * [calendarId] Calendar identifier.
    */
   core.Future<Acl> list(core.String calendarId) {
     final $queryParams = {};
@@ -720,9 +745,10 @@ class AclResource extends core.Object {
   // Method AclResource.Update
   /**
    * Updates an access control rule.
-   * [calendarId] Calendar identifier.
-   * [ruleId] ACL rule identifier.
-   * [content] the AclRule
+   *
+   *    * [content] the AclRule
+   *    * [calendarId] Calendar identifier.
+   *    * [ruleId] ACL rule identifier.
    */
   core.Future<AclRule> update(core.String calendarId, core.String ruleId, AclRule content) {
     final $queryParams = {};
@@ -754,9 +780,10 @@ class AclResource extends core.Object {
   // Method AclResource.Patch
   /**
    * Updates an access control rule. This method supports patch semantics.
-   * [calendarId] Calendar identifier.
-   * [ruleId] ACL rule identifier.
-   * [content] the AclRule
+   *
+   *    * [content] the AclRule
+   *    * [calendarId] Calendar identifier.
+   *    * [ruleId] ACL rule identifier.
    */
   core.Future<AclRule> patch(core.String calendarId, core.String ruleId, AclRule content) {
     final $queryParams = {};
@@ -788,8 +815,9 @@ class AclResource extends core.Object {
   // Method AclResource.Delete
   /**
    * Deletes an access control rule.
-   * [calendarId] Calendar identifier.
-   * [ruleId] ACL rule identifier.
+   *
+   *    * [calendarId] Calendar identifier.
+   *    * [ruleId] ACL rule identifier.
    */
   core.Future delete(core.String calendarId, core.String ruleId) {
     final $queryParams = {};
@@ -826,6 +854,7 @@ class ColorsResource extends core.Object {
   // Method ColorsResource.Get
   /**
    * Returns the color definitions for calendars and events.
+   *
    */
   core.Future<Colors> get() {
     final $queryParams = {};
@@ -860,8 +889,10 @@ class EventsResource extends core.Object {
   // Method EventsResource.Insert
   /**
    * Creates an event.
-   * [calendarId] Calendar identifier.
-   * [content] the Event
+   *
+   *    * [content] the Event
+   *    * [calendarId] Calendar identifier.
+   *    * [sendNotifications] Whether to send notifications about the creation of the new event. Optional. The default is False.
    */
   core.Future<Event> insert(core.String calendarId, Event content, [core.bool sendNotifications = UNSPECIFIED]) {
     final $queryParams = {};
@@ -893,16 +924,28 @@ class EventsResource extends core.Object {
   // Method EventsResource.Get
   /**
    * Returns an event.
-   * [calendarId] Calendar identifier.
-   * [eventId] Event identifier.
+   *
+   *    * [calendarId] Calendar identifier.
+   *    * [eventId] Event identifier.
+   *    * [timeZone] Time zone used in the response. Optional. The default is the time zone of the calendar.
+   *    * [alwaysIncludeEmail] Whether to always include a value in the "email" field for the organizer, creator and attendees,
+   *        even if no real email is available (i.e. a generated, non-working value will be provided).
+   *        The use of this option is discouraged and should only be used by clients which cannot
+   *        handle the absence of an email address value in the mentioned places. Optional. The
+   *        default is False.
+   *    * [maxAttendees] The maximum number of attendees to include in the response. If there are more than the specified
+   *        number of attendees, only the participant is returned. Optional.
+
+  Minimum: 1.
    */
-  core.Future<Event> get(core.String calendarId, core.String eventId, [core.String timeZone = UNSPECIFIED, core.int maxAttendees = UNSPECIFIED]) {
+  core.Future<Event> get(core.String calendarId, core.String eventId, [core.String timeZone = UNSPECIFIED, core.bool alwaysIncludeEmail = UNSPECIFIED, core.int maxAttendees = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["calendarId"] = calendarId;
     $pathParams["eventId"] = eventId;
     if (UNSPECIFIED != timeZone) $queryParams["timeZone"] = timeZone;
+    if (UNSPECIFIED != alwaysIncludeEmail) $queryParams["alwaysIncludeEmail"] = alwaysIncludeEmail;
     if (UNSPECIFIED != maxAttendees) $queryParams["maxAttendees"] = maxAttendees;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
@@ -926,9 +969,12 @@ class EventsResource extends core.Object {
   // Method EventsResource.Move
   /**
    * Moves an event to another calendar, i.e. changes an event's organizer.
-   * [calendarId] Calendar identifier of the source calendar where the event currently is on.
-   * [eventId] Event identifier.
-   * [destination] Calendar identifier of the target calendar where the event is to be moved to.
+   *
+   *    * [calendarId] Calendar identifier of the source calendar where the event currently is on.
+   *    * [eventId] Event identifier.
+   *    * [destination] Calendar identifier of the target calendar where the event is to be moved to.
+   *    * [sendNotifications] Whether to send notifications about the change of the event's organizer. Optional. The default is
+   *        False.
    */
   core.Future<Event> move(core.String calendarId, core.String eventId, core.String destination, [core.bool sendNotifications = UNSPECIFIED]) {
     final $queryParams = {};
@@ -960,9 +1006,41 @@ class EventsResource extends core.Object {
   // Method EventsResource.List
   /**
    * Returns events on the specified calendar.
-   * [calendarId] Calendar identifier.
+   *
+   *    * [calendarId] Calendar identifier.
+   *    * [orderBy] The order of the events returned in the result. Optional. The default is an unspecified, stable
+   *        order.
+   *    * [showHiddenInvitations] Whether to include hidden invitations in the result. Optional. The default is False.
+   *    * [showDeleted] Whether to include deleted events (with 'eventStatus' equals 'cancelled') in the result. Optional.
+   *        The default is False.
+   *    * [iCalUID] Specifies iCalendar UID (iCalUID) of events to be included in the response. Optional.
+   *    * [updatedMin] Lower bound for an event's last modification time (as a RFC 3339 timestamp) to filter by. Optional.
+   *        The default is not to filter by last modification time.
+   *    * [singleEvents] Whether to expand recurring events into instances and only return single one-off events and
+   *        instances of recurring events, but not the underlying recurring events themselves.
+   *        Optional. The default is False.
+   *    * [alwaysIncludeEmail] Whether to always include a value in the "email" field for the organizer, creator and attendees,
+   *        even if no real email is available (i.e. a generated, non-working value will be provided).
+   *        The use of this option is discouraged and should only be used by clients which cannot
+   *        handle the absence of an email address value in the mentioned places. Optional. The
+   *        default is False.
+   *    * [maxResults] Maximum number of events returned on one result page. Optional.
+
+  Minimum: 1.
+   *    * [q] Free text search terms to find events that match these terms in any field, except for extended
+   *        properties. Optional.
+   *    * [pageToken] Token specifying which result page to return. Optional.
+   *    * [timeMin] Lower bound (inclusive) for an event's end time to filter by. Optional. The default is not to filter
+   *        by end time.
+   *    * [timeZone] Time zone used in the response. Optional. The default is the time zone of the calendar.
+   *    * [timeMax] Upper bound (exclusive) for an event's start time to filter by. Optional. The default is not to
+   *        filter by start time.
+   *    * [maxAttendees] The maximum number of attendees to include in the response. If there are more than the specified
+   *        number of attendees, only the participant is returned. Optional.
+
+  Minimum: 1.
    */
-  core.Future<Events> list(core.String calendarId, [EventsResourceListOrderBy orderBy = UNSPECIFIED, core.bool showHiddenInvitations = UNSPECIFIED, core.bool showDeleted = UNSPECIFIED, core.String iCalUID = UNSPECIFIED, core.String updatedMin = UNSPECIFIED, core.bool singleEvents = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String q = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.String timeMin = UNSPECIFIED, core.String timeZone = UNSPECIFIED, core.String timeMax = UNSPECIFIED, core.int maxAttendees = UNSPECIFIED]) {
+  core.Future<Events> list(core.String calendarId, [EventsResourceListOrderBy orderBy = UNSPECIFIED, core.bool showHiddenInvitations = UNSPECIFIED, core.bool showDeleted = UNSPECIFIED, core.String iCalUID = UNSPECIFIED, core.String updatedMin = UNSPECIFIED, core.bool singleEvents = UNSPECIFIED, core.bool alwaysIncludeEmail = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String q = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.String timeMin = UNSPECIFIED, core.String timeZone = UNSPECIFIED, core.String timeMax = UNSPECIFIED, core.int maxAttendees = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -973,6 +1051,7 @@ class EventsResource extends core.Object {
     if (UNSPECIFIED != iCalUID) $queryParams["iCalUID"] = iCalUID;
     if (UNSPECIFIED != updatedMin) $queryParams["updatedMin"] = updatedMin;
     if (UNSPECIFIED != singleEvents) $queryParams["singleEvents"] = singleEvents;
+    if (UNSPECIFIED != alwaysIncludeEmail) $queryParams["alwaysIncludeEmail"] = alwaysIncludeEmail;
     if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
     if (UNSPECIFIED != q) $queryParams["q"] = q;
     if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
@@ -1002,16 +1081,25 @@ class EventsResource extends core.Object {
   // Method EventsResource.Update
   /**
    * Updates an event.
-   * [calendarId] Calendar identifier.
-   * [eventId] Event identifier.
-   * [content] the Event
+   *
+   *    * [content] the Event
+   *    * [calendarId] Calendar identifier.
+   *    * [eventId] Event identifier.
+   *    * [alwaysIncludeEmail] Whether to always include a value in the "email" field for the organizer, creator and attendees,
+   *        even if no real email is available (i.e. a generated, non-working value will be provided).
+   *        The use of this option is discouraged and should only be used by clients which cannot
+   *        handle the absence of an email address value in the mentioned places. Optional. The
+   *        default is False.
+   *    * [sendNotifications] Whether to send notifications about the event update (e.g. attendee's responses, title changes,
+   *        etc.). Optional. The default is False.
    */
-  core.Future<Event> update(core.String calendarId, core.String eventId, Event content, [core.bool sendNotifications = UNSPECIFIED]) {
+  core.Future<Event> update(core.String calendarId, core.String eventId, Event content, [core.bool alwaysIncludeEmail = UNSPECIFIED, core.bool sendNotifications = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["calendarId"] = calendarId;
     $pathParams["eventId"] = eventId;
+    if (UNSPECIFIED != alwaysIncludeEmail) $queryParams["alwaysIncludeEmail"] = alwaysIncludeEmail;
     if (UNSPECIFIED != sendNotifications) $queryParams["sendNotifications"] = sendNotifications;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
@@ -1037,16 +1125,25 @@ class EventsResource extends core.Object {
   // Method EventsResource.Patch
   /**
    * Updates an event. This method supports patch semantics.
-   * [calendarId] Calendar identifier.
-   * [eventId] Event identifier.
-   * [content] the Event
+   *
+   *    * [content] the Event
+   *    * [calendarId] Calendar identifier.
+   *    * [eventId] Event identifier.
+   *    * [alwaysIncludeEmail] Whether to always include a value in the "email" field for the organizer, creator and attendees,
+   *        even if no real email is available (i.e. a generated, non-working value will be provided).
+   *        The use of this option is discouraged and should only be used by clients which cannot
+   *        handle the absence of an email address value in the mentioned places. Optional. The
+   *        default is False.
+   *    * [sendNotifications] Whether to send notifications about the event update (e.g. attendee's responses, title changes,
+   *        etc.). Optional. The default is False.
    */
-  core.Future<Event> patch(core.String calendarId, core.String eventId, Event content, [core.bool sendNotifications = UNSPECIFIED]) {
+  core.Future<Event> patch(core.String calendarId, core.String eventId, Event content, [core.bool alwaysIncludeEmail = UNSPECIFIED, core.bool sendNotifications = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["calendarId"] = calendarId;
     $pathParams["eventId"] = eventId;
+    if (UNSPECIFIED != alwaysIncludeEmail) $queryParams["alwaysIncludeEmail"] = alwaysIncludeEmail;
     if (UNSPECIFIED != sendNotifications) $queryParams["sendNotifications"] = sendNotifications;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
@@ -1072,16 +1169,35 @@ class EventsResource extends core.Object {
   // Method EventsResource.Instances
   /**
    * Returns instances of the specified recurring event.
-   * [calendarId] Calendar identifier.
-   * [eventId] Recurring event identifier.
+   *
+   *    * [calendarId] Calendar identifier.
+   *    * [eventId] Recurring event identifier.
+   *    * [showDeleted] Whether to include deleted events (with 'eventStatus' equals 'cancelled') in the result. Optional.
+   *        The default is False.
+   *    * [alwaysIncludeEmail] Whether to always include a value in the "email" field for the organizer, creator and attendees,
+   *        even if no real email is available (i.e. a generated, non-working value will be provided).
+   *        The use of this option is discouraged and should only be used by clients which cannot
+   *        handle the absence of an email address value in the mentioned places. Optional. The
+   *        default is False.
+   *    * [maxResults] Maximum number of events returned on one result page. Optional.
+
+  Minimum: 1.
+   *    * [pageToken] Token specifying which result page to return. Optional.
+   *    * [timeZone] Time zone used in the response. Optional. The default is the time zone of the calendar.
+   *    * [originalStart] The original start time of the instance in the result. Optional.
+   *    * [maxAttendees] The maximum number of attendees to include in the response. If there are more than the specified
+   *        number of attendees, only the participant is returned. Optional.
+
+  Minimum: 1.
    */
-  core.Future<Events> instances(core.String calendarId, core.String eventId, [core.bool showDeleted = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.String timeZone = UNSPECIFIED, core.String originalStart = UNSPECIFIED, core.int maxAttendees = UNSPECIFIED]) {
+  core.Future<Events> instances(core.String calendarId, core.String eventId, [core.bool showDeleted = UNSPECIFIED, core.bool alwaysIncludeEmail = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.String timeZone = UNSPECIFIED, core.String originalStart = UNSPECIFIED, core.int maxAttendees = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["calendarId"] = calendarId;
     $pathParams["eventId"] = eventId;
     if (UNSPECIFIED != showDeleted) $queryParams["showDeleted"] = showDeleted;
+    if (UNSPECIFIED != alwaysIncludeEmail) $queryParams["alwaysIncludeEmail"] = alwaysIncludeEmail;
     if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
     if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
     if (UNSPECIFIED != timeZone) $queryParams["timeZone"] = timeZone;
@@ -1109,8 +1225,9 @@ class EventsResource extends core.Object {
   // Method EventsResource.Import
   /**
    * Imports an event.
-   * [calendarId] Calendar identifier.
-   * [content] the Event
+   *
+   *    * [content] the Event
+   *    * [calendarId] Calendar identifier.
    */
   core.Future<Event> import(core.String calendarId, Event content) {
     final $queryParams = {};
@@ -1141,8 +1258,10 @@ class EventsResource extends core.Object {
   // Method EventsResource.QuickAdd
   /**
    * Creates an event based on a simple text string.
-   * [calendarId] Calendar identifier.
-   * [text] The text describing the event to be created.
+   *
+   *    * [calendarId] Calendar identifier.
+   *    * [text] The text describing the event to be created.
+   *    * [sendNotifications] Whether to send notifications about the creation of the event. Optional. The default is False.
    */
   core.Future<Event> quickAdd(core.String calendarId, core.String text, [core.bool sendNotifications = UNSPECIFIED]) {
     final $queryParams = {};
@@ -1173,8 +1292,10 @@ class EventsResource extends core.Object {
   // Method EventsResource.Delete
   /**
    * Deletes an event.
-   * [calendarId] Calendar identifier.
-   * [eventId] Event identifier.
+   *
+   *    * [calendarId] Calendar identifier.
+   *    * [eventId] Event identifier.
+   *    * [sendNotifications] Whether to send notifications about the deletion of the event. Optional. The default is False.
    */
   core.Future delete(core.String calendarId, core.String eventId, [core.bool sendNotifications = UNSPECIFIED]) {
     final $queryParams = {};
@@ -1661,6 +1782,9 @@ class Event extends IdentityHash {
  */
   EventOrganizer organizer;
 
+  /** Title of the event. */
+  core.String summary;
+
   /** Identifier of the event. */
   core.String id;
 
@@ -1694,11 +1818,8 @@ class Event extends IdentityHash {
  */
   core.String recurringEventId;
 
-  /**
- * For an instance of a recurring event, this is the time at which this event would start according
- * to the recurrence data in the recurring event identified by recurringEventId. Immutable.
- */
-  EventDateTime originalStartTime;
+  /** A gadget that extends this event. */
+  EventGadget gadget;
 
   /**
  * Status of the event. Optional. Possible values are: - "confirmed" - The event is confirmed. This
@@ -1710,9 +1831,6 @@ class Event extends IdentityHash {
   /** Last modification time of the event (as a RFC 3339 timestamp). Read-only. */
   core.String updated;
 
-  /** A gadget that extends this event. */
-  EventGadget gadget;
-
   /** Description of the event. Optional. */
   core.String description;
 
@@ -1721,6 +1839,9 @@ class Event extends IdentityHash {
 
   /** Extended properties of the event. */
   EventExtendedProperties extendedProperties;
+
+  
+  core.bool endTimeUnspecified;
 
   /** Sequence number as per iCalendar. */
   core.int sequence;
@@ -1756,6 +1877,13 @@ class Event extends IdentityHash {
   /** Type of the resource ("calendar#event"). */
   core.String kind;
 
+  /**
+ * Whether this is a locked event copy where no changes can be made to the main event fields
+ * "summary", "description", "location", "start", "end" or "recurrence". The default is False. Read-
+ * Only.
+ */
+  core.bool locked;
+
   /** Creation time of the event (as a RFC 3339 timestamp). Read-only. */
   core.String created;
 
@@ -1777,8 +1905,11 @@ class Event extends IdentityHash {
  */
   core.bool guestsCanSeeOtherGuests;
 
-  /** Title of the event. */
-  core.String summary;
+  /**
+ * For an instance of a recurring event, this is the time at which this event would start according
+ * to the recurrence data in the recurring event identified by recurringEventId. Immutable.
+ */
+  EventDateTime originalStartTime;
 
   /**
  * Whether attendees other than the organizer can invite others to the event. Optional. The default
@@ -1805,6 +1936,7 @@ class Event extends IdentityHash {
     final result = new Event();
     result.creator = EventCreator.parse(json["creator"]);
     result.organizer = EventOrganizer.parse(json["organizer"]);
+    result.summary = identity(json["summary"]);
     result.id = identity(json["id"]);
     result.attendees = map(EventAttendee.parse)(json["attendees"]);
     result.htmlLink = identity(json["htmlLink"]);
@@ -1813,25 +1945,26 @@ class Event extends IdentityHash {
     result.etag = identity(json["etag"]);
     result.location = identity(json["location"]);
     result.recurringEventId = identity(json["recurringEventId"]);
-    result.originalStartTime = EventDateTime.parse(json["originalStartTime"]);
+    result.gadget = EventGadget.parse(json["gadget"]);
     result.status = identity(json["status"]);
     result.updated = identity(json["updated"]);
-    result.gadget = EventGadget.parse(json["gadget"]);
     result.description = identity(json["description"]);
     result.iCalUID = identity(json["iCalUID"]);
     result.extendedProperties = EventExtendedProperties.parse(json["extendedProperties"]);
+    result.endTimeUnspecified = identity(json["endTimeUnspecified"]);
     result.sequence = identity(json["sequence"]);
     result.visibility = identity(json["visibility"]);
     result.guestsCanModify = identity(json["guestsCanModify"]);
     result.end = EventDateTime.parse(json["end"]);
     result.attendeesOmitted = identity(json["attendeesOmitted"]);
     result.kind = identity(json["kind"]);
+    result.locked = identity(json["locked"]);
     result.created = identity(json["created"]);
     result.colorId = identity(json["colorId"]);
     result.anyoneCanAddSelf = identity(json["anyoneCanAddSelf"]);
     result.reminders = EventReminders.parse(json["reminders"]);
     result.guestsCanSeeOtherGuests = identity(json["guestsCanSeeOtherGuests"]);
-    result.summary = identity(json["summary"]);
+    result.originalStartTime = EventDateTime.parse(json["originalStartTime"]);
     result.guestsCanInviteOthers = identity(json["guestsCanInviteOthers"]);
     result.transparency = identity(json["transparency"]);
     result.privateCopy = identity(json["privateCopy"]);
@@ -1843,6 +1976,7 @@ class Event extends IdentityHash {
     final result = {};
     result["creator"] = EventCreator.serialize(value.creator);
     result["organizer"] = EventOrganizer.serialize(value.organizer);
+    result["summary"] = identity(value.summary);
     result["id"] = identity(value.id);
     result["attendees"] = map(EventAttendee.serialize)(value.attendees);
     result["htmlLink"] = identity(value.htmlLink);
@@ -1851,25 +1985,26 @@ class Event extends IdentityHash {
     result["etag"] = identity(value.etag);
     result["location"] = identity(value.location);
     result["recurringEventId"] = identity(value.recurringEventId);
-    result["originalStartTime"] = EventDateTime.serialize(value.originalStartTime);
+    result["gadget"] = EventGadget.serialize(value.gadget);
     result["status"] = identity(value.status);
     result["updated"] = identity(value.updated);
-    result["gadget"] = EventGadget.serialize(value.gadget);
     result["description"] = identity(value.description);
     result["iCalUID"] = identity(value.iCalUID);
     result["extendedProperties"] = EventExtendedProperties.serialize(value.extendedProperties);
+    result["endTimeUnspecified"] = identity(value.endTimeUnspecified);
     result["sequence"] = identity(value.sequence);
     result["visibility"] = identity(value.visibility);
     result["guestsCanModify"] = identity(value.guestsCanModify);
     result["end"] = EventDateTime.serialize(value.end);
     result["attendeesOmitted"] = identity(value.attendeesOmitted);
     result["kind"] = identity(value.kind);
+    result["locked"] = identity(value.locked);
     result["created"] = identity(value.created);
     result["colorId"] = identity(value.colorId);
     result["anyoneCanAddSelf"] = identity(value.anyoneCanAddSelf);
     result["reminders"] = EventReminders.serialize(value.reminders);
     result["guestsCanSeeOtherGuests"] = identity(value.guestsCanSeeOtherGuests);
-    result["summary"] = identity(value.summary);
+    result["originalStartTime"] = EventDateTime.serialize(value.originalStartTime);
     result["guestsCanInviteOthers"] = identity(value.guestsCanInviteOthers);
     result["transparency"] = identity(value.transparency);
     result["privateCopy"] = identity(value.privateCopy);
@@ -1887,18 +2022,21 @@ class EventAttendee extends IdentityHash {
   core.String displayName;
 
   /**
- * Whether this entry represents the calendar on which this copy of the event appears. Read-only.
- * The default is False.
- */
-  core.bool self;
-
-  /**
  * The attendee's response status. Possible values are: - "needsAction" - The attendee has not
  * responded to the invitation. - "declined" - The attendee has declined the invitation. -
  * "tentative" - The attendee has tentatively accepted the invitation. - "accepted" - The attendee
  * has accepted the invitation.
  */
   core.String responseStatus;
+
+  /**
+ * Whether this entry represents the calendar on which this copy of the event appears. Read-only.
+ * The default is False.
+ */
+  core.bool self;
+
+  /** The attendee's Profile ID, if available. */
+  core.String id;
 
   /** Number of additional guests. Optional. The default is 0. */
   core.int additionalGuests;
@@ -1923,8 +2061,9 @@ class EventAttendee extends IdentityHash {
     final result = new EventAttendee();
     result.comment = identity(json["comment"]);
     result.displayName = identity(json["displayName"]);
-    result.self = identity(json["self"]);
     result.responseStatus = identity(json["responseStatus"]);
+    result.self = identity(json["self"]);
+    result.id = identity(json["id"]);
     result.additionalGuests = identity(json["additionalGuests"]);
     result.resource = identity(json["resource"]);
     result.organizer = identity(json["organizer"]);
@@ -1938,8 +2077,9 @@ class EventAttendee extends IdentityHash {
     final result = {};
     result["comment"] = identity(value.comment);
     result["displayName"] = identity(value.displayName);
-    result["self"] = identity(value.self);
     result["responseStatus"] = identity(value.responseStatus);
+    result["self"] = identity(value.self);
+    result["id"] = identity(value.id);
     result["additionalGuests"] = identity(value.additionalGuests);
     result["resource"] = identity(value.resource);
     result["organizer"] = identity(value.organizer);
@@ -1964,6 +2104,9 @@ class EventCreator extends IdentityHash {
   /** The creator's email address, if available. */
   core.String email;
 
+  /** The creator's Profile ID, if available. */
+  core.String id;
+
   /** Parses an instance from its JSON representation. */
   static EventCreator parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
@@ -1971,6 +2114,7 @@ class EventCreator extends IdentityHash {
     result.self = identity(json["self"]);
     result.displayName = identity(json["displayName"]);
     result.email = identity(json["email"]);
+    result.id = identity(json["id"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
@@ -1980,6 +2124,7 @@ class EventCreator extends IdentityHash {
     result["self"] = identity(value.self);
     result["displayName"] = identity(value.displayName);
     result["email"] = identity(value.email);
+    result["id"] = identity(value.id);
     return result;
   }
   toString() => serialize(this).toString();
@@ -2124,6 +2269,9 @@ class EventOrganizer extends IdentityHash {
   /** The organizer's email address, if available. */
   core.String email;
 
+  /** The organizer's Profile ID, if available. */
+  core.String id;
+
   /** Parses an instance from its JSON representation. */
   static EventOrganizer parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
@@ -2131,6 +2279,7 @@ class EventOrganizer extends IdentityHash {
     result.self = identity(json["self"]);
     result.displayName = identity(json["displayName"]);
     result.email = identity(json["email"]);
+    result.id = identity(json["id"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
@@ -2140,6 +2289,7 @@ class EventOrganizer extends IdentityHash {
     result["self"] = identity(value.self);
     result["displayName"] = identity(value.displayName);
     result["email"] = identity(value.email);
+    result["id"] = identity(value.id);
     return result;
   }
   toString() => serialize(this).toString();

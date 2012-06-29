@@ -110,8 +110,14 @@ class ManagementWebpropertiesResourceResource extends core.Object {
   // Method ManagementResource.ManagementWebpropertiesResourceResource.List
   /**
    * Lists web properties to which the user has access.
-   * [accountId] Account ID to retrieve web properties for. Can either be a specific account ID or '~all', which
+   *
+   *    * [accountId] Account ID to retrieve web properties for. Can either be a specific account ID or '~all', which
    *        refers to all the accounts that user has access to.
+   *    * [maxResults] The maximum number of web properties to include in this response.
+   *    * [startIndex] An index of the first entity to retrieve. Use this parameter as a pagination mechanism along with
+   *        the max-results parameter.
+
+  Minimum: 1.
    */
   core.Future<Webproperties> list(core.String accountId, [core.int maxResults = UNSPECIFIED, core.int startIndex = UNSPECIFIED]) {
     final $queryParams = {};
@@ -149,6 +155,12 @@ class ManagementSegmentsResourceResource extends core.Object {
   // Method ManagementResource.ManagementSegmentsResourceResource.List
   /**
    * Lists advanced segments to which the user has access.
+   *
+   *    * [maxResults] The maximum number of advanced segments to include in this response.
+   *    * [startIndex] An index of the first advanced segment to retrieve. Use this parameter as a pagination mechanism
+   *        along with the max-results parameter.
+
+  Minimum: 1.
    */
   core.Future<Segments> list([core.int maxResults = UNSPECIFIED, core.int startIndex = UNSPECIFIED]) {
     final $queryParams = {};
@@ -185,6 +197,12 @@ class ManagementAccountsResourceResource extends core.Object {
   // Method ManagementResource.ManagementAccountsResourceResource.List
   /**
    * Lists all accounts to which the user has access.
+   *
+   *    * [maxResults] The maximum number of accounts to include in this response.
+   *    * [startIndex] An index of the first account to retrieve. Use this parameter as a pagination mechanism along with
+   *        the max-results parameter.
+
+  Minimum: 1.
    */
   core.Future<Accounts> list([core.int maxResults = UNSPECIFIED, core.int startIndex = UNSPECIFIED]) {
     final $queryParams = {};
@@ -221,12 +239,18 @@ class ManagementGoalsResourceResource extends core.Object {
   // Method ManagementResource.ManagementGoalsResourceResource.List
   /**
    * Lists goals to which the user has access.
-   * [accountId] Account ID to retrieve goals for. Can either be a specific account ID or '~all', which refers to all
+   *
+   *    * [accountId] Account ID to retrieve goals for. Can either be a specific account ID or '~all', which refers to all
    *        the accounts that user has access to.
-   * [webPropertyId] Web property ID to retrieve goals for. Can either be a specific web property ID or '~all', which
+   *    * [webPropertyId] Web property ID to retrieve goals for. Can either be a specific web property ID or '~all', which
    *        refers to all the web properties that user has access to.
-   * [profileId] Profile ID to retrieve goals for. Can either be a specific profile ID or '~all', which refers to all
+   *    * [profileId] Profile ID to retrieve goals for. Can either be a specific profile ID or '~all', which refers to all
    *        the profiles that user has access to.
+   *    * [maxResults] The maximum number of goals to include in this response.
+   *    * [startIndex] An index of the first goal to retrieve. Use this parameter as a pagination mechanism along with the
+   *        max-results parameter.
+
+  Minimum: 1.
    */
   core.Future<Goals> list(core.String accountId, core.String webPropertyId, core.String profileId, [core.int maxResults = UNSPECIFIED, core.int startIndex = UNSPECIFIED]) {
     final $queryParams = {};
@@ -266,10 +290,16 @@ class ManagementProfilesResourceResource extends core.Object {
   // Method ManagementResource.ManagementProfilesResourceResource.List
   /**
    * Lists profiles to which the user has access.
-   * [accountId] Account ID for the profiles to retrieve. Can either be a specific account ID or '~all', which refers
+   *
+   *    * [accountId] Account ID for the profiles to retrieve. Can either be a specific account ID or '~all', which refers
    *        to all the accounts to which the user has access.
-   * [webPropertyId] Web property ID for the profiles to retrieve. Can either be a specific web property ID or '~all',
+   *    * [webPropertyId] Web property ID for the profiles to retrieve. Can either be a specific web property ID or '~all',
    *        which refers to all the web properties to which the user has access.
+   *    * [maxResults] The maximum number of profiles to include in this response.
+   *    * [startIndex] An index of the first entity to retrieve. Use this parameter as a pagination mechanism along with
+   *        the max-results parameter.
+
+  Minimum: 1.
    */
   core.Future<Profiles> list(core.String accountId, core.String webPropertyId, [core.int maxResults = UNSPECIFIED, core.int startIndex = UNSPECIFIED]) {
     final $queryParams = {};
@@ -318,14 +348,24 @@ class DataGaResourceResource extends core.Object {
   // Method DataResource.DataGaResourceResource.Get
   /**
    * Returns Analytics data for a profile.
-   * [ids] Unique table ID for retrieving Analytics data. Table ID is of the form ga:XXXX, where XXXX is the
+   *
+   *    * [ids] Unique table ID for retrieving Analytics data. Table ID is of the form ga:XXXX, where XXXX is the
    *        Analytics profile ID.
-   * [startDate] Start date for fetching Analytics data. All requests should specify a start date formatted as YYYY-
+   *    * [startDate] Start date for fetching Analytics data. All requests should specify a start date formatted as YYYY-
    *        MM-DD.
-   * [endDate] End date for fetching Analytics data. All requests should specify an end date formatted as YYYY-MM-
+   *    * [endDate] End date for fetching Analytics data. All requests should specify an end date formatted as YYYY-MM-
    *        DD.
-   * [metrics] A comma-separated list of Analytics metrics. E.g., 'ga:visits,ga:pageviews'. At least one metric
+   *    * [metrics] A comma-separated list of Analytics metrics. E.g., 'ga:visits,ga:pageviews'. At least one metric
    *        must be specified.
+   *    * [maxResults] The maximum number of entries to include in this feed.
+   *    * [sort] A comma-separated list of dimensions or metrics that determine the sort order for Analytics data.
+   *    * [dimensions] A comma-separated list of Analytics dimensions. E.g., 'ga:browser,ga:city'.
+   *    * [startIndex] An index of the first entity to retrieve. Use this parameter as a pagination mechanism along with
+   *        the max-results parameter.
+
+  Minimum: 1.
+   *    * [segment] An Analytics advanced segment to be applied to data.
+   *    * [filters] A comma-separated list of dimension or metric filters to be applied to Analytics data.
    */
   core.Future<GaData> get(core.String ids, core.String startDate, core.String endDate, core.String metrics, [core.int maxResults = UNSPECIFIED, core.String sort = UNSPECIFIED, core.String dimensions = UNSPECIFIED, core.int startIndex = UNSPECIFIED, core.String segment = UNSPECIFIED, core.String filters = UNSPECIFIED]) {
     final $queryParams = {};

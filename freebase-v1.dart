@@ -77,7 +77,24 @@ class FreebaseApi extends core.Object {
   // Method .Mqlread
   /**
    * Performs MQL Queries.
-   * [query] An envelope containing a single MQL query.
+   *
+   *    * [query] An envelope containing a single MQL query.
+   *    * [lang] The language of the results - an id of a /type/lang object.
+  Default: /lang/en.
+   *    * [htmlEscape] Whether or not to escape entities.
+  Default: true.
+   *    * [indent] How many spaces to indent the json.
+  Default: 0.
+
+  Maximum: 10.
+   *    * [uniquenessFailure] How MQL responds to uniqueness failures.
+  Default: hard.
+   *    * [dateline] The dateline that you get in a mqlwrite response to ensure consistent results.
+   *    * [cursor] The mql cursor.
+   *    * [callback] JS method name for JSONP callbacks.
+   *    * [cost] Show the costs or not.
+  Default: false.
+   *    * [asOfTime] Run the query as it would've been run at the specified point in time.
    */
   core.Future mqlread(core.String query, [core.String lang = UNSPECIFIED, core.bool htmlEscape = UNSPECIFIED, core.int indent = UNSPECIFIED, MqlreadUniquenessFailure uniquenessFailure = UNSPECIFIED, core.String dateline = UNSPECIFIED, core.String cursor = UNSPECIFIED, core.String callback = UNSPECIFIED, core.bool cost = UNSPECIFIED, core.String asOfTime = UNSPECIFIED]) {
     final $queryParams = {};
@@ -113,7 +130,22 @@ class FreebaseApi extends core.Object {
   }  // Method .Image
   /**
    * Returns the scaled/cropped image attached to a freebase node.
-   * [id] Freebase entity or content id, mid, or guid.
+   *
+   *    * [id] Freebase entity or content id, mid, or guid.
+   *    * [maxwidth] Maximum width in pixels for resulting image.
+
+
+  Maximum: 4096.
+   *    * [maxheight] Maximum height in pixels for resulting image.
+
+
+  Maximum: 4096.
+   *    * [fallbackid] Use the image associated with this secondary id if no image is associated with the primary id.
+   *        Default: /freebase/no_image_png.
+   *    * [pad] A boolean specifying whether the resulting image should be padded up to the requested dimensions.
+   *        Default: false.
+   *    * [mode] Method used to scale or crop image.
+  Default: fit.
    */
   core.Future image(core.List<core.String> id, [core.int maxwidth = UNSPECIFIED, core.int maxheight = UNSPECIFIED, core.String fallbackid = UNSPECIFIED, core.bool pad = UNSPECIFIED, ImageMode mode = UNSPECIFIED]) {
     final $queryParams = {};
@@ -154,7 +186,11 @@ class TextResource extends core.Object {
   // Method TextResource.Get
   /**
    * Returns blob attached to node at specified id as HTML
-   * [id] The id of the item that you want data about
+   *
+   *    * [id] The id of the item that you want data about
+   *    * [maxlength] The max number of characters to return. Valid only for 'plain' format.
+   *    * [format] Sanitizing transformation.
+  Default: plain.
    */
   core.Future<ContentserviceGet> get(core.List<core.String> id, [core.int maxlength = UNSPECIFIED, TextResourceGetFormat format = UNSPECIFIED]) {
     final $queryParams = {};
@@ -300,13 +336,13 @@ class MqlreadUniquenessFailure extends core.Object implements core.Hashable {
 
 // Enum Image.Mode
 class ImageMode extends core.Object implements core.Hashable {
-  /** TODO(bendrees) */
+  /** Fill rectangle completely with image, relax constraint on one dimension if necessary. */
   static final ImageMode FILL = const ImageMode._internal("fill", 0);
-  /** TODO(bendrees) */
+  /** Fill rectangle with image, crop image to maintain rectangle dimensions. */
   static final ImageMode FILLCROP = const ImageMode._internal("fillcrop", 1);
-  /** TODO(bendrees) */
+  /** Fill rectangle with image, center horizontally, crop left and right. */
   static final ImageMode FILLCROPMID = const ImageMode._internal("fillcropmid", 2);
-  /** TODO(bendrees) */
+  /** Fit image inside rectangle, leave empty space in one dimension if necessary. */
   static final ImageMode FIT = const ImageMode._internal("fit", 3);
 
   /** All values of this enumeration */

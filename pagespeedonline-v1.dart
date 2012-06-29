@@ -88,7 +88,11 @@ class PagespeedapiResource extends core.Object {
   /**
    * Runs Page Speed analysis on the page at the specified URL, and returns a Page Speed score, a list
    * of suggestions to make that page faster, and other information.
-   * [url] The URL to fetch and analyze
+   *
+   *    * [url] The URL to fetch and analyze
+   *    * [locale] The locale used to localize formatted results
+   *    * [rule] A Page Speed rule to run; if none are given, all rules are run
+   *    * [strategy] The analysis strategy to use
    */
   core.Future<Result> runpagespeed(core.String url, [core.String locale = UNSPECIFIED, core.List<core.String> rule = UNSPECIFIED, PagespeedapiResourceRunpagespeedStrategy strategy = UNSPECIFIED]) {
     final $queryParams = {};

@@ -98,7 +98,17 @@ class FilesResource extends core.Object {
   // Method FilesResource.List
   /**
    * Lists files for a user profile.
-   * [profileId] The DFA profile id.
+   *
+   *    * [profileId] The DFA profile id.
+   *    * [pageToken] The value of the nextToken from the previous result page.
+   *    * [sortField] The field to sort the list by.
+  Default: LAST_MODIFIED_TIME.
+   *    * [sortOrder] Order of sorted results, default is 'DESCENDING'.
+  Default: DESCENDING.
+   *    * [maxResults] Maximum number of results to return.
+
+  Minimum: 0.
+  Maximum: 10.
    */
   core.Future<FileList> list(core.String profileId, [core.String pageToken = UNSPECIFIED, FilesResourceListSortField sortField = UNSPECIFIED, FilesResourceListSortOrder sortOrder = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
     final $queryParams = {};
@@ -200,8 +210,14 @@ class DimensionValuesResource extends core.Object {
   // Method DimensionValuesResource.Query
   /**
    * Retrieves list of report dimension values for a list of filters.
-   * [profileId] The DFA user profile id.
-   * [content] the DimensionValueRequest
+   *
+   *    * [content] the DimensionValueRequest
+   *    * [profileId] The DFA user profile id.
+   *    * [pageToken] The value of the nextToken from the previous result page.
+   *    * [maxResults] Maximum number of results to return.
+
+  Minimum: 0.
+  Maximum: 100.
    */
   core.Future<DimensionValueList> query(core.String profileId, DimensionValueRequest content, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
     final $queryParams = {};
@@ -241,6 +257,7 @@ class UserProfilesResource extends core.Object {
   // Method UserProfilesResource.List
   /**
    * Retrieves list of user profiles for a user.
+   *
    */
   core.Future<UserProfileList> list() {
     final $queryParams = {};
@@ -268,7 +285,8 @@ class UserProfilesResource extends core.Object {
   // Method UserProfilesResource.Get
   /**
    * Gets one user profile by id.
-   * [profileId] The user profile id.
+   *
+   *    * [profileId] The user profile id.
    */
   core.Future<UserProfile> get(core.String profileId) {
     final $queryParams = {};
@@ -306,8 +324,9 @@ class ReportsResource extends core.Object {
   // Method ReportsResource.Insert
   /**
    * Creates a report.
-   * [profileId] The DFA user profile id.
-   * [content] the Report
+   *
+   *    * [content] the Report
+   *    * [profileId] The DFA user profile id.
    */
   core.Future<Report> insert(core.String profileId, Report content) {
     final $queryParams = {};
@@ -338,8 +357,10 @@ class ReportsResource extends core.Object {
   // Method ReportsResource.Run
   /**
    * Runs a report.
-   * [profileId] The DFA profile id.
-   * [reportId] The id of the report.
+   *
+   *    * [profileId] The DFA profile id.
+   *    * [reportId] The id of the report.
+   *    * [synchronous] If set and true, tries to run the report synchronously.
    */
   core.Future<File> run(core.String profileId, core.String reportId, [core.bool synchronous = UNSPECIFIED]) {
     final $queryParams = {};
@@ -370,8 +391,9 @@ class ReportsResource extends core.Object {
   // Method ReportsResource.Get
   /**
    * Retrieves a report by its id.
-   * [profileId] The DFA user profile id.
-   * [reportId] The id of the report.
+   *
+   *    * [profileId] The DFA user profile id.
+   *    * [reportId] The id of the report.
    */
   core.Future<Report> get(core.String profileId, core.String reportId) {
     final $queryParams = {};
@@ -401,7 +423,17 @@ class ReportsResource extends core.Object {
   // Method ReportsResource.List
   /**
    * Retrieves list of reports.
-   * [profileId] The DFA user profile id.
+   *
+   *    * [profileId] The DFA user profile id.
+   *    * [pageToken] The value of the nextToken from the previous result page.
+   *    * [sortField] The field to sort the list by.
+  Default: LAST_MODIFIED_TIME.
+   *    * [sortOrder] Order of sorted results, default is 'DESCENDING'.
+  Default: DESCENDING.
+   *    * [maxResults] Maximum number of results to return.
+
+  Minimum: 0.
+  Maximum: 10.
    */
   core.Future<ReportList> list(core.String profileId, [core.String pageToken = UNSPECIFIED, ReportsResourceListSortField sortField = UNSPECIFIED, ReportsResourceListSortOrder sortOrder = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
     final $queryParams = {};
@@ -434,9 +466,10 @@ class ReportsResource extends core.Object {
   // Method ReportsResource.Update
   /**
    * Updates a report.
-   * [profileId] The DFA user profile id.
-   * [reportId] The id of the report.
-   * [content] the Report
+   *
+   *    * [content] the Report
+   *    * [profileId] The DFA user profile id.
+   *    * [reportId] The id of the report.
    */
   core.Future<Report> update(core.String profileId, core.String reportId, Report content) {
     final $queryParams = {};
@@ -468,9 +501,10 @@ class ReportsResource extends core.Object {
   // Method ReportsResource.Patch
   /**
    * Updates a report. This method supports patch semantics.
-   * [profileId] The DFA user profile id.
-   * [reportId] The id of the report.
-   * [content] the Report
+   *
+   *    * [content] the Report
+   *    * [profileId] The DFA user profile id.
+   *    * [reportId] The id of the report.
    */
   core.Future<Report> patch(core.String profileId, core.String reportId, Report content) {
     final $queryParams = {};
@@ -502,8 +536,9 @@ class ReportsResource extends core.Object {
   // Method ReportsResource.Delete
   /**
    * Deletes a report by its id.
-   * [profileId] The DFA user profile id.
-   * [reportId] The id of the report.
+   *
+   *    * [profileId] The DFA user profile id.
+   *    * [reportId] The id of the report.
    */
   core.Future delete(core.String profileId, core.String reportId) {
     final $queryParams = {};
@@ -607,8 +642,18 @@ class ReportsFilesResourceResource extends core.Object {
   // Method ReportsResource.ReportsFilesResourceResource.List
   /**
    * Lists files for a report.
-   * [profileId] The DFA profile id.
-   * [reportId] The id of the parent report.
+   *
+   *    * [profileId] The DFA profile id.
+   *    * [reportId] The id of the parent report.
+   *    * [sortField] The field to sort the list by.
+  Default: LAST_MODIFIED_TIME.
+   *    * [maxResults] Maximum number of results to return.
+
+  Minimum: 0.
+  Maximum: 10.
+   *    * [pageToken] The value of the nextToken from the previous result page.
+   *    * [sortOrder] Order of sorted results, default is 'DESCENDING'.
+  Default: DESCENDING.
    */
   core.Future<FileList> list(core.String profileId, core.String reportId, [ReportsResourceReportsFilesResourceResourceListSortField sortField = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String pageToken = UNSPECIFIED, ReportsResourceReportsFilesResourceResourceListSortOrder sortOrder = UNSPECIFIED]) {
     final $queryParams = {};
@@ -642,9 +687,10 @@ class ReportsFilesResourceResource extends core.Object {
   // Method ReportsResource.ReportsFilesResourceResource.Get
   /**
    * Retrieves a report file.
-   * [profileId] The DFA profile id.
-   * [reportId] The id of the report.
-   * [fileId] The id of the report file.
+   *
+   *    * [profileId] The DFA profile id.
+   *    * [reportId] The id of the report.
+   *    * [fileId] The id of the report file.
    */
   core.Future<File> get(core.String profileId, core.String reportId, core.String fileId) {
     final $queryParams = {};

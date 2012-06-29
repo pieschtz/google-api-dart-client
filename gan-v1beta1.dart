@@ -104,8 +104,30 @@ class AdvertisersResource extends core.Object {
   // Method AdvertisersResource.List
   /**
    * Retrieves data about all advertisers that the requesting advertiser/publisher has access to.
-   * [role] The role of the requester. Valid values: 'advertisers' or 'publishers'.
-   * [roleId] The ID of the requesting advertiser or publisher.
+   *
+   *    * [role] The role of the requester. Valid values: 'advertisers' or 'publishers'.
+   *    * [roleId] The ID of the requesting advertiser or publisher.
+   *    * [relationshipStatus] Filters out all advertisers for which do not have the given relationship status with the requesting
+   *        publisher.
+   *    * [minSevenDayEpc] Filters out all advertisers that have a seven day EPC average lower than the given value
+   *        (inclusive). Min value: 0.0. Optional.
+   *    * [advertiserCategory] Caret(^) delimted list of advertiser categories. Valid categories are defined here:
+   *        http://www.google.com/support/affiliatenetwork/advertiser/bin/answer.py?hl=en=107581.
+   *        Filters out all advertisers not in one of the given advertiser categories. Optional.
+   *    * [minNinetyDayEpc] Filters out all advertisers that have a ninety day EPC average lower than the given value
+   *        (inclusive). Min value: 0.0. Optional.
+   *    * [pageToken] The value of 'nextPageToken' from the previous page. Optional.
+   *    * [maxResults] Max number of items to return in this page. Optional. Defaults to 20.
+
+  Minimum: 0.
+  Maximum: 100.
+   *    * [minPayoutRank] A value between 1 and 4, where 1 represents the quartile of advertisers with the lowest ranks and 4
+   *        represents the quartile of advertisers with the highest ranks. Filters out all advertisers
+   *        with a lower rank than the given quartile. For example if a 2 was given only advertisers
+   *        with a payout rank of 25 or higher would be included. Optional.
+
+  Minimum: 1.
+  Maximum: 4.
    */
   core.Future<Advertisers> list(AdvertisersResourceListRole role, core.String roleId, [AdvertisersResourceListRelationshipStatus relationshipStatus = UNSPECIFIED, core.double minSevenDayEpc = UNSPECIFIED, core.String advertiserCategory = UNSPECIFIED, core.double minNinetyDayEpc = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.int minPayoutRank = UNSPECIFIED]) {
     final $queryParams = {};
@@ -144,8 +166,10 @@ class AdvertisersResource extends core.Object {
    * Retrieves data about a single advertiser if that the requesting advertiser/publisher has access
    * to it. Only publishers can lookup advertisers. Advertisers can request information about
    * themselves by omitting the advertiserId query parameter.
-   * [role] The role of the requester. Valid values: 'advertisers' or 'publishers'.
-   * [roleId] The ID of the requesting advertiser or publisher.
+   *
+   *    * [role] The role of the requester. Valid values: 'advertisers' or 'publishers'.
+   *    * [roleId] The ID of the requesting advertiser or publisher.
+   *    * [advertiserId] The ID of the advertiser to look up. Optional.
    */
   core.Future<Advertiser> get(AdvertisersResourceGetRole role, core.String roleId, [core.String advertiserId = UNSPECIFIED]) {
     final $queryParams = {};
@@ -294,7 +318,10 @@ class CcOffersResource extends core.Object {
   // Method CcOffersResource.List
   /**
    * Retrieves credit card offers for the given publisher.
-   * [publisher] The ID of the publisher in question.
+   *
+   *    * [publisher] The ID of the publisher in question.
+   *    * [advertiser] The advertiser ID of a card issuer whose offers to include. Optional, may be repeated.
+   *    * [projection] The set of fields to return.
    */
   core.Future<CcOffers> list(core.String publisher, [core.List<core.String> advertiser = UNSPECIFIED, CcOffersResourceListProjection projection = UNSPECIFIED]) {
     final $queryParams = {};
@@ -363,8 +390,41 @@ class EventsResource extends core.Object {
   // Method EventsResource.List
   /**
    * Retrieves event data for a given advertiser/publisher.
-   * [role] The role of the requester. Valid values: 'advertisers' or 'publishers'.
-   * [roleId] The ID of the requesting advertiser or publisher.
+   *
+   *    * [role] The role of the requester. Valid values: 'advertisers' or 'publishers'.
+   *    * [roleId] The ID of the requesting advertiser or publisher.
+   *    * [orderId] Caret(^) delimited list of order IDs. Filters out all events that do not reference one of the given
+   *        order IDs. Optional.
+   *    * [sku] Caret(^) delimited list of SKUs. Filters out all events that do not reference one of the given SKU.
+   *        Optional.
+   *    * [eventDateMax] Filters out all events later than given date. Optional. Defaults to 24 hours after eventMin.
+   *    * [type] Filters out all events that are not of the given type. Valid values: 'action', 'transaction',
+   *        'charge'. Optional.
+   *    * [linkId] Caret(^) delimited list of link IDs. Filters out all events that do not reference one of the given
+   *        link IDs. Optional.
+   *    * [modifyDateMin] Filters out all events modified earlier than given date. Optional. Defaults to 24 hours before the
+   *        current modifyDateMax, if modifyDateMax is explicitly set.
+   *    * [eventDateMin] Filters out all events earlier than given date. Optional. Defaults to 24 hours from current
+   *        date/time.
+   *    * [memberId] Caret(^) delimited list of member IDs. Filters out all events that do not reference one of the given
+   *        member IDs. Optional.
+   *    * [maxResults] Max number of offers to return in this page. Optional. Defaults to 20.
+
+  Minimum: 0.
+  Maximum: 100.
+   *    * [advertiserId] Caret(^) delimited list of advertiser IDs. Filters out all events that do not reference one of the
+   *        given advertiser IDs. Only used when under publishers role. Optional.
+   *    * [pageToken] The value of 'nextPageToken' from the previous page. Optional.
+   *    * [productCategory] Caret(^) delimited list of product categories. Filters out all events that do not reference a
+   *        product in one of the given product categories. Optional.
+   *    * [chargeType] Filters out all charge events that are not of the given charge type. Valid values: 'other',
+   *        'slotting_fee', 'monthly_minimum', 'tier_bonus', 'credit', 'debit'. Optional.
+   *    * [modifyDateMax] Filters out all events modified later than given date. Optional. Defaults to 24 hours after
+   *        modifyDateMin, if modifyDateMin is explicitly set.
+   *    * [status] Filters out all events that do not have the given status. Valid values: 'active', 'canceled'.
+   *        Optional.
+   *    * [publisherId] Caret(^) delimited list of publisher IDs. Filters out all events that do not reference one of the
+   *        given publishers IDs. Only used when under advertiser role. Optional.
    */
   core.Future<Events> list(EventsResourceListRole role, core.String roleId, [core.String orderId = UNSPECIFIED, core.String sku = UNSPECIFIED, core.String eventDateMax = UNSPECIFIED, EventsResourceListType type = UNSPECIFIED, core.String linkId = UNSPECIFIED, core.String modifyDateMin = UNSPECIFIED, core.String eventDateMin = UNSPECIFIED, core.String memberId = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String advertiserId = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.String productCategory = UNSPECIFIED, EventsResourceListChargeType chargeType = UNSPECIFIED, core.String modifyDateMax = UNSPECIFIED, EventsResourceListStatus status = UNSPECIFIED, core.String publisherId = UNSPECIFIED]) {
     final $queryParams = {};
@@ -569,9 +629,10 @@ class LinksResource extends core.Object {
   // Method LinksResource.Insert
   /**
    * Inserts a new link.
-   * [role] The role of the requester. Valid values: 'advertisers' or 'publishers'.
-   * [roleId] The ID of the requesting advertiser or publisher.
-   * [content] the Link
+   *
+   *    * [content] the Link
+   *    * [role] The role of the requester. Valid values: 'advertisers' or 'publishers'.
+   *    * [roleId] The ID of the requesting advertiser or publisher.
    */
   core.Future<Link> insert(LinksResourceInsertRole role, core.String roleId, Link content) {
     final $queryParams = {};
@@ -603,8 +664,23 @@ class LinksResource extends core.Object {
   // Method LinksResource.List
   /**
    * Retrieves all links that match the query parameters.
-   * [role] The role of the requester. Valid values: 'advertisers' or 'publishers'.
-   * [roleId] The ID of the requesting advertiser or publisher.
+   *
+   *    * [role] The role of the requester. Valid values: 'advertisers' or 'publishers'.
+   *    * [roleId] The ID of the requesting advertiser or publisher.
+   *    * [linkType] The type of the link.
+   *    * [startDateMin] The beginning of the start date range.
+   *    * [assetSize] The size of the given asset.
+   *    * [relationshipStatus] The status of the relationship.
+   *    * [advertiserCategory] The advertiser's primary vertical.
+   *    * [maxResults] Max number of items to return in this page. Optional. Defaults to 20.
+
+  Minimum: 0.
+  Maximum: 100.
+   *    * [advertiserId] Limits the resulting links to the ones belonging to the listed advertisers.
+   *    * [pageToken] The value of 'nextPageToken' from the previous page. Optional.
+   *    * [startDateMax] The end of the start date range.
+   *    * [promotionType] The promotion type.
+   *    * [authorship] The role of the author of the link.
    */
   core.Future<Links> list(LinksResourceListRole role, core.String roleId, [LinksResourceListLinkType linkType = UNSPECIFIED, core.String startDateMin = UNSPECIFIED, core.List<core.String> assetSize = UNSPECIFIED, LinksResourceListRelationshipStatus relationshipStatus = UNSPECIFIED, LinksResourceListAdvertiserCategory advertiserCategory = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.List<core.String> advertiserId = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.String startDateMax = UNSPECIFIED, LinksResourceListPromotionType promotionType = UNSPECIFIED, LinksResourceListAuthorship authorship = UNSPECIFIED]) {
     final $queryParams = {};
@@ -647,9 +723,10 @@ class LinksResource extends core.Object {
    * Retrieves data about a single link if the requesting advertiser/publisher has access to it.
    * Advertisers can look up their own links. Publishers can look up visible links or links belonging
    * to advertisers they are in a relationship with.
-   * [role] The role of the requester. Valid values: 'advertisers' or 'publishers'.
-   * [roleId] The ID of the requesting advertiser or publisher.
-   * [linkId] The ID of the link to look up.
+   *
+   *    * [role] The role of the requester. Valid values: 'advertisers' or 'publishers'.
+   *    * [roleId] The ID of the requesting advertiser or publisher.
+   *    * [linkId] The ID of the link to look up.
    */
   core.Future<Link> get(LinksResourceGetRole role, core.String roleId, core.String linkId) {
     final $queryParams = {};
@@ -1127,8 +1204,31 @@ class PublishersResource extends core.Object {
   // Method PublishersResource.List
   /**
    * Retrieves data about all publishers that the requesting advertiser/publisher has access to.
-   * [role] The role of the requester. Valid values: 'advertisers' or 'publishers'.
-   * [roleId] The ID of the requesting advertiser or publisher.
+   *
+   *    * [role] The role of the requester. Valid values: 'advertisers' or 'publishers'.
+   *    * [roleId] The ID of the requesting advertiser or publisher.
+   *    * [publisherCategory] Caret(^) delimted list of publisher categories. Valid categories: (unclassified|community_and_conten
+   *        t|shopping_and_promotion|loyalty_and_rewards|network|search_specialist|comparison_shopping
+   *        |email). Filters out all publishers not in one of the given advertiser categories.
+   *        Optional.
+   *    * [relationshipStatus] Filters out all publishers for which do not have the given relationship status with the requesting
+   *        publisher.
+   *    * [minSevenDayEpc] Filters out all publishers that have a seven day EPC average lower than the given value (inclusive).
+   *        Min value 0.0. Optional.
+   *    * [minNinetyDayEpc] Filters out all publishers that have a ninety day EPC average lower than the given value
+   *        (inclusive). Min value: 0.0. Optional.
+   *    * [pageToken] The value of 'nextPageToken' from the previous page. Optional.
+   *    * [maxResults] Max number of items to return in this page. Optional. Defaults to 20.
+
+  Minimum: 0.
+  Maximum: 100.
+   *    * [minPayoutRank] A value between 1 and 4, where 1 represents the quartile of publishers with the lowest ranks and 4
+   *        represents the quartile of publishers with the highest ranks. Filters out all publishers
+   *        with a lower rank than the given quartile. For example if a 2 was given only publishers
+   *        with a payout rank of 25 or higher would be included. Optional.
+
+  Minimum: 1.
+  Maximum: 4.
    */
   core.Future<Publishers> list(PublishersResourceListRole role, core.String roleId, [core.String publisherCategory = UNSPECIFIED, PublishersResourceListRelationshipStatus relationshipStatus = UNSPECIFIED, core.double minSevenDayEpc = UNSPECIFIED, core.double minNinetyDayEpc = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.int minPayoutRank = UNSPECIFIED]) {
     final $queryParams = {};
@@ -1167,8 +1267,10 @@ class PublishersResource extends core.Object {
    * Retrieves data about a single advertiser if that the requesting advertiser/publisher has access
    * to it. Only advertisers can look up publishers. Publishers can request information about
    * themselves by omitting the publisherId query parameter.
-   * [role] The role of the requester. Valid values: 'advertisers' or 'publishers'.
-   * [roleId] The ID of the requesting advertiser or publisher.
+   *
+   *    * [role] The role of the requester. Valid values: 'advertisers' or 'publishers'.
+   *    * [roleId] The ID of the requesting advertiser or publisher.
+   *    * [publisherId] The ID of the publisher to look up. Optional.
    */
   core.Future<Publisher> get(PublishersResourceGetRole role, core.String roleId, [core.String publisherId = UNSPECIFIED]) {
     final $queryParams = {};

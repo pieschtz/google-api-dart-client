@@ -120,9 +120,11 @@ class VotesResource extends core.Object {
   /**
    * Inserts a new vote by the authenticated user for the specified submission within the specified
    * series.
-   * [seriesId] The decimal ID of the Series.
-   * [submissionId] The decimal ID of the Submission within the Series.
-   * [content] the Vote
+   *
+   *    * [content] the Vote
+   *    * [seriesId] The decimal ID of the Series.
+   *    * [submissionId] The decimal ID of the Submission within the Series.
+   *    * [unauthToken] User identifier for unauthenticated usage mode
    */
   core.Future<Vote> insert(core.int seriesId, core.int submissionId, Vote content, [core.String unauthToken = UNSPECIFIED]) {
     final $queryParams = {};
@@ -156,9 +158,12 @@ class VotesResource extends core.Object {
   /**
    * Updates the votes by the authenticated user for the specified submission within the specified
    * series. This method supports patch semantics.
-   * [seriesId] The decimal ID of the Series.
-   * [submissionId] The decimal ID of the Submission within the Series.
-   * [content] the Vote
+   *
+   *    * [content] the Vote
+   *    * [seriesId] The decimal ID of the Series.
+   *    * [submissionId] The decimal ID of the Submission within the Series.
+   *    * [userId]
+   *    * [unauthToken] User identifier for unauthenticated usage mode
    */
   core.Future<Vote> patch(core.int seriesId, core.int submissionId, Vote content, [core.String userId = UNSPECIFIED, core.String unauthToken = UNSPECIFIED]) {
     final $queryParams = {};
@@ -192,7 +197,10 @@ class VotesResource extends core.Object {
   // Method VotesResource.List
   /**
    * Lists the votes by the authenticated user for the given series.
-   * [seriesId] The decimal ID of the Series.
+   *
+   *    * [seriesId] The decimal ID of the Series.
+   *    * [maxResults] Maximum number of results to return.
+   *    * [startIndex] Index of the first result to be retrieved.
    */
   core.Future<VoteList> list(core.int seriesId, [core.int maxResults = UNSPECIFIED, core.int startIndex = UNSPECIFIED]) {
     final $queryParams = {};
@@ -224,9 +232,12 @@ class VotesResource extends core.Object {
   /**
    * Updates the votes by the authenticated user for the specified submission within the specified
    * series.
-   * [seriesId] The decimal ID of the Series.
-   * [submissionId] The decimal ID of the Submission within the Series.
-   * [content] the Vote
+   *
+   *    * [content] the Vote
+   *    * [seriesId] The decimal ID of the Series.
+   *    * [submissionId] The decimal ID of the Submission within the Series.
+   *    * [userId]
+   *    * [unauthToken] User identifier for unauthenticated usage mode
    */
   core.Future<Vote> update(core.int seriesId, core.int submissionId, Vote content, [core.String userId = UNSPECIFIED, core.String unauthToken = UNSPECIFIED]) {
     final $queryParams = {};
@@ -261,8 +272,11 @@ class VotesResource extends core.Object {
   /**
    * Returns the votes by the authenticated user for the specified submission within the specified
    * series.
-   * [seriesId] The decimal ID of the Series.
-   * [submissionId] The decimal ID of the Submission within the Series.
+   *
+   *    * [seriesId] The decimal ID of the Series.
+   *    * [submissionId] The decimal ID of the Submission within the Series.
+   *    * [userId]
+   *    * [unauthToken] User identifier for unauthenticated usage mode
    */
   core.Future<Vote> get(core.int seriesId, core.int submissionId, [core.String userId = UNSPECIFIED, core.String unauthToken = UNSPECIFIED]) {
     final $queryParams = {};
@@ -302,10 +316,13 @@ class ResponsesResource extends core.Object {
   /**
    * Inserts a response for the specified submission in the specified topic within the specified
    * series.
-   * [seriesId] The decimal ID of the Series.
-   * [topicId] The decimal ID of the Topic within the Series.
-   * [parentSubmissionId] The decimal ID of the parent Submission within the Series.
-   * [content] the Submission
+   *
+   *    * [content] the Submission
+   *    * [seriesId] The decimal ID of the Series.
+   *    * [topicId] The decimal ID of the Topic within the Series.
+   *    * [parentSubmissionId] The decimal ID of the parent Submission within the Series.
+   *    * [unauthToken] User identifier for unauthenticated usage mode
+   *    * [anonymous] Set to true to mark the new submission as anonymous.
    */
   core.Future<Submission> insert(core.int seriesId, core.int topicId, core.int parentSubmissionId, Submission content, [core.String unauthToken = UNSPECIFIED, core.bool anonymous = UNSPECIFIED]) {
     final $queryParams = {};
@@ -341,8 +358,15 @@ class ResponsesResource extends core.Object {
   /**
    * Lists or searches the responses for the specified submission within the specified series and
    * returns the search results.
-   * [seriesId] The decimal ID of the Series.
-   * [submissionId] The decimal ID of the Submission within the Series.
+   *
+   *    * [seriesId] The decimal ID of the Series.
+   *    * [submissionId] The decimal ID of the Submission within the Series.
+   *    * [maxResults] Maximum number of results to return.
+   *    * [sort] Sort order.
+   *    * [author] Restricts the results to submissions by a specific author.
+   *    * [startIndex] Index of the first result to be retrieved.
+   *    * [q] Search query.
+   *    * [hasAttachedVideo] Specifies whether to restrict to submissions that have videos attached.
    */
   core.Future<SubmissionList> list(core.int seriesId, core.int submissionId, [core.int maxResults = UNSPECIFIED, core.String sort = UNSPECIFIED, core.String author = UNSPECIFIED, core.int startIndex = UNSPECIFIED, core.String q = UNSPECIFIED, core.bool hasAttachedVideo = UNSPECIFIED]) {
     final $queryParams = {};
@@ -385,9 +409,10 @@ class TagsResource extends core.Object {
   // Method TagsResource.Insert
   /**
    * Inserts a new tag for the specified submission within the specified series.
-   * [seriesId] The decimal ID of the Series.
-   * [submissionId] The decimal ID of the Submission within the Series.
-   * [content] the Tag
+   *
+   *    * [content] the Tag
+   *    * [seriesId] The decimal ID of the Series.
+   *    * [submissionId] The decimal ID of the Submission within the Series.
    */
   core.Future<Tag> insert(core.int seriesId, core.int submissionId, Tag content) {
     final $queryParams = {};
@@ -419,8 +444,9 @@ class TagsResource extends core.Object {
   // Method TagsResource.List
   /**
    * Lists all tags for the specified submission within the specified series.
-   * [seriesId] The decimal ID of the Series.
-   * [submissionId] The decimal ID of the Submission within the Series.
+   *
+   *    * [seriesId] The decimal ID of the Series.
+   *    * [submissionId] The decimal ID of the Submission within the Series.
    */
   core.Future<TagList> list(core.int seriesId, core.int submissionId) {
     final $queryParams = {};
@@ -450,9 +476,10 @@ class TagsResource extends core.Object {
   // Method TagsResource.Delete
   /**
    * Deletes the specified tag from the specified submission within the specified series.
-   * [seriesId] The decimal ID of the Series.
-   * [submissionId] The decimal ID of the Submission within the Series.
-   * [tagId]
+   *
+   *    * [seriesId] The decimal ID of the Series.
+   *    * [submissionId] The decimal ID of the Submission within the Series.
+   *    * [tagId]
    */
   core.Future delete(core.int seriesId, core.int submissionId, core.String tagId) {
     final $queryParams = {};
@@ -494,7 +521,8 @@ class SeriesResource extends core.Object {
   // Method SeriesResource.Insert
   /**
    * Inserts a new series.
-   * [content] the Series
+   *
+   *    * [content] the Series
    */
   core.Future<Series> insert(Series content) {
     final $queryParams = {};
@@ -524,8 +552,9 @@ class SeriesResource extends core.Object {
   // Method SeriesResource.Patch
   /**
    * Updates the specified series. This method supports patch semantics.
-   * [seriesId] The decimal ID of the Series.
-   * [content] the Series
+   *
+   *    * [content] the Series
+   *    * [seriesId] The decimal ID of the Series.
    */
   core.Future<Series> patch(core.int seriesId, Series content) {
     final $queryParams = {};
@@ -556,6 +585,10 @@ class SeriesResource extends core.Object {
   // Method SeriesResource.List
   /**
    * Searches the series and returns the search results.
+   *
+   *    * [maxResults] Maximum number of results to return.
+   *    * [q] Search query.
+   *    * [startIndex] Index of the first result to be retrieved.
    */
   core.Future<SeriesList> list([core.int maxResults = UNSPECIFIED, core.String q = UNSPECIFIED, core.int startIndex = UNSPECIFIED]) {
     final $queryParams = {};
@@ -586,8 +619,9 @@ class SeriesResource extends core.Object {
   // Method SeriesResource.Update
   /**
    * Updates the specified series.
-   * [seriesId] The decimal ID of the Series.
-   * [content] the Series
+   *
+   *    * [content] the Series
+   *    * [seriesId] The decimal ID of the Series.
    */
   core.Future<Series> update(core.int seriesId, Series content) {
     final $queryParams = {};
@@ -618,7 +652,8 @@ class SeriesResource extends core.Object {
   // Method SeriesResource.Get
   /**
    * Returns the specified series.
-   * [seriesId] The decimal ID of the Series.
+   *
+   *    * [seriesId] The decimal ID of the Series.
    */
   core.Future<Series> get(core.int seriesId) {
     final $queryParams = {};
@@ -655,7 +690,16 @@ class SeriesSubmissionsResourceResource extends core.Object {
   // Method SeriesResource.SeriesSubmissionsResourceResource.List
   /**
    * Searches the submissions for the specified series and returns the search results.
-   * [seriesId] The decimal ID of the Series.
+   *
+   *    * [seriesId] The decimal ID of the Series.
+   *    * [lang] The language code for the language the client prefers resuls in.
+   *    * [maxResults] Maximum number of results to return.
+   *    * [includeVotes] Specifies whether to include the current user's vote
+   *    * [startIndex] Index of the first result to be retrieved.
+   *    * [author] Restricts the results to submissions by a specific author.
+   *    * [sort] Sort order.
+   *    * [q] Search query.
+   *    * [hasAttachedVideo] Specifies whether to restrict to submissions that have videos attached.
    */
   core.Future<SubmissionList> list(core.int seriesId, [core.String lang = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.bool includeVotes = UNSPECIFIED, core.int startIndex = UNSPECIFIED, core.String author = UNSPECIFIED, core.String sort = UNSPECIFIED, core.String q = UNSPECIFIED, core.bool hasAttachedVideo = UNSPECIFIED]) {
     final $queryParams = {};
@@ -699,7 +743,14 @@ class SeriesResponsesResourceResource extends core.Object {
   // Method SeriesResource.SeriesResponsesResourceResource.List
   /**
    * Searches the responses for the specified series and returns the search results.
-   * [seriesId] The decimal ID of the Series.
+   *
+   *    * [seriesId] The decimal ID of the Series.
+   *    * [maxResults] Maximum number of results to return.
+   *    * [sort] Sort order.
+   *    * [author] Restricts the results to submissions by a specific author.
+   *    * [startIndex] Index of the first result to be retrieved.
+   *    * [q] Search query.
+   *    * [hasAttachedVideo] Specifies whether to restrict to submissions that have videos attached.
    */
   core.Future<SeriesList> list(core.int seriesId, [core.int maxResults = UNSPECIFIED, core.String sort = UNSPECIFIED, core.String author = UNSPECIFIED, core.int startIndex = UNSPECIFIED, core.String q = UNSPECIFIED, core.bool hasAttachedVideo = UNSPECIFIED]) {
     final $queryParams = {};
@@ -743,8 +794,9 @@ class TopicsResource extends core.Object {
   // Method TopicsResource.Insert
   /**
    * Inserts a new topic into the specified series.
-   * [seriesId] The decimal ID of the Series.
-   * [content] the Topic
+   *
+   *    * [content] the Topic
+   *    * [seriesId] The decimal ID of the Series.
    */
   core.Future<Topic> insert(core.int seriesId, Topic content) {
     final $queryParams = {};
@@ -775,7 +827,12 @@ class TopicsResource extends core.Object {
   // Method TopicsResource.List
   /**
    * Searches the topics within the specified series and returns the search results.
-   * [seriesId] The decimal ID of the Series.
+   *
+   *    * [seriesId] The decimal ID of the Series.
+   *    * [maxResults] Maximum number of results to return.
+   *    * [q] Search query.
+   *    * [startIndex] Index of the first result to be retrieved.
+   *    * [mode]
    */
   core.Future<TopicList> list(core.int seriesId, [core.int maxResults = UNSPECIFIED, core.String q = UNSPECIFIED, core.int startIndex = UNSPECIFIED, core.String mode = UNSPECIFIED]) {
     final $queryParams = {};
@@ -808,9 +865,10 @@ class TopicsResource extends core.Object {
   // Method TopicsResource.Update
   /**
    * Updates the specified topic within the specified series.
-   * [seriesId] The decimal ID of the Series.
-   * [topicId] The decimal ID of the Topic within the Series.
-   * [content] the Topic
+   *
+   *    * [content] the Topic
+   *    * [seriesId] The decimal ID of the Series.
+   *    * [topicId] The decimal ID of the Topic within the Series.
    */
   core.Future<Topic> update(core.int seriesId, core.int topicId, Topic content) {
     final $queryParams = {};
@@ -842,8 +900,9 @@ class TopicsResource extends core.Object {
   // Method TopicsResource.Get
   /**
    * Returns the specified topic from the specified series.
-   * [seriesId] The decimal ID of the Series.
-   * [topicId] The decimal ID of the Topic within the Series.
+   *
+   *    * [seriesId] The decimal ID of the Series.
+   *    * [topicId] The decimal ID of the Topic within the Series.
    */
   core.Future<Topic> get(core.int seriesId, core.int topicId) {
     final $queryParams = {};
@@ -882,8 +941,16 @@ class TopicsSubmissionsResourceResource extends core.Object {
   /**
    * Searches the submissions for the specified topic within the specified series and returns the
    * search results.
-   * [seriesId] The decimal ID of the Series.
-   * [topicId] The decimal ID of the Topic within the Series.
+   *
+   *    * [seriesId] The decimal ID of the Series.
+   *    * [topicId] The decimal ID of the Topic within the Series.
+   *    * [maxResults] Maximum number of results to return.
+   *    * [includeVotes] Specifies whether to include the current user's vote
+   *    * [startIndex] Index of the first result to be retrieved.
+   *    * [author] Restricts the results to submissions by a specific author.
+   *    * [sort] Sort order.
+   *    * [q] Search query.
+   *    * [hasAttachedVideo] Specifies whether to restrict to submissions that have videos attached.
    */
   core.Future<SubmissionList> list(core.int seriesId, core.int topicId, [core.int maxResults = UNSPECIFIED, core.bool includeVotes = UNSPECIFIED, core.int startIndex = UNSPECIFIED, core.String author = UNSPECIFIED, core.String sort = UNSPECIFIED, core.String q = UNSPECIFIED, core.bool hasAttachedVideo = UNSPECIFIED]) {
     final $queryParams = {};
@@ -937,6 +1004,10 @@ class GlobalSeriesResourceResource extends core.Object {
   // Method GlobalResource.GlobalSeriesResourceResource.List
   /**
    * Searches the public series and returns the search results.
+   *
+   *    * [maxResults] Maximum number of results to return.
+   *    * [q] Search query.
+   *    * [startIndex] Index of the first result to be retrieved.
    */
   core.Future<SeriesList> list([core.int maxResults = UNSPECIFIED, core.String q = UNSPECIFIED, core.int startIndex = UNSPECIFIED]) {
     final $queryParams = {};
@@ -974,7 +1045,8 @@ class ProfilesResource extends core.Object {
   // Method ProfilesResource.Patch
   /**
    * Updates the profile information for the authenticated user. This method supports patch semantics.
-   * [content] the Profile
+   *
+   *    * [content] the Profile
    */
   core.Future<Profile> patch(Profile content) {
     final $queryParams = {};
@@ -1004,7 +1076,8 @@ class ProfilesResource extends core.Object {
   // Method ProfilesResource.Update
   /**
    * Updates the profile information for the authenticated user.
-   * [content] the Profile
+   *
+   *    * [content] the Profile
    */
   core.Future<Profile> update(Profile content) {
     final $queryParams = {};
@@ -1034,6 +1107,7 @@ class ProfilesResource extends core.Object {
   // Method ProfilesResource.Get
   /**
    * Returns the profile information for the authenticated user.
+   *
    */
   core.Future<Profile> get() {
     final $queryParams = {};
@@ -1078,6 +1152,7 @@ class FeaturedSeriesResourceResource extends core.Object {
   // Method FeaturedResource.FeaturedSeriesResourceResource.List
   /**
    * Lists the featured series.
+   *
    */
   core.Future<SeriesList> list() {
     final $queryParams = {};
@@ -1122,6 +1197,7 @@ class MyrecentSeriesResourceResource extends core.Object {
   // Method MyrecentResource.MyrecentSeriesResourceResource.List
   /**
    * Lists the series the authenticated user has visited.
+   *
    */
   core.Future<SeriesList> list() {
     final $queryParams = {};
@@ -1166,6 +1242,7 @@ class MySeriesResourceResource extends core.Object {
   // Method MyResource.MySeriesResourceResource.List
   /**
    * Lists all series created by the authenticated user.
+   *
    */
   core.Future<SeriesList> list() {
     final $queryParams = {};
@@ -1200,9 +1277,12 @@ class SubmissionsResource extends core.Object {
   // Method SubmissionsResource.Insert
   /**
    * Inserts a new submission in the specified topic within the specified series.
-   * [seriesId] The decimal ID of the Series.
-   * [topicId] The decimal ID of the Topic within the Series.
-   * [content] the Submission
+   *
+   *    * [content] the Submission
+   *    * [seriesId] The decimal ID of the Series.
+   *    * [topicId] The decimal ID of the Topic within the Series.
+   *    * [unauthToken] User identifier for unauthenticated usage mode
+   *    * [anonymous] Set to true to mark the new submission as anonymous.
    */
   core.Future<Submission> insert(core.int seriesId, core.int topicId, Submission content, [core.String unauthToken = UNSPECIFIED, core.bool anonymous = UNSPECIFIED]) {
     final $queryParams = {};
@@ -1236,8 +1316,11 @@ class SubmissionsResource extends core.Object {
   // Method SubmissionsResource.Get
   /**
    * Returns the specified submission within the specified series.
-   * [seriesId] The decimal ID of the Series.
-   * [submissionId] The decimal ID of the Submission within the Series.
+   *
+   *    * [seriesId] The decimal ID of the Series.
+   *    * [submissionId] The decimal ID of the Submission within the Series.
+   *    * [lang] The language code for the language the client prefers resuls in.
+   *    * [includeVotes] Specifies whether to include the current user's vote
    */
   core.Future<Submission> get(core.int seriesId, core.int submissionId, [core.String lang = UNSPECIFIED, core.bool includeVotes = UNSPECIFIED]) {
     final $queryParams = {};

@@ -77,6 +77,9 @@ class Oauth2Api extends core.Object {
   // Method .Tokeninfo
   /**
 
+   *
+   *    * [accessToken]
+   *    * [idToken]
    */
   core.Future<Tokeninfo> tokeninfo([core.String accessToken = UNSPECIFIED, core.String idToken = UNSPECIFIED]) {
     final $queryParams = {};
@@ -121,6 +124,7 @@ class UserinfoResource extends core.Object {
   // Method UserinfoResource.Get
   /**
 
+   *
    */
   core.Future<Userinfo> get() {
     final $queryParams = {};
@@ -166,6 +170,7 @@ class UserinfoV2ResourceUserinfoV2MeResourceResourceResourceResource extends cor
   // Method UserinfoResource.UserinfoV2ResourceResource.UserinfoV2ResourceUserinfoV2MeResourceResourceResourceResource.Get
   /**
 
+   *
    */
   core.Future<Userinfo> get() {
     final $queryParams = {};

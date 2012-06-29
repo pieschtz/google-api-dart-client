@@ -89,8 +89,9 @@ class GroupsResource extends core.Object {
   // Method GroupsResource.Patch
   /**
    * Updates an existing resource. This method supports patch semantics.
-   * [groupUniqueId] The resource ID
-   * [content] the Groups
+   *
+   *    * [content] the Groups
+   *    * [groupUniqueId] The resource ID
    */
   core.Future<Groups> patch(core.String groupUniqueId, Groups content) {
     final $queryParams = {};
@@ -121,8 +122,9 @@ class GroupsResource extends core.Object {
   // Method GroupsResource.Update
   /**
    * Updates an existing resource.
-   * [groupUniqueId] The resource ID
-   * [content] the Groups
+   *
+   *    * [content] the Groups
+   *    * [groupUniqueId] The resource ID
    */
   core.Future<Groups> update(core.String groupUniqueId, Groups content) {
     final $queryParams = {};
@@ -153,7 +155,8 @@ class GroupsResource extends core.Object {
   // Method GroupsResource.Get
   /**
    * Gets one resource by id.
-   * [groupUniqueId] The resource ID
+   *
+   *    * [groupUniqueId] The resource ID
    */
   core.Future<Groups> get(core.String groupUniqueId) {
     final $queryParams = {};

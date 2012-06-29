@@ -95,7 +95,8 @@ class TrainedmodelsResource extends core.Object {
   // Method TrainedmodelsResource.Insert
   /**
    * Begin training your model.
-   * [content] the Training
+   *
+   *    * [content] the Training
    */
   core.Future<Training> insert(Training content) {
     final $queryParams = {};
@@ -125,7 +126,8 @@ class TrainedmodelsResource extends core.Object {
   // Method TrainedmodelsResource.Get
   /**
    * Check training status of your model.
-   * [id] The unique name for the predictive model.
+   *
+   *    * [id] The unique name for the predictive model.
    */
   core.Future<Training> get(core.String id) {
     final $queryParams = {};
@@ -154,8 +156,9 @@ class TrainedmodelsResource extends core.Object {
   // Method TrainedmodelsResource.Predict
   /**
    * Submit model id and request a prediction.
-   * [id] The unique name for the predictive model.
-   * [content] the Input
+   *
+   *    * [content] the Input
+   *    * [id] The unique name for the predictive model.
    */
   core.Future<Output> predict(core.String id, Input content) {
     final $queryParams = {};
@@ -186,6 +189,11 @@ class TrainedmodelsResource extends core.Object {
   // Method TrainedmodelsResource.List
   /**
    * List available models.
+   *
+   *    * [pageToken] Pagination token
+   *    * [maxResults] Maximum number of results to return
+
+  Minimum: 0.
    */
   core.Future<List> list([core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
     final $queryParams = {};
@@ -215,8 +223,9 @@ class TrainedmodelsResource extends core.Object {
   // Method TrainedmodelsResource.Update
   /**
    * Add new data to a trained model.
-   * [id] The unique name for the predictive model.
-   * [content] the Update
+   *
+   *    * [content] the Update
+   *    * [id] The unique name for the predictive model.
    */
   core.Future<Training> update(core.String id, Update content) {
     final $queryParams = {};
@@ -247,7 +256,8 @@ class TrainedmodelsResource extends core.Object {
   // Method TrainedmodelsResource.Analyze
   /**
    * Get analysis of the model and the data the model was trained on.
-   * [id] The unique name for the predictive model.
+   *
+   *    * [id] The unique name for the predictive model.
    */
   core.Future<Analyze> analyze(core.String id) {
     final $queryParams = {};
@@ -276,7 +286,8 @@ class TrainedmodelsResource extends core.Object {
   // Method TrainedmodelsResource.Delete
   /**
    * Delete a trained model.
-   * [id] The unique name for the predictive model.
+   *
+   *    * [id] The unique name for the predictive model.
    */
   core.Future delete(core.String id) {
     final $queryParams = {};
@@ -312,8 +323,9 @@ class HostedmodelsResource extends core.Object {
   // Method HostedmodelsResource.Predict
   /**
    * Submit input and request an output against a hosted model.
-   * [hostedModelName] The name of a hosted model.
-   * [content] the Input
+   *
+   *    * [content] the Input
+   *    * [hostedModelName] The name of a hosted model.
    */
   core.Future<Output> predict(core.String hostedModelName, Input content) {
     final $queryParams = {};

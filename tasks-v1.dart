@@ -95,8 +95,13 @@ class TasksResource extends core.Object {
   // Method TasksResource.Insert
   /**
    * Creates a new task on the specified task list.
-   * [tasklist] Task list identifier.
-   * [content] the Task
+   *
+   *    * [content] the Task
+   *    * [tasklist] Task list identifier.
+   *    * [parent] Parent task identifier. If the task is created at the top level, this parameter is omitted.
+   *        Optional.
+   *    * [previous] Previous sibling task identifier. If the task is created at the first position among its siblings,
+   *        this parameter is omitted. Optional.
    */
   core.Future<Task> insert(core.String tasklist, Task content, [core.String parent = UNSPECIFIED, core.String previous = UNSPECIFIED]) {
     final $queryParams = {};
@@ -129,8 +134,9 @@ class TasksResource extends core.Object {
   // Method TasksResource.Get
   /**
    * Returns the specified task.
-   * [tasklist] Task list identifier.
-   * [task] Task identifier.
+   *
+   *    * [tasklist] Task list identifier.
+   *    * [task] Task identifier.
    */
   core.Future<Task> get(core.String tasklist, core.String task) {
     final $queryParams = {};
@@ -161,7 +167,8 @@ class TasksResource extends core.Object {
   /**
    * Clears all completed tasks from the specified task list. The affected tasks will be marked as
    * 'hidden' and no longer be returned by default when retrieving all tasks for a task list.
-   * [tasklist] Task list identifier.
+   *
+   *    * [tasklist] Task list identifier.
    */
   core.Future clear(core.String tasklist) {
     final $queryParams = {};
@@ -191,8 +198,13 @@ class TasksResource extends core.Object {
   /**
    * Moves the specified task to another position in the task list. This can include putting it as a
    * child task under a new parent and/or move it to a different position among its sibling tasks.
-   * [tasklist] Task list identifier.
-   * [task] Task identifier.
+   *
+   *    * [tasklist] Task list identifier.
+   *    * [task] Task identifier.
+   *    * [parent] New parent task identifier. If the task is moved to the top level, this parameter is omitted.
+   *        Optional.
+   *    * [previous] New previous sibling task identifier. If the task is moved to the first position among its siblings,
+   *        this parameter is omitted. Optional.
    */
   core.Future<Task> move(core.String tasklist, core.String task, [core.String parent = UNSPECIFIED, core.String previous = UNSPECIFIED]) {
     final $queryParams = {};
@@ -224,7 +236,23 @@ class TasksResource extends core.Object {
   // Method TasksResource.List
   /**
    * Returns all tasks in the specified task list.
-   * [tasklist] Task list identifier.
+   *
+   *    * [tasklist] Task list identifier.
+   *    * [dueMax] Upper bound for a task's due date (as a RFC 3339 timestamp) to filter by. Optional. The default is
+   *        not to filter by due date.
+   *    * [showDeleted] Flag indicating whether deleted tasks are returned in the result. Optional. The default is False.
+   *    * [updatedMin] Lower bound for a task's last modification time (as a RFC 3339 timestamp) to filter by. Optional.
+   *        The default is not to filter by last modification time.
+   *    * [completedMin] Lower bound for a task's completion date (as a RFC 3339 timestamp) to filter by. Optional. The
+   *        default is not to filter by completion date.
+   *    * [maxResults] Maximum number of task lists returned on one page. Optional. The default is 100.
+   *    * [showCompleted] Flag indicating whether completed tasks are returned in the result. Optional. The default is True.
+   *    * [pageToken] Token specifying the result page to return. Optional.
+   *    * [completedMax] Upper bound for a task's completion date (as a RFC 3339 timestamp) to filter by. Optional. The
+   *        default is not to filter by completion date.
+   *    * [showHidden] Flag indicating whether hidden tasks are returned in the result. Optional. The default is False.
+   *    * [dueMin] Lower bound for a task's due date (as a RFC 3339 timestamp) to filter by. Optional. The default is
+   *        not to filter by due date.
    */
   core.Future<Tasks> list(core.String tasklist, [core.String dueMax = UNSPECIFIED, core.bool showDeleted = UNSPECIFIED, core.String updatedMin = UNSPECIFIED, core.String completedMin = UNSPECIFIED, core.String maxResults = UNSPECIFIED, core.bool showCompleted = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.String completedMax = UNSPECIFIED, core.bool showHidden = UNSPECIFIED, core.String dueMin = UNSPECIFIED]) {
     final $queryParams = {};
@@ -263,9 +291,10 @@ class TasksResource extends core.Object {
   // Method TasksResource.Update
   /**
    * Updates the specified task.
-   * [tasklist] Task list identifier.
-   * [task] Task identifier.
-   * [content] the Task
+   *
+   *    * [content] the Task
+   *    * [tasklist] Task list identifier.
+   *    * [task] Task identifier.
    */
   core.Future<Task> update(core.String tasklist, core.String task, Task content) {
     final $queryParams = {};
@@ -297,9 +326,10 @@ class TasksResource extends core.Object {
   // Method TasksResource.Patch
   /**
    * Updates the specified task. This method supports patch semantics.
-   * [tasklist] Task list identifier.
-   * [task] Task identifier.
-   * [content] the Task
+   *
+   *    * [content] the Task
+   *    * [tasklist] Task list identifier.
+   *    * [task] Task identifier.
    */
   core.Future<Task> patch(core.String tasklist, core.String task, Task content) {
     final $queryParams = {};
@@ -331,8 +361,9 @@ class TasksResource extends core.Object {
   // Method TasksResource.Delete
   /**
    * Deletes the specified task from the task list.
-   * [tasklist] Task list identifier.
-   * [task] Task identifier.
+   *
+   *    * [tasklist] Task list identifier.
+   *    * [task] Task identifier.
    */
   core.Future delete(core.String tasklist, core.String task) {
     final $queryParams = {};
@@ -369,7 +400,8 @@ class TasklistsResource extends core.Object {
   // Method TasklistsResource.Insert
   /**
    * Creates a new task list and adds it to the authenticated user's task lists.
-   * [content] the TaskList
+   *
+   *    * [content] the TaskList
    */
   core.Future<TaskList> insert(TaskList content) {
     final $queryParams = {};
@@ -399,7 +431,8 @@ class TasklistsResource extends core.Object {
   // Method TasklistsResource.Get
   /**
    * Returns the authenticated user's specified task list.
-   * [tasklist] Task list identifier.
+   *
+   *    * [tasklist] Task list identifier.
    */
   core.Future<TaskList> get(core.String tasklist) {
     final $queryParams = {};
@@ -428,6 +461,9 @@ class TasklistsResource extends core.Object {
   // Method TasklistsResource.List
   /**
    * Returns all the authenticated user's task lists.
+   *
+   *    * [pageToken] Token specifying the result page to return. Optional.
+   *    * [maxResults] Maximum number of task lists returned on one page. Optional. The default is 100.
    */
   core.Future<TaskLists> list([core.String pageToken = UNSPECIFIED, core.String maxResults = UNSPECIFIED]) {
     final $queryParams = {};
@@ -457,8 +493,9 @@ class TasklistsResource extends core.Object {
   // Method TasklistsResource.Update
   /**
    * Updates the authenticated user's specified task list.
-   * [tasklist] Task list identifier.
-   * [content] the TaskList
+   *
+   *    * [content] the TaskList
+   *    * [tasklist] Task list identifier.
    */
   core.Future<TaskList> update(core.String tasklist, TaskList content) {
     final $queryParams = {};
@@ -489,8 +526,9 @@ class TasklistsResource extends core.Object {
   // Method TasklistsResource.Patch
   /**
    * Updates the authenticated user's specified task list. This method supports patch semantics.
-   * [tasklist] Task list identifier.
-   * [content] the TaskList
+   *
+   *    * [content] the TaskList
+   *    * [tasklist] Task list identifier.
    */
   core.Future<TaskList> patch(core.String tasklist, TaskList content) {
     final $queryParams = {};
@@ -521,7 +559,8 @@ class TasklistsResource extends core.Object {
   // Method TasklistsResource.Delete
   /**
    * Deletes the authenticated user's specified task list.
-   * [tasklist] Task list identifier.
+   *
+   *    * [tasklist] Task list identifier.
    */
   core.Future delete(core.String tasklist) {
     final $queryParams = {};

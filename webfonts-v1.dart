@@ -86,6 +86,8 @@ class WebfontsResource extends core.Object {
   // Method WebfontsResource.List
   /**
    * Retrieves the list of fonts currently served by the Google Web Fonts Developer API
+   *
+   *    * [sort] Enables sorting of the list
    */
   core.Future<WebfontList> list([WebfontsResourceListSort sort = UNSPECIFIED]) {
     final $queryParams = {};

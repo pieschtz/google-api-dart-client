@@ -104,7 +104,8 @@ class BlogsResource extends core.Object {
   // Method BlogsResource.ListByUser
   /**
    * Retrieves a list of blogs, possibly filtered.
-   * [userId] ID of the user whose blogs are to be fetched. Either the word 'self' (sans quote marks) or the
+   *
+   *    * [userId] ID of the user whose blogs are to be fetched. Either the word 'self' (sans quote marks) or the
    *        user's profile identifier.
    */
   core.Future<BlogList> listByUser(core.String userId) {
@@ -134,6 +135,8 @@ class BlogsResource extends core.Object {
   // Method BlogsResource.GetByUrl
   /**
    * Retrieve a Blog by URL.
+   *
+   *    * [url] The URL of the blog to retrieve.
    */
   core.Future<Blog> getByUrl([core.String url = UNSPECIFIED]) {
     final $queryParams = {};
@@ -162,7 +165,9 @@ class BlogsResource extends core.Object {
   // Method BlogsResource.Get
   /**
    * Gets one blog by id.
-   * [blogId] The ID of the blog to get.
+   *
+   *    * [blogId] The ID of the blog to get.
+   *    * [maxPosts] Maximum number of posts to pull back with the blog.
    */
   core.Future<Blog> get(core.String blogId, [core.int maxPosts = UNSPECIFIED]) {
     final $queryParams = {};
@@ -199,8 +204,9 @@ class PostsResource extends core.Object {
   // Method PostsResource.Insert
   /**
    * Add a post.
-   * [blogId] ID of the blog to fetch the post from.
-   * [content] the Post
+   *
+   *    * [content] the Post
+   *    * [blogId] ID of the blog to fetch the post from.
    */
   core.Future<Post> insert(core.String blogId, Post content) {
     final $queryParams = {};
@@ -231,7 +237,9 @@ class PostsResource extends core.Object {
   // Method PostsResource.Search
   /**
    * Search for a post.
-   * [blogId] ID of the blog to fetch the post from.
+   *
+   *    * [blogId] ID of the blog to fetch the post from.
+   *    * [q] Query terms to search this blog for matching posts.
    */
   core.Future<PostList> search(core.String blogId, [core.String q = UNSPECIFIED]) {
     final $queryParams = {};
@@ -261,8 +269,10 @@ class PostsResource extends core.Object {
   // Method PostsResource.Get
   /**
    * Get a post by id.
-   * [blogId] ID of the blog to fetch the post from.
-   * [postId] The ID of the post
+   *
+   *    * [blogId] ID of the blog to fetch the post from.
+   *    * [postId] The ID of the post
+   *    * [maxComments] Maximum number of comments to pull back on a post.
    */
   core.Future<Post> get(core.String blogId, core.String postId, [core.int maxComments = UNSPECIFIED]) {
     final $queryParams = {};
@@ -293,7 +303,14 @@ class PostsResource extends core.Object {
   // Method PostsResource.List
   /**
    * Retrieves a list of posts, possibly filtered.
-   * [blogId] ID of the blog to fetch posts from.
+   *
+   *    * [blogId] ID of the blog to fetch posts from.
+   *    * [startDate] Earliest post date to fetch, a date-time with RFC 3339 formatting.
+   *    * [endDate] Latest post date to fetch, a date-time with RFC 3339 formatting.
+   *    * [labels] Comma-separated list of labels to search for.
+   *    * [maxResults] Maximum number of posts to fetch.
+   *    * [pageToken] Continuation token if the request is paged.
+   *    * [fetchBodies] Whether the body content of posts is included.
    */
   core.Future<PostList> list(core.String blogId, [core.String startDate = UNSPECIFIED, core.String endDate = UNSPECIFIED, core.String labels = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.bool fetchBodies = UNSPECIFIED]) {
     final $queryParams = {};
@@ -328,9 +345,10 @@ class PostsResource extends core.Object {
   // Method PostsResource.Update
   /**
    * Update a post.
-   * [blogId] The ID of the Blog.
-   * [postId] The ID of the Post.
-   * [content] the Post
+   *
+   *    * [content] the Post
+   *    * [blogId] The ID of the Blog.
+   *    * [postId] The ID of the Post.
    */
   core.Future<Post> update(core.String blogId, core.String postId, Post content) {
     final $queryParams = {};
@@ -362,7 +380,10 @@ class PostsResource extends core.Object {
   // Method PostsResource.GetByPath
   /**
    * Retrieve a Post by Path.
-   * [blogId] ID of the blog to fetch the post from.
+   *
+   *    * [blogId] ID of the blog to fetch the post from.
+   *    * [path] Path of the Post to retrieve.
+   *    * [maxComments] Maximum number of comments to pull back on a post.
    */
   core.Future<Post> getByPath(core.String blogId, [core.String path = UNSPECIFIED, core.int maxComments = UNSPECIFIED]) {
     final $queryParams = {};
@@ -393,9 +414,10 @@ class PostsResource extends core.Object {
   // Method PostsResource.Patch
   /**
    * Update a post. This method supports patch semantics.
-   * [blogId] The ID of the Blog.
-   * [postId] The ID of the Post.
-   * [content] the Post
+   *
+   *    * [content] the Post
+   *    * [blogId] The ID of the Blog.
+   *    * [postId] The ID of the Post.
    */
   core.Future<Post> patch(core.String blogId, core.String postId, Post content) {
     final $queryParams = {};
@@ -427,8 +449,9 @@ class PostsResource extends core.Object {
   // Method PostsResource.Delete
   /**
    * Delete a post by id.
-   * [blogId] The Id of the Blog.
-   * [postId] The ID of the Post.
+   *
+   *    * [blogId] The Id of the Blog.
+   *    * [postId] The ID of the Post.
    */
   core.Future delete(core.String blogId, core.String postId) {
     final $queryParams = {};
@@ -465,7 +488,9 @@ class PagesResource extends core.Object {
   // Method PagesResource.List
   /**
    * Retrieves pages for a blog, possibly filtered.
-   * [blogId] ID of the blog to fetch pages from.
+   *
+   *    * [blogId] ID of the blog to fetch pages from.
+   *    * [fetchBodies] Whether to retrieve the Page bodies.
    */
   core.Future<PageList> list(core.String blogId, [core.bool fetchBodies = UNSPECIFIED]) {
     final $queryParams = {};
@@ -495,8 +520,9 @@ class PagesResource extends core.Object {
   // Method PagesResource.Get
   /**
    * Gets one blog page by id.
-   * [blogId] ID of the blog containing the page.
-   * [pageId] The ID of the page to get.
+   *
+   *    * [blogId] ID of the blog containing the page.
+   *    * [pageId] The ID of the page to get.
    */
   core.Future<Page> get(core.String blogId, core.String pageId) {
     final $queryParams = {};
@@ -533,8 +559,14 @@ class CommentsResource extends core.Object {
   // Method CommentsResource.List
   /**
    * Retrieves the comments for a blog, possibly filtered.
-   * [blogId] ID of the blog to fetch comments from.
-   * [postId] ID of the post to fetch posts from.
+   *
+   *    * [blogId] ID of the blog to fetch comments from.
+   *    * [postId] ID of the post to fetch posts from.
+   *    * [startDate] Earliest date of comment to fetch, a date-time with RFC 3339 formatting.
+   *    * [endDate] Latest date of comment to fetch, a date-time with RFC 3339 formatting.
+   *    * [maxResults] Maximum number of comments to include in the result.
+   *    * [pageToken] Continuation token if request is paged.
+   *    * [fetchBodies] Whether the body content of the comments is included.
    */
   core.Future<CommentList> list(core.String blogId, core.String postId, [core.String startDate = UNSPECIFIED, core.String endDate = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.bool fetchBodies = UNSPECIFIED]) {
     final $queryParams = {};
@@ -569,9 +601,10 @@ class CommentsResource extends core.Object {
   // Method CommentsResource.Get
   /**
    * Gets one comment by id.
-   * [blogId] ID of the blog to containing the comment.
-   * [postId] ID of the post to fetch posts from.
-   * [commentId] The ID of the comment to get.
+   *
+   *    * [blogId] ID of the blog to containing the comment.
+   *    * [postId] ID of the post to fetch posts from.
+   *    * [commentId] The ID of the comment to get.
    */
   core.Future<Comment> get(core.String blogId, core.String postId, core.String commentId) {
     final $queryParams = {};
@@ -609,7 +642,8 @@ class UsersResource extends core.Object {
   // Method UsersResource.Get
   /**
    * Gets one user by id.
-   * [userId] The ID of the user to get.
+   *
+   *    * [userId] The ID of the user to get.
    */
   core.Future<User> get(core.String userId) {
     final $queryParams = {};

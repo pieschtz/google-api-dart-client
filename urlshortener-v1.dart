@@ -89,7 +89,8 @@ class UrlResource extends core.Object {
   // Method UrlResource.Insert
   /**
    * Creates a new short URL.
-   * [content] the Url
+   *
+   *    * [content] the Url
    */
   core.Future<Url> insert(Url content) {
     final $queryParams = {};
@@ -119,6 +120,9 @@ class UrlResource extends core.Object {
   // Method UrlResource.List
   /**
    * Retrieves a list of URLs shortened by a user.
+   *
+   *    * [startToken] Token for requesting successive pages of results.
+   *    * [projection] Additional information to return.
    */
   core.Future<UrlHistory> list([core.String startToken = UNSPECIFIED, UrlResourceListProjection projection = UNSPECIFIED]) {
     final $queryParams = {};
@@ -148,7 +152,9 @@ class UrlResource extends core.Object {
   // Method UrlResource.Get
   /**
    * Expands a short URL or gets creation time and analytics.
-   * [shortUrl] The short URL, including the protocol.
+   *
+   *    * [shortUrl] The short URL, including the protocol.
+   *    * [projection] Additional information to return.
    */
   core.Future<Url> get(core.String shortUrl, [UrlResourceGetProjection projection = UNSPECIFIED]) {
     final $queryParams = {};
