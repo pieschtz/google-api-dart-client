@@ -68,8 +68,11 @@ class DiscoveryApi extends core.Object {
   DiscoveryApiAlt alt;
 
 
-  DiscoveryApi([this.baseUrl = "https://www.googleapis.com/discovery/v1/", this.applicationName, this.authenticator]) { 
+  DiscoveryApi([this.baseUrl = "https://www.googleapis.com/discovery/v1/", applicationName, this.authenticator]) { 
     _apis = new ApisResource._internal(this);
+    this.applicationName = applicationName
+      .replaceAll(const RegExp(@'\s+'), '_')
+      .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '');
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";

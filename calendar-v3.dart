@@ -79,7 +79,7 @@ class CalendarApi extends core.Object {
   CalendarApiAlt alt;
 
 
-  CalendarApi([this.baseUrl = "https://www.googleapis.com/calendar/v3/", this.applicationName, this.authenticator]) { 
+  CalendarApi([this.baseUrl = "https://www.googleapis.com/calendar/v3/", applicationName, this.authenticator]) { 
     _freebusy = new FreebusyResource._internal(this);
     _settings = new SettingsResource._internal(this);
     _calendarList = new CalendarListResource._internal(this);
@@ -87,6 +87,9 @@ class CalendarApi extends core.Object {
     _acl = new AclResource._internal(this);
     _colors = new ColorsResource._internal(this);
     _events = new EventsResource._internal(this);
+    this.applicationName = applicationName
+      .replaceAll(const RegExp(@'\s+'), '_')
+      .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '');
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";

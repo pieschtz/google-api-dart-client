@@ -67,14 +67,23 @@ class CoordinateApi extends core.Object {
   CoordinateApiAlt alt;
 
 
-  CoordinateApi([this.baseUrl = "https://www.googleapis.com/coordinate/v1/teams/", this.applicationName, this.authenticator]) { 
+  CoordinateApi([this.baseUrl = "https://www.googleapis.com/coordinate/v1/teams/", applicationName, this.authenticator]) { 
     _jobs = new JobsResource._internal(this);
+    this.applicationName = applicationName
+      .replaceAll(const RegExp(@'\s+'), '_')
+      .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '');
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}coordinate/v1/20120622 google-api-dart-client/${clientVersion}";
   }
 
+
+  /** OAuth2 scope: View and manage your Google Maps Coordinate jobs */
+  static final core.String COORDINATE_SCOPE = "https://www.googleapis.com/auth/coordinate";
+
+  /** OAuth2 scope: View your Google Coordinate jobs */
+  static final core.String COORDINATE_READONLY_SCOPE = "https://www.googleapis.com/auth/coordinate.readonly";
 }
 
 // Resource .JobsResource

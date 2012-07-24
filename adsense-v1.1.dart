@@ -77,17 +77,20 @@ class AdsenseApi extends core.Object {
   AdsenseApiAlt alt;
 
 
-  AdsenseApi([this.baseUrl = "https://www.googleapis.com/adsense/v1.1/", this.applicationName, this.authenticator]) { 
+  AdsenseApi([this.baseUrl = "https://www.googleapis.com/adsense/v1.1/", applicationName, this.authenticator]) { 
     _urlchannels = new UrlchannelsResource._internal(this);
     _adunits = new AdunitsResource._internal(this);
     _adclients = new AdclientsResource._internal(this);
     _reports = new ReportsResource._internal(this);
     _accounts = new AccountsResource._internal(this);
     _customchannels = new CustomchannelsResource._internal(this);
+    this.applicationName = applicationName
+      .replaceAll(const RegExp(@'\s+'), '_')
+      .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '');
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}adsense/v1.1/20120614 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}adsense/v1.1/20120717 google-api-dart-client/${clientVersion}";
   }
 
 

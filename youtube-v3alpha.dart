@@ -75,12 +75,15 @@ class YoutubeApi extends core.Object {
   YoutubeApiAlt alt;
 
 
-  YoutubeApi([this.baseUrl = "https://www.googleapis.com/youtube/v3alpha/", this.applicationName, this.authenticator]) { 
+  YoutubeApi([this.baseUrl = "https://www.googleapis.com/youtube/v3alpha/", applicationName, this.authenticator]) { 
     _channels = new ChannelsResource._internal(this);
     _search = new SearchResource._internal(this);
     _playlistitems = new PlaylistitemsResource._internal(this);
     _playlists = new PlaylistsResource._internal(this);
     _videos = new VideosResource._internal(this);
+    this.applicationName = applicationName
+      .replaceAll(const RegExp(@'\s+'), '_')
+      .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '');
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
@@ -97,16 +100,18 @@ class ChannelsResource extends core.Object {
 
   // Method ChannelsResource.List
   /**
-   * Browse the YouTube channel collection.
+   * Browse the YouTube channel collection. Either the 'id' or 'mine' parameter must be set.
    *
    *    * [part] Parts of the channel resource to be returned.
+   *    * [id] YouTube IDs of the channels to be returned.
    *    * [mine] Flag indicating only return the channel ids of the authenticated user.
    */
-  core.Future<ChannelListResponse> list(core.String part, [core.String mine = UNSPECIFIED]) {
+  core.Future<ChannelListResponse> list(core.String part, [core.String id = UNSPECIFIED, core.String mine = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["part"] = part;
+    if (UNSPECIFIED != id) $queryParams["id"] = id;
     if (UNSPECIFIED != mine) $queryParams["mine"] = mine;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
@@ -383,24 +388,32 @@ class VideosResource extends core.Object {
 
 // Schema .Channel
 class Channel extends IdentityHash {
-  /** Information about the channel content: upload playlist id. */
-  ChannelContentDetails contentDetails;
-
   /** The type of this API resource. */
   core.String kind;
+
+  /** Statistics about the channel: number of subscribers, views, and comments. */
+  ChannelStatistics statistics;
+
+  /** Information about the channel content: upload playlist id, privacy status. */
+  ChannelContentDetails contentDetails;
+
+  /** Basic details about the channel: title, description, and thumbnails. */
+  ChannelSnippet snippet;
 
   /** The eTag of the channel. */
   core.String etag;
 
-  /** The unique id of the channel. */
+  /** The unique ID of the channel. */
   core.String id;
 
   /** Parses an instance from its JSON representation. */
   static Channel parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Channel();
-    result.contentDetails = ChannelContentDetails.parse(json["contentDetails"]);
     result.kind = identity(json["kind"]);
+    result.statistics = ChannelStatistics.parse(json["statistics"]);
+    result.contentDetails = ChannelContentDetails.parse(json["contentDetails"]);
+    result.snippet = ChannelSnippet.parse(json["snippet"]);
     result.etag = identity(json["etag"]);
     result.id = identity(json["id"]);
     return result;
@@ -409,8 +422,10 @@ class Channel extends IdentityHash {
   static core.Object serialize(Channel value) {
     if (value == null) return null;
     final result = {};
-    result["contentDetails"] = ChannelContentDetails.serialize(value.contentDetails);
     result["kind"] = identity(value.kind);
+    result["statistics"] = ChannelStatistics.serialize(value.statistics);
+    result["contentDetails"] = ChannelContentDetails.serialize(value.contentDetails);
+    result["snippet"] = ChannelSnippet.serialize(value.snippet);
     result["etag"] = identity(value.etag);
     result["id"] = identity(value.id);
     return result;
@@ -420,13 +435,17 @@ class Channel extends IdentityHash {
 
 // Schema .ChannelContentDetails
 class ChannelContentDetails extends IdentityHash {
-  /** The unique id of the channel. */
+  /** Privacy status of the channel. */
+  core.String privacyStatus;
+
+  /** The ID of the playlist containing the uploads of this channel. */
   core.String uploads;
 
   /** Parses an instance from its JSON representation. */
   static ChannelContentDetails parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ChannelContentDetails();
+    result.privacyStatus = identity(json["privacyStatus"]);
     result.uploads = identity(json["uploads"]);
     return result;
   }
@@ -434,6 +453,7 @@ class ChannelContentDetails extends IdentityHash {
   static core.Object serialize(ChannelContentDetails value) {
     if (value == null) return null;
     final result = {};
+    result["privacyStatus"] = identity(value.privacyStatus);
     result["uploads"] = identity(value.uploads);
     return result;
   }
@@ -442,8 +462,8 @@ class ChannelContentDetails extends IdentityHash {
 
 // Schema .ChannelListResponse
 class ChannelListResponse extends IdentityHash {
-  /** List of channels matching the request criteria. */
-  core.List<Channel> channels;
+  /** Map of channels matching the request criteria, keyed by channel id. */
+  core.Map<core.String, Channel> channels;
 
   /** The type of this API response. */
   core.String kind;
@@ -455,7 +475,7 @@ class ChannelListResponse extends IdentityHash {
   static ChannelListResponse parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ChannelListResponse();
-    result.channels = map(Channel.parse)(json["channels"]);
+    result.channels = mapValues(Channel.parse)(json["channels"]);
     result.kind = identity(json["kind"]);
     result.etag = identity(json["etag"]);
     return result;
@@ -464,9 +484,78 @@ class ChannelListResponse extends IdentityHash {
   static core.Object serialize(ChannelListResponse value) {
     if (value == null) return null;
     final result = {};
-    result["channels"] = map(Channel.serialize)(value.channels);
+    result["channels"] = mapValues(Channel.serialize)(value.channels);
     result["kind"] = identity(value.kind);
     result["etag"] = identity(value.etag);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema .ChannelSnippet
+class ChannelSnippet extends IdentityHash {
+  /** Title of the channel. */
+  core.String title;
+
+  /** Description of the channel. */
+  core.String description;
+
+  /** Channel thumbnails. */
+  core.Map<core.String, Thumbnail> thumbnails;
+
+  /** Parses an instance from its JSON representation. */
+  static ChannelSnippet parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new ChannelSnippet();
+    result.title = identity(json["title"]);
+    result.description = identity(json["description"]);
+    result.thumbnails = mapValues(Thumbnail.parse)(json["thumbnails"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(ChannelSnippet value) {
+    if (value == null) return null;
+    final result = {};
+    result["title"] = identity(value.title);
+    result["description"] = identity(value.description);
+    result["thumbnails"] = mapValues(Thumbnail.serialize)(value.thumbnails);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema .ChannelStatistics
+class ChannelStatistics extends IdentityHash {
+  /** Number of comments for this channel. */
+  core.String commentCount;
+
+  /** Number of subscribers to this channel. */
+  core.String subscriberCount;
+
+  /** Number of videos in the channel. */
+  core.String videoCount;
+
+  /** Number of times the channel has been viewed. */
+  core.String viewCount;
+
+  /** Parses an instance from its JSON representation. */
+  static ChannelStatistics parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new ChannelStatistics();
+    result.commentCount = identity(json["commentCount"]);
+    result.subscriberCount = identity(json["subscriberCount"]);
+    result.videoCount = identity(json["videoCount"]);
+    result.viewCount = identity(json["viewCount"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(ChannelStatistics value) {
+    if (value == null) return null;
+    final result = {};
+    result["commentCount"] = identity(value.commentCount);
+    result["subscriberCount"] = identity(value.subscriberCount);
+    result["videoCount"] = identity(value.videoCount);
+    result["viewCount"] = identity(value.viewCount);
     return result;
   }
   toString() => serialize(this).toString();
@@ -580,8 +669,8 @@ class PlaylistItem extends IdentityHash {
 
 // Schema .PlaylistItemListResponse
 class PlaylistItemListResponse extends IdentityHash {
-  /** List of playlists matching the request criteria. */
-  core.List<PlaylistItem> playlistItems;
+  /** Map of playlist items matching the request criteria, keyed by id. */
+  core.Map<core.String, PlaylistItem> playlistItems;
 
   /** The type of this API response. */
   core.String kind;
@@ -593,7 +682,7 @@ class PlaylistItemListResponse extends IdentityHash {
   static PlaylistItemListResponse parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new PlaylistItemListResponse();
-    result.playlistItems = map(PlaylistItem.parse)(json["playlistItems"]);
+    result.playlistItems = mapValues(PlaylistItem.parse)(json["playlistItems"]);
     result.kind = identity(json["kind"]);
     result.etag = identity(json["etag"]);
     return result;
@@ -602,7 +691,7 @@ class PlaylistItemListResponse extends IdentityHash {
   static core.Object serialize(PlaylistItemListResponse value) {
     if (value == null) return null;
     final result = {};
-    result["playlistItems"] = map(PlaylistItem.serialize)(value.playlistItems);
+    result["playlistItems"] = mapValues(PlaylistItem.serialize)(value.playlistItems);
     result["kind"] = identity(value.kind);
     result["etag"] = identity(value.etag);
     return result;
@@ -612,41 +701,37 @@ class PlaylistItemListResponse extends IdentityHash {
 
 // Schema .PlaylistItemSnippet
 class PlaylistItemSnippet extends IdentityHash {
+  /** The playlist the item is part of. */
+  core.String playlistId;
+
   /** Description of the playlist item. */
   core.String description;
-
-  /** Author of the playlist item. */
-  core.String author;
-
-  /** The resource id contained in this playlist item. */
-  ResourceId resourceId;
-
-  /** The time the playlist item was created. */
-  core.String timePublished;
-
-  /** The playlist in which this playlist item is contained. */
-  core.String playlistId;
 
   /** Title of the playlist item. */
   core.String title;
 
-  /** The time the playlist item was updated. */
-  core.String timeUpdated;
+  /** The ID of the resource referenced by the playlist item. */
+  ResourceId resourceId;
 
-  /** The position of the playlist item within the playlist. */
+  /** Author of the playlist item. */
+  core.String channelId;
+
+  /** The date and time the playlist item was created. */
+  core.String publishedAt;
+
+  /** The position of the item within the playlist. */
   core.int position;
 
   /** Parses an instance from its JSON representation. */
   static PlaylistItemSnippet parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new PlaylistItemSnippet();
-    result.description = identity(json["description"]);
-    result.author = identity(json["author"]);
-    result.resourceId = ResourceId.parse(json["resourceId"]);
-    result.timePublished = identity(json["timePublished"]);
     result.playlistId = identity(json["playlistId"]);
+    result.description = identity(json["description"]);
     result.title = identity(json["title"]);
-    result.timeUpdated = identity(json["timeUpdated"]);
+    result.resourceId = ResourceId.parse(json["resourceId"]);
+    result.channelId = identity(json["channelId"]);
+    result.publishedAt = identity(json["publishedAt"]);
     result.position = identity(json["position"]);
     return result;
   }
@@ -654,13 +739,12 @@ class PlaylistItemSnippet extends IdentityHash {
   static core.Object serialize(PlaylistItemSnippet value) {
     if (value == null) return null;
     final result = {};
-    result["description"] = identity(value.description);
-    result["author"] = identity(value.author);
-    result["resourceId"] = ResourceId.serialize(value.resourceId);
-    result["timePublished"] = identity(value.timePublished);
     result["playlistId"] = identity(value.playlistId);
+    result["description"] = identity(value.description);
     result["title"] = identity(value.title);
-    result["timeUpdated"] = identity(value.timeUpdated);
+    result["resourceId"] = ResourceId.serialize(value.resourceId);
+    result["channelId"] = identity(value.channelId);
+    result["publishedAt"] = identity(value.publishedAt);
     result["position"] = identity(value.position);
     return result;
   }
@@ -675,8 +759,8 @@ class PlaylistListResponse extends IdentityHash {
   /** The eTag of the response. */
   core.String etag;
 
-  /** List of playlists matching the request criteria. */
-  core.List<Playlist> playlists;
+  /** Map of playlists matching the request criteria, keyed by id. */
+  core.Map<core.String, Playlist> playlists;
 
   /** Parses an instance from its JSON representation. */
   static PlaylistListResponse parse(core.Map<core.String, core.Object> json) {
@@ -684,7 +768,7 @@ class PlaylistListResponse extends IdentityHash {
     final result = new PlaylistListResponse();
     result.kind = identity(json["kind"]);
     result.etag = identity(json["etag"]);
-    result.playlists = map(Playlist.parse)(json["playlists"]);
+    result.playlists = mapValues(Playlist.parse)(json["playlists"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
@@ -693,7 +777,7 @@ class PlaylistListResponse extends IdentityHash {
     final result = {};
     result["kind"] = identity(value.kind);
     result["etag"] = identity(value.etag);
-    result["playlists"] = map(Playlist.serialize)(value.playlists);
+    result["playlists"] = mapValues(Playlist.serialize)(value.playlists);
     return result;
   }
   toString() => serialize(this).toString();
@@ -704,27 +788,27 @@ class PlaylistSnippet extends IdentityHash {
   /** Title of the playlist. */
   core.String title;
 
-  /** Textual tags associated with the playlist. */
-  core.List<core.String> tags;
+  /** Author of the playlist. */
+  core.String channelId;
 
   /** Description of the playlist. */
   core.String description;
 
-  /** The time the playlist was created. */
-  core.String timeCreated;
+  /** The date and time the playlist was created. */
+  core.String publishedAt;
 
-  /** Author of the playlist. */
-  core.String author;
+  /** Textual tags associated with the playlist. */
+  core.List<core.String> tags;
 
   /** Parses an instance from its JSON representation. */
   static PlaylistSnippet parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new PlaylistSnippet();
     result.title = identity(json["title"]);
-    result.tags = map(identity)(json["tags"]);
+    result.channelId = identity(json["channelId"]);
     result.description = identity(json["description"]);
-    result.timeCreated = identity(json["timeCreated"]);
-    result.author = identity(json["author"]);
+    result.publishedAt = identity(json["publishedAt"]);
+    result.tags = map(identity)(json["tags"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
@@ -732,10 +816,10 @@ class PlaylistSnippet extends IdentityHash {
     if (value == null) return null;
     final result = {};
     result["title"] = identity(value.title);
-    result["tags"] = map(identity)(value.tags);
+    result["channelId"] = identity(value.channelId);
     result["description"] = identity(value.description);
-    result["timeCreated"] = identity(value.timeCreated);
-    result["author"] = identity(value.author);
+    result["publishedAt"] = identity(value.publishedAt);
+    result["tags"] = map(identity)(value.tags);
     return result;
   }
   toString() => serialize(this).toString();
@@ -743,23 +827,23 @@ class PlaylistSnippet extends IdentityHash {
 
 // Schema .ResourceId
 class ResourceId extends IdentityHash {
-  /** Type of the resource. */
-  core.String type;
+  /** The kind of the referred resource. */
+  core.String kind;
 
-  /** Only set if type == CHANNEL. */
+  /** ID of the referred channel. Present only when type is "CHANNEL". */
   core.String channelId;
 
-  /** Only set if type == PLAYLIST. */
+  /** ID of the referred playlist. Present only when type is "PLAYLIST". */
   core.String playlistId;
 
-  /** Only set if type == VIDEO. */
+  /** ID of the referred video. Present only when type is "VIDEO". */
   core.String videoId;
 
   /** Parses an instance from its JSON representation. */
   static ResourceId parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ResourceId();
-    result.type = identity(json["type"]);
+    result.kind = identity(json["kind"]);
     result.channelId = identity(json["channelId"]);
     result.playlistId = identity(json["playlistId"]);
     result.videoId = identity(json["videoId"]);
@@ -769,7 +853,7 @@ class ResourceId extends IdentityHash {
   static core.Object serialize(ResourceId value) {
     if (value == null) return null;
     final result = {};
-    result["type"] = identity(value.type);
+    result["kind"] = identity(value.kind);
     result["channelId"] = identity(value.channelId);
     result["playlistId"] = identity(value.playlistId);
     result["videoId"] = identity(value.videoId);
@@ -823,7 +907,7 @@ class SearchResult extends IdentityHash {
   /** The type of this API resource. */
   core.String kind;
 
-  /** The eTag of the search. */
+  /** The eTag of the search result. */
   core.String etag;
 
   /** The id of the resource. */
@@ -854,36 +938,36 @@ class SearchResult extends IdentityHash {
 
 // Schema .SearchResultSnippet
 class SearchResultSnippet extends IdentityHash {
-  /** Title of the search result. */
-  core.String title;
+  /** Author of the found resource. */
+  core.String channelId;
 
   /** Description of the search result. */
   core.String description;
 
-  /** The time the resource was created at (milliseconds since epoch). */
-  core.String timeCreated;
+  /** The date and time the found resource was created. */
+  core.String publishedAt;
 
-  /** Author of the resource. */
-  core.String author;
+  /** Title of the search result. */
+  core.String title;
 
   /** Parses an instance from its JSON representation. */
   static SearchResultSnippet parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new SearchResultSnippet();
-    result.title = identity(json["title"]);
+    result.channelId = identity(json["channelId"]);
     result.description = identity(json["description"]);
-    result.timeCreated = identity(json["timeCreated"]);
-    result.author = identity(json["author"]);
+    result.publishedAt = identity(json["publishedAt"]);
+    result.title = identity(json["title"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
   static core.Object serialize(SearchResultSnippet value) {
     if (value == null) return null;
     final result = {};
-    result["title"] = identity(value.title);
+    result["channelId"] = identity(value.channelId);
     result["description"] = identity(value.description);
-    result["timeCreated"] = identity(value.timeCreated);
-    result["author"] = identity(value.author);
+    result["publishedAt"] = identity(value.publishedAt);
+    result["title"] = identity(value.title);
     return result;
   }
   toString() => serialize(this).toString();
@@ -1003,8 +1087,8 @@ class VideoListResponse extends IdentityHash {
   /** The eTag of the response. */
   core.String etag;
 
-  /** List of videos matching the request criteria. */
-  core.List<Video> videos;
+  /** Map of videos matching the request criteria, keyed by video id. */
+  core.Map<core.String, Video> videos;
 
   /** Parses an instance from its JSON representation. */
   static VideoListResponse parse(core.Map<core.String, core.Object> json) {
@@ -1012,7 +1096,7 @@ class VideoListResponse extends IdentityHash {
     final result = new VideoListResponse();
     result.kind = identity(json["kind"]);
     result.etag = identity(json["etag"]);
-    result.videos = map(Video.parse)(json["videos"]);
+    result.videos = mapValues(Video.parse)(json["videos"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
@@ -1021,7 +1105,7 @@ class VideoListResponse extends IdentityHash {
     final result = {};
     result["kind"] = identity(value.kind);
     result["etag"] = identity(value.etag);
-    result["videos"] = map(Video.serialize)(value.videos);
+    result["videos"] = mapValues(Video.serialize)(value.videos);
     return result;
   }
   toString() => serialize(this).toString();
@@ -1030,20 +1114,20 @@ class VideoListResponse extends IdentityHash {
 // Schema .VideoPlayer
 class VideoPlayer extends IdentityHash {
   /** Iframe embed for the video. */
-  core.String embed;
+  core.String embedHtml;
 
   /** Parses an instance from its JSON representation. */
   static VideoPlayer parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new VideoPlayer();
-    result.embed = identity(json["embed"]);
+    result.embedHtml = identity(json["embedHtml"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
   static core.Object serialize(VideoPlayer value) {
     if (value == null) return null;
     final result = {};
-    result["embed"] = identity(value.embed);
+    result["embedHtml"] = identity(value.embedHtml);
     return result;
   }
   toString() => serialize(this).toString();
@@ -1054,17 +1138,20 @@ class VideoSnippet extends IdentityHash {
   /** Video thumbnails. */
   core.Map<core.String, Thumbnail> thumbnails;
 
+  /** Textual tags associated with the video. */
+  core.List<core.String> tags;
+
+  /** Channel the video was uploaded into. */
+  core.String channelId;
+
+  /** Date time the video was uploaded. */
+  core.String publishedAt;
+
   /** Title of the video. */
   core.String title;
 
-  /** Channel the video was uploaded to. */
-  core.String channelId;
-
   /** Video category the video belongs to. */
   core.String categoryId;
-
-  /** Textual tags associated with the video. */
-  core.List<core.String> tags;
 
   /** Description of the video. */
   core.String description;
@@ -1074,10 +1161,11 @@ class VideoSnippet extends IdentityHash {
     if (json == null) return null;
     final result = new VideoSnippet();
     result.thumbnails = mapValues(Thumbnail.parse)(json["thumbnails"]);
-    result.title = identity(json["title"]);
-    result.channelId = identity(json["channelId"]);
-    result.categoryId = identity(json["categoryId"]);
     result.tags = map(identity)(json["tags"]);
+    result.channelId = identity(json["channelId"]);
+    result.publishedAt = identity(json["publishedAt"]);
+    result.title = identity(json["title"]);
+    result.categoryId = identity(json["categoryId"]);
     result.description = identity(json["description"]);
     return result;
   }
@@ -1086,10 +1174,11 @@ class VideoSnippet extends IdentityHash {
     if (value == null) return null;
     final result = {};
     result["thumbnails"] = mapValues(Thumbnail.serialize)(value.thumbnails);
-    result["title"] = identity(value.title);
-    result["channelId"] = identity(value.channelId);
-    result["categoryId"] = identity(value.categoryId);
     result["tags"] = map(identity)(value.tags);
+    result["channelId"] = identity(value.channelId);
+    result["publishedAt"] = identity(value.publishedAt);
+    result["title"] = identity(value.title);
+    result["categoryId"] = identity(value.categoryId);
     result["description"] = identity(value.description);
     return result;
   }

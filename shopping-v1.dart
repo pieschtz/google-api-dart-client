@@ -67,12 +67,15 @@ class ShoppingApi extends core.Object {
   ShoppingApiAlt alt;
 
 
-  ShoppingApi([this.baseUrl = "https://www.googleapis.com/shopping/search/v1/", this.applicationName, this.authenticator]) { 
+  ShoppingApi([this.baseUrl = "https://www.googleapis.com/shopping/search/v1/", applicationName, this.authenticator]) { 
     _products = new ProductsResource._internal(this);
+    this.applicationName = applicationName
+      .replaceAll(const RegExp(@'\s+'), '_')
+      .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '');
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}shopping/v1/20120614 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}shopping/v1/20120713 google-api-dart-client/${clientVersion}";
   }
 
 
@@ -266,7 +269,10 @@ class ProductsResource extends core.Object {
 
 // Schema .Product
 class Product extends IdentityHash {
-  
+  /**
+ * Self link of product when generated for a search request. Self link of product when generated for
+ * a lookup request.
+ */
   core.String selfLink;
 
   /** The kind of item, always shopping#product. */

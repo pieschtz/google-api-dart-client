@@ -69,9 +69,12 @@ class TaskqueueApi extends core.Object {
   TaskqueueApiAlt alt;
 
 
-  TaskqueueApi([this.baseUrl = "https://www.googleapis.com/taskqueue/v1beta2/projects/", this.applicationName, this.authenticator]) { 
+  TaskqueueApi([this.baseUrl = "https://www.googleapis.com/taskqueue/v1beta2/projects/", applicationName, this.authenticator]) { 
     _taskqueues = new TaskqueuesResource._internal(this);
     _tasks = new TasksResource._internal(this);
+    this.applicationName = applicationName
+      .replaceAll(const RegExp(@'\s+'), '_')
+      .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '');
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";

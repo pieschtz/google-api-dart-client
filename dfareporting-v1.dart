@@ -73,11 +73,14 @@ class DfareportingApi extends core.Object {
   DfareportingApiAlt alt;
 
 
-  DfareportingApi([this.baseUrl = "https://www.googleapis.com/dfareporting/v1/", this.applicationName, this.authenticator]) { 
+  DfareportingApi([this.baseUrl = "https://www.googleapis.com/dfareporting/v1/", applicationName, this.authenticator]) { 
     _files = new FilesResource._internal(this);
     _dimensionValues = new DimensionValuesResource._internal(this);
     _userProfiles = new UserProfilesResource._internal(this);
     _reports = new ReportsResource._internal(this);
+    this.applicationName = applicationName
+      .replaceAll(const RegExp(@'\s+'), '_')
+      .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '');
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";

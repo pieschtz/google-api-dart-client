@@ -75,12 +75,15 @@ class BooksApi extends core.Object {
   BooksApiAlt alt;
 
 
-  BooksApi([this.baseUrl = "https://www.googleapis.com/books/v1/", this.applicationName, this.authenticator]) { 
+  BooksApi([this.baseUrl = "https://www.googleapis.com/books/v1/", applicationName, this.authenticator]) { 
     _layers = new LayersResource._internal(this);
     _bookshelves = new BookshelvesResource._internal(this);
     _myconfig = new MyconfigResource._internal(this);
     _volumes = new VolumesResource._internal(this);
     _mylibrary = new MylibraryResource._internal(this);
+    this.applicationName = applicationName
+      .replaceAll(const RegExp(@'\s+'), '_')
+      .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '');
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";

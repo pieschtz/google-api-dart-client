@@ -69,9 +69,12 @@ class AnalyticsApi extends core.Object {
   AnalyticsApiAlt alt;
 
 
-  AnalyticsApi([this.baseUrl = "https://www.googleapis.com/analytics/v3/", this.applicationName, this.authenticator]) { 
+  AnalyticsApi([this.baseUrl = "https://www.googleapis.com/analytics/v3/", applicationName, this.authenticator]) { 
     _management = new ManagementResource._internal(this);
     _data = new DataResource._internal(this);
+    this.applicationName = applicationName
+      .replaceAll(const RegExp(@'\s+'), '_')
+      .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '');
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";

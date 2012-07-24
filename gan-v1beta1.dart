@@ -75,12 +75,15 @@ class GanApi extends core.Object {
   GanApiAlt alt;
 
 
-  GanApi([this.baseUrl = "https://www.googleapis.com/gan/v1beta1/", this.applicationName, this.authenticator]) { 
+  GanApi([this.baseUrl = "https://www.googleapis.com/gan/v1beta1/", applicationName, this.authenticator]) { 
     _advertisers = new AdvertisersResource._internal(this);
     _ccOffers = new CcOffersResource._internal(this);
     _events = new EventsResource._internal(this);
     _links = new LinksResource._internal(this);
     _publishers = new PublishersResource._internal(this);
+    this.applicationName = applicationName
+      .replaceAll(const RegExp(@'\s+'), '_')
+      .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '');
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";

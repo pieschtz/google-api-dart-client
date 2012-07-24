@@ -75,16 +75,19 @@ class BigqueryApi extends core.Object {
   BigqueryApiAlt alt;
 
 
-  BigqueryApi([this.baseUrl = "https://www.googleapis.com/bigquery/v2/", this.applicationName, this.authenticator]) { 
+  BigqueryApi([this.baseUrl = "https://www.googleapis.com/bigquery/v2/", applicationName, this.authenticator]) { 
     _tables = new TablesResource._internal(this);
     _datasets = new DatasetsResource._internal(this);
     _jobs = new JobsResource._internal(this);
     _tabledata = new TabledataResource._internal(this);
     _projects = new ProjectsResource._internal(this);
+    this.applicationName = applicationName
+      .replaceAll(const RegExp(@'\s+'), '_')
+      .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '');
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}bigquery/v2/20120614 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}bigquery/v2/20120717 google-api-dart-client/${clientVersion}";
   }
 
 
@@ -1187,8 +1190,8 @@ class GetQueryResultsResponse extends IdentityHash {
   core.List<TableRow> rows;
 
   /**
- * Reference to the Helix Job that was created to run the query. This field will be present even if
- * the original request timed out, in which case GetQueryResults can be used to read the results
+ * Reference to the BigQuery Job that was created to run the query. This field will be present even
+ * if the original request timed out, in which case GetQueryResults can be used to read the results
  * once the query has completed. Since this API only returns the first page of results, subsequent
  * pages can be fetched via the same mechanism (GetQueryResults).
  */

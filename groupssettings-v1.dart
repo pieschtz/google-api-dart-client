@@ -67,8 +67,11 @@ class GroupssettingsApi extends core.Object {
   GroupssettingsApiAlt alt;
 
 
-  GroupssettingsApi([this.baseUrl = "https://www.googleapis.com/groups/v1/groups/", this.applicationName, this.authenticator]) { 
+  GroupssettingsApi([this.baseUrl = "https://www.googleapis.com/groups/v1/groups/", applicationName, this.authenticator]) { 
     _groups = new GroupsResource._internal(this);
+    this.applicationName = applicationName
+      .replaceAll(const RegExp(@'\s+'), '_')
+      .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '');
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";

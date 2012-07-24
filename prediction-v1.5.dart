@@ -69,9 +69,12 @@ class PredictionApi extends core.Object {
   PredictionApiAlt alt;
 
 
-  PredictionApi([this.baseUrl = "https://www.googleapis.com/prediction/v1.5/", this.applicationName, this.authenticator]) { 
+  PredictionApi([this.baseUrl = "https://www.googleapis.com/prediction/v1.5/", applicationName, this.authenticator]) { 
     _trainedmodels = new TrainedmodelsResource._internal(this);
     _hostedmodels = new HostedmodelsResource._internal(this);
+    this.applicationName = applicationName
+      .replaceAll(const RegExp(@'\s+'), '_')
+      .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '');
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";

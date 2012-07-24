@@ -75,12 +75,15 @@ class BloggerApi extends core.Object {
   BloggerApiAlt alt;
 
 
-  BloggerApi([this.baseUrl = "https://www.googleapis.com/blogger/v3/", this.applicationName, this.authenticator]) { 
+  BloggerApi([this.baseUrl = "https://www.googleapis.com/blogger/v3/", applicationName, this.authenticator]) { 
     _blogs = new BlogsResource._internal(this);
     _posts = new PostsResource._internal(this);
     _pages = new PagesResource._internal(this);
     _comments = new CommentsResource._internal(this);
     _users = new UsersResource._internal(this);
+    this.applicationName = applicationName
+      .replaceAll(const RegExp(@'\s+'), '_')
+      .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '');
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";

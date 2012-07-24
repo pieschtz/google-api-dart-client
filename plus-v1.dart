@@ -71,14 +71,17 @@ class PlusApi extends core.Object {
   PlusApiAlt alt;
 
 
-  PlusApi([this.baseUrl = "https://www.googleapis.com/plus/v1/", this.applicationName, this.authenticator]) { 
+  PlusApi([this.baseUrl = "https://www.googleapis.com/plus/v1/", applicationName, this.authenticator]) { 
     _activities = new ActivitiesResource._internal(this);
     _comments = new CommentsResource._internal(this);
     _people = new PeopleResource._internal(this);
+    this.applicationName = applicationName
+      .replaceAll(const RegExp(@'\s+'), '_')
+      .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '');
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}plus/v1/20120602 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}plus/v1/20120712 google-api-dart-client/${clientVersion}";
   }
 
 
@@ -1821,7 +1824,7 @@ class PersonOrganizations extends IdentityHash {
   /** The date the person left this organization. */
   core.String endDate;
 
-  /** A short description of the person's role in this organization. */
+  /** A short description of the person's role in this organization. Deprecated. */
   core.String description;
 
   /** The person's job title or role within the organization. */
@@ -1833,10 +1836,10 @@ class PersonOrganizations extends IdentityHash {
  */
   core.bool primary;
 
-  /** The location of this organization. */
+  /** The location of this organization. Deprecated. */
   core.String location;
 
-  /** The department within the organization. */
+  /** The department within the organization. Deprecated. */
   core.String department;
 
   /** The type of organization. Possible values are:  

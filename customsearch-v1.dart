@@ -67,8 +67,11 @@ class CustomsearchApi extends core.Object {
   CustomsearchApiAlt alt;
 
 
-  CustomsearchApi([this.baseUrl = "https://www.googleapis.com/customsearch/", this.applicationName, this.authenticator]) { 
+  CustomsearchApi([this.baseUrl = "https://www.googleapis.com/customsearch/", applicationName, this.authenticator]) { 
     _cse = new CseResource._internal(this);
+    this.applicationName = applicationName
+      .replaceAll(const RegExp(@'\s+'), '_')
+      .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '');
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";

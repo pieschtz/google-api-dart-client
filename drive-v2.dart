@@ -81,7 +81,7 @@ class DriveApi extends core.Object {
   DriveApiAlt alt;
 
 
-  DriveApi([this.baseUrl = "https://www.googleapis.com/drive/v2/", this.applicationName, this.authenticator]) { 
+  DriveApi([this.baseUrl = "https://www.googleapis.com/drive/v2/", applicationName, this.authenticator]) { 
     _files = new FilesResource._internal(this);
     _about = new AboutResource._internal(this);
     _apps = new AppsResource._internal(this);
@@ -90,17 +90,20 @@ class DriveApi extends core.Object {
     _changes = new ChangesResource._internal(this);
     _children = new ChildrenResource._internal(this);
     _permissions = new PermissionsResource._internal(this);
+    this.applicationName = applicationName
+      .replaceAll(const RegExp(@'\s+'), '_')
+      .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '');
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}drive/v2/20120501 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}drive/v2/20120516 google-api-dart-client/${clientVersion}";
   }
 
 
   /** OAuth2 scope: View and manage the files and documents in your Google Drive */
   static final core.String DRIVE_SCOPE = "https://www.googleapis.com/auth/drive";
 
-  /** OAuth2 scope: New service: https://www.googleapis.com/auth/drive.apps.readonly */
+  /** OAuth2 scope: View your Google Drive apps */
   static final core.String DRIVE_APPS_READONLY_SCOPE = "https://www.googleapis.com/auth/drive.apps.readonly";
 
   /** OAuth2 scope: View and manage Google Drive files that you have opened or created with this app */
@@ -467,26 +470,29 @@ class FilesResource extends core.Object {
    *    * [fileId] The ID of the file to copy.
    *    * [convert] Whether to convert this file to the corresponding Google Docs format.
   Default: false.
-   *    * [ocr] Whether to attempt OCR on .jpg, .png, or .gif uploads.
-  Default: false.
-   *    * [sourceLanguage] The language of the original file to be translated.
-   *    * [ocrLanguage] If ocr is true, hints at the language to use. Valid values are ISO 639-1 codes.
-   *    * [timedTextLanguage] The language of the timed text.
    *    * [targetLanguage] Target language to translate the file to. If no sourceLanguage is provided, the API will attempt to
    *        detect the language.
+   *    * [sourceLanguage] The language of the original file to be translated.
+   *    * [ocrLanguage] If ocr is true, hints at the language to use. Valid values are ISO 639-1 codes.
+   *    * [pinned] Whether to pin the head revision of the new copy.
+  Default: false.
+   *    * [ocr] Whether to attempt OCR on .jpg, .png, or .gif uploads.
+  Default: false.
+   *    * [timedTextLanguage] The language of the timed text.
    *    * [timedTextTrackName] The timed text track name.
    */
-  core.Future<File> copy(core.String fileId, File content, [core.bool convert = UNSPECIFIED, core.bool ocr = UNSPECIFIED, core.String sourceLanguage = UNSPECIFIED, core.String ocrLanguage = UNSPECIFIED, core.String timedTextLanguage = UNSPECIFIED, core.String targetLanguage = UNSPECIFIED, core.String timedTextTrackName = UNSPECIFIED]) {
+  core.Future<File> copy(core.String fileId, File content, [core.bool convert = UNSPECIFIED, core.String targetLanguage = UNSPECIFIED, core.String sourceLanguage = UNSPECIFIED, core.String ocrLanguage = UNSPECIFIED, core.bool pinned = UNSPECIFIED, core.bool ocr = UNSPECIFIED, core.String timedTextLanguage = UNSPECIFIED, core.String timedTextTrackName = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["fileId"] = fileId;
     if (UNSPECIFIED != convert) $queryParams["convert"] = convert;
-    if (UNSPECIFIED != ocr) $queryParams["ocr"] = ocr;
+    if (UNSPECIFIED != targetLanguage) $queryParams["targetLanguage"] = targetLanguage;
     if (UNSPECIFIED != sourceLanguage) $queryParams["sourceLanguage"] = sourceLanguage;
     if (UNSPECIFIED != ocrLanguage) $queryParams["ocrLanguage"] = ocrLanguage;
+    if (UNSPECIFIED != pinned) $queryParams["pinned"] = pinned;
+    if (UNSPECIFIED != ocr) $queryParams["ocr"] = ocr;
     if (UNSPECIFIED != timedTextLanguage) $queryParams["timedTextLanguage"] = timedTextLanguage;
-    if (UNSPECIFIED != targetLanguage) $queryParams["targetLanguage"] = targetLanguage;
     if (UNSPECIFIED != timedTextTrackName) $queryParams["timedTextTrackName"] = timedTextTrackName;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
@@ -2068,9 +2074,9 @@ class File extends IdentityHash {
   core.String lastViewedByMeDate;
 
   /**
- * Collection of parent folders which contain this file. On insert, setting this field will put the
- * file in all of the provided folders. If no folders are provided, the file will be placed in the
- * default root folder. On update, this field is ignored.
+ * Collection of parent folders which contain this file. Setting this field will put the file in all
+ * of the provided folders. On insert, if no folders are provided, the file will be placed in the
+ * default root folder.
  */
   core.List<ParentReference> parents;
 

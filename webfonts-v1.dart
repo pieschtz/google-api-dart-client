@@ -67,8 +67,11 @@ class WebfontsApi extends core.Object {
   WebfontsApiAlt alt;
 
 
-  WebfontsApi([this.baseUrl = "https://www.googleapis.com/webfonts/v1/", this.applicationName, this.authenticator]) { 
+  WebfontsApi([this.baseUrl = "https://www.googleapis.com/webfonts/v1/", applicationName, this.authenticator]) { 
     _webfonts = new WebfontsResource._internal(this);
+    this.applicationName = applicationName
+      .replaceAll(const RegExp(@'\s+'), '_')
+      .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '');
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";

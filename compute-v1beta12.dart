@@ -87,7 +87,7 @@ class ComputeApi extends core.Object {
   ComputeApiAlt alt;
 
 
-  ComputeApi([this.baseUrl = "https://www.googleapis.com/compute/v1beta12/projects/", this.applicationName, this.authenticator]) { 
+  ComputeApi([this.baseUrl = "https://www.googleapis.com/compute/v1beta12/projects/", applicationName, this.authenticator]) { 
     _operations = new OperationsResource._internal(this);
     _kernels = new KernelsResource._internal(this);
     _disks = new DisksResource._internal(this);
@@ -99,10 +99,13 @@ class ComputeApi extends core.Object {
     _firewalls = new FirewallsResource._internal(this);
     _networks = new NetworksResource._internal(this);
     _projects = new ProjectsResource._internal(this);
+    this.applicationName = applicationName
+      .replaceAll(const RegExp(@'\s+'), '_')
+      .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '');
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}compute/v1beta12/20120614 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}compute/v1beta12/20120712 google-api-dart-client/${clientVersion}";
   }
 
 

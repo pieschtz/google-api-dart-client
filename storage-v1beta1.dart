@@ -73,15 +73,18 @@ class StorageApi extends core.Object {
   StorageApiAlt alt;
 
 
-  StorageApi([this.baseUrl = "https://www.googleapis.com/storage/v1beta1/", this.applicationName, this.authenticator]) { 
+  StorageApi([this.baseUrl = "https://www.googleapis.com/storage/v1beta1/", applicationName, this.authenticator]) { 
     _objectAccessControls = new ObjectAccessControlsResource._internal(this);
     _bucketAccessControls = new BucketAccessControlsResource._internal(this);
     _objects = new ObjectsResource._internal(this);
     _buckets = new BucketsResource._internal(this);
+    this.applicationName = applicationName
+      .replaceAll(const RegExp(@'\s+'), '_')
+      .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '');
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}storage/v1beta1/20120608 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}storage/v1beta1/20120626 google-api-dart-client/${clientVersion}";
   }
 
 
@@ -105,11 +108,11 @@ class ObjectAccessControlsResource extends core.Object {
   /**
    * Creates a new ACL entry on the specified object.
    *
-   *    * [content] the Objectaccesscontrol
+   *    * [content] the ObjectAccessControl
    *    * [bucket] Name of a bucket.
    *    * [object] Name of the object.
    */
-  core.Future<Objectaccesscontrol> insert(core.String bucket, core.String object, Objectaccesscontrol content) {
+  core.Future<ObjectAccessControl> insert(core.String bucket, core.String object, ObjectAccessControl content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -124,7 +127,7 @@ class ObjectAccessControlsResource extends core.Object {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     $headers["Content-Type"] = "application/json";
-    final $body = JSON.stringify(Objectaccesscontrol.serialize(content));
+    final $body = JSON.stringify(ObjectAccessControl.serialize(content));
     final $path = "b/{bucket}/o/{object}/acl";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
@@ -133,7 +136,7 @@ class ObjectAccessControlsResource extends core.Object {
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request($body))
-        .transform((final $text) => Objectaccesscontrol.parse(JSON.parse($text)));
+        .transform((final $text) => ObjectAccessControl.parse(JSON.parse($text)));
   }
 
   // Method ObjectAccessControlsResource.Get
@@ -145,7 +148,7 @@ class ObjectAccessControlsResource extends core.Object {
    *    * [entity] The entity holding the permission. Can be user-userId, group-groupId, allUsers, or
    *        allAuthenticatedUsers.
    */
-  core.Future<Objectaccesscontrol> get(core.String bucket, core.String object, core.String entity) {
+  core.Future<ObjectAccessControl> get(core.String bucket, core.String object, core.String entity) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -168,7 +171,7 @@ class ObjectAccessControlsResource extends core.Object {
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
-        .transform((final $text) => Objectaccesscontrol.parse(JSON.parse($text)));
+        .transform((final $text) => ObjectAccessControl.parse(JSON.parse($text)));
   }
 
   // Method ObjectAccessControlsResource.List
@@ -178,7 +181,7 @@ class ObjectAccessControlsResource extends core.Object {
    *    * [bucket] Name of a bucket.
    *    * [object] Name of the object.
    */
-  core.Future<Objectaccesscontrols> list(core.String bucket, core.String object) {
+  core.Future<ObjectAccessControls> list(core.String bucket, core.String object) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -200,20 +203,20 @@ class ObjectAccessControlsResource extends core.Object {
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
-        .transform((final $text) => Objectaccesscontrols.parse(JSON.parse($text)));
+        .transform((final $text) => ObjectAccessControls.parse(JSON.parse($text)));
   }
 
   // Method ObjectAccessControlsResource.Update
   /**
    * Updates an ACL entry on the specified object.
    *
-   *    * [content] the Objectaccesscontrol
+   *    * [content] the ObjectAccessControl
    *    * [bucket] Name of a bucket.
    *    * [object] Name of the object.
    *    * [entity] The entity holding the permission. Can be user-userId, group-groupId, allUsers, or
    *        allAuthenticatedUsers.
    */
-  core.Future<Objectaccesscontrol> update(core.String bucket, core.String object, core.String entity, Objectaccesscontrol content) {
+  core.Future<ObjectAccessControl> update(core.String bucket, core.String object, core.String entity, ObjectAccessControl content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -229,7 +232,7 @@ class ObjectAccessControlsResource extends core.Object {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     $headers["Content-Type"] = "application/json";
-    final $body = JSON.stringify(Objectaccesscontrol.serialize(content));
+    final $body = JSON.stringify(ObjectAccessControl.serialize(content));
     final $path = "b/{bucket}/o/{object}/acl/{entity}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "PUT", $headers);
@@ -238,20 +241,20 @@ class ObjectAccessControlsResource extends core.Object {
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request($body))
-        .transform((final $text) => Objectaccesscontrol.parse(JSON.parse($text)));
+        .transform((final $text) => ObjectAccessControl.parse(JSON.parse($text)));
   }
 
   // Method ObjectAccessControlsResource.Patch
   /**
    * Updates an ACL entry on the specified object. This method supports patch semantics.
    *
-   *    * [content] the Objectaccesscontrol
+   *    * [content] the ObjectAccessControl
    *    * [bucket] Name of a bucket.
    *    * [object] Name of the object.
    *    * [entity] The entity holding the permission. Can be user-userId, group-groupId, allUsers, or
    *        allAuthenticatedUsers.
    */
-  core.Future<Objectaccesscontrol> patch(core.String bucket, core.String object, core.String entity, Objectaccesscontrol content) {
+  core.Future<ObjectAccessControl> patch(core.String bucket, core.String object, core.String entity, ObjectAccessControl content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -267,7 +270,7 @@ class ObjectAccessControlsResource extends core.Object {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     $headers["Content-Type"] = "application/json";
-    final $body = JSON.stringify(Objectaccesscontrol.serialize(content));
+    final $body = JSON.stringify(ObjectAccessControl.serialize(content));
     final $path = "b/{bucket}/o/{object}/acl/{entity}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "PATCH", $headers);
@@ -276,7 +279,7 @@ class ObjectAccessControlsResource extends core.Object {
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request($body))
-        .transform((final $text) => Objectaccesscontrol.parse(JSON.parse($text)));
+        .transform((final $text) => ObjectAccessControl.parse(JSON.parse($text)));
   }
 
   // Method ObjectAccessControlsResource.Delete
@@ -325,10 +328,10 @@ class BucketAccessControlsResource extends core.Object {
   /**
    * Creates a new ACL entry on the specified bucket.
    *
-   *    * [content] the Bucketaccesscontrol
+   *    * [content] the BucketAccessControl
    *    * [bucket] Name of a bucket.
    */
-  core.Future<Bucketaccesscontrol> insert(core.String bucket, Bucketaccesscontrol content) {
+  core.Future<BucketAccessControl> insert(core.String bucket, BucketAccessControl content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -342,7 +345,7 @@ class BucketAccessControlsResource extends core.Object {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     $headers["Content-Type"] = "application/json";
-    final $body = JSON.stringify(Bucketaccesscontrol.serialize(content));
+    final $body = JSON.stringify(BucketAccessControl.serialize(content));
     final $path = "b/{bucket}/acl";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "POST", $headers);
@@ -351,7 +354,7 @@ class BucketAccessControlsResource extends core.Object {
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request($body))
-        .transform((final $text) => Bucketaccesscontrol.parse(JSON.parse($text)));
+        .transform((final $text) => BucketAccessControl.parse(JSON.parse($text)));
   }
 
   // Method BucketAccessControlsResource.Get
@@ -362,7 +365,7 @@ class BucketAccessControlsResource extends core.Object {
    *    * [entity] The entity holding the permission. Can be user-userId, group-groupId, allUsers, or
    *        allAuthenticatedUsers.
    */
-  core.Future<Bucketaccesscontrol> get(core.String bucket, core.String entity) {
+  core.Future<BucketAccessControl> get(core.String bucket, core.String entity) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -384,7 +387,7 @@ class BucketAccessControlsResource extends core.Object {
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
-        .transform((final $text) => Bucketaccesscontrol.parse(JSON.parse($text)));
+        .transform((final $text) => BucketAccessControl.parse(JSON.parse($text)));
   }
 
   // Method BucketAccessControlsResource.List
@@ -393,7 +396,7 @@ class BucketAccessControlsResource extends core.Object {
    *
    *    * [bucket] Name of a bucket.
    */
-  core.Future<Bucketaccesscontrols> list(core.String bucket) {
+  core.Future<BucketAccessControls> list(core.String bucket) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -414,19 +417,19 @@ class BucketAccessControlsResource extends core.Object {
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
-        .transform((final $text) => Bucketaccesscontrols.parse(JSON.parse($text)));
+        .transform((final $text) => BucketAccessControls.parse(JSON.parse($text)));
   }
 
   // Method BucketAccessControlsResource.Update
   /**
    * Updates an ACL entry on the specified bucket.
    *
-   *    * [content] the Bucketaccesscontrol
+   *    * [content] the BucketAccessControl
    *    * [bucket] Name of a bucket.
    *    * [entity] The entity holding the permission. Can be user-userId, group-groupId, allUsers, or
    *        allAuthenticatedUsers.
    */
-  core.Future<Bucketaccesscontrol> update(core.String bucket, core.String entity, Bucketaccesscontrol content) {
+  core.Future<BucketAccessControl> update(core.String bucket, core.String entity, BucketAccessControl content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -441,7 +444,7 @@ class BucketAccessControlsResource extends core.Object {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     $headers["Content-Type"] = "application/json";
-    final $body = JSON.stringify(Bucketaccesscontrol.serialize(content));
+    final $body = JSON.stringify(BucketAccessControl.serialize(content));
     final $path = "b/{bucket}/acl/{entity}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "PUT", $headers);
@@ -450,19 +453,19 @@ class BucketAccessControlsResource extends core.Object {
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request($body))
-        .transform((final $text) => Bucketaccesscontrol.parse(JSON.parse($text)));
+        .transform((final $text) => BucketAccessControl.parse(JSON.parse($text)));
   }
 
   // Method BucketAccessControlsResource.Patch
   /**
    * Updates an ACL entry on the specified bucket. This method supports patch semantics.
    *
-   *    * [content] the Bucketaccesscontrol
+   *    * [content] the BucketAccessControl
    *    * [bucket] Name of a bucket.
    *    * [entity] The entity holding the permission. Can be user-userId, group-groupId, allUsers, or
    *        allAuthenticatedUsers.
    */
-  core.Future<Bucketaccesscontrol> patch(core.String bucket, core.String entity, Bucketaccesscontrol content) {
+  core.Future<BucketAccessControl> patch(core.String bucket, core.String entity, BucketAccessControl content) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -477,7 +480,7 @@ class BucketAccessControlsResource extends core.Object {
     if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     $headers["Content-Type"] = "application/json";
-    final $body = JSON.stringify(Bucketaccesscontrol.serialize(content));
+    final $body = JSON.stringify(BucketAccessControl.serialize(content));
     final $path = "b/{bucket}/acl/{entity}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
     final $http = new HttpRequest($url, "PATCH", $headers);
@@ -486,7 +489,7 @@ class BucketAccessControlsResource extends core.Object {
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request($body))
-        .transform((final $text) => Bucketaccesscontrol.parse(JSON.parse($text)));
+        .transform((final $text) => BucketAccessControl.parse(JSON.parse($text)));
   }
 
   // Method BucketAccessControlsResource.Delete
@@ -1292,10 +1295,10 @@ class Bucket extends IdentityHash {
   core.String projectId;
 
   /** Access controls on the bucket. */
-  core.List<Bucketaccesscontrol> acl;
+  core.List<BucketAccessControl> acl;
 
   /** Default access controls to apply to new objects when no ACL is provided. */
-  core.List<Objectaccesscontrol> defaultObjectAcl;
+  core.List<ObjectAccessControl> defaultObjectAcl;
 
   /**
  * The location of the bucket. Object data for objects in the bucket resides in physical storage in
@@ -1320,8 +1323,8 @@ class Bucket extends IdentityHash {
     result.kind = identity(json["kind"]);
     result.timeCreated = identity(json["timeCreated"]);
     result.projectId = identity(json["projectId"]);
-    result.acl = map(Bucketaccesscontrol.parse)(json["acl"]);
-    result.defaultObjectAcl = map(Objectaccesscontrol.parse)(json["defaultObjectAcl"]);
+    result.acl = map(BucketAccessControl.parse)(json["acl"]);
+    result.defaultObjectAcl = map(ObjectAccessControl.parse)(json["defaultObjectAcl"]);
     result.location = identity(json["location"]);
     result.owner = BucketOwner.parse(json["owner"]);
     result.id = identity(json["id"]);
@@ -1336,12 +1339,110 @@ class Bucket extends IdentityHash {
     result["kind"] = identity(value.kind);
     result["timeCreated"] = identity(value.timeCreated);
     result["projectId"] = identity(value.projectId);
-    result["acl"] = map(Bucketaccesscontrol.serialize)(value.acl);
-    result["defaultObjectAcl"] = map(Objectaccesscontrol.serialize)(value.defaultObjectAcl);
+    result["acl"] = map(BucketAccessControl.serialize)(value.acl);
+    result["defaultObjectAcl"] = map(ObjectAccessControl.serialize)(value.defaultObjectAcl);
     result["location"] = identity(value.location);
     result["owner"] = BucketOwner.serialize(value.owner);
     result["id"] = identity(value.id);
     result["selfLink"] = identity(value.selfLink);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema .BucketAccessControl
+class BucketAccessControl extends IdentityHash {
+  /** The domain associated with the entity, if any. */
+  core.String domain;
+
+  /** The name of the bucket. */
+  core.String bucket;
+
+  /**
+ * The kind of item this is. For bucket access control entries, this is always
+ * storage#bucketAccessControl.
+ */
+  core.String kind;
+
+  /** The ID of the access-control entry. */
+  core.String id;
+
+  /** The access permission for the entity. Can be READER, WRITER, or OWNER. */
+  core.String role;
+
+  /** The ID for the entity, if any. */
+  core.String entityId;
+
+  /**
+ * The entity holding the permission, in one of the following forms: - user-userId - user-email -
+ * group-groupId - group-email - allUsers - allAuthenticatedUsers
+ */
+  core.String entity;
+
+  /** The email address associated with the entity, if any. */
+  core.String email;
+
+  /** The link to this access-control entry. */
+  core.String selfLink;
+
+  /** Parses an instance from its JSON representation. */
+  static BucketAccessControl parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new BucketAccessControl();
+    result.domain = identity(json["domain"]);
+    result.bucket = identity(json["bucket"]);
+    result.kind = identity(json["kind"]);
+    result.id = identity(json["id"]);
+    result.role = identity(json["role"]);
+    result.entityId = identity(json["entityId"]);
+    result.entity = identity(json["entity"]);
+    result.email = identity(json["email"]);
+    result.selfLink = identity(json["selfLink"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(BucketAccessControl value) {
+    if (value == null) return null;
+    final result = {};
+    result["domain"] = identity(value.domain);
+    result["bucket"] = identity(value.bucket);
+    result["kind"] = identity(value.kind);
+    result["id"] = identity(value.id);
+    result["role"] = identity(value.role);
+    result["entityId"] = identity(value.entityId);
+    result["entity"] = identity(value.entity);
+    result["email"] = identity(value.email);
+    result["selfLink"] = identity(value.selfLink);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema .BucketAccessControls
+class BucketAccessControls extends IdentityHash {
+  /** The list of items. */
+  core.List<BucketAccessControl> items;
+
+  /**
+ * The kind of item this is. For lists of bucket access control entries, this is always
+ * storage#bucketAccessControls.
+ */
+  core.String kind;
+
+  /** Parses an instance from its JSON representation. */
+  static BucketAccessControls parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new BucketAccessControls();
+    result.items = map(BucketAccessControl.parse)(json["items"]);
+    result.kind = identity(json["kind"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(BucketAccessControls value) {
+    if (value == null) return null;
+    final result = {};
+    result["items"] = map(BucketAccessControl.serialize)(value.items);
+    result["kind"] = identity(value.kind);
     return result;
   }
   toString() => serialize(this).toString();
@@ -1399,104 +1500,6 @@ class BucketWebsite extends IdentityHash {
     final result = {};
     result["notFoundPage"] = identity(value.notFoundPage);
     result["mainPageSuffix"] = identity(value.mainPageSuffix);
-    return result;
-  }
-  toString() => serialize(this).toString();
-}
-
-// Schema .Bucketaccesscontrol
-class Bucketaccesscontrol extends IdentityHash {
-  /** The domain associated with the entity, if any. */
-  core.String domain;
-
-  /** The name of the bucket. */
-  core.String bucket;
-
-  /**
- * The kind of item this is. For bucket access control entries, this is always
- * storage#bucket_access_control.
- */
-  core.String kind;
-
-  /** The ID of the access-control entry. */
-  core.String id;
-
-  /** The access permission for the entity. Can be READER, WRITER, or OWNER. */
-  core.String role;
-
-  /** The ID for the entity, if any. */
-  core.String entityId;
-
-  /**
- * The entity holding the permission, in one of the following forms: - user-userId - user-email -
- * group-groupId - group-email - allUsers - allAuthenticatedUsers
- */
-  core.String entity;
-
-  /** The email address associated with the entity, if any. */
-  core.String email;
-
-  /** The link to this access-control entry. */
-  core.String selfLink;
-
-  /** Parses an instance from its JSON representation. */
-  static Bucketaccesscontrol parse(core.Map<core.String, core.Object> json) {
-    if (json == null) return null;
-    final result = new Bucketaccesscontrol();
-    result.domain = identity(json["domain"]);
-    result.bucket = identity(json["bucket"]);
-    result.kind = identity(json["kind"]);
-    result.id = identity(json["id"]);
-    result.role = identity(json["role"]);
-    result.entityId = identity(json["entityId"]);
-    result.entity = identity(json["entity"]);
-    result.email = identity(json["email"]);
-    result.selfLink = identity(json["selfLink"]);
-    return result;
-  }
-  /** Converts an instance to its JSON representation. */
-  static core.Object serialize(Bucketaccesscontrol value) {
-    if (value == null) return null;
-    final result = {};
-    result["domain"] = identity(value.domain);
-    result["bucket"] = identity(value.bucket);
-    result["kind"] = identity(value.kind);
-    result["id"] = identity(value.id);
-    result["role"] = identity(value.role);
-    result["entityId"] = identity(value.entityId);
-    result["entity"] = identity(value.entity);
-    result["email"] = identity(value.email);
-    result["selfLink"] = identity(value.selfLink);
-    return result;
-  }
-  toString() => serialize(this).toString();
-}
-
-// Schema .Bucketaccesscontrols
-class Bucketaccesscontrols extends IdentityHash {
-  /** The list of items. */
-  core.List<Bucketaccesscontrol> items;
-
-  /**
- * The kind of item this is. For lists of bucket access control entries, this is always
- * storage#bucket_access_controls.
- */
-  core.String kind;
-
-  /** Parses an instance from its JSON representation. */
-  static Bucketaccesscontrols parse(core.Map<core.String, core.Object> json) {
-    if (json == null) return null;
-    final result = new Bucketaccesscontrols();
-    result.items = map(Bucketaccesscontrol.parse)(json["items"]);
-    result.kind = identity(json["kind"]);
-    return result;
-  }
-  /** Converts an instance to its JSON representation. */
-  static core.Object serialize(Bucketaccesscontrols value) {
-    if (value == null) return null;
-    final result = {};
-    result["items"] = map(Bucketaccesscontrol.serialize)(value.items);
-    result["kind"] = identity(value.kind);
     return result;
   }
   toString() => serialize(this).toString();
@@ -1567,7 +1570,7 @@ class Object extends IdentityHash {
   core.String cacheControl;
 
   /** Access controls on the object. */
-  core.List<Objectaccesscontrol> acl;
+  core.List<ObjectAccessControl> acl;
 
   /** The ID of the object. */
   core.String id;
@@ -1590,7 +1593,7 @@ class Object extends IdentityHash {
     result.selfLink = identity(json["selfLink"]);
     result.owner = ObjectOwner.parse(json["owner"]);
     result.cacheControl = identity(json["cacheControl"]);
-    result.acl = map(Objectaccesscontrol.parse)(json["acl"]);
+    result.acl = map(ObjectAccessControl.parse)(json["acl"]);
     result.id = identity(json["id"]);
     result.contentDisposition = identity(json["contentDisposition"]);
     result.metadata = mapValues(identity)(json["metadata"]);
@@ -1608,10 +1611,113 @@ class Object extends IdentityHash {
     result["selfLink"] = identity(value.selfLink);
     result["owner"] = ObjectOwner.serialize(value.owner);
     result["cacheControl"] = identity(value.cacheControl);
-    result["acl"] = map(Objectaccesscontrol.serialize)(value.acl);
+    result["acl"] = map(ObjectAccessControl.serialize)(value.acl);
     result["id"] = identity(value.id);
     result["contentDisposition"] = identity(value.contentDisposition);
     result["metadata"] = mapValues(identity)(value.metadata);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema .ObjectAccessControl
+class ObjectAccessControl extends IdentityHash {
+  /** The domain associated with the entity, if any. */
+  core.String domain;
+
+  /** The name of the object. */
+  core.String object;
+
+  /** The name of the bucket. */
+  core.String bucket;
+
+  /**
+ * The kind of item this is. For object access control entries, this is always
+ * storage#objectAccessControl.
+ */
+  core.String kind;
+
+  /** The ID of the access-control entry. */
+  core.String id;
+
+  /** The access permission for the entity. Can be READER or OWNER. */
+  core.String role;
+
+  /** The ID for the entity, if any. */
+  core.String entityId;
+
+  /**
+ * The entity holding the permission, in one of the following forms: - user-userId - user-email -
+ * group-groupId - group-email - allUsers - allAuthenticatedUsers
+ */
+  core.String entity;
+
+  /** The email address associated with the entity, if any. */
+  core.String email;
+
+  /** The link to this access-control entry. */
+  core.String selfLink;
+
+  /** Parses an instance from its JSON representation. */
+  static ObjectAccessControl parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new ObjectAccessControl();
+    result.domain = identity(json["domain"]);
+    result.object = identity(json["object"]);
+    result.bucket = identity(json["bucket"]);
+    result.kind = identity(json["kind"]);
+    result.id = identity(json["id"]);
+    result.role = identity(json["role"]);
+    result.entityId = identity(json["entityId"]);
+    result.entity = identity(json["entity"]);
+    result.email = identity(json["email"]);
+    result.selfLink = identity(json["selfLink"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(ObjectAccessControl value) {
+    if (value == null) return null;
+    final result = {};
+    result["domain"] = identity(value.domain);
+    result["object"] = identity(value.object);
+    result["bucket"] = identity(value.bucket);
+    result["kind"] = identity(value.kind);
+    result["id"] = identity(value.id);
+    result["role"] = identity(value.role);
+    result["entityId"] = identity(value.entityId);
+    result["entity"] = identity(value.entity);
+    result["email"] = identity(value.email);
+    result["selfLink"] = identity(value.selfLink);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema .ObjectAccessControls
+class ObjectAccessControls extends IdentityHash {
+  /** The list of items. */
+  core.List<ObjectAccessControl> items;
+
+  /**
+ * The kind of item this is. For lists of object access control entries, this is always
+ * storage#objectAccessControls.
+ */
+  core.String kind;
+
+  /** Parses an instance from its JSON representation. */
+  static ObjectAccessControls parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new ObjectAccessControls();
+    result.items = map(ObjectAccessControl.parse)(json["items"]);
+    result.kind = identity(json["kind"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(ObjectAccessControls value) {
+    if (value == null) return null;
+    final result = {};
+    result["items"] = map(ObjectAccessControl.serialize)(value.items);
+    result["kind"] = identity(value.kind);
     return result;
   }
   toString() => serialize(this).toString();
@@ -1695,109 +1801,6 @@ class ObjectOwner extends IdentityHash {
     final result = {};
     result["entityId"] = identity(value.entityId);
     result["entity"] = identity(value.entity);
-    return result;
-  }
-  toString() => serialize(this).toString();
-}
-
-// Schema .Objectaccesscontrol
-class Objectaccesscontrol extends IdentityHash {
-  /** The domain associated with the entity, if any. */
-  core.String domain;
-
-  /** The name of the object. */
-  core.String object;
-
-  /** The name of the bucket. */
-  core.String bucket;
-
-  /**
- * The kind of item this is. For object access control entries, this is always
- * storage#object_access_control.
- */
-  core.String kind;
-
-  /** The ID of the access-control entry. */
-  core.String id;
-
-  /** The access permission for the entity. Can be READER or OWNER. */
-  core.String role;
-
-  /** The ID for the entity, if any. */
-  core.String entityId;
-
-  /**
- * The entity holding the permission, in one of the following forms: - user-userId - user-email -
- * group-groupId - group-email - allUsers - allAuthenticatedUsers
- */
-  core.String entity;
-
-  /** The email address associated with the entity, if any. */
-  core.String email;
-
-  /** The link to this access-control entry. */
-  core.String selfLink;
-
-  /** Parses an instance from its JSON representation. */
-  static Objectaccesscontrol parse(core.Map<core.String, core.Object> json) {
-    if (json == null) return null;
-    final result = new Objectaccesscontrol();
-    result.domain = identity(json["domain"]);
-    result.object = identity(json["object"]);
-    result.bucket = identity(json["bucket"]);
-    result.kind = identity(json["kind"]);
-    result.id = identity(json["id"]);
-    result.role = identity(json["role"]);
-    result.entityId = identity(json["entityId"]);
-    result.entity = identity(json["entity"]);
-    result.email = identity(json["email"]);
-    result.selfLink = identity(json["selfLink"]);
-    return result;
-  }
-  /** Converts an instance to its JSON representation. */
-  static core.Object serialize(Objectaccesscontrol value) {
-    if (value == null) return null;
-    final result = {};
-    result["domain"] = identity(value.domain);
-    result["object"] = identity(value.object);
-    result["bucket"] = identity(value.bucket);
-    result["kind"] = identity(value.kind);
-    result["id"] = identity(value.id);
-    result["role"] = identity(value.role);
-    result["entityId"] = identity(value.entityId);
-    result["entity"] = identity(value.entity);
-    result["email"] = identity(value.email);
-    result["selfLink"] = identity(value.selfLink);
-    return result;
-  }
-  toString() => serialize(this).toString();
-}
-
-// Schema .Objectaccesscontrols
-class Objectaccesscontrols extends IdentityHash {
-  /** The list of items. */
-  core.List<Objectaccesscontrol> items;
-
-  /**
- * The kind of item this is. For lists of object access control entries, this is always
- * storage#object_access_controls.
- */
-  core.String kind;
-
-  /** Parses an instance from its JSON representation. */
-  static Objectaccesscontrols parse(core.Map<core.String, core.Object> json) {
-    if (json == null) return null;
-    final result = new Objectaccesscontrols();
-    result.items = map(Objectaccesscontrol.parse)(json["items"]);
-    result.kind = identity(json["kind"]);
-    return result;
-  }
-  /** Converts an instance to its JSON representation. */
-  static core.Object serialize(Objectaccesscontrols value) {
-    if (value == null) return null;
-    final result = {};
-    result["items"] = map(Objectaccesscontrol.serialize)(value.items);
-    result["kind"] = identity(value.kind);
     return result;
   }
   toString() => serialize(this).toString();
