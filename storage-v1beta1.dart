@@ -73,14 +73,15 @@ class StorageApi extends core.Object {
   StorageApiAlt alt;
 
 
-  StorageApi([this.baseUrl = "https://www.googleapis.com/storage/v1beta1/", applicationName, this.authenticator]) { 
+  StorageApi([this.baseUrl = "https://www.googleapis.com/storage/v1beta1/", applicationName, this.authenticator]) :
+      this.applicationName = applicationName
+          .replaceAll(const RegExp(@'\s+'), '_')
+          .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+  { 
     _objectAccessControls = new ObjectAccessControlsResource._internal(this);
     _bucketAccessControls = new BucketAccessControlsResource._internal(this);
     _objects = new ObjectsResource._internal(this);
     _buckets = new BucketsResource._internal(this);
-    this.applicationName = applicationName
-      .replaceAll(const RegExp(@'\s+'), '_')
-      .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '');
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";

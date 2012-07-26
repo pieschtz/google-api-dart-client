@@ -75,15 +75,16 @@ class BigqueryApi extends core.Object {
   BigqueryApiAlt alt;
 
 
-  BigqueryApi([this.baseUrl = "https://www.googleapis.com/bigquery/v2/", applicationName, this.authenticator]) { 
+  BigqueryApi([this.baseUrl = "https://www.googleapis.com/bigquery/v2/", applicationName, this.authenticator]) :
+      this.applicationName = applicationName
+          .replaceAll(const RegExp(@'\s+'), '_')
+          .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+  { 
     _tables = new TablesResource._internal(this);
     _datasets = new DatasetsResource._internal(this);
     _jobs = new JobsResource._internal(this);
     _tabledata = new TabledataResource._internal(this);
     _projects = new ProjectsResource._internal(this);
-    this.applicationName = applicationName
-      .replaceAll(const RegExp(@'\s+'), '_')
-      .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '');
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
@@ -1441,17 +1442,14 @@ class JobConfigurationLoad extends IdentityHash {
  */
   core.String encoding;
 
-  /** [Optional] Delimiter to use between fields in the import data. Default is ',' */
+  /**
+ * [Optional] Delimiter to use between fields in the import data. Default is ','. Note that
+ * delimiters are applied to the raw, binary data before the encoding is applied.
+ */
   core.String fieldDelimiter;
 
   /** [Required] Table being written to. */
   TableReference destinationTable;
-
-  /**
- * [Optional] Maximum number of bad records that should be ignored before the entire job is aborted
- * and no updates are performed.
- */
-  core.int maxBadRecords;
 
   /**
  * [Optional] Whether to overwrite an existing table (WRITE_TRUNCATE), append to an existing table
@@ -1459,11 +1457,23 @@ class JobConfigurationLoad extends IdentityHash {
  */
   core.String writeDisposition;
 
-  /** [Required] Source URIs describing Google Cloud Storage locations of data to load. */
-  core.List<core.String> sourceUris;
+  /**
+ * [Optional] Maximum number of bad records that should be ignored before the entire job is aborted
+ * and no updates are performed.
+ */
+  core.int maxBadRecords;
 
   /** [Optional] Number of rows of initial data to skip in the data being imported. */
   core.int skipLeadingRows;
+
+  /** [Required] Source URIs describing Google Cloud Storage locations of data to load. */
+  core.List<core.String> sourceUris;
+
+  /**
+ * [Optional] Quote character to use. Default is '"'. Note that quoting is done on the raw, binary
+ * data before the encoding is applied.
+ */
+  core.String quote;
 
   /**
  * [Optional] Whether to create the table if it doesn't already exist (CREATE_IF_NEEDED) or to
@@ -1490,10 +1500,11 @@ class JobConfigurationLoad extends IdentityHash {
     result.encoding = identity(json["encoding"]);
     result.fieldDelimiter = identity(json["fieldDelimiter"]);
     result.destinationTable = TableReference.parse(json["destinationTable"]);
-    result.maxBadRecords = identity(json["maxBadRecords"]);
     result.writeDisposition = identity(json["writeDisposition"]);
-    result.sourceUris = map(identity)(json["sourceUris"]);
+    result.maxBadRecords = identity(json["maxBadRecords"]);
     result.skipLeadingRows = identity(json["skipLeadingRows"]);
+    result.sourceUris = map(identity)(json["sourceUris"]);
+    result.quote = identity(json["quote"]);
     result.createDisposition = identity(json["createDisposition"]);
     result.schemaInlineFormat = identity(json["schemaInlineFormat"]);
     result.schemaInline = identity(json["schemaInline"]);
@@ -1507,10 +1518,11 @@ class JobConfigurationLoad extends IdentityHash {
     result["encoding"] = identity(value.encoding);
     result["fieldDelimiter"] = identity(value.fieldDelimiter);
     result["destinationTable"] = TableReference.serialize(value.destinationTable);
-    result["maxBadRecords"] = identity(value.maxBadRecords);
     result["writeDisposition"] = identity(value.writeDisposition);
-    result["sourceUris"] = map(identity)(value.sourceUris);
+    result["maxBadRecords"] = identity(value.maxBadRecords);
     result["skipLeadingRows"] = identity(value.skipLeadingRows);
+    result["sourceUris"] = map(identity)(value.sourceUris);
+    result["quote"] = identity(value.quote);
     result["createDisposition"] = identity(value.createDisposition);
     result["schemaInlineFormat"] = identity(value.schemaInlineFormat);
     result["schemaInline"] = identity(value.schemaInline);

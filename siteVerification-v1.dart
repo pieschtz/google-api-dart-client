@@ -67,11 +67,12 @@ class SiteVerificationApi extends core.Object {
   SiteVerificationApiAlt alt;
 
 
-  SiteVerificationApi([this.baseUrl = "https://www.googleapis.com/siteVerification/v1/", applicationName, this.authenticator]) { 
+  SiteVerificationApi([this.baseUrl = "https://www.googleapis.com/siteVerification/v1/", applicationName, this.authenticator]) :
+      this.applicationName = applicationName
+          .replaceAll(const RegExp(@'\s+'), '_')
+          .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+  { 
     _webResource = new WebResourceResource._internal(this);
-    this.applicationName = applicationName
-      .replaceAll(const RegExp(@'\s+'), '_')
-      .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '');
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";

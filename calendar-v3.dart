@@ -79,7 +79,11 @@ class CalendarApi extends core.Object {
   CalendarApiAlt alt;
 
 
-  CalendarApi([this.baseUrl = "https://www.googleapis.com/calendar/v3/", applicationName, this.authenticator]) { 
+  CalendarApi([this.baseUrl = "https://www.googleapis.com/calendar/v3/", applicationName, this.authenticator]) :
+      this.applicationName = applicationName
+          .replaceAll(const RegExp(@'\s+'), '_')
+          .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+  { 
     _freebusy = new FreebusyResource._internal(this);
     _settings = new SettingsResource._internal(this);
     _calendarList = new CalendarListResource._internal(this);
@@ -87,13 +91,10 @@ class CalendarApi extends core.Object {
     _acl = new AclResource._internal(this);
     _colors = new ColorsResource._internal(this);
     _events = new EventsResource._internal(this);
-    this.applicationName = applicationName
-      .replaceAll(const RegExp(@'\s+'), '_')
-      .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '');
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}calendar/v3/20120423 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}calendar/v3/20120712 google-api-dart-client/${clientVersion}";
   }
 
 
@@ -1843,7 +1844,10 @@ class Event extends IdentityHash {
   /** Extended properties of the event. */
   EventExtendedProperties extendedProperties;
 
-  
+  /**
+ * Whether the end time is really unspecified. An end time is still provided for compatibility
+ * reasons, even if this attribute is set to True. The default is False.
+ */
   core.bool endTimeUnspecified;
 
   /** Sequence number as per iCalendar. */
@@ -1870,10 +1874,10 @@ class Event extends IdentityHash {
   EventDateTime end;
 
   /**
- * Whether attendees have been omitted from the event's representation. When retrieving an event,
- * this is due to a restriction specified by the 'maxAttendee' query parameter. When updating an
- * event, this can be used to only update the participant's response. Optional. The default is
- * False.
+ * Whether attendees may have been omitted from the event's representation. When retrieving an
+ * event, this may be due to a restriction specified by the 'maxAttendee' query parameter. When
+ * updating an event, this can be used to only update the participant's response. Optional. The
+ * default is False.
  */
   core.bool attendeesOmitted;
 

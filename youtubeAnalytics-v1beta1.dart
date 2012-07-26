@@ -67,11 +67,12 @@ class YoutubeAnalyticsApi extends core.Object {
   YoutubeAnalyticsApiAlt alt;
 
 
-  YoutubeAnalyticsApi([this.baseUrl = "https://www.googleapis.com/youtube/analytics/v1beta1/", applicationName, this.authenticator]) { 
+  YoutubeAnalyticsApi([this.baseUrl = "https://www.googleapis.com/youtube/analytics/v1beta1/", applicationName, this.authenticator]) :
+      this.applicationName = applicationName
+          .replaceAll(const RegExp(@'\s+'), '_')
+          .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+  { 
     _reports = new ReportsResource._internal(this);
-    this.applicationName = applicationName
-      .replaceAll(const RegExp(@'\s+'), '_')
-      .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '');
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";

@@ -69,16 +69,17 @@ class AnalyticsApi extends core.Object {
   AnalyticsApiAlt alt;
 
 
-  AnalyticsApi([this.baseUrl = "https://www.googleapis.com/analytics/v3/", applicationName, this.authenticator]) { 
+  AnalyticsApi([this.baseUrl = "https://www.googleapis.com/analytics/v3/", applicationName, this.authenticator]) :
+      this.applicationName = applicationName
+          .replaceAll(const RegExp(@'\s+'), '_')
+          .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+  { 
     _management = new ManagementResource._internal(this);
     _data = new DataResource._internal(this);
-    this.applicationName = applicationName
-      .replaceAll(const RegExp(@'\s+'), '_')
-      .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '');
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}analytics/v3/20120607 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}analytics/v3/20120712 google-api-dart-client/${clientVersion}";
   }
 
 
@@ -335,12 +336,75 @@ class ManagementProfilesResourceResource extends core.Object {
 // Resource .DataResource
 class DataResource extends core.Object {
   final AnalyticsApi _$service;
+  final DataMcfResourceResource mcf;
   final DataGaResourceResource ga;
   
   DataResource._internal(AnalyticsApi $service) : _$service = $service,
+    mcf = new DataMcfResourceResource._internal($service),
     ga = new DataGaResourceResource._internal($service);
 }
 
+
+// Resource DataResource.DataMcfResourceResource
+class DataMcfResourceResource extends core.Object {
+  final AnalyticsApi _$service;
+  
+  DataMcfResourceResource._internal(AnalyticsApi $service) : _$service = $service;
+
+  // Method DataResource.DataMcfResourceResource.Get
+  /**
+   * Returns Analytics Multi-Channel Funnels data for a profile.
+   *
+   *    * [ids] Unique table ID for retrieving Analytics data. Table ID is of the form ga:XXXX, where XXXX is the
+   *        Analytics profile ID.
+   *    * [startDate] Start date for fetching Analytics data. All requests should specify a start date formatted as YYYY-
+   *        MM-DD.
+   *    * [endDate] End date for fetching Analytics data. All requests should specify an end date formatted as YYYY-MM-
+   *        DD.
+   *    * [metrics] A comma-separated list of Multi-Channel Funnels metrics. E.g.,
+   *        'mcf:totalConversions,mcf:totalConversionValue'. At least one metric must be specified.
+   *    * [maxResults] The maximum number of entries to include in this feed.
+   *    * [sort] A comma-separated list of dimensions or metrics that determine the sort order for the Analytics
+   *        data.
+   *    * [dimensions] A comma-separated list of Multi-Channel Funnels dimensions. E.g., 'mcf:source,mcf:medium'.
+   *    * [startIndex] An index of the first entity to retrieve. Use this parameter as a pagination mechanism along with
+   *        the max-results parameter.
+
+  Minimum: 1.
+   *    * [filters] A comma-separated list of dimension or metric filters to be applied to the Analytics data.
+   */
+  core.Future<McfData> get(core.String ids, core.String startDate, core.String endDate, core.String metrics, [core.int maxResults = UNSPECIFIED, core.String sort = UNSPECIFIED, core.String dimensions = UNSPECIFIED, core.int startIndex = UNSPECIFIED, core.String filters = UNSPECIFIED]) {
+    final $queryParams = {};
+    final $headers = {};
+    final $pathParams = {};
+    $pathParams["ids"] = ids;
+    $pathParams["start-date"] = startDate;
+    $pathParams["end-date"] = endDate;
+    $pathParams["metrics"] = metrics;
+    if (UNSPECIFIED != maxResults) $queryParams["max-results"] = maxResults;
+    if (UNSPECIFIED != sort) $queryParams["sort"] = sort;
+    if (UNSPECIFIED != dimensions) $queryParams["dimensions"] = dimensions;
+    if (UNSPECIFIED != startIndex) $queryParams["start-index"] = startIndex;
+    if (UNSPECIFIED != filters) $queryParams["filters"] = filters;
+    if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
+    if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
+    if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
+    if (_$service.oauthToken != null) $headers["Authorization"] = "Bearer ${_$service.oauthToken}";
+    if (_$service.key != null) $queryParams["key"] = _$service.key;
+    if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
+    if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
+    $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
+    final $path = "data/mcf";
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
+    final $http = new HttpRequest($url, "GET", $headers);
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new core.Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => McfData.parse(JSON.parse($text)));
+  }
+}
 
 // Resource DataResource.DataGaResourceResource
 class DataGaResourceResource extends core.Object {
@@ -1188,6 +1252,305 @@ class Goals extends IdentityHash {
     result["startIndex"] = identity(value.startIndex);
     result["nextLink"] = identity(value.nextLink);
     result["totalResults"] = identity(value.totalResults);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema .McfData
+class McfData extends IdentityHash {
+  /** Resource type. */
+  core.String kind;
+
+  /**
+ * Analytics data rows, where each row contains a list of dimension values followed by the metric
+ * values. The order of dimensions and metrics is same as specified in the request.
+ */
+  core.List<core.List<McfDataRows>> rows;
+
+  /** Determines if the Analytics data contains sampled data. */
+  core.bool containsSampledData;
+
+  /** The total number of rows for the query, regardless of the number of rows in the response. */
+  core.int totalResults;
+
+  /**
+ * The maximum number of rows the response can contain, regardless of the actual number of rows
+ * returned. Its value ranges from 1 to 10,000 with a value of 1000 by default, or otherwise
+ * specified by the max-results query parameter.
+ */
+  core.int itemsPerPage;
+
+  /**
+ * Total values for the requested metrics over all the results, not just the results returned in
+ * this response. The order of the metric totals is same as the metric order specified in the
+ * request.
+ */
+  core.Map<core.String, core.String> totalsForAllResults;
+
+  /** Link to next page for this Analytics data query. */
+  core.String nextLink;
+
+  /** Unique ID for this data response. */
+  core.String id;
+
+  /** Analytics data request query parameters. */
+  McfDataQuery query;
+
+  /** Link to previous page for this Analytics data query. */
+  core.String previousLink;
+
+  /** Information for the profile, for which the Analytics data was requested. */
+  McfDataProfileInfo profileInfo;
+
+  /**
+ * Column headers that list dimension names followed by the metric names. The order of dimensions
+ * and metrics is same as specified in the request.
+ */
+  core.List<McfDataColumnHeaders> columnHeaders;
+
+  /** Link to this page. */
+  core.String selfLink;
+
+  /** Parses an instance from its JSON representation. */
+  static McfData parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new McfData();
+    result.kind = identity(json["kind"]);
+    result.rows = map(map(McfDataRows.parse))(json["rows"]);
+    result.containsSampledData = identity(json["containsSampledData"]);
+    result.totalResults = identity(json["totalResults"]);
+    result.itemsPerPage = identity(json["itemsPerPage"]);
+    result.totalsForAllResults = mapValues(identity)(json["totalsForAllResults"]);
+    result.nextLink = identity(json["nextLink"]);
+    result.id = identity(json["id"]);
+    result.query = McfDataQuery.parse(json["query"]);
+    result.previousLink = identity(json["previousLink"]);
+    result.profileInfo = McfDataProfileInfo.parse(json["profileInfo"]);
+    result.columnHeaders = map(McfDataColumnHeaders.parse)(json["columnHeaders"]);
+    result.selfLink = identity(json["selfLink"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(McfData value) {
+    if (value == null) return null;
+    final result = {};
+    result["kind"] = identity(value.kind);
+    result["rows"] = map(map(McfDataRows.serialize))(value.rows);
+    result["containsSampledData"] = identity(value.containsSampledData);
+    result["totalResults"] = identity(value.totalResults);
+    result["itemsPerPage"] = identity(value.itemsPerPage);
+    result["totalsForAllResults"] = mapValues(identity)(value.totalsForAllResults);
+    result["nextLink"] = identity(value.nextLink);
+    result["id"] = identity(value.id);
+    result["query"] = McfDataQuery.serialize(value.query);
+    result["previousLink"] = identity(value.previousLink);
+    result["profileInfo"] = McfDataProfileInfo.serialize(value.profileInfo);
+    result["columnHeaders"] = map(McfDataColumnHeaders.serialize)(value.columnHeaders);
+    result["selfLink"] = identity(value.selfLink);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema McfData.McfDataColumnHeaders
+class McfDataColumnHeaders extends IdentityHash {
+  /**
+ * Data type. Dimension and metric values data types such as INTEGER, DOUBLE, CURRENCY, MCF_SEQUENCE
+ * etc.
+ */
+  core.String dataType;
+
+  /** Column Type. Either DIMENSION or METRIC. */
+  core.String columnType;
+
+  /** Column name. */
+  core.String name;
+
+  /** Parses an instance from its JSON representation. */
+  static McfDataColumnHeaders parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new McfDataColumnHeaders();
+    result.dataType = identity(json["dataType"]);
+    result.columnType = identity(json["columnType"]);
+    result.name = identity(json["name"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(McfDataColumnHeaders value) {
+    if (value == null) return null;
+    final result = {};
+    result["dataType"] = identity(value.dataType);
+    result["columnType"] = identity(value.columnType);
+    result["name"] = identity(value.name);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema McfData.McfDataProfileInfo
+class McfDataProfileInfo extends IdentityHash {
+  /** Web Property ID to which this profile belongs. */
+  core.String webPropertyId;
+
+  /** Internal ID for the web property to which this profile belongs. */
+  core.String internalWebPropertyId;
+
+  /** Table ID for profile. */
+  core.String tableId;
+
+  /** Profile ID. */
+  core.String profileId;
+
+  /** Profile name. */
+  core.String profileName;
+
+  /** Account ID to which this profile belongs. */
+  core.String accountId;
+
+  /** Parses an instance from its JSON representation. */
+  static McfDataProfileInfo parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new McfDataProfileInfo();
+    result.webPropertyId = identity(json["webPropertyId"]);
+    result.internalWebPropertyId = identity(json["internalWebPropertyId"]);
+    result.tableId = identity(json["tableId"]);
+    result.profileId = identity(json["profileId"]);
+    result.profileName = identity(json["profileName"]);
+    result.accountId = identity(json["accountId"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(McfDataProfileInfo value) {
+    if (value == null) return null;
+    final result = {};
+    result["webPropertyId"] = identity(value.webPropertyId);
+    result["internalWebPropertyId"] = identity(value.internalWebPropertyId);
+    result["tableId"] = identity(value.tableId);
+    result["profileId"] = identity(value.profileId);
+    result["profileName"] = identity(value.profileName);
+    result["accountId"] = identity(value.accountId);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema McfData.McfDataQuery
+class McfDataQuery extends IdentityHash {
+  /** Maximum results per page. */
+  core.int maxResults;
+
+  /** List of dimensions or metrics based on which Analytics data is sorted. */
+  core.List<core.String> sort;
+
+  /** List of analytics dimensions. */
+  core.String dimensions;
+
+  /** Start date. */
+  core.String startDate;
+
+  /** Start index. */
+  core.int startIndex;
+
+  /** Analytics advanced segment. */
+  core.String segment;
+
+  /** Unique table ID. */
+  core.String ids;
+
+  /** List of analytics metrics. */
+  core.List<core.String> metrics;
+
+  /** Comma-separated list of dimension or metric filters. */
+  core.String filters;
+
+  /** End date. */
+  core.String endDate;
+
+  /** Parses an instance from its JSON representation. */
+  static McfDataQuery parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new McfDataQuery();
+    result.maxResults = identity(json["max-results"]);
+    result.sort = map(identity)(json["sort"]);
+    result.dimensions = identity(json["dimensions"]);
+    result.startDate = identity(json["start-date"]);
+    result.startIndex = identity(json["start-index"]);
+    result.segment = identity(json["segment"]);
+    result.ids = identity(json["ids"]);
+    result.metrics = map(identity)(json["metrics"]);
+    result.filters = identity(json["filters"]);
+    result.endDate = identity(json["end-date"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(McfDataQuery value) {
+    if (value == null) return null;
+    final result = {};
+    result["max-results"] = identity(value.maxResults);
+    result["sort"] = map(identity)(value.sort);
+    result["dimensions"] = identity(value.dimensions);
+    result["start-date"] = identity(value.startDate);
+    result["start-index"] = identity(value.startIndex);
+    result["segment"] = identity(value.segment);
+    result["ids"] = identity(value.ids);
+    result["metrics"] = map(identity)(value.metrics);
+    result["filters"] = identity(value.filters);
+    result["end-date"] = identity(value.endDate);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema McfData.McfDataRows
+class McfDataRows extends IdentityHash {
+  /** A primitive metric value. A primitive dimension value. */
+  core.String primitiveValue;
+
+  /** A conversion path dimension value, containing a list of interactions with their attributes. */
+  core.List<McfDataRowsConversionPathValue> conversionPathValue;
+
+  /** Parses an instance from its JSON representation. */
+  static McfDataRows parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new McfDataRows();
+    result.primitiveValue = identity(json["primitiveValue"]);
+    result.conversionPathValue = map(McfDataRowsConversionPathValue.parse)(json["conversionPathValue"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(McfDataRows value) {
+    if (value == null) return null;
+    final result = {};
+    result["primitiveValue"] = identity(value.primitiveValue);
+    result["conversionPathValue"] = map(McfDataRowsConversionPathValue.serialize)(value.conversionPathValue);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema McfData.McfDataRows.McfDataRowsConversionPathValue
+class McfDataRowsConversionPathValue extends IdentityHash {
+  /** Node value of an interaction on conversion path. Such as source, medium etc. */
+  core.String nodeValue;
+
+  /** Type of an interaction on conversion path. Such as CLICK, IMPRESSION etc. */
+  core.String interactionType;
+
+  /** Parses an instance from its JSON representation. */
+  static McfDataRowsConversionPathValue parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new McfDataRowsConversionPathValue();
+    result.nodeValue = identity(json["nodeValue"]);
+    result.interactionType = identity(json["interactionType"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(McfDataRowsConversionPathValue value) {
+    if (value == null) return null;
+    final result = {};
+    result["nodeValue"] = identity(value.nodeValue);
+    result["interactionType"] = identity(value.interactionType);
     return result;
   }
   toString() => serialize(this).toString();

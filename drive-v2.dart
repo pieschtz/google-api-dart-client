@@ -81,7 +81,11 @@ class DriveApi extends core.Object {
   DriveApiAlt alt;
 
 
-  DriveApi([this.baseUrl = "https://www.googleapis.com/drive/v2/", applicationName, this.authenticator]) { 
+  DriveApi([this.baseUrl = "https://www.googleapis.com/drive/v2/", applicationName, this.authenticator]) :
+      this.applicationName = applicationName
+          .replaceAll(const RegExp(@'\s+'), '_')
+          .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+  { 
     _files = new FilesResource._internal(this);
     _about = new AboutResource._internal(this);
     _apps = new AppsResource._internal(this);
@@ -90,13 +94,10 @@ class DriveApi extends core.Object {
     _changes = new ChangesResource._internal(this);
     _children = new ChildrenResource._internal(this);
     _permissions = new PermissionsResource._internal(this);
-    this.applicationName = applicationName
-      .replaceAll(const RegExp(@'\s+'), '_')
-      .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '');
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}drive/v2/20120516 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}drive/v2/20120724 google-api-dart-client/${clientVersion}";
   }
 
 
@@ -240,7 +241,7 @@ class FilesResource extends core.Object {
    *    * [fileId] The ID for the file in question.
    *    * [updateViewedDate] Whether to update the view date after successfully retrieving the file.
   Default: false.
-   *    * [projection] Restrict information returned for simplicity and optimization.
+   *    * [projection] This parameter is deprecated and has no function.
    */
   core.Future<File> get(core.String fileId, [core.bool updateViewedDate = UNSPECIFIED, FilesResourceGetProjection projection = UNSPECIFIED]) {
     final $queryParams = {};
@@ -274,7 +275,7 @@ class FilesResource extends core.Object {
    *
    *    * [q] Query string for searching files.
    *    * [pageToken] Page token for files.
-   *    * [projection] Restrict information returned for simplicity and optimization.
+   *    * [projection] This parameter is deprecated and has no function.
    *    * [maxResults] Maximum number of files to return.
   Default: 100.
   Minimum: 0.
@@ -548,9 +549,9 @@ class FilesResource extends core.Object {
 
 // Enum FilesResource.Get.Projection
 class FilesResourceGetProjection extends core.Object implements core.Hashable {
-  /** Includes only the basic metadata fields */
+  /** Deprecated */
   static final FilesResourceGetProjection BASIC = const FilesResourceGetProjection._internal("BASIC", 0);
-  /** Includes all metadata fields */
+  /** Deprecated */
   static final FilesResourceGetProjection FULL = const FilesResourceGetProjection._internal("FULL", 1);
 
   /** All values of this enumeration */
@@ -579,9 +580,9 @@ class FilesResourceGetProjection extends core.Object implements core.Hashable {
 
 // Enum FilesResource.List.Projection
 class FilesResourceListProjection extends core.Object implements core.Hashable {
-  /** Includes only the basic metadata fields */
+  /** Deprecated */
   static final FilesResourceListProjection BASIC = const FilesResourceListProjection._internal("BASIC", 0);
-  /** Includes all metadata fields */
+  /** Deprecated */
   static final FilesResourceListProjection FULL = const FilesResourceListProjection._internal("FULL", 1);
 
   /** All values of this enumeration */
@@ -1434,7 +1435,7 @@ class About extends IdentityHash {
   /** The current user's ID as visible in the permissions collection. */
   core.String permissionId;
 
-  /** List of max upload sizes for each file type. */
+  /** List of max upload sizes for each file type. The most specific type takes precedence. */
   core.List<AboutMaxUploadSizes> maxUploadSizes;
 
   /** The name of the current user. */
@@ -1443,7 +1444,10 @@ class About extends IdentityHash {
   /** The number of remaining change ids. */
   core.String remainingChangeIds;
 
-  /** Additional ACL role info. */
+  /**
+ * Information about supported additional roles per file type. The most specific type takes
+ * precedence.
+ */
   core.List<AboutAdditionalRoleInfo> additionalRoleInfo;
 
   /** The ETag of the item. */
@@ -1529,10 +1533,10 @@ class About extends IdentityHash {
 
 // Schema About.AboutAdditionalRoleInfo
 class AboutAdditionalRoleInfo extends IdentityHash {
-  /** The role sets for this role info item. */
+  /** The supported additional roles per primary role. */
   core.List<AboutAdditionalRoleInfoRoleSets> roleSets;
 
-  /** The content type for this ACL role info item. */
+  /** The content type that this additional role info applies to. */
   core.String type;
 
   /** Parses an instance from its JSON representation. */
@@ -1556,10 +1560,10 @@ class AboutAdditionalRoleInfo extends IdentityHash {
 
 // Schema About.AboutAdditionalRoleInfo.AboutAdditionalRoleInfoRoleSets
 class AboutAdditionalRoleInfoRoleSets extends IdentityHash {
-  /** The primary role for this role set. */
+  /** A primary permission role. */
   core.String primaryRole;
 
-  /** The list of additional roles for this role set. */
+  /** The supported additional roles with the primary role. */
   core.List<core.String> additionalRoles;
 
   /** Parses an instance from its JSON representation. */
@@ -2034,7 +2038,10 @@ class ChildReference extends IdentityHash {
 
 // Schema .File
 class File extends IdentityHash {
-  /** The MIME type of the file. */
+  /**
+ * The MIME type of the file. This is only mutable on update when uploading new content. This field
+ * can be left blank, and the mimetype will be determined from the uploaded content's MIME type.
+ */
   core.String mimeType;
 
   /** A link to the file's thumbnail. */
@@ -2084,13 +2091,21 @@ class File extends IdentityHash {
   core.Map<core.String, core.String> exportLinks;
 
   /**
- * The filename when uploading this file. This will only be populated on files with content stored
- * in Drive.
+ * The original filename if the file was uploaded manually, or the original title if the file was
+ * inserted through the API. Note that renames of the title will not change the original filename.
+ * This will only be populated on files with content stored in Drive.
  */
   core.String originalFilename;
 
   /** A short description of the file. */
   core.String description;
+
+  /**
+ * A link for downloading the content of the file in a browser using cookie based authentication. In
+ * cases where the content is shared publicly, the content can be downloaded without any
+ * credentials.
+ */
+  core.String webContentLink;
 
   /** Whether the file can be edited by the current user. */
   core.bool editable;
@@ -2115,16 +2130,22 @@ class File extends IdentityHash {
  */
   core.String md5Checksum;
 
+  /**
+ * Metadata about image media. This will only be present for image types, and its contents will
+ * depend on what can be parsed from the image content.
+ */
+  FileImageMediaMetadata imageMediaMetadata;
+
   /** A link for embedding the file. */
   core.String embedLink;
 
-  /** A link for opening the file in a browser. */
+  /** A link for opening the file in using a relevant Google editor or viewer. */
   core.String alternateLink;
 
-  /** A link to the permissions collection. */
-  core.String permissionsLink;
-
-  /** Last time this file was modified by the user (formatted RFC 3339 timestamp). */
+  /**
+ * Last time this file was modified by the user (formatted RFC 3339 timestamp). Note that setting
+ * modifiedDate will also update the modifiedByMe date for the user which set the date.
+ */
   core.String modifiedByMeDate;
 
   /**
@@ -2137,16 +2158,19 @@ class File extends IdentityHash {
   Permission userPermission;
 
   /**
- * The file extension used when downloading this file. This field is read only. To set the
- * extension, include it on title when creating the file. This will only be populated on files with
- * content stored in Drive.
+ * The file extension used when downloading this file. This field is set from the title when
+ * inserting or uploading new content. This will only be populated on files with content stored in
+ * Drive.
  */
   core.String fileExtension;
 
   /** A link back to this file. */
   core.String selfLink;
 
-  /** Last time this file was modified by anyone (formatted RFC 3339 timestamp). */
+  /**
+ * Last time this file was modified by anyone (formatted RFC 3339 timestamp). This is only mutable
+ * on update when the setModifiedDate parameter is set.
+ */
   core.String modifiedDate;
 
   /** Parses an instance from its JSON representation. */
@@ -2169,15 +2193,16 @@ class File extends IdentityHash {
     result.exportLinks = mapValues(identity)(json["exportLinks"]);
     result.originalFilename = identity(json["originalFilename"]);
     result.description = identity(json["description"]);
+    result.webContentLink = identity(json["webContentLink"]);
     result.editable = identity(json["editable"]);
     result.kind = identity(json["kind"]);
     result.quotaBytesUsed = identity(json["quotaBytesUsed"]);
     result.fileSize = identity(json["fileSize"]);
     result.createdDate = identity(json["createdDate"]);
     result.md5Checksum = identity(json["md5Checksum"]);
+    result.imageMediaMetadata = FileImageMediaMetadata.parse(json["imageMediaMetadata"]);
     result.embedLink = identity(json["embedLink"]);
     result.alternateLink = identity(json["alternateLink"]);
-    result.permissionsLink = identity(json["permissionsLink"]);
     result.modifiedByMeDate = identity(json["modifiedByMeDate"]);
     result.downloadUrl = identity(json["downloadUrl"]);
     result.userPermission = Permission.parse(json["userPermission"]);
@@ -2206,21 +2231,91 @@ class File extends IdentityHash {
     result["exportLinks"] = mapValues(identity)(value.exportLinks);
     result["originalFilename"] = identity(value.originalFilename);
     result["description"] = identity(value.description);
+    result["webContentLink"] = identity(value.webContentLink);
     result["editable"] = identity(value.editable);
     result["kind"] = identity(value.kind);
     result["quotaBytesUsed"] = identity(value.quotaBytesUsed);
     result["fileSize"] = identity(value.fileSize);
     result["createdDate"] = identity(value.createdDate);
     result["md5Checksum"] = identity(value.md5Checksum);
+    result["imageMediaMetadata"] = FileImageMediaMetadata.serialize(value.imageMediaMetadata);
     result["embedLink"] = identity(value.embedLink);
     result["alternateLink"] = identity(value.alternateLink);
-    result["permissionsLink"] = identity(value.permissionsLink);
     result["modifiedByMeDate"] = identity(value.modifiedByMeDate);
     result["downloadUrl"] = identity(value.downloadUrl);
     result["userPermission"] = Permission.serialize(value.userPermission);
     result["fileExtension"] = identity(value.fileExtension);
     result["selfLink"] = identity(value.selfLink);
     result["modifiedDate"] = identity(value.modifiedDate);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema File.FileImageMediaMetadata
+class FileImageMediaMetadata extends IdentityHash {
+  /** The width of the image in pixels. */
+  core.int width;
+
+  /** The rotation in clockwise degrees from the image's original orientation. */
+  core.int rotation;
+
+  /** Geographic location information stored in the image. */
+  FileImageMediaMetadataLocation location;
+
+  /** The height of the image in pixels. */
+  core.int height;
+
+  /** Parses an instance from its JSON representation. */
+  static FileImageMediaMetadata parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new FileImageMediaMetadata();
+    result.width = identity(json["width"]);
+    result.rotation = identity(json["rotation"]);
+    result.location = FileImageMediaMetadataLocation.parse(json["location"]);
+    result.height = identity(json["height"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(FileImageMediaMetadata value) {
+    if (value == null) return null;
+    final result = {};
+    result["width"] = identity(value.width);
+    result["rotation"] = identity(value.rotation);
+    result["location"] = FileImageMediaMetadataLocation.serialize(value.location);
+    result["height"] = identity(value.height);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema File.FileImageMediaMetadata.FileImageMediaMetadataLocation
+class FileImageMediaMetadataLocation extends IdentityHash {
+  /** The latitude stored in the image. */
+  core.double latitude;
+
+  /** The altitude stored in the image. */
+  core.double altitude;
+
+  /** The longitude stored in the image. */
+  core.double longitude;
+
+  /** Parses an instance from its JSON representation. */
+  static FileImageMediaMetadataLocation parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new FileImageMediaMetadataLocation();
+    result.latitude = identity(json["latitude"]);
+    result.altitude = identity(json["altitude"]);
+    result.longitude = identity(json["longitude"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(FileImageMediaMetadataLocation value) {
+    if (value == null) return null;
+    final result = {};
+    result["latitude"] = identity(value.latitude);
+    result["altitude"] = identity(value.altitude);
+    result["longitude"] = identity(value.longitude);
     return result;
   }
   toString() => serialize(this).toString();
@@ -2543,8 +2638,10 @@ class Revision extends IdentityHash {
   core.String mimeType;
 
   /**
- * Whether this revision is pinned to prevent automatic purging. This will only be populated on
- * files with content stored in Drive.
+ * Whether this revision is pinned to prevent automatic purging. This will only be populated and can
+ * only be modified on files with content stored in Drive which are not Google Docs. Revisions can
+ * also be pinned when they are created through the drive.files.insert/update/copy by using the
+ * pinned query parameter.
  */
   core.bool pinned;
 
@@ -2554,13 +2651,22 @@ class Revision extends IdentityHash {
   /** A link to the published revision. */
   core.String publishedLink;
 
-  /** Whether this revision is published outside the domain. */
+  /**
+ * Whether this revision is published outside the domain. This is only populated and can only be
+ * modified for Google Docs.
+ */
   core.bool publishedOutsideDomain;
 
-  /** Whether subsequent revisions will be automatically republished. */
+  /**
+ * Whether subsequent revisions will be automatically republished. This is only populated and can
+ * only be modified for Google Docs.
+ */
   core.bool publishAuto;
 
-  /** Whether this revision is published. This is only populated for Google Docs. */
+  /**
+ * Whether this revision is published. This is only populated and can only be modified for Google
+ * Docs.
+ */
   core.bool published;
 
   /**

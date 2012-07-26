@@ -75,15 +75,16 @@ class FusiontablesApi extends core.Object {
   FusiontablesApiAlt alt;
 
 
-  FusiontablesApi([this.baseUrl = "https://www.googleapis.com/fusiontables/v1/", applicationName, this.authenticator]) { 
+  FusiontablesApi([this.baseUrl = "https://www.googleapis.com/fusiontables/v1/", applicationName, this.authenticator]) :
+      this.applicationName = applicationName
+          .replaceAll(const RegExp(@'\s+'), '_')
+          .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+  { 
     _column = new ColumnResource._internal(this);
     _query = new QueryResource._internal(this);
     _style = new StyleResource._internal(this);
     _template = new TemplateResource._internal(this);
     _table = new TableResource._internal(this);
-    this.applicationName = applicationName
-      .replaceAll(const RegExp(@'\s+'), '_')
-      .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '');
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";

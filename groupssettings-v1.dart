@@ -21,7 +21,7 @@
 
 // API GroupssettingsApi
 /**
- * Lets you manage permission levels and related settings of a group
+ * Lets you manage permission levels and related settings of a group.
  */
 class GroupssettingsApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
@@ -67,15 +67,16 @@ class GroupssettingsApi extends core.Object {
   GroupssettingsApiAlt alt;
 
 
-  GroupssettingsApi([this.baseUrl = "https://www.googleapis.com/groups/v1/groups/", applicationName, this.authenticator]) { 
+  GroupssettingsApi([this.baseUrl = "https://www.googleapis.com/groups/v1/groups/", applicationName, this.authenticator]) :
+      this.applicationName = applicationName
+          .replaceAll(const RegExp(@'\s+'), '_')
+          .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+  { 
     _groups = new GroupsResource._internal(this);
-    this.applicationName = applicationName
-      .replaceAll(const RegExp(@'\s+'), '_')
-      .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '');
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}groupssettings/v1/20120516 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}groupssettings/v1/20120724 google-api-dart-client/${clientVersion}";
   }
 
 

@@ -97,7 +97,11 @@ class OrkutApi extends core.Object {
   OrkutApiAlt alt;
 
 
-  OrkutApi([this.baseUrl = "https://www.googleapis.com/orkut/v2/", applicationName, this.authenticator]) { 
+  OrkutApi([this.baseUrl = "https://www.googleapis.com/orkut/v2/", applicationName, this.authenticator]) :
+      this.applicationName = applicationName
+          .replaceAll(const RegExp(@'\s+'), '_')
+          .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+  { 
     _communityMembers = new CommunityMembersResource._internal(this);
     _activities = new ActivitiesResource._internal(this);
     _communityPollComments = new CommunityPollCommentsResource._internal(this);
@@ -114,9 +118,6 @@ class OrkutApi extends core.Object {
     _activityVisibility = new ActivityVisibilityResource._internal(this);
     _badges = new BadgesResource._internal(this);
     _counters = new CountersResource._internal(this);
-    this.applicationName = applicationName
-      .replaceAll(const RegExp(@'\s+'), '_')
-      .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '');
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";

@@ -75,19 +75,20 @@ class GanApi extends core.Object {
   GanApiAlt alt;
 
 
-  GanApi([this.baseUrl = "https://www.googleapis.com/gan/v1beta1/", applicationName, this.authenticator]) { 
+  GanApi([this.baseUrl = "https://www.googleapis.com/gan/v1beta1/", applicationName, this.authenticator]) :
+      this.applicationName = applicationName
+          .replaceAll(const RegExp(@'\s+'), '_')
+          .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+  { 
     _advertisers = new AdvertisersResource._internal(this);
     _ccOffers = new CcOffersResource._internal(this);
     _events = new EventsResource._internal(this);
     _links = new LinksResource._internal(this);
     _publishers = new PublishersResource._internal(this);
-    this.applicationName = applicationName
-      .replaceAll(const RegExp(@'\s+'), '_')
-      .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '');
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}gan/v1beta1/20120501 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}gan/v1beta1/20120723 google-api-dart-client/${clientVersion}";
   }
 
 
@@ -2282,6 +2283,9 @@ class Events extends IdentityHash {
 
 // Schema .Link
 class Link extends IdentityHash {
+  /** Flag for if this link is active. */
+  core.bool isActive;
+
   /** Date that this link becomes active. */
   core.String startDate;
 
@@ -2312,6 +2316,9 @@ class Link extends IdentityHash {
   /** Creative Type. */
   core.String creativeType;
 
+  /** Tracking url for impressions. */
+  core.String impressionTrackingUrl;
+
   /** Promotion Type */
   core.String promotionType;
 
@@ -2324,8 +2331,8 @@ class Link extends IdentityHash {
   /** Availability. */
   core.String availability;
 
-  /** Flag for if this link is active. */
-  core.bool isActive;
+  /** Tracking url for clicks. */
+  core.String clickTrackingUrl;
 
   /** The destination URL for the link. */
   core.String destinationUrl;
@@ -2334,6 +2341,7 @@ class Link extends IdentityHash {
   static Link parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Link();
+    result.isActive = identity(json["isActive"]);
     result.startDate = identity(json["startDate"]);
     result.kind = identity(json["kind"]);
     result.endDate = identity(json["endDate"]);
@@ -2344,11 +2352,12 @@ class Link extends IdentityHash {
     result.id = identity(json["id"]);
     result.advertiserId = identity(json["advertiserId"]);
     result.creativeType = identity(json["creativeType"]);
+    result.impressionTrackingUrl = identity(json["impressionTrackingUrl"]);
     result.promotionType = identity(json["promotionType"]);
     result.duration = identity(json["duration"]);
     result.authorship = identity(json["authorship"]);
     result.availability = identity(json["availability"]);
-    result.isActive = identity(json["isActive"]);
+    result.clickTrackingUrl = identity(json["clickTrackingUrl"]);
     result.destinationUrl = identity(json["destinationUrl"]);
     return result;
   }
@@ -2356,6 +2365,7 @@ class Link extends IdentityHash {
   static core.Object serialize(Link value) {
     if (value == null) return null;
     final result = {};
+    result["isActive"] = identity(value.isActive);
     result["startDate"] = identity(value.startDate);
     result["kind"] = identity(value.kind);
     result["endDate"] = identity(value.endDate);
@@ -2366,11 +2376,12 @@ class Link extends IdentityHash {
     result["id"] = identity(value.id);
     result["advertiserId"] = identity(value.advertiserId);
     result["creativeType"] = identity(value.creativeType);
+    result["impressionTrackingUrl"] = identity(value.impressionTrackingUrl);
     result["promotionType"] = identity(value.promotionType);
     result["duration"] = identity(value.duration);
     result["authorship"] = identity(value.authorship);
     result["availability"] = identity(value.availability);
-    result["isActive"] = identity(value.isActive);
+    result["clickTrackingUrl"] = identity(value.clickTrackingUrl);
     result["destinationUrl"] = identity(value.destinationUrl);
     return result;
   }

@@ -71,17 +71,18 @@ class PlusApi extends core.Object {
   PlusApiAlt alt;
 
 
-  PlusApi([this.baseUrl = "https://www.googleapis.com/plus/v1/", applicationName, this.authenticator]) { 
+  PlusApi([this.baseUrl = "https://www.googleapis.com/plus/v1/", applicationName, this.authenticator]) :
+      this.applicationName = applicationName
+          .replaceAll(const RegExp(@'\s+'), '_')
+          .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+  { 
     _activities = new ActivitiesResource._internal(this);
     _comments = new CommentsResource._internal(this);
     _people = new PeopleResource._internal(this);
-    this.applicationName = applicationName
-      .replaceAll(const RegExp(@'\s+'), '_')
-      .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '');
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}plus/v1/20120712 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}plus/v1/20120723 google-api-dart-client/${clientVersion}";
   }
 
 

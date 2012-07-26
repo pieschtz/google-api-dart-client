@@ -257,7 +257,7 @@ class _ProxyChannel {
   _ProxyCallback _callback;
 
   _ProxyChannel(String this._provider, _ProxyCallback this._callback) {
-    _nonce = (Math.random() * 100000).toInt().toString();
+    _nonce = (0x7FFFFFFF & random()).toString();
     _element = _iframe(_getProxyUrl());
     window.on.message.add(_onMessage);
   }

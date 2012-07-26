@@ -14,6 +14,7 @@
 
 #library('utils');
 #import('dart:uri');
+#import('dart:html');
 
 /// A Transform<T> is a function from T to T.
 typedef T Transform<T>(T value);
@@ -104,3 +105,10 @@ class _Unspecified {
 }
 /** A sentinel to be used as a default parameter value. */
 final UNSPECIFIED = const _Unspecified._internal();
+
+/// Returns a random unsigned 32-bit integer. 
+int random() {
+  final ary = new Uint32Array(1);
+  window.crypto.getRandomValues(ary);
+  return ary[0];
+}

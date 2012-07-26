@@ -75,21 +75,25 @@ class YoutubeApi extends core.Object {
   YoutubeApiAlt alt;
 
 
-  YoutubeApi([this.baseUrl = "https://www.googleapis.com/youtube/v3alpha/", applicationName, this.authenticator]) { 
+  YoutubeApi([this.baseUrl = "https://www.googleapis.com/youtube/v3alpha/", applicationName, this.authenticator]) :
+      this.applicationName = applicationName
+          .replaceAll(const RegExp(@'\s+'), '_')
+          .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+  { 
     _channels = new ChannelsResource._internal(this);
     _search = new SearchResource._internal(this);
     _playlistitems = new PlaylistitemsResource._internal(this);
     _playlists = new PlaylistsResource._internal(this);
     _videos = new VideosResource._internal(this);
-    this.applicationName = applicationName
-      .replaceAll(const RegExp(@'\s+'), '_')
-      .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '');
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}youtube/v3alpha/20120626 google-api-dart-client/${clientVersion}";
   }
 
+
+  /** OAuth2 scope: Manage your Youtube account */
+  static final core.String YOUTUBE_SCOPE = "https://www.googleapis.com/auth/youtube";
 }
 
 // Resource .ChannelsResource
