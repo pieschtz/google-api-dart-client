@@ -49,9 +49,6 @@ class OAuth2 implements Authenticator {
       _provider = provider,
       _tokenLoaded = tokenLoaded {
     _channel = _createFutureChannel();
-    try {
-      _token = _storedToken;  // Pull cached token from localStorage
-    } catch (final e) {}
     // Attempt an immediate login, we may already be authorized.
     login(immediate:true);
   }
@@ -137,22 +134,38 @@ class OAuth2 implements Authenticator {
         _token = tok.hasValue ? tok.value : null;
       });
       _tokenFuture = tokenCompleter.future;
-      _tokenCompleter = _wrapValidation(tokenCompleter);
 
-      // Synchronous if the channel is already open -> avoids popup blocker
-      _channel.onComplete((proxyChannel) {
-        if (!proxyChannel.hasValue) {
-          return _tokenCompleter.completeException(proxyChannel.exception);
-        }
-        String uri = _getAuthorizeUri(immediate);
-        if (immediate) {
-          IFrameElement iframe = _iframe(uri);
-          _tokenCompleter.future.onComplete((f) => iframe.remove());
-        } else {
-          Window popup = _popup(uri);
-          new _WindowPoller(_tokenCompleter, popup).poll();
-        }
-      });
+      completeByPromptingUser() {
+        _tokenCompleter = _wrapValidation(tokenCompleter);
+
+        // Synchronous if the channel is already open -> avoids popup blocker
+        _channel.onComplete((proxyChannel) {
+          if (!proxyChannel.hasValue) {
+            return _tokenCompleter.completeException(proxyChannel.exception);
+          }
+          String uri = _getAuthorizeUri(immediate);
+          if (immediate) {
+            IFrameElement iframe = _iframe(uri);
+            _tokenCompleter.future.onComplete((f) => iframe.remove());
+          } else {
+            Window popup = _popup(uri);
+            new _WindowPoller(_tokenCompleter, popup).poll();
+          }
+        });
+      }
+
+      final stored = _storedToken;
+      if ((stored != null) && !stored.expired) {
+        stored.validate(_clientId).onComplete((f) {
+          if (f.hasValue) {
+            tokenCompleter.complete(stored);
+          } else {
+            completeByPromptingUser();
+          }
+        });
+      } else {
+        completeByPromptingUser();
+      }
     }
     return _tokenFuture;
   }
@@ -253,11 +266,13 @@ typedef void _ProxyCallback(String subject, List<String> args);
 class _ProxyChannel {
   String _nonce;
   String _provider;
+  String _expectedOrigin;
   IFrameElement _element;
   _ProxyCallback _callback;
 
   _ProxyChannel(String this._provider, _ProxyCallback this._callback) {
     _nonce = (0x7FFFFFFF & random()).toString();
+    _expectedOrigin = _origin(_provider);
     _element = _iframe(_getProxyUrl());
     window.on.message.add(_onMessage);
   }
@@ -268,7 +283,14 @@ class _ProxyChannel {
   }
 
   void _onMessage(MessageEvent event) {
-    var data = JSON.parse(event.data);
+    if (event.origin != _expectedOrigin) return;
+    var data;
+    try {
+      data = JSON.parse(event.data);
+    } catch (final e) {
+      print("Invalid JSON received via postMessage: ${event.data}");
+      return;
+    }
     if (!(data is Map) || (data['t'] != _nonce)) {
       return;
     }
@@ -277,6 +299,13 @@ class _ProxyChannel {
       subject = subject.substring(0, subject.length - _nonce.length - 1);
     }
     _callback(subject, data['a']);
+  }
+
+  /// Computes the javascript origin of an absolute URI.
+  String _origin(String uriString) {
+    final uri = new Uri.fromString(uriString);
+    final portPart = (uri.port != 0) ? ":${uri.port}" : "";
+    return "${uri.scheme}://${uri.domain}$portPart";
   }
 
   String _getProxyUrl() {

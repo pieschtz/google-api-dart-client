@@ -88,11 +88,11 @@ class YoutubeApi extends core.Object {
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}youtube/v3alpha/20120626 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}youtube/v3alpha/20120727 google-api-dart-client/${clientVersion}";
   }
 
 
-  /** OAuth2 scope: Manage your Youtube account */
+  /** OAuth2 scope: Manage your YouTube account */
   static final core.String YOUTUBE_SCOPE = "https://www.googleapis.com/auth/youtube";
 }
 

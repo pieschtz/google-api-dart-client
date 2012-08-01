@@ -94,7 +94,7 @@ class CalendarApi extends core.Object {
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}calendar/v3/20120712 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}calendar/v3/20120718 google-api-dart-client/${clientVersion}";
   }
 
 
@@ -219,11 +219,15 @@ class CalendarListResource extends core.Object {
    * Adds an entry to the user's calendar list.
    *
    *    * [content] the CalendarListEntry
+   *    * [colorRgbFormat] Whether to use the 'frontendColor' and 'backgroundColor' fields to write the calendar colors (RGB).
+   *        If this feature is used, the index-based 'color' field will be set to the best matching
+   *        option automatically. Optional. The default is False.
    */
-  core.Future<CalendarListEntry> insert(CalendarListEntry content) {
+  core.Future<CalendarListEntry> insert(CalendarListEntry content, [core.bool colorRgbFormat = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
+    if (UNSPECIFIED != colorRgbFormat) $queryParams["colorRgbFormat"] = colorRgbFormat;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -320,12 +324,16 @@ class CalendarListResource extends core.Object {
    *
    *    * [content] the CalendarListEntry
    *    * [calendarId] Calendar identifier.
+   *    * [colorRgbFormat] Whether to use the 'frontendColor' and 'backgroundColor' fields to write the calendar colors (RGB).
+   *        If this feature is used, the index-based 'color' field will be set to the best matching
+   *        option automatically. Optional. The default is False.
    */
-  core.Future<CalendarListEntry> update(core.String calendarId, CalendarListEntry content) {
+  core.Future<CalendarListEntry> update(core.String calendarId, CalendarListEntry content, [core.bool colorRgbFormat = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["calendarId"] = calendarId;
+    if (UNSPECIFIED != colorRgbFormat) $queryParams["colorRgbFormat"] = colorRgbFormat;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -353,12 +361,16 @@ class CalendarListResource extends core.Object {
    *
    *    * [content] the CalendarListEntry
    *    * [calendarId] Calendar identifier.
+   *    * [colorRgbFormat] Whether to use the 'frontendColor' and 'backgroundColor' fields to write the calendar colors (RGB).
+   *        If this feature is used, the index-based 'color' field will be set to the best matching
+   *        option automatically. Optional. The default is False.
    */
-  core.Future<CalendarListEntry> patch(core.String calendarId, CalendarListEntry content) {
+  core.Future<CalendarListEntry> patch(core.String calendarId, CalendarListEntry content, [core.bool colorRgbFormat = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["calendarId"] = calendarId;
+    if (UNSPECIFIED != colorRgbFormat) $queryParams["colorRgbFormat"] = colorRgbFormat;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -1580,6 +1592,12 @@ class CalendarListEntry extends IdentityHash {
   /** Type of the resource ("calendar#calendarListEntry"). */
   core.String kind;
 
+  /**
+ * The foreground color of the calendar in the format '#ffffff'. This property supersedes the index-
+ * based colorId property. Optional.
+ */
+  core.String foregroundColor;
+
   /** The default reminders that the authenticated user has for this calendar. */
   core.List<EventReminder> defaultReminders;
 
@@ -1603,6 +1621,12 @@ class CalendarListEntry extends IdentityHash {
 
   /** Geographic location of the calendar as free-form text. Optional. Read-only. */
   core.String location;
+
+  /**
+ * The main color of the calendar in the format '#0088aa'. This property supersedes the index-based
+ * colorId property. Optional.
+ */
+  core.String backgroundColor;
 
   /** The summary that the authenticated user has set for this calendar. Optional. */
   core.String summaryOverride;
@@ -1632,6 +1656,7 @@ class CalendarListEntry extends IdentityHash {
     if (json == null) return null;
     final result = new CalendarListEntry();
     result.kind = identity(json["kind"]);
+    result.foregroundColor = identity(json["foregroundColor"]);
     result.defaultReminders = map(EventReminder.parse)(json["defaultReminders"]);
     result.description = identity(json["description"]);
     result.colorId = identity(json["colorId"]);
@@ -1639,6 +1664,7 @@ class CalendarListEntry extends IdentityHash {
     result.summary = identity(json["summary"]);
     result.etag = identity(json["etag"]);
     result.location = identity(json["location"]);
+    result.backgroundColor = identity(json["backgroundColor"]);
     result.summaryOverride = identity(json["summaryOverride"]);
     result.timeZone = identity(json["timeZone"]);
     result.hidden = identity(json["hidden"]);
@@ -1651,6 +1677,7 @@ class CalendarListEntry extends IdentityHash {
     if (value == null) return null;
     final result = {};
     result["kind"] = identity(value.kind);
+    result["foregroundColor"] = identity(value.foregroundColor);
     result["defaultReminders"] = map(EventReminder.serialize)(value.defaultReminders);
     result["description"] = identity(value.description);
     result["colorId"] = identity(value.colorId);
@@ -1658,6 +1685,7 @@ class CalendarListEntry extends IdentityHash {
     result["summary"] = identity(value.summary);
     result["etag"] = identity(value.etag);
     result["location"] = identity(value.location);
+    result["backgroundColor"] = identity(value.backgroundColor);
     result["summaryOverride"] = identity(value.summaryOverride);
     result["timeZone"] = identity(value.timeZone);
     result["hidden"] = identity(value.hidden);
@@ -1845,7 +1873,7 @@ class Event extends IdentityHash {
   EventExtendedProperties extendedProperties;
 
   /**
- * Whether the end time is really unspecified. An end time is still provided for compatibility
+ * Whether the end time is actually unspecified. An end time is still provided for compatibility
  * reasons, even if this attribute is set to True. The default is False.
  */
   core.bool endTimeUnspecified;

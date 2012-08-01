@@ -67,7 +67,7 @@ class Oauth2Api extends core.Object {
   Oauth2ApiAlt alt;
 
 
-  Oauth2Api([this.baseUrl = "https://www.googleapis.com//", applicationName, this.authenticator]) :
+  Oauth2Api([this.baseUrl = "https://www.googleapis.com/", applicationName, this.authenticator]) :
       this.applicationName = applicationName
           .replaceAll(const RegExp(@'\s+'), '_')
           .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '')
@@ -76,7 +76,7 @@ class Oauth2Api extends core.Object {
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}oauth2/v2/20120712 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}oauth2/v2/20120723 google-api-dart-client/${clientVersion}";
   }
   // Method .Tokeninfo
   /**

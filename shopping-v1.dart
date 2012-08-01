@@ -76,7 +76,7 @@ class ShoppingApi extends core.Object {
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}shopping/v1/20120717 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}shopping/v1/20120726 google-api-dart-client/${clientVersion}";
   }
 
 
