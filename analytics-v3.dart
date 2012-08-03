@@ -79,7 +79,7 @@ class AnalyticsApi extends core.Object {
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}analytics/v3/20120712 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}analytics/v3/20120726 google-api-dart-client/${clientVersion}";
   }
 
 

@@ -97,7 +97,7 @@ class DriveApi extends core.Object {
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}drive/v2/20120724 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}drive/v2/20120727 google-api-dart-client/${clientVersion}";
   }
 
 
@@ -685,6 +685,36 @@ class AppsResource extends core.Object {
     return $authenticatedHttp
         .chain((final $req) => $req.request())
         .transform((final $text) => AppList.parse(JSON.parse($text)));
+  }
+
+  // Method AppsResource.Get
+  /**
+   * Gets a specific app.
+   *
+   *    * [appId] The ID of the app.
+   */
+  core.Future<App> get(core.String appId) {
+    final $queryParams = {};
+    final $headers = {};
+    final $pathParams = {};
+    $pathParams["appId"] = appId;
+    if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
+    if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
+    if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
+    if (_$service.oauthToken != null) $headers["Authorization"] = "Bearer ${_$service.oauthToken}";
+    if (_$service.key != null) $queryParams["key"] = _$service.key;
+    if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
+    if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
+    $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
+    final $path = "apps/{appId}";
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
+    final $http = new HttpRequest($url, "GET", $headers);
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new core.Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => App.parse(JSON.parse($text)));
   }
 }
 
@@ -1701,6 +1731,9 @@ class App extends IdentityHash {
   /** The list of primary file extensions. */
   core.List<core.String> primaryFileExtensions;
 
+  /** Whether the app is selected as the default handler for the types it supports. */
+  core.bool useByDefault;
+
   /** The name of the app. */
   core.String name;
 
@@ -1743,6 +1776,7 @@ class App extends IdentityHash {
     final result = new App();
     result.kind = identity(json["kind"]);
     result.primaryFileExtensions = map(identity)(json["primaryFileExtensions"]);
+    result.useByDefault = identity(json["useByDefault"]);
     result.name = identity(json["name"]);
     result.icons = map(AppIcons.parse)(json["icons"]);
     result.secondaryFileExtensions = map(identity)(json["secondaryFileExtensions"]);
@@ -1763,6 +1797,7 @@ class App extends IdentityHash {
     final result = {};
     result["kind"] = identity(value.kind);
     result["primaryFileExtensions"] = map(identity)(value.primaryFileExtensions);
+    result["useByDefault"] = identity(value.useByDefault);
     result["name"] = identity(value.name);
     result["icons"] = map(AppIcons.serialize)(value.icons);
     result["secondaryFileExtensions"] = map(identity)(value.secondaryFileExtensions);
@@ -2053,6 +2088,12 @@ class File extends IdentityHash {
   /** Indexable text attributes for the file (can only be written) */
   FileIndexableText indexableText;
 
+  /**
+ * Whether this file has been explicitly trashed, as opposed to recursively trashed. This will only
+ * be populated if the file is trashed.
+ */
+  core.bool explicitlyTrashed;
+
   /** ETag of the file. */
   core.String etag;
 
@@ -2181,6 +2222,7 @@ class File extends IdentityHash {
     result.thumbnailLink = identity(json["thumbnailLink"]);
     result.labels = FileLabels.parse(json["labels"]);
     result.indexableText = FileIndexableText.parse(json["indexableText"]);
+    result.explicitlyTrashed = identity(json["explicitlyTrashed"]);
     result.etag = identity(json["etag"]);
     result.lastModifyingUserName = identity(json["lastModifyingUserName"]);
     result.writersCanShare = identity(json["writersCanShare"]);
@@ -2219,6 +2261,7 @@ class File extends IdentityHash {
     result["thumbnailLink"] = identity(value.thumbnailLink);
     result["labels"] = FileLabels.serialize(value.labels);
     result["indexableText"] = FileIndexableText.serialize(value.indexableText);
+    result["explicitlyTrashed"] = identity(value.explicitlyTrashed);
     result["etag"] = identity(value.etag);
     result["lastModifyingUserName"] = identity(value.lastModifyingUserName);
     result["writersCanShare"] = identity(value.writersCanShare);

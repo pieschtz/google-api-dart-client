@@ -88,7 +88,7 @@ class FusiontablesApi extends core.Object {
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}fusiontables/v1/20120423 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}fusiontables/v1/20120726 google-api-dart-client/${clientVersion}";
   }
 
 
@@ -1684,6 +1684,9 @@ class Table extends IdentityHash {
   /** Optional link for attribution. */
   core.String attributionLink;
 
+  /** Optional sql that encodes the table definition for derived tables. */
+  core.String sql;
+
   /** Encrypted unique alphanumeric identifier for the table. */
   core.String tableId;
 
@@ -1703,6 +1706,7 @@ class Table extends IdentityHash {
     result.isExportable = identity(json["isExportable"]);
     result.baseTableIds = map(identity)(json["baseTableIds"]);
     result.attributionLink = identity(json["attributionLink"]);
+    result.sql = identity(json["sql"]);
     result.tableId = identity(json["tableId"]);
     result.columns = map(Column.parse)(json["columns"]);
     result.name = identity(json["name"]);
@@ -1718,6 +1722,7 @@ class Table extends IdentityHash {
     result["isExportable"] = identity(value.isExportable);
     result["baseTableIds"] = map(identity)(value.baseTableIds);
     result["attributionLink"] = identity(value.attributionLink);
+    result["sql"] = identity(value.sql);
     result["tableId"] = identity(value.tableId);
     result["columns"] = map(Column.serialize)(value.columns);
     result["name"] = identity(value.name);

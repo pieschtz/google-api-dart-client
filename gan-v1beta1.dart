@@ -88,7 +88,7 @@ class GanApi extends core.Object {
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}gan/v1beta1/20120723 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}gan/v1beta1/20120727 google-api-dart-client/${clientVersion}";
   }
 
 
@@ -1444,6 +1444,9 @@ class Advertiser extends IdentityHash {
  */
   core.String payoutRank;
 
+  /** The default link id for this advertiser. */
+  core.String defaultLinkId;
+
   /**
  * The sum of fees paid to publishers divided by the total number of clicks over the past seven
  * days. Values are multiplied by 100 for display purposes.
@@ -1497,6 +1500,7 @@ class Advertiser extends IdentityHash {
     result.contactPhone = identity(json["contactPhone"]);
     result.description = identity(json["description"]);
     result.payoutRank = identity(json["payoutRank"]);
+    result.defaultLinkId = identity(json["defaultLinkId"]);
     result.epcSevenDayAverage = Money.parse(json["epcSevenDayAverage"]);
     result.commissionDuration = identity(json["commissionDuration"]);
     result.status = identity(json["status"]);
@@ -1521,6 +1525,7 @@ class Advertiser extends IdentityHash {
     result["contactPhone"] = identity(value.contactPhone);
     result["description"] = identity(value.description);
     result["payoutRank"] = identity(value.payoutRank);
+    result["defaultLinkId"] = identity(value.defaultLinkId);
     result["epcSevenDayAverage"] = Money.serialize(value.epcSevenDayAverage);
     result["commissionDuration"] = identity(value.commissionDuration);
     result["status"] = identity(value.status);
@@ -2286,8 +2291,8 @@ class Link extends IdentityHash {
   /** Flag for if this link is active. */
   core.bool isActive;
 
-  /** Date that this link becomes active. */
-  core.String startDate;
+  /** The link type. */
+  core.String linkType;
 
   /** The kind for one entity. */
   core.String kind;
@@ -2301,6 +2306,9 @@ class Link extends IdentityHash {
   /** The logical name for this link. */
   core.String name;
 
+  /** Date that this link becomes active. */
+  core.String startDate;
+
   /** Date that this link was created. */
   core.String createDate;
 
@@ -2312,9 +2320,6 @@ class Link extends IdentityHash {
 
   /** The advertiser id for the advertiser who owns this link. */
   core.String advertiserId;
-
-  /** Creative Type. */
-  core.String creativeType;
 
   /** Tracking url for impressions. */
   core.String impressionTrackingUrl;
@@ -2342,16 +2347,16 @@ class Link extends IdentityHash {
     if (json == null) return null;
     final result = new Link();
     result.isActive = identity(json["isActive"]);
-    result.startDate = identity(json["startDate"]);
+    result.linkType = identity(json["linkType"]);
     result.kind = identity(json["kind"]);
     result.endDate = identity(json["endDate"]);
     result.description = identity(json["description"]);
     result.name = identity(json["name"]);
+    result.startDate = identity(json["startDate"]);
     result.createDate = identity(json["createDate"]);
     result.imageAltText = identity(json["imageAltText"]);
     result.id = identity(json["id"]);
     result.advertiserId = identity(json["advertiserId"]);
-    result.creativeType = identity(json["creativeType"]);
     result.impressionTrackingUrl = identity(json["impressionTrackingUrl"]);
     result.promotionType = identity(json["promotionType"]);
     result.duration = identity(json["duration"]);
@@ -2366,16 +2371,16 @@ class Link extends IdentityHash {
     if (value == null) return null;
     final result = {};
     result["isActive"] = identity(value.isActive);
-    result["startDate"] = identity(value.startDate);
+    result["linkType"] = identity(value.linkType);
     result["kind"] = identity(value.kind);
     result["endDate"] = identity(value.endDate);
     result["description"] = identity(value.description);
     result["name"] = identity(value.name);
+    result["startDate"] = identity(value.startDate);
     result["createDate"] = identity(value.createDate);
     result["imageAltText"] = identity(value.imageAltText);
     result["id"] = identity(value.id);
     result["advertiserId"] = identity(value.advertiserId);
-    result["creativeType"] = identity(value.creativeType);
     result["impressionTrackingUrl"] = identity(value.impressionTrackingUrl);
     result["promotionType"] = identity(value.promotionType);
     result["duration"] = identity(value.duration);

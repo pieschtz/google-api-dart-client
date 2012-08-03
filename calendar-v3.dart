@@ -94,7 +94,7 @@ class CalendarApi extends core.Object {
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}calendar/v3/20120718 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}calendar/v3/20120726 google-api-dart-client/${clientVersion}";
   }
 
 

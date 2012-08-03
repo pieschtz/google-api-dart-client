@@ -76,7 +76,7 @@ class Oauth2Api extends core.Object {
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}oauth2/v2/20120723 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}oauth2/v2/20120726 google-api-dart-client/${clientVersion}";
   }
   // Method .Tokeninfo
   /**
