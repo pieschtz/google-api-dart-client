@@ -70,8 +70,8 @@ class DiscoveryApi extends core.Object {
 
   DiscoveryApi([this.baseUrl = "https://www.googleapis.com/discovery/v1/", applicationName, this.authenticator]) :
       this.applicationName = applicationName
-          .replaceAll(const RegExp(@'\s+'), '_')
-          .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+          .replaceAll(const core.RegExp(@'\s+'), '_')
+          .replaceAll(const core.RegExp(@'[^-_.,0-9a-zA-Z]'), '')
   { 
     _apis = new ApisResource._internal(this);
   }

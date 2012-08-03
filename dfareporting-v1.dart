@@ -75,8 +75,8 @@ class DfareportingApi extends core.Object {
 
   DfareportingApi([this.baseUrl = "https://www.googleapis.com/dfareporting/v1/", applicationName, this.authenticator]) :
       this.applicationName = applicationName
-          .replaceAll(const RegExp(@'\s+'), '_')
-          .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+          .replaceAll(const core.RegExp(@'\s+'), '_')
+          .replaceAll(const core.RegExp(@'[^-_.,0-9a-zA-Z]'), '')
   { 
     _files = new FilesResource._internal(this);
     _dimensionValues = new DimensionValuesResource._internal(this);

@@ -77,8 +77,8 @@ class GanApi extends core.Object {
 
   GanApi([this.baseUrl = "https://www.googleapis.com/gan/v1beta1/", applicationName, this.authenticator]) :
       this.applicationName = applicationName
-          .replaceAll(const RegExp(@'\s+'), '_')
-          .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+          .replaceAll(const core.RegExp(@'\s+'), '_')
+          .replaceAll(const core.RegExp(@'[^-_.,0-9a-zA-Z]'), '')
   { 
     _advertisers = new AdvertisersResource._internal(this);
     _ccOffers = new CcOffersResource._internal(this);

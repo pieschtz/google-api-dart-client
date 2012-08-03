@@ -69,8 +69,8 @@ class AuditApi extends core.Object {
 
   AuditApi([this.baseUrl = "https://www.googleapis.com/apps/reporting/audit/v1/", applicationName, this.authenticator]) :
       this.applicationName = applicationName
-          .replaceAll(const RegExp(@'\s+'), '_')
-          .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+          .replaceAll(const core.RegExp(@'\s+'), '_')
+          .replaceAll(const core.RegExp(@'[^-_.,0-9a-zA-Z]'), '')
   { 
     _activities = new ActivitiesResource._internal(this);
   }

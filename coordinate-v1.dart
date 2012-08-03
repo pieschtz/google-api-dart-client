@@ -69,8 +69,8 @@ class CoordinateApi extends core.Object {
 
   CoordinateApi([this.baseUrl = "https://www.googleapis.com/coordinate/v1/teams/", applicationName, this.authenticator]) :
       this.applicationName = applicationName
-          .replaceAll(const RegExp(@'\s+'), '_')
-          .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+          .replaceAll(const core.RegExp(@'\s+'), '_')
+          .replaceAll(const core.RegExp(@'[^-_.,0-9a-zA-Z]'), '')
   { 
     _jobs = new JobsResource._internal(this);
   }

@@ -71,8 +71,8 @@ class PredictionApi extends core.Object {
 
   PredictionApi([this.baseUrl = "https://www.googleapis.com/prediction/v1.5/", applicationName, this.authenticator]) :
       this.applicationName = applicationName
-          .replaceAll(const RegExp(@'\s+'), '_')
-          .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+          .replaceAll(const core.RegExp(@'\s+'), '_')
+          .replaceAll(const core.RegExp(@'[^-_.,0-9a-zA-Z]'), '')
   { 
     _trainedmodels = new TrainedmodelsResource._internal(this);
     _hostedmodels = new HostedmodelsResource._internal(this);

@@ -69,8 +69,8 @@ class GroupssettingsApi extends core.Object {
 
   GroupssettingsApi([this.baseUrl = "https://www.googleapis.com/groups/v1/groups/", applicationName, this.authenticator]) :
       this.applicationName = applicationName
-          .replaceAll(const RegExp(@'\s+'), '_')
-          .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+          .replaceAll(const core.RegExp(@'\s+'), '_')
+          .replaceAll(const core.RegExp(@'[^-_.,0-9a-zA-Z]'), '')
   { 
     _groups = new GroupsResource._internal(this);
   }

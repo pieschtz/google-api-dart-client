@@ -77,8 +77,8 @@ class YoutubeApi extends core.Object {
 
   YoutubeApi([this.baseUrl = "https://www.googleapis.com/youtube/v3alpha/", applicationName, this.authenticator]) :
       this.applicationName = applicationName
-          .replaceAll(const RegExp(@'\s+'), '_')
-          .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+          .replaceAll(const core.RegExp(@'\s+'), '_')
+          .replaceAll(const core.RegExp(@'[^-_.,0-9a-zA-Z]'), '')
   { 
     _channels = new ChannelsResource._internal(this);
     _search = new SearchResource._internal(this);

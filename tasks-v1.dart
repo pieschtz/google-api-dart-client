@@ -71,8 +71,8 @@ class TasksApi extends core.Object {
 
   TasksApi([this.baseUrl = "https://www.googleapis.com/tasks/v1/", applicationName, this.authenticator]) :
       this.applicationName = applicationName
-          .replaceAll(const RegExp(@'\s+'), '_')
-          .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+          .replaceAll(const core.RegExp(@'\s+'), '_')
+          .replaceAll(const core.RegExp(@'[^-_.,0-9a-zA-Z]'), '')
   { 
     _tasks = new TasksResource._internal(this);
     _tasklists = new TasklistsResource._internal(this);

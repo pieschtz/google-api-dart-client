@@ -69,8 +69,8 @@ class FreebaseApi extends core.Object {
 
   FreebaseApi([this.baseUrl = "https://www.googleapis.com/freebase/v1/", applicationName, this.authenticator]) :
       this.applicationName = applicationName
-          .replaceAll(const RegExp(@'\s+'), '_')
-          .replaceAll(const RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+          .replaceAll(const core.RegExp(@'\s+'), '_')
+          .replaceAll(const core.RegExp(@'[^-_.,0-9a-zA-Z]'), '')
   { 
     _text = new TextResource._internal(this);
   }
