@@ -68,7 +68,7 @@ class Oauth2Api extends core.Object {
 
 
   Oauth2Api([this.baseUrl = "https://www.googleapis.com/", applicationName, this.authenticator]) :
-      this.applicationName = applicationName
+      this.applicationName = (applicationName == null) ? null : applicationName
           .replaceAll(const core.RegExp(@'\s+'), '_')
           .replaceAll(const core.RegExp(@'[^-_.,0-9a-zA-Z]'), '')
   { 

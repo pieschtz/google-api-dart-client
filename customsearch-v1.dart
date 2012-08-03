@@ -68,7 +68,7 @@ class CustomsearchApi extends core.Object {
 
 
   CustomsearchApi([this.baseUrl = "https://www.googleapis.com/customsearch/", applicationName, this.authenticator]) :
-      this.applicationName = applicationName
+      this.applicationName = (applicationName == null) ? null : applicationName
           .replaceAll(const core.RegExp(@'\s+'), '_')
           .replaceAll(const core.RegExp(@'[^-_.,0-9a-zA-Z]'), '')
   { 

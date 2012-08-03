@@ -88,7 +88,7 @@ class ComputeApi extends core.Object {
 
 
   ComputeApi([this.baseUrl = "https://www.googleapis.com/compute/v1beta12/projects/", applicationName, this.authenticator]) :
-      this.applicationName = applicationName
+      this.applicationName = (applicationName == null) ? null : applicationName
           .replaceAll(const core.RegExp(@'\s+'), '_')
           .replaceAll(const core.RegExp(@'[^-_.,0-9a-zA-Z]'), '')
   { 
