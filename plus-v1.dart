@@ -82,7 +82,7 @@ class PlusApi extends core.Object {
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}plus/v1/20120723 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}plus/v1/20120806 google-api-dart-client/${clientVersion}";
   }
 
 
@@ -120,7 +120,7 @@ class ActivitiesResource extends core.Object {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    $pathParams["query"] = query;
+    if (UNSPECIFIED != query) $queryParams["query"] = query;
     if (UNSPECIFIED != orderBy) $queryParams["orderBy"] = orderBy;
     if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
     if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
@@ -451,7 +451,7 @@ class PeopleResource extends core.Object {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    $pathParams["query"] = query;
+    if (UNSPECIFIED != query) $queryParams["query"] = query;
     if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
     if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
     if (UNSPECIFIED != language) $queryParams["language"] = language;

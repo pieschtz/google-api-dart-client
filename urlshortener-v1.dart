@@ -164,7 +164,7 @@ class UrlResource extends core.Object {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    $pathParams["shortUrl"] = shortUrl;
+    if (UNSPECIFIED != shortUrl) $queryParams["shortUrl"] = shortUrl;
     if (UNSPECIFIED != projection) $queryParams["projection"] = projection;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;

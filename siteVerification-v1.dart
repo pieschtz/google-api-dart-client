@@ -76,7 +76,7 @@ class SiteVerificationApi extends core.Object {
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}siteVerification/v1/20111216 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}siteVerification/v1/20120806 google-api-dart-client/${clientVersion}";
   }
 
 
@@ -104,7 +104,7 @@ class WebResourceResource extends core.Object {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    $pathParams["verificationMethod"] = verificationMethod;
+    if (UNSPECIFIED != verificationMethod) $queryParams["verificationMethod"] = verificationMethod;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;

@@ -255,7 +255,7 @@ class TasksResource extends core.Object {
     $pathParams["project"] = project;
     $pathParams["taskqueue"] = taskqueue;
     $pathParams["task"] = task;
-    $pathParams["newLeaseSeconds"] = newLeaseSeconds;
+    if (UNSPECIFIED != newLeaseSeconds) $queryParams["newLeaseSeconds"] = newLeaseSeconds;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -294,7 +294,7 @@ class TasksResource extends core.Object {
     $pathParams["project"] = project;
     $pathParams["taskqueue"] = taskqueue;
     $pathParams["task"] = task;
-    $pathParams["newLeaseSeconds"] = newLeaseSeconds;
+    if (UNSPECIFIED != newLeaseSeconds) $queryParams["newLeaseSeconds"] = newLeaseSeconds;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -369,8 +369,8 @@ class TasksResource extends core.Object {
     final $pathParams = {};
     $pathParams["project"] = project;
     $pathParams["taskqueue"] = taskqueue;
-    $pathParams["numTasks"] = numTasks;
-    $pathParams["leaseSecs"] = leaseSecs;
+    if (UNSPECIFIED != numTasks) $queryParams["numTasks"] = numTasks;
+    if (UNSPECIFIED != leaseSecs) $queryParams["leaseSecs"] = leaseSecs;
     if (UNSPECIFIED != groupByTag) $queryParams["groupByTag"] = groupByTag;
     if (UNSPECIFIED != tag) $queryParams["tag"] = tag;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;

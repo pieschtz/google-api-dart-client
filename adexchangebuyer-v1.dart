@@ -21,7 +21,7 @@
 
 // API AdexchangebuyerApi
 /**
- * Lets you manage your Ad Exchange Buyer account
+ * Lets you manage your Ad Exchange Buyer account.
  */
 class AdexchangebuyerApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
@@ -82,7 +82,7 @@ class AdexchangebuyerApi extends core.Object {
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}adexchangebuyer/v1/20120508 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}adexchangebuyer/v1/20120718 google-api-dart-client/${clientVersion}";
   }
 
 
@@ -372,7 +372,7 @@ class CreativesResource extends core.Object {
     final $pathParams = {};
     $pathParams["accountId"] = accountId;
     $pathParams["buyerCreativeId"] = buyerCreativeId;
-    $pathParams["adgroupId"] = adgroupId;
+    if (UNSPECIFIED != adgroupId) $queryParams["adgroupId"] = adgroupId;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -612,6 +612,12 @@ class Creative extends IdentityHash {
 
 // Schema .CreativesList
 class CreativesList extends IdentityHash {
+  /**
+ * Continuation token used to page through creatives. To retrieve the next page of results, set the
+ * next request's "pageToken" value to this.
+ */
+  core.String nextPageToken;
+
   /** A list of creatives. */
   core.List<Creative> items;
 
@@ -622,6 +628,7 @@ class CreativesList extends IdentityHash {
   static CreativesList parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new CreativesList();
+    result.nextPageToken = identity(json["nextPageToken"]);
     result.items = map(Creative.parse)(json["items"]);
     result.kind = identity(json["kind"]);
     return result;
@@ -630,6 +637,7 @@ class CreativesList extends IdentityHash {
   static core.Object serialize(CreativesList value) {
     if (value == null) return null;
     final result = {};
+    result["nextPageToken"] = identity(value.nextPageToken);
     result["items"] = map(Creative.serialize)(value.items);
     result["kind"] = identity(value.kind);
     return result;

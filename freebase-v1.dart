@@ -104,7 +104,7 @@ class FreebaseApi extends core.Object {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    $pathParams["query"] = query;
+    if (UNSPECIFIED != query) $queryParams["query"] = query;
     if (UNSPECIFIED != lang) $queryParams["lang"] = lang;
     if (UNSPECIFIED != htmlEscape) $queryParams["html_escape"] = htmlEscape;
     if (UNSPECIFIED != indent) $queryParams["indent"] = indent;

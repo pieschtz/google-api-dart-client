@@ -76,7 +76,7 @@ class ShoppingApi extends core.Object {
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}shopping/v1/20120726 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}shopping/v1/20120815 google-api-dart-client/${clientVersion}";
   }
 
 
@@ -761,6 +761,9 @@ class ShoppingModelCategoryJsonV1 extends IdentityHash {
 // Schema .ShoppingModelDebugJsonV1
 class ShoppingModelDebugJsonV1 extends IdentityHash {
   /** Google internal. */
+  core.String recommendedItemsRequest;
+
+  /** Google internal. */
   core.String searchRequest;
 
   /** Google internal. */
@@ -776,6 +779,9 @@ class ShoppingModelDebugJsonV1 extends IdentityHash {
   core.String elapsedMillis;
 
   /** Google internal. */
+  core.String recommendedItemsResponse;
+
+  /** Google internal. */
   core.String facetsResponse;
 
   /** Google internal */
@@ -785,11 +791,13 @@ class ShoppingModelDebugJsonV1 extends IdentityHash {
   static ShoppingModelDebugJsonV1 parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new ShoppingModelDebugJsonV1();
+    result.recommendedItemsRequest = identity(json["recommendedItemsRequest"]);
     result.searchRequest = identity(json["searchRequest"]);
     result.rdcResponse = identity(json["rdcResponse"]);
     result.facetsRequest = identity(json["facetsRequest"]);
     result.searchResponse = identity(json["searchResponse"]);
     result.elapsedMillis = identity(json["elapsedMillis"]);
+    result.recommendedItemsResponse = identity(json["recommendedItemsResponse"]);
     result.facetsResponse = identity(json["facetsResponse"]);
     result.backendTimes = map(ShoppingModelDebugJsonV1BackendTimes.parse)(json["backendTimes"]);
     return result;
@@ -798,11 +806,13 @@ class ShoppingModelDebugJsonV1 extends IdentityHash {
   static core.Object serialize(ShoppingModelDebugJsonV1 value) {
     if (value == null) return null;
     final result = {};
+    result["recommendedItemsRequest"] = identity(value.recommendedItemsRequest);
     result["searchRequest"] = identity(value.searchRequest);
     result["rdcResponse"] = identity(value.rdcResponse);
     result["facetsRequest"] = identity(value.facetsRequest);
     result["searchResponse"] = identity(value.searchResponse);
     result["elapsedMillis"] = identity(value.elapsedMillis);
+    result["recommendedItemsResponse"] = identity(value.recommendedItemsResponse);
     result["facetsResponse"] = identity(value.facetsResponse);
     result["backendTimes"] = map(ShoppingModelDebugJsonV1BackendTimes.serialize)(value.backendTimes);
     return result;

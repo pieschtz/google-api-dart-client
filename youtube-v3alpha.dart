@@ -88,12 +88,15 @@ class YoutubeApi extends core.Object {
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}youtube/v3alpha/20120727 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}youtube/v3alpha/20120816 google-api-dart-client/${clientVersion}";
   }
 
 
   /** OAuth2 scope: Manage your YouTube account */
   static final core.String YOUTUBE_SCOPE = "https://www.googleapis.com/auth/youtube";
+
+  /** OAuth2 scope: View and manage your assets and associated content on YouTube */
+  static final core.String YOUTUBEPARTNER_SCOPE = "https://www.googleapis.com/auth/youtubepartner";
 }
 
 // Resource .ChannelsResource
@@ -107,16 +110,18 @@ class ChannelsResource extends core.Object {
    * Browse the YouTube channel collection. Either the 'id' or 'mine' parameter must be set.
    *
    *    * [part] Parts of the channel resource to be returned.
-   *    * [id] YouTube IDs of the channels to be returned.
    *    * [mine] Flag indicating only return the channel ids of the authenticated user.
+   *    * [contentOwnerId] The authenticated user acts on behalf of this content owner.
+   *    * [id] YouTube IDs of the channels to be returned.
    */
-  core.Future<ChannelListResponse> list(core.String part, [core.String id = UNSPECIFIED, core.String mine = UNSPECIFIED]) {
+  core.Future<ChannelListResponse> list(core.String part, [core.String mine = UNSPECIFIED, core.String contentOwnerId = UNSPECIFIED, core.String id = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    $pathParams["part"] = part;
-    if (UNSPECIFIED != id) $queryParams["id"] = id;
+    if (UNSPECIFIED != part) $queryParams["part"] = part;
     if (UNSPECIFIED != mine) $queryParams["mine"] = mine;
+    if (UNSPECIFIED != contentOwnerId) $queryParams["contentOwnerId"] = contentOwnerId;
+    if (UNSPECIFIED != id) $queryParams["id"] = id;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -274,24 +279,26 @@ class PlaylistitemsResource extends core.Object {
    * Browse the YouTube playlist collection.
    *
    *    * [part] Parts of the playlist resource to be returned.
-   *    * [startIndex] Index of the first element to return (starts at 0)
-
-  Minimum: 0.
    *    * [playlistId] Retrieves playlist items from the given playlist id.
-   *    * [id] YouTube IDs of the playlists to be returned.
    *    * [maxResults] Maximum number of results to return
   Default: 50.
   Minimum: 0.
+   *    * [id] YouTube IDs of the playlists to be returned.
+   *    * [startIndex] Index of the first element to return (starts at 0)
+
+  Minimum: 0.
+   *    * [contentOwnerId] The authenticated user acts on behalf of this content owner.
    */
-  core.Future<PlaylistItemListResponse> list(core.String part, [core.int startIndex = UNSPECIFIED, core.String playlistId = UNSPECIFIED, core.String id = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
+  core.Future<PlaylistItemListResponse> list(core.String part, [core.String playlistId = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String id = UNSPECIFIED, core.int startIndex = UNSPECIFIED, core.String contentOwnerId = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    $pathParams["part"] = part;
-    if (UNSPECIFIED != startIndex) $queryParams["startIndex"] = startIndex;
+    if (UNSPECIFIED != part) $queryParams["part"] = part;
     if (UNSPECIFIED != playlistId) $queryParams["playlistId"] = playlistId;
-    if (UNSPECIFIED != id) $queryParams["id"] = id;
     if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
+    if (UNSPECIFIED != id) $queryParams["id"] = id;
+    if (UNSPECIFIED != startIndex) $queryParams["startIndex"] = startIndex;
+    if (UNSPECIFIED != contentOwnerId) $queryParams["contentOwnerId"] = contentOwnerId;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -324,13 +331,15 @@ class PlaylistsResource extends core.Object {
    *
    *    * [id] YouTube IDs of the playlists to be returned.
    *    * [part] Parts of the playlist resource to be returned.
+   *    * [contentOwnerId] The authenticated user acts on behalf of this content owner.
    */
-  core.Future<PlaylistListResponse> list(core.String id, core.String part) {
+  core.Future<PlaylistListResponse> list(core.String id, core.String part, [core.String contentOwnerId = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    $pathParams["id"] = id;
-    $pathParams["part"] = part;
+    if (UNSPECIFIED != id) $queryParams["id"] = id;
+    if (UNSPECIFIED != part) $queryParams["part"] = part;
+    if (UNSPECIFIED != contentOwnerId) $queryParams["contentOwnerId"] = contentOwnerId;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -363,13 +372,15 @@ class VideosResource extends core.Object {
    *
    *    * [id] YouTube IDs of the videos to be returned.
    *    * [part] Parts of the video resource to be returned.
+   *    * [contentOwnerId] The authenticated user acts on behalf of this content owner.
    */
-  core.Future<VideoListResponse> list(core.String id, core.String part) {
+  core.Future<VideoListResponse> list(core.String id, core.String part, [core.String contentOwnerId = UNSPECIFIED]) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    $pathParams["id"] = id;
-    $pathParams["part"] = part;
+    if (UNSPECIFIED != id) $queryParams["id"] = id;
+    if (UNSPECIFIED != part) $queryParams["part"] = part;
+    if (UNSPECIFIED != contentOwnerId) $queryParams["contentOwnerId"] = contentOwnerId;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -639,6 +650,9 @@ class PlaylistItem extends IdentityHash {
   /** Basic details about the playlist item: title, description, thumbnails. */
   PlaylistItemSnippet snippet;
 
+  /** Content details about the playlist item: start and end clipping time. */
+  PlaylistItemContentDetails contentDetails;
+
   /** The type of this API resource. */
   core.String kind;
 
@@ -653,6 +667,7 @@ class PlaylistItem extends IdentityHash {
     if (json == null) return null;
     final result = new PlaylistItem();
     result.snippet = PlaylistItemSnippet.parse(json["snippet"]);
+    result.contentDetails = PlaylistItemContentDetails.parse(json["contentDetails"]);
     result.kind = identity(json["kind"]);
     result.etag = identity(json["etag"]);
     result.id = identity(json["id"]);
@@ -663,9 +678,42 @@ class PlaylistItem extends IdentityHash {
     if (value == null) return null;
     final result = {};
     result["snippet"] = PlaylistItemSnippet.serialize(value.snippet);
+    result["contentDetails"] = PlaylistItemContentDetails.serialize(value.contentDetails);
     result["kind"] = identity(value.kind);
     result["etag"] = identity(value.etag);
     result["id"] = identity(value.id);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema .PlaylistItemContentDetails
+class PlaylistItemContentDetails extends IdentityHash {
+  /** The time video playback begins. */
+  core.String startAt;
+
+  /** The time video playback ends. */
+  core.String endAt;
+
+  /** ID of the video. */
+  core.String videoId;
+
+  /** Parses an instance from its JSON representation. */
+  static PlaylistItemContentDetails parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new PlaylistItemContentDetails();
+    result.startAt = identity(json["startAt"]);
+    result.endAt = identity(json["endAt"]);
+    result.videoId = identity(json["videoId"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(PlaylistItemContentDetails value) {
+    if (value == null) return null;
+    final result = {};
+    result["startAt"] = identity(value.startAt);
+    result["endAt"] = identity(value.endAt);
+    result["videoId"] = identity(value.videoId);
     return result;
   }
   toString() => serialize(this).toString();

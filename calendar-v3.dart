@@ -998,7 +998,7 @@ class EventsResource extends core.Object {
     final $pathParams = {};
     $pathParams["calendarId"] = calendarId;
     $pathParams["eventId"] = eventId;
-    $pathParams["destination"] = destination;
+    if (UNSPECIFIED != destination) $queryParams["destination"] = destination;
     if (UNSPECIFIED != sendNotifications) $queryParams["sendNotifications"] = sendNotifications;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
@@ -1284,7 +1284,7 @@ class EventsResource extends core.Object {
     final $headers = {};
     final $pathParams = {};
     $pathParams["calendarId"] = calendarId;
-    $pathParams["text"] = text;
+    if (UNSPECIFIED != text) $queryParams["text"] = text;
     if (UNSPECIFIED != sendNotifications) $queryParams["sendNotifications"] = sendNotifications;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;

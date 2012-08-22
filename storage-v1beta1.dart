@@ -85,7 +85,7 @@ class StorageApi extends core.Object {
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}storage/v1beta1/20120626 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}storage/v1beta1/20120806 google-api-dart-client/${clientVersion}";
   }
 
 
@@ -1002,7 +1002,7 @@ class BucketsResource extends core.Object {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    $pathParams["projectId"] = projectId;
+    if (UNSPECIFIED != projectId) $queryParams["projectId"] = projectId;
     if (UNSPECIFIED != maxResults) $queryParams["max-results"] = maxResults;
     if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
     if (UNSPECIFIED != projection) $queryParams["projection"] = projection;
@@ -1549,6 +1549,9 @@ class Object extends IdentityHash {
   /** The name of this object. Required if not specified by URL parameter. */
   core.String name;
 
+  /** Content-Language of the object data. */
+  core.String contentLanguage;
+
   /**
  * Object media data. Provided on your behalf when uploading raw media or multipart/related with an
  * auxiliary media part.
@@ -1588,6 +1591,7 @@ class Object extends IdentityHash {
     final result = new Object();
     result.kind = identity(json["kind"]);
     result.name = identity(json["name"]);
+    result.contentLanguage = identity(json["contentLanguage"]);
     result.media = ObjectMedia.parse(json["media"]);
     result.bucket = identity(json["bucket"]);
     result.contentEncoding = identity(json["contentEncoding"]);
@@ -1606,6 +1610,7 @@ class Object extends IdentityHash {
     final result = {};
     result["kind"] = identity(value.kind);
     result["name"] = identity(value.name);
+    result["contentLanguage"] = identity(value.contentLanguage);
     result["media"] = ObjectMedia.serialize(value.media);
     result["bucket"] = identity(value.bucket);
     result["contentEncoding"] = identity(value.contentEncoding);

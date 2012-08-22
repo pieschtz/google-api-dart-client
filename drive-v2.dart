@@ -97,7 +97,7 @@ class DriveApi extends core.Object {
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}drive/v2/20120727 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}drive/v2/20120816 google-api-dart-client/${clientVersion}";
   }
 
 
@@ -1767,7 +1767,9 @@ class App extends IdentityHash {
   /** The ID of the app. */
   core.String id;
 
-  /** The name of the type of object this app creates. */
+  /**
+ * The type of object this app creates (e.g. Chart). If empty, the app name should be used instead.
+ */
   core.String objectType;
 
   /** Parses an instance from its JSON representation. */

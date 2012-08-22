@@ -76,7 +76,7 @@ class YoutubeAnalyticsApi extends core.Object {
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}youtubeAnalytics/v1beta1/20120710 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}youtubeAnalytics/v1beta1/20120816 google-api-dart-client/${clientVersion}";
   }
 
 
@@ -120,10 +120,10 @@ class ReportsResource extends core.Object {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    $pathParams["ids"] = ids;
-    $pathParams["start-date"] = startDate;
-    $pathParams["end-date"] = endDate;
-    $pathParams["metrics"] = metrics;
+    if (UNSPECIFIED != ids) $queryParams["ids"] = ids;
+    if (UNSPECIFIED != startDate) $queryParams["start-date"] = startDate;
+    if (UNSPECIFIED != endDate) $queryParams["end-date"] = endDate;
+    if (UNSPECIFIED != metrics) $queryParams["metrics"] = metrics;
     if (UNSPECIFIED != maxResults) $queryParams["max-results"] = maxResults;
     if (UNSPECIFIED != sort) $queryParams["sort"] = sort;
     if (UNSPECIFIED != dimensions) $queryParams["dimensions"] = dimensions;

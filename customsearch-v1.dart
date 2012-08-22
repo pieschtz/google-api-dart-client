@@ -76,7 +76,7 @@ class CustomsearchApi extends core.Object {
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}customsearch/v1/20120511 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}customsearch/v1/20120718 google-api-dart-client/${clientVersion}";
   }
 
 }
@@ -136,7 +136,7 @@ class CseResource extends core.Object {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    $pathParams["q"] = q;
+    if (UNSPECIFIED != q) $queryParams["q"] = q;
     if (UNSPECIFIED != sort) $queryParams["sort"] = sort;
     if (UNSPECIFIED != orTerms) $queryParams["orTerms"] = orTerms;
     if (UNSPECIFIED != highRange) $queryParams["highRange"] = highRange;

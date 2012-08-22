@@ -91,7 +91,7 @@ class AdsenseApi extends core.Object {
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}adsense/v1.1/20120717 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}adsense/v1.1/20120806 google-api-dart-client/${clientVersion}";
   }
 
 
@@ -358,8 +358,8 @@ class ReportsResource extends core.Object {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    $pathParams["startDate"] = startDate;
-    $pathParams["endDate"] = endDate;
+    if (UNSPECIFIED != startDate) $queryParams["startDate"] = startDate;
+    if (UNSPECIFIED != endDate) $queryParams["endDate"] = endDate;
     if (UNSPECIFIED != sort) $queryParams["sort"] = sort;
     if (UNSPECIFIED != locale) $queryParams["locale"] = locale;
     if (UNSPECIFIED != metric) $queryParams["metric"] = metric;
@@ -743,8 +743,8 @@ class AccountsReportsResourceResource extends core.Object {
     final $headers = {};
     final $pathParams = {};
     $pathParams["accountId"] = accountId;
-    $pathParams["startDate"] = startDate;
-    $pathParams["endDate"] = endDate;
+    if (UNSPECIFIED != startDate) $queryParams["startDate"] = startDate;
+    if (UNSPECIFIED != endDate) $queryParams["endDate"] = endDate;
     if (UNSPECIFIED != sort) $queryParams["sort"] = sort;
     if (UNSPECIFIED != locale) $queryParams["locale"] = locale;
     if (UNSPECIFIED != metric) $queryParams["metric"] = metric;

@@ -88,7 +88,7 @@ class BooksApi extends core.Object {
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}books/v1/20120614 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}books/v1/20120806 google-api-dart-client/${clientVersion}";
   }
 
 
@@ -220,7 +220,7 @@ class LayersAnnotationDataResourceResource extends core.Object {
     final $pathParams = {};
     $pathParams["volumeId"] = volumeId;
     $pathParams["layerId"] = layerId;
-    $pathParams["contentVersion"] = contentVersion;
+    if (UNSPECIFIED != contentVersion) $queryParams["contentVersion"] = contentVersion;
     if (UNSPECIFIED != scale) $queryParams["scale"] = scale;
     if (UNSPECIFIED != source) $queryParams["source"] = source;
     if (UNSPECIFIED != locale) $queryParams["locale"] = locale;
@@ -273,7 +273,7 @@ class LayersAnnotationDataResourceResource extends core.Object {
     $pathParams["volumeId"] = volumeId;
     $pathParams["layerId"] = layerId;
     $pathParams["annotationDataId"] = annotationDataId;
-    $pathParams["contentVersion"] = contentVersion;
+    if (UNSPECIFIED != contentVersion) $queryParams["contentVersion"] = contentVersion;
     if (UNSPECIFIED != scale) $queryParams["scale"] = scale;
     if (UNSPECIFIED != locale) $queryParams["locale"] = locale;
     if (UNSPECIFIED != h) $queryParams["h"] = h;
@@ -334,7 +334,7 @@ class LayersVolumeAnnotationsResourceResource extends core.Object {
     final $pathParams = {};
     $pathParams["volumeId"] = volumeId;
     $pathParams["layerId"] = layerId;
-    $pathParams["contentVersion"] = contentVersion;
+    if (UNSPECIFIED != contentVersion) $queryParams["contentVersion"] = contentVersion;
     if (UNSPECIFIED != showDeleted) $queryParams["showDeleted"] = showDeleted;
     if (UNSPECIFIED != endPosition) $queryParams["endPosition"] = endPosition;
     if (UNSPECIFIED != endOffset) $queryParams["endOffset"] = endOffset;
@@ -550,8 +550,8 @@ class MyconfigResource extends core.Object {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    $pathParams["volumeIds"] = volumeIds;
-    $pathParams["cpksver"] = cpksver;
+    if (UNSPECIFIED != volumeIds) $queryParams["volumeIds"] = volumeIds;
+    if (UNSPECIFIED != cpksver) $queryParams["cpksver"] = cpksver;
     if (UNSPECIFIED != locale) $queryParams["locale"] = locale;
     if (UNSPECIFIED != source) $queryParams["source"] = source;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
@@ -587,10 +587,10 @@ class MyconfigResource extends core.Object {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    $pathParams["source"] = source;
-    $pathParams["volumeId"] = volumeId;
-    $pathParams["nonce"] = nonce;
-    $pathParams["cpksver"] = cpksver;
+    if (UNSPECIFIED != source) $queryParams["source"] = source;
+    if (UNSPECIFIED != volumeId) $queryParams["volumeId"] = volumeId;
+    if (UNSPECIFIED != nonce) $queryParams["nonce"] = nonce;
+    if (UNSPECIFIED != cpksver) $queryParams["cpksver"] = cpksver;
     if (UNSPECIFIED != locale) $queryParams["locale"] = locale;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
@@ -626,9 +626,9 @@ class MyconfigResource extends core.Object {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    $pathParams["source"] = source;
-    $pathParams["nonce"] = nonce;
-    $pathParams["cpksver"] = cpksver;
+    if (UNSPECIFIED != source) $queryParams["source"] = source;
+    if (UNSPECIFIED != nonce) $queryParams["nonce"] = nonce;
+    if (UNSPECIFIED != cpksver) $queryParams["cpksver"] = cpksver;
     if (UNSPECIFIED != locale) $queryParams["locale"] = locale;
     if (UNSPECIFIED != showPreorders) $queryParams["showPreorders"] = showPreorders;
     if (UNSPECIFIED != volumeIds) $queryParams["volumeIds"] = volumeIds;
@@ -687,7 +687,7 @@ class VolumesResource extends core.Object {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    $pathParams["q"] = q;
+    if (UNSPECIFIED != q) $queryParams["q"] = q;
     if (UNSPECIFIED != orderBy) $queryParams["orderBy"] = orderBy;
     if (UNSPECIFIED != projection) $queryParams["projection"] = projection;
     if (UNSPECIFIED != libraryRestrict) $queryParams["libraryRestrict"] = libraryRestrict;
@@ -1178,7 +1178,7 @@ class MylibraryBookshelvesResourceResource extends core.Object {
     final $headers = {};
     final $pathParams = {};
     $pathParams["shelf"] = shelf;
-    $pathParams["volumeId"] = volumeId;
+    if (UNSPECIFIED != volumeId) $queryParams["volumeId"] = volumeId;
     if (UNSPECIFIED != source) $queryParams["source"] = source;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
@@ -1306,7 +1306,7 @@ class MylibraryBookshelvesResourceResource extends core.Object {
     final $headers = {};
     final $pathParams = {};
     $pathParams["shelf"] = shelf;
-    $pathParams["volumeId"] = volumeId;
+    if (UNSPECIFIED != volumeId) $queryParams["volumeId"] = volumeId;
     if (UNSPECIFIED != source) $queryParams["source"] = source;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
@@ -1342,8 +1342,8 @@ class MylibraryBookshelvesResourceResource extends core.Object {
     final $headers = {};
     final $pathParams = {};
     $pathParams["shelf"] = shelf;
-    $pathParams["volumeId"] = volumeId;
-    $pathParams["volumePosition"] = volumePosition;
+    if (UNSPECIFIED != volumeId) $queryParams["volumeId"] = volumeId;
+    if (UNSPECIFIED != volumePosition) $queryParams["volumePosition"] = volumePosition;
     if (UNSPECIFIED != source) $queryParams["source"] = source;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
@@ -1474,8 +1474,8 @@ class MylibraryReadingpositionsResourceResource extends core.Object {
     final $headers = {};
     final $pathParams = {};
     $pathParams["volumeId"] = volumeId;
-    $pathParams["timestamp"] = timestamp;
-    $pathParams["position"] = position;
+    if (UNSPECIFIED != timestamp) $queryParams["timestamp"] = timestamp;
+    if (UNSPECIFIED != position) $queryParams["position"] = position;
     if (UNSPECIFIED != source) $queryParams["source"] = source;
     if (UNSPECIFIED != contentVersion) $queryParams["contentVersion"] = contentVersion;
     if (UNSPECIFIED != action) $queryParams["action"] = action;
@@ -2194,6 +2194,12 @@ class BooksLayerGeoDataGeo extends IdentityHash {
   core.String countryCode;
 
   /**
+ * The display title and localized canonical name to use when searching for this entity on Google
+ * search.
+ */
+  core.String title;
+
+  /**
  * The Zoom level to use for the map. Zoom levels between 0 (the lowest zoom level, in which the
  * entire world can be seen on one map) to 21+ (down to individual buildings). See:
  * https://developers.google.com/maps/documentation/staticmaps/#Zoomlevels
@@ -2217,9 +2223,6 @@ class BooksLayerGeoDataGeo extends IdentityHash {
  */
   core.List<core.List<BooksLayerGeoDataGeoBoundary>> boundary;
 
-  /** The resolution of the location. Ex: POI_LEVEL */
-  core.String resolution;
-
   /** The viewport for showing this location. This is a latitude, longitude rectangle. */
   BooksLayerGeoDataGeoViewport viewport;
 
@@ -2231,12 +2234,12 @@ class BooksLayerGeoDataGeo extends IdentityHash {
     if (json == null) return null;
     final result = new BooksLayerGeoDataGeo();
     result.countryCode = identity(json["countryCode"]);
+    result.title = identity(json["title"]);
     result.zoom = identity(json["zoom"]);
     result.longitude = identity(json["longitude"]);
     result.mapType = identity(json["mapType"]);
     result.latitude = identity(json["latitude"]);
     result.boundary = map(map(BooksLayerGeoDataGeoBoundary.parse))(json["boundary"]);
-    result.resolution = identity(json["resolution"]);
     result.viewport = BooksLayerGeoDataGeoViewport.parse(json["viewport"]);
     result.cachePolicy = identity(json["cachePolicy"]);
     return result;
@@ -2246,12 +2249,12 @@ class BooksLayerGeoDataGeo extends IdentityHash {
     if (value == null) return null;
     final result = {};
     result["countryCode"] = identity(value.countryCode);
+    result["title"] = identity(value.title);
     result["zoom"] = identity(value.zoom);
     result["longitude"] = identity(value.longitude);
     result["mapType"] = identity(value.mapType);
     result["latitude"] = identity(value.latitude);
     result["boundary"] = map(map(BooksLayerGeoDataGeoBoundary.serialize))(value.boundary);
-    result["resolution"] = identity(value.resolution);
     result["viewport"] = BooksLayerGeoDataGeoViewport.serialize(value.viewport);
     result["cachePolicy"] = identity(value.cachePolicy);
     return result;

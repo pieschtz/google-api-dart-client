@@ -33,16 +33,18 @@ class FusiontablesApi extends core.Object {
   /** The application name, used in the user-agent header */
   final core.String applicationName;
   FusiontablesApi get _$service() => this;
+  StyleResource _style;
+  StyleResource get style() => _style;
   ColumnResource _column;
   ColumnResource get column() => _column;
   QueryResource _query;
   QueryResource get query() => _query;
-  StyleResource _style;
-  StyleResource get style() => _style;
   TemplateResource _template;
   TemplateResource get template() => _template;
   TableResource _table;
   TableResource get table() => _table;
+  ImportResource _import;
+  ImportResource get import() => _import;
   
   /** Returns response with indentations and line breaks. */
   core.bool prettyPrint;
@@ -80,15 +82,16 @@ class FusiontablesApi extends core.Object {
           .replaceAll(const core.RegExp(@'\s+'), '_')
           .replaceAll(const core.RegExp(@'[^-_.,0-9a-zA-Z]'), '')
   { 
+    _style = new StyleResource._internal(this);
     _column = new ColumnResource._internal(this);
     _query = new QueryResource._internal(this);
-    _style = new StyleResource._internal(this);
     _template = new TemplateResource._internal(this);
     _table = new TableResource._internal(this);
+    _import = new ImportResource._internal(this);
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}fusiontables/v1/20120726 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}fusiontables/v1/20120806 google-api-dart-client/${clientVersion}";
   }
 
 
@@ -97,6 +100,216 @@ class FusiontablesApi extends core.Object {
 
   /** OAuth2 scope: View your Fusion Tables */
   static final core.String FUSIONTABLES_READONLY_SCOPE = "https://www.googleapis.com/auth/fusiontables.readonly";
+}
+
+// Resource .StyleResource
+class StyleResource extends core.Object {
+  final FusiontablesApi _$service;
+  
+  StyleResource._internal(FusiontablesApi $service) : _$service = $service;
+
+  // Method StyleResource.Insert
+  /**
+   * Adds a new style for the table.
+   *
+   *    * [content] the StyleSetting
+   *    * [tableId] Table for which a new style is being added
+   */
+  core.Future<StyleSetting> insert(core.String tableId, StyleSetting content) {
+    final $queryParams = {};
+    final $headers = {};
+    final $pathParams = {};
+    $pathParams["tableId"] = tableId;
+    if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
+    if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
+    if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
+    if (_$service.oauthToken != null) $headers["Authorization"] = "Bearer ${_$service.oauthToken}";
+    if (_$service.key != null) $queryParams["key"] = _$service.key;
+    if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
+    if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
+    $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
+    $headers["Content-Type"] = "application/json";
+    final $body = JSON.stringify(StyleSetting.serialize(content));
+    final $path = "tables/{tableId}/styles";
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
+    final $http = new HttpRequest($url, "POST", $headers);
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new core.Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => StyleSetting.parse(JSON.parse($text)));
+  }
+
+  // Method StyleResource.Get
+  /**
+   * Gets a specific style.
+   *
+   *    * [tableId] Table to which the requested style belongs
+   *    * [styleId] Identifier (integer) for a specific style in a table
+   */
+  core.Future<StyleSetting> get(core.String tableId, core.int styleId) {
+    final $queryParams = {};
+    final $headers = {};
+    final $pathParams = {};
+    $pathParams["tableId"] = tableId;
+    $pathParams["styleId"] = styleId;
+    if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
+    if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
+    if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
+    if (_$service.oauthToken != null) $headers["Authorization"] = "Bearer ${_$service.oauthToken}";
+    if (_$service.key != null) $queryParams["key"] = _$service.key;
+    if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
+    if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
+    $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
+    final $path = "tables/{tableId}/styles/{styleId}";
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
+    final $http = new HttpRequest($url, "GET", $headers);
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new core.Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => StyleSetting.parse(JSON.parse($text)));
+  }
+
+  // Method StyleResource.List
+  /**
+   * Retrieves a list of styles.
+   *
+   *    * [tableId] Table whose styles are being listed
+   *    * [pageToken] Continuation token specifying which result page to return. Optional.
+   *    * [maxResults] Maximum number of styles to return. Optional. Default is 5.
+
+  Minimum: 0.
+   */
+  core.Future<StyleSettingList> list(core.String tableId, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
+    final $queryParams = {};
+    final $headers = {};
+    final $pathParams = {};
+    $pathParams["tableId"] = tableId;
+    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
+    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
+    if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
+    if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
+    if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
+    if (_$service.oauthToken != null) $headers["Authorization"] = "Bearer ${_$service.oauthToken}";
+    if (_$service.key != null) $queryParams["key"] = _$service.key;
+    if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
+    if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
+    $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
+    final $path = "tables/{tableId}/styles";
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
+    final $http = new HttpRequest($url, "GET", $headers);
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new core.Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => StyleSettingList.parse(JSON.parse($text)));
+  }
+
+  // Method StyleResource.Update
+  /**
+   * Updates an existing style.
+   *
+   *    * [content] the StyleSetting
+   *    * [tableId] Table whose style is being updated.
+   *    * [styleId] Identifier (within a table) for the style being updated.
+   */
+  core.Future<StyleSetting> update(core.String tableId, core.int styleId, StyleSetting content) {
+    final $queryParams = {};
+    final $headers = {};
+    final $pathParams = {};
+    $pathParams["tableId"] = tableId;
+    $pathParams["styleId"] = styleId;
+    if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
+    if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
+    if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
+    if (_$service.oauthToken != null) $headers["Authorization"] = "Bearer ${_$service.oauthToken}";
+    if (_$service.key != null) $queryParams["key"] = _$service.key;
+    if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
+    if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
+    $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
+    $headers["Content-Type"] = "application/json";
+    final $body = JSON.stringify(StyleSetting.serialize(content));
+    final $path = "tables/{tableId}/styles/{styleId}";
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
+    final $http = new HttpRequest($url, "PUT", $headers);
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new core.Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => StyleSetting.parse(JSON.parse($text)));
+  }
+
+  // Method StyleResource.Patch
+  /**
+   * Updates an existing style. This method supports patch semantics.
+   *
+   *    * [content] the StyleSetting
+   *    * [tableId] Table whose style is being updated.
+   *    * [styleId] Identifier (within a table) for the style being updated.
+   */
+  core.Future<StyleSetting> patch(core.String tableId, core.int styleId, StyleSetting content) {
+    final $queryParams = {};
+    final $headers = {};
+    final $pathParams = {};
+    $pathParams["tableId"] = tableId;
+    $pathParams["styleId"] = styleId;
+    if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
+    if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
+    if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
+    if (_$service.oauthToken != null) $headers["Authorization"] = "Bearer ${_$service.oauthToken}";
+    if (_$service.key != null) $queryParams["key"] = _$service.key;
+    if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
+    if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
+    $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
+    $headers["Content-Type"] = "application/json";
+    final $body = JSON.stringify(StyleSetting.serialize(content));
+    final $path = "tables/{tableId}/styles/{styleId}";
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
+    final $http = new HttpRequest($url, "PATCH", $headers);
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new core.Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => StyleSetting.parse(JSON.parse($text)));
+  }
+
+  // Method StyleResource.Delete
+  /**
+   * Deletes a style.
+   *
+   *    * [tableId] Table from which the style is being deleted
+   *    * [styleId] Identifier (within a table) for the style being deleted
+   */
+  core.Future delete(core.String tableId, core.int styleId) {
+    final $queryParams = {};
+    final $headers = {};
+    final $pathParams = {};
+    $pathParams["tableId"] = tableId;
+    $pathParams["styleId"] = styleId;
+    if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
+    if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
+    if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
+    if (_$service.oauthToken != null) $headers["Authorization"] = "Bearer ${_$service.oauthToken}";
+    if (_$service.key != null) $queryParams["key"] = _$service.key;
+    if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
+    if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
+    $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
+    final $path = "tables/{tableId}/styles/{styleId}";
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
+    final $http = new HttpRequest($url, "DELETE", $headers);
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new core.Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => identity(JSON.parse($text)));
+  }
 }
 
 // Resource .ColumnResource
@@ -328,7 +541,7 @@ class QueryResource extends core.Object {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    $pathParams["sql"] = sql;
+    if (UNSPECIFIED != sql) $queryParams["sql"] = sql;
     if (UNSPECIFIED != typed) $queryParams["typed"] = typed;
     if (UNSPECIFIED != hdrs) $queryParams["hdrs"] = hdrs;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
@@ -352,9 +565,9 @@ class QueryResource extends core.Object {
 
   // Method QueryResource.Sql
   /**
-   * Executes an SQL SELECT/INSERT/UPDATE/DELETE/SHOW/DESCRIBE statement.
+   * Executes an SQL SELECT/INSERT/UPDATE/DELETE/SHOW/DESCRIBE/CREATE statement.
    *
-   *    * [sql] An SQL SELECT/SHOW/DESCRIBE/INSERT/UPDATE/DELETE statement.
+   *    * [sql] An SQL SELECT/SHOW/DESCRIBE/INSERT/UPDATE/DELETE/CREATE statement.
    *    * [typed] Should typed values be returned in the (JSON) response -- numbers for numeric values and parsed
    *        geometries for KML values? Default is true.
    *    * [hdrs] Should column names be included (in the first row)?. Default is true.
@@ -363,7 +576,7 @@ class QueryResource extends core.Object {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    $pathParams["sql"] = sql;
+    if (UNSPECIFIED != sql) $queryParams["sql"] = sql;
     if (UNSPECIFIED != typed) $queryParams["typed"] = typed;
     if (UNSPECIFIED != hdrs) $queryParams["hdrs"] = hdrs;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
@@ -383,216 +596,6 @@ class QueryResource extends core.Object {
     return $authenticatedHttp
         .chain((final $req) => $req.request())
         .transform((final $text) => Sqlresponse.parse(JSON.parse($text)));
-  }
-}
-
-// Resource .StyleResource
-class StyleResource extends core.Object {
-  final FusiontablesApi _$service;
-  
-  StyleResource._internal(FusiontablesApi $service) : _$service = $service;
-
-  // Method StyleResource.Insert
-  /**
-   * Adds a new style for the table.
-   *
-   *    * [content] the StyleSetting
-   *    * [tableId] Table for which a new style is being added
-   */
-  core.Future<StyleSetting> insert(core.String tableId, StyleSetting content) {
-    final $queryParams = {};
-    final $headers = {};
-    final $pathParams = {};
-    $pathParams["tableId"] = tableId;
-    if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
-    if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
-    if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
-    if (_$service.oauthToken != null) $headers["Authorization"] = "Bearer ${_$service.oauthToken}";
-    if (_$service.key != null) $queryParams["key"] = _$service.key;
-    if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
-    if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
-    $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
-    $headers["Content-Type"] = "application/json";
-    final $body = JSON.stringify(StyleSetting.serialize(content));
-    final $path = "tables/{tableId}/styles";
-    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
-    final $authenticatedHttp = (_$service.authenticator == null)
-        ? new core.Future.immediate($http)
-        : _$service.authenticator.authenticate($http);
-    return $authenticatedHttp
-        .chain((final $req) => $req.request($body))
-        .transform((final $text) => StyleSetting.parse(JSON.parse($text)));
-  }
-
-  // Method StyleResource.Get
-  /**
-   * Gets a specific style.
-   *
-   *    * [tableId] Table to which the requested style belongs
-   *    * [styleId] Identifier (integer) for a specific style in a table
-   */
-  core.Future<StyleSetting> get(core.String tableId, core.int styleId) {
-    final $queryParams = {};
-    final $headers = {};
-    final $pathParams = {};
-    $pathParams["tableId"] = tableId;
-    $pathParams["styleId"] = styleId;
-    if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
-    if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
-    if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
-    if (_$service.oauthToken != null) $headers["Authorization"] = "Bearer ${_$service.oauthToken}";
-    if (_$service.key != null) $queryParams["key"] = _$service.key;
-    if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
-    if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
-    $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
-    final $path = "tables/{tableId}/styles/{styleId}";
-    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
-    final $authenticatedHttp = (_$service.authenticator == null)
-        ? new core.Future.immediate($http)
-        : _$service.authenticator.authenticate($http);
-    return $authenticatedHttp
-        .chain((final $req) => $req.request())
-        .transform((final $text) => StyleSetting.parse(JSON.parse($text)));
-  }
-
-  // Method StyleResource.List
-  /**
-   * Retrieves a list of styles.
-   *
-   *    * [tableId] Table whose styles are being listed
-   *    * [pageToken] Continuation token specifying which result page to return. Optional.
-   *    * [maxResults] Maximum number of styles to return. Optional. Default is 5.
-
-  Minimum: 0.
-   */
-  core.Future<StyleSettingList> list(core.String tableId, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
-    final $queryParams = {};
-    final $headers = {};
-    final $pathParams = {};
-    $pathParams["tableId"] = tableId;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
-    if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
-    if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
-    if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
-    if (_$service.oauthToken != null) $headers["Authorization"] = "Bearer ${_$service.oauthToken}";
-    if (_$service.key != null) $queryParams["key"] = _$service.key;
-    if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
-    if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
-    $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
-    final $path = "tables/{tableId}/styles";
-    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
-    final $authenticatedHttp = (_$service.authenticator == null)
-        ? new core.Future.immediate($http)
-        : _$service.authenticator.authenticate($http);
-    return $authenticatedHttp
-        .chain((final $req) => $req.request())
-        .transform((final $text) => StyleSettingList.parse(JSON.parse($text)));
-  }
-
-  // Method StyleResource.Update
-  /**
-   * Updates an existing style.
-   *
-   *    * [content] the StyleSetting
-   *    * [tableId] Table whose style is being updated.
-   *    * [styleId] Identifier (within a table) for the style being updated.
-   */
-  core.Future<StyleSetting> update(core.String tableId, core.int styleId, StyleSetting content) {
-    final $queryParams = {};
-    final $headers = {};
-    final $pathParams = {};
-    $pathParams["tableId"] = tableId;
-    $pathParams["styleId"] = styleId;
-    if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
-    if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
-    if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
-    if (_$service.oauthToken != null) $headers["Authorization"] = "Bearer ${_$service.oauthToken}";
-    if (_$service.key != null) $queryParams["key"] = _$service.key;
-    if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
-    if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
-    $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
-    $headers["Content-Type"] = "application/json";
-    final $body = JSON.stringify(StyleSetting.serialize(content));
-    final $path = "tables/{tableId}/styles/{styleId}";
-    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PUT", $headers);
-    final $authenticatedHttp = (_$service.authenticator == null)
-        ? new core.Future.immediate($http)
-        : _$service.authenticator.authenticate($http);
-    return $authenticatedHttp
-        .chain((final $req) => $req.request($body))
-        .transform((final $text) => StyleSetting.parse(JSON.parse($text)));
-  }
-
-  // Method StyleResource.Patch
-  /**
-   * Updates an existing style. This method supports patch semantics.
-   *
-   *    * [content] the StyleSetting
-   *    * [tableId] Table whose style is being updated.
-   *    * [styleId] Identifier (within a table) for the style being updated.
-   */
-  core.Future<StyleSetting> patch(core.String tableId, core.int styleId, StyleSetting content) {
-    final $queryParams = {};
-    final $headers = {};
-    final $pathParams = {};
-    $pathParams["tableId"] = tableId;
-    $pathParams["styleId"] = styleId;
-    if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
-    if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
-    if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
-    if (_$service.oauthToken != null) $headers["Authorization"] = "Bearer ${_$service.oauthToken}";
-    if (_$service.key != null) $queryParams["key"] = _$service.key;
-    if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
-    if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
-    $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
-    $headers["Content-Type"] = "application/json";
-    final $body = JSON.stringify(StyleSetting.serialize(content));
-    final $path = "tables/{tableId}/styles/{styleId}";
-    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PATCH", $headers);
-    final $authenticatedHttp = (_$service.authenticator == null)
-        ? new core.Future.immediate($http)
-        : _$service.authenticator.authenticate($http);
-    return $authenticatedHttp
-        .chain((final $req) => $req.request($body))
-        .transform((final $text) => StyleSetting.parse(JSON.parse($text)));
-  }
-
-  // Method StyleResource.Delete
-  /**
-   * Deletes a style.
-   *
-   *    * [tableId] Table from which the style is being deleted
-   *    * [styleId] Identifier (within a table) for the style being deleted
-   */
-  core.Future delete(core.String tableId, core.int styleId) {
-    final $queryParams = {};
-    final $headers = {};
-    final $pathParams = {};
-    $pathParams["tableId"] = tableId;
-    $pathParams["styleId"] = styleId;
-    if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
-    if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
-    if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
-    if (_$service.oauthToken != null) $headers["Authorization"] = "Bearer ${_$service.oauthToken}";
-    if (_$service.key != null) $queryParams["key"] = _$service.key;
-    if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
-    if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
-    $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
-    final $path = "tables/{tableId}/styles/{styleId}";
-    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "DELETE", $headers);
-    final $authenticatedHttp = (_$service.authenticator == null)
-        ? new core.Future.immediate($http)
-        : _$service.authenticator.authenticate($http);
-    return $authenticatedHttp
-        .chain((final $req) => $req.request())
-        .transform((final $text) => identity(JSON.parse($text)));
   }
 }
 
@@ -1012,6 +1015,47 @@ class TableResource extends core.Object {
   }
 }
 
+// Resource .ImportResource
+class ImportResource extends core.Object {
+  final FusiontablesApi _$service;
+  
+  ImportResource._internal(FusiontablesApi $service) : _$service = $service;
+
+  // Method ImportResource.Insert
+  /**
+   * Import more rows into a table.
+   *
+   *    * [tableId] The table into which new rows are being imported.
+   *    * [delimiter] The delimiter used to separate cell values. Default is ','.
+   *    * [encoding] The encoding of the content. Default is UTF-8.
+   */
+  core.Future<Import> insert(core.String tableId, [core.String delimiter = UNSPECIFIED, core.String encoding = UNSPECIFIED]) {
+    final $queryParams = {};
+    final $headers = {};
+    final $pathParams = {};
+    $pathParams["tableId"] = tableId;
+    if (UNSPECIFIED != delimiter) $queryParams["delimiter"] = delimiter;
+    if (UNSPECIFIED != encoding) $queryParams["encoding"] = encoding;
+    if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
+    if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
+    if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
+    if (_$service.oauthToken != null) $headers["Authorization"] = "Bearer ${_$service.oauthToken}";
+    if (_$service.key != null) $queryParams["key"] = _$service.key;
+    if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
+    if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
+    $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
+    final $path = "tables/{tableId}/import";
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
+    final $http = new HttpRequest($url, "POST", $headers);
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new core.Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Import.parse(JSON.parse($text)));
+  }
+}
+
 // Schema .Bucket
 class Bucket extends IdentityHash {
   /** Opacity of the color: 0.0 (transparent) to 1.0 (opaque). */
@@ -1204,6 +1248,33 @@ class Geometry extends IdentityHash {
     result["geometry"] = identity(value.geometry);
     result["type"] = identity(value.type);
     result["geometries"] = map(identity)(value.geometries);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema .Import
+class Import extends IdentityHash {
+  /** The number of rows received from the import request. */
+  core.String numRowsReceived;
+
+  /** Type name: a template for an import request. */
+  core.String kind;
+
+  /** Parses an instance from its JSON representation. */
+  static Import parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new Import();
+    result.numRowsReceived = identity(json["numRowsReceived"]);
+    result.kind = identity(json["kind"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(Import value) {
+    if (value == null) return null;
+    final result = {};
+    result["numRowsReceived"] = identity(value.numRowsReceived);
+    result["kind"] = identity(value.kind);
     return result;
   }
   toString() => serialize(this).toString();

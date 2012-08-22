@@ -79,7 +79,7 @@ class AnalyticsApi extends core.Object {
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}analytics/v3/20120726 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}analytics/v3/20120808 google-api-dart-client/${clientVersion}";
   }
 
 
@@ -377,10 +377,10 @@ class DataMcfResourceResource extends core.Object {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    $pathParams["ids"] = ids;
-    $pathParams["start-date"] = startDate;
-    $pathParams["end-date"] = endDate;
-    $pathParams["metrics"] = metrics;
+    if (UNSPECIFIED != ids) $queryParams["ids"] = ids;
+    if (UNSPECIFIED != startDate) $queryParams["start-date"] = startDate;
+    if (UNSPECIFIED != endDate) $queryParams["end-date"] = endDate;
+    if (UNSPECIFIED != metrics) $queryParams["metrics"] = metrics;
     if (UNSPECIFIED != maxResults) $queryParams["max-results"] = maxResults;
     if (UNSPECIFIED != sort) $queryParams["sort"] = sort;
     if (UNSPECIFIED != dimensions) $queryParams["dimensions"] = dimensions;
@@ -438,10 +438,10 @@ class DataGaResourceResource extends core.Object {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    $pathParams["ids"] = ids;
-    $pathParams["start-date"] = startDate;
-    $pathParams["end-date"] = endDate;
-    $pathParams["metrics"] = metrics;
+    if (UNSPECIFIED != ids) $queryParams["ids"] = ids;
+    if (UNSPECIFIED != startDate) $queryParams["start-date"] = startDate;
+    if (UNSPECIFIED != endDate) $queryParams["end-date"] = endDate;
+    if (UNSPECIFIED != metrics) $queryParams["metrics"] = metrics;
     if (UNSPECIFIED != maxResults) $queryParams["max-results"] = maxResults;
     if (UNSPECIFIED != sort) $queryParams["sort"] = sort;
     if (UNSPECIFIED != dimensions) $queryParams["dimensions"] = dimensions;

@@ -718,8 +718,8 @@ class InstancesResource extends core.Object {
     final $pathParams = {};
     $pathParams["project"] = project;
     $pathParams["instance"] = instance;
-    $pathParams["access_config"] = accessConfig;
-    $pathParams["network_interface"] = networkInterface;
+    if (UNSPECIFIED != accessConfig) $queryParams["access_config"] = accessConfig;
+    if (UNSPECIFIED != networkInterface) $queryParams["network_interface"] = networkInterface;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -823,7 +823,7 @@ class InstancesResource extends core.Object {
     final $pathParams = {};
     $pathParams["project"] = project;
     $pathParams["instance"] = instance;
-    $pathParams["network_interface"] = networkInterface;
+    if (UNSPECIFIED != networkInterface) $queryParams["network_interface"] = networkInterface;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;

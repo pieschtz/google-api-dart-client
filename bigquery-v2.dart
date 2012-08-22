@@ -88,7 +88,7 @@ class BigqueryApi extends core.Object {
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}bigquery/v2/20120726 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}bigquery/v2/20120807 google-api-dart-client/${clientVersion}";
   }
 
 
@@ -1939,16 +1939,21 @@ class QueryRequest extends IdentityHash {
  */
   core.int timeoutMs;
 
-  /**
- * [Required] A query string, following the BigQuery query syntax of the query to execute. Table
- * names should be qualified by dataset name in the format projectId:datasetId.tableId unless you
- * specify the defaultDataset value. If the table is in the same project as the job, you can omit
- * the project ID. Example: SELECT f1 FROM myProjectId:myDatasetId.myTableId.
- */
-  core.String query;
-
   /** The resource type of the request. */
   core.String kind;
+
+  /**
+ * [Optional] If set, don't actually run the query. A valid query will return an empty response,
+ * while an invalid query will return the same error it would if it wasn't a dry run.
+ */
+  core.bool dryRun;
+
+  /**
+ * [Optional] Specifies the default datasetId and projectId to assume for any unqualified table
+ * names in the query. If not set, all table names in the query string must be fully-qualified in
+ * the format projectId:datasetId.tableid.
+ */
+  DatasetReference defaultDataset;
 
   /**
  * [Optional] The maximum number of results to return per page of results. If the response list
@@ -1958,21 +1963,23 @@ class QueryRequest extends IdentityHash {
   core.int maxResults;
 
   /**
- * [Optional] Specifies the default datasetId and projectId to assume for any unqualified table
- * names in the query. If not set, all table names in the query string must be fully-qualified in
- * the format projectId:datasetId.tableid.
+ * [Required] A query string, following the BigQuery query syntax of the query to execute. Table
+ * names should be qualified by dataset name in the format projectId:datasetId.tableId unless you
+ * specify the defaultDataset value. If the table is in the same project as the job, you can omit
+ * the project ID. Example: SELECT f1 FROM myProjectId:myDatasetId.myTableId.
  */
-  DatasetReference defaultDataset;
+  core.String query;
 
   /** Parses an instance from its JSON representation. */
   static QueryRequest parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new QueryRequest();
     result.timeoutMs = identity(json["timeoutMs"]);
-    result.query = identity(json["query"]);
     result.kind = identity(json["kind"]);
-    result.maxResults = identity(json["maxResults"]);
+    result.dryRun = identity(json["dryRun"]);
     result.defaultDataset = DatasetReference.parse(json["defaultDataset"]);
+    result.maxResults = identity(json["maxResults"]);
+    result.query = identity(json["query"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
@@ -1980,10 +1987,11 @@ class QueryRequest extends IdentityHash {
     if (value == null) return null;
     final result = {};
     result["timeoutMs"] = identity(value.timeoutMs);
-    result["query"] = identity(value.query);
     result["kind"] = identity(value.kind);
-    result["maxResults"] = identity(value.maxResults);
+    result["dryRun"] = identity(value.dryRun);
     result["defaultDataset"] = DatasetReference.serialize(value.defaultDataset);
+    result["maxResults"] = identity(value.maxResults);
+    result["query"] = identity(value.query);
     return result;
   }
   toString() => serialize(this).toString();

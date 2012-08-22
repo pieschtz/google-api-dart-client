@@ -77,7 +77,7 @@ class PagespeedonlineApi extends core.Object {
   }
   core.String get userAgent() {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}pagespeedonline/v1/20120214 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}pagespeedonline/v1/20120813 google-api-dart-client/${clientVersion}";
   }
 
 }
@@ -102,7 +102,7 @@ class PagespeedapiResource extends core.Object {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    $pathParams["url"] = url;
+    if (UNSPECIFIED != url) $queryParams["url"] = url;
     if (UNSPECIFIED != locale) $queryParams["locale"] = locale;
     if (UNSPECIFIED != rule) $queryParams["rule"] = rule;
     if (UNSPECIFIED != strategy) $queryParams["strategy"] = strategy;

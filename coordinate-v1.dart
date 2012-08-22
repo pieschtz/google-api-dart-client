@@ -113,10 +113,10 @@ class JobsResource extends core.Object {
     final $headers = {};
     final $pathParams = {};
     $pathParams["teamId"] = teamId;
-    $pathParams["address"] = address;
-    $pathParams["lat"] = lat;
-    $pathParams["lng"] = lng;
-    $pathParams["title"] = title;
+    if (UNSPECIFIED != address) $queryParams["address"] = address;
+    if (UNSPECIFIED != lat) $queryParams["lat"] = lat;
+    if (UNSPECIFIED != lng) $queryParams["lng"] = lng;
+    if (UNSPECIFIED != title) $queryParams["title"] = title;
     if (UNSPECIFIED != customerName) $queryParams["customerName"] = customerName;
     if (UNSPECIFIED != note) $queryParams["note"] = note;
     if (UNSPECIFIED != assignee) $queryParams["assignee"] = assignee;
