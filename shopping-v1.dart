@@ -17,7 +17,7 @@
 #import('dart:json');
 
 #import('utils.dart');
-#import('http.dart');
+#import('http.dart', prefix:'http');
 
 // API ShoppingApi
 /**
@@ -27,14 +27,14 @@ class ShoppingApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
   final core.String baseUrl;
   /** How we should identify ourselves to the service. */
-  Authenticator authenticator;
+  http.Authenticator authenticator;
   /** The client library version */
   final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
   final core.String applicationName;
-  ShoppingApi get _$service() => this;
+  ShoppingApi get _$service => this;
   ProductsResource _products;
-  ProductsResource get products() => _products;
+  ProductsResource get products => _products;
   
   /** Returns response with indentations and line breaks. */
   core.bool prettyPrint;
@@ -67,16 +67,16 @@ class ShoppingApi extends core.Object {
   ShoppingApiAlt alt;
 
 
-  ShoppingApi([this.baseUrl = "https://www.googleapis.com/shopping/search/v1/", applicationName, this.authenticator]) :
+  ShoppingApi({this.baseUrl:"https://www.googleapis.com/shopping/search/v1/", applicationName, this.authenticator}) :
       this.applicationName = (applicationName == null) ? null : applicationName
-          .replaceAll(const core.RegExp(@'\s+'), '_')
-          .replaceAll(const core.RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+          .replaceAll(const core.RegExp(r'\s+'), '_')
+          .replaceAll(const core.RegExp(r'[^-_.,0-9a-zA-Z]'), '')
   { 
     _products = new ProductsResource._internal(this);
   }
-  core.String get userAgent() {
+  core.String get userAgent {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}shopping/v1/20120815 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}shopping/v1/20120904 google-api-dart-client/${clientVersion}";
   }
 
 
@@ -139,53 +139,53 @@ class ProductsResource extends core.Object {
    *    * [categoryRecommendationsUseGcsConfig] This parameter is currently ignored
    *    * [promotionsUseGcsConfig] Whether to return promotion information as configured in the GCS account
    */
-  core.Future<Products> list(core.String source, [core.String facetsInclude = UNSPECIFIED, core.bool plusOneEnabled = UNSPECIFIED, core.bool plusOneUseGcsConfig = UNSPECIFIED, core.bool facetsEnabled = UNSPECIFIED, core.bool relatedQueriesUseGcsConfig = UNSPECIFIED, core.bool promotionsEnabled = UNSPECIFIED, core.String channels = UNSPECIFIED, core.String currency = UNSPECIFIED, core.bool categoryRecommendationsEnabled = UNSPECIFIED, core.String facetsDiscover = UNSPECIFIED, core.String categoryRecommendationsCategory = UNSPECIFIED, core.int startIndex = UNSPECIFIED, core.String availability = UNSPECIFIED, core.String crowdBy = UNSPECIFIED, core.bool spellingEnabled = UNSPECIFIED, core.String taxonomy = UNSPECIFIED, core.bool spellingUseGcsConfig = UNSPECIFIED, core.String useCase = UNSPECIFIED, core.String location = UNSPECIFIED, core.int maxVariants = UNSPECIFIED, core.String categoriesInclude = UNSPECIFIED, core.String boostBy = UNSPECIFIED, core.bool safe = UNSPECIFIED, core.bool categoriesUseGcsConfig = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.bool facetsUseGcsConfig = UNSPECIFIED, core.bool categoriesEnabled = UNSPECIFIED, core.String plusOneStyles = UNSPECIFIED, core.String attributeFilter = UNSPECIFIED, core.bool clickTracking = UNSPECIFIED, core.String thumbnails = UNSPECIFIED, core.String language = UNSPECIFIED, core.String categoryRecommendationsInclude = UNSPECIFIED, core.String country = UNSPECIFIED, core.String rankBy = UNSPECIFIED, core.String restrictBy = UNSPECIFIED, core.String q = UNSPECIFIED, core.bool redirectsEnabled = UNSPECIFIED, core.bool redirectsUseGcsConfig = UNSPECIFIED, core.bool relatedQueriesEnabled = UNSPECIFIED, core.bool categoryRecommendationsUseGcsConfig = UNSPECIFIED, core.bool promotionsUseGcsConfig = UNSPECIFIED]) {
+  core.Future<Products> list(core.String source, {core.String facetsInclude, core.bool plusOneEnabled, core.bool plusOneUseGcsConfig, core.bool facetsEnabled, core.bool relatedQueriesUseGcsConfig, core.bool promotionsEnabled, core.String channels, core.String currency, core.bool categoryRecommendationsEnabled, core.String facetsDiscover, core.String categoryRecommendationsCategory, core.int startIndex, core.String availability, core.String crowdBy, core.bool spellingEnabled, core.String taxonomy, core.bool spellingUseGcsConfig, core.String useCase, core.String location, core.int maxVariants, core.String categoriesInclude, core.String boostBy, core.bool safe, core.bool categoriesUseGcsConfig, core.int maxResults, core.bool facetsUseGcsConfig, core.bool categoriesEnabled, core.String plusOneStyles, core.String attributeFilter, core.bool clickTracking, core.String thumbnails, core.String language, core.String categoryRecommendationsInclude, core.String country, core.String rankBy, core.String restrictBy, core.String q, core.bool redirectsEnabled, core.bool redirectsUseGcsConfig, core.bool relatedQueriesEnabled, core.bool categoryRecommendationsUseGcsConfig, core.bool promotionsUseGcsConfig}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["source"] = source;
-    if (UNSPECIFIED != facetsInclude) $queryParams["facets.include"] = facetsInclude;
-    if (UNSPECIFIED != plusOneEnabled) $queryParams["plusOne.enabled"] = plusOneEnabled;
-    if (UNSPECIFIED != plusOneUseGcsConfig) $queryParams["plusOne.useGcsConfig"] = plusOneUseGcsConfig;
-    if (UNSPECIFIED != facetsEnabled) $queryParams["facets.enabled"] = facetsEnabled;
-    if (UNSPECIFIED != relatedQueriesUseGcsConfig) $queryParams["relatedQueries.useGcsConfig"] = relatedQueriesUseGcsConfig;
-    if (UNSPECIFIED != promotionsEnabled) $queryParams["promotions.enabled"] = promotionsEnabled;
-    if (UNSPECIFIED != channels) $queryParams["channels"] = channels;
-    if (UNSPECIFIED != currency) $queryParams["currency"] = currency;
-    if (UNSPECIFIED != categoryRecommendationsEnabled) $queryParams["categoryRecommendations.enabled"] = categoryRecommendationsEnabled;
-    if (UNSPECIFIED != facetsDiscover) $queryParams["facets.discover"] = facetsDiscover;
-    if (UNSPECIFIED != categoryRecommendationsCategory) $queryParams["categoryRecommendations.category"] = categoryRecommendationsCategory;
-    if (UNSPECIFIED != startIndex) $queryParams["startIndex"] = startIndex;
-    if (UNSPECIFIED != availability) $queryParams["availability"] = availability;
-    if (UNSPECIFIED != crowdBy) $queryParams["crowdBy"] = crowdBy;
-    if (UNSPECIFIED != spellingEnabled) $queryParams["spelling.enabled"] = spellingEnabled;
-    if (UNSPECIFIED != taxonomy) $queryParams["taxonomy"] = taxonomy;
-    if (UNSPECIFIED != spellingUseGcsConfig) $queryParams["spelling.useGcsConfig"] = spellingUseGcsConfig;
-    if (UNSPECIFIED != useCase) $queryParams["useCase"] = useCase;
-    if (UNSPECIFIED != location) $queryParams["location"] = location;
-    if (UNSPECIFIED != maxVariants) $queryParams["maxVariants"] = maxVariants;
-    if (UNSPECIFIED != categoriesInclude) $queryParams["categories.include"] = categoriesInclude;
-    if (UNSPECIFIED != boostBy) $queryParams["boostBy"] = boostBy;
-    if (UNSPECIFIED != safe) $queryParams["safe"] = safe;
-    if (UNSPECIFIED != categoriesUseGcsConfig) $queryParams["categories.useGcsConfig"] = categoriesUseGcsConfig;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
-    if (UNSPECIFIED != facetsUseGcsConfig) $queryParams["facets.useGcsConfig"] = facetsUseGcsConfig;
-    if (UNSPECIFIED != categoriesEnabled) $queryParams["categories.enabled"] = categoriesEnabled;
-    if (UNSPECIFIED != plusOneStyles) $queryParams["plusOne.styles"] = plusOneStyles;
-    if (UNSPECIFIED != attributeFilter) $queryParams["attributeFilter"] = attributeFilter;
-    if (UNSPECIFIED != clickTracking) $queryParams["clickTracking"] = clickTracking;
-    if (UNSPECIFIED != thumbnails) $queryParams["thumbnails"] = thumbnails;
-    if (UNSPECIFIED != language) $queryParams["language"] = language;
-    if (UNSPECIFIED != categoryRecommendationsInclude) $queryParams["categoryRecommendations.include"] = categoryRecommendationsInclude;
-    if (UNSPECIFIED != country) $queryParams["country"] = country;
-    if (UNSPECIFIED != rankBy) $queryParams["rankBy"] = rankBy;
-    if (UNSPECIFIED != restrictBy) $queryParams["restrictBy"] = restrictBy;
-    if (UNSPECIFIED != q) $queryParams["q"] = q;
-    if (UNSPECIFIED != redirectsEnabled) $queryParams["redirects.enabled"] = redirectsEnabled;
-    if (UNSPECIFIED != redirectsUseGcsConfig) $queryParams["redirects.useGcsConfig"] = redirectsUseGcsConfig;
-    if (UNSPECIFIED != relatedQueriesEnabled) $queryParams["relatedQueries.enabled"] = relatedQueriesEnabled;
-    if (UNSPECIFIED != categoryRecommendationsUseGcsConfig) $queryParams["categoryRecommendations.useGcsConfig"] = categoryRecommendationsUseGcsConfig;
-    if (UNSPECIFIED != promotionsUseGcsConfig) $queryParams["promotions.useGcsConfig"] = promotionsUseGcsConfig;
+    if (?facetsInclude) $queryParams["facets.include"] = facetsInclude;
+    if (?plusOneEnabled) $queryParams["plusOne.enabled"] = plusOneEnabled;
+    if (?plusOneUseGcsConfig) $queryParams["plusOne.useGcsConfig"] = plusOneUseGcsConfig;
+    if (?facetsEnabled) $queryParams["facets.enabled"] = facetsEnabled;
+    if (?relatedQueriesUseGcsConfig) $queryParams["relatedQueries.useGcsConfig"] = relatedQueriesUseGcsConfig;
+    if (?promotionsEnabled) $queryParams["promotions.enabled"] = promotionsEnabled;
+    if (?channels) $queryParams["channels"] = channels;
+    if (?currency) $queryParams["currency"] = currency;
+    if (?categoryRecommendationsEnabled) $queryParams["categoryRecommendations.enabled"] = categoryRecommendationsEnabled;
+    if (?facetsDiscover) $queryParams["facets.discover"] = facetsDiscover;
+    if (?categoryRecommendationsCategory) $queryParams["categoryRecommendations.category"] = categoryRecommendationsCategory;
+    if (?startIndex) $queryParams["startIndex"] = startIndex;
+    if (?availability) $queryParams["availability"] = availability;
+    if (?crowdBy) $queryParams["crowdBy"] = crowdBy;
+    if (?spellingEnabled) $queryParams["spelling.enabled"] = spellingEnabled;
+    if (?taxonomy) $queryParams["taxonomy"] = taxonomy;
+    if (?spellingUseGcsConfig) $queryParams["spelling.useGcsConfig"] = spellingUseGcsConfig;
+    if (?useCase) $queryParams["useCase"] = useCase;
+    if (?location) $queryParams["location"] = location;
+    if (?maxVariants) $queryParams["maxVariants"] = maxVariants;
+    if (?categoriesInclude) $queryParams["categories.include"] = categoriesInclude;
+    if (?boostBy) $queryParams["boostBy"] = boostBy;
+    if (?safe) $queryParams["safe"] = safe;
+    if (?categoriesUseGcsConfig) $queryParams["categories.useGcsConfig"] = categoriesUseGcsConfig;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
+    if (?facetsUseGcsConfig) $queryParams["facets.useGcsConfig"] = facetsUseGcsConfig;
+    if (?categoriesEnabled) $queryParams["categories.enabled"] = categoriesEnabled;
+    if (?plusOneStyles) $queryParams["plusOne.styles"] = plusOneStyles;
+    if (?attributeFilter) $queryParams["attributeFilter"] = attributeFilter;
+    if (?clickTracking) $queryParams["clickTracking"] = clickTracking;
+    if (?thumbnails) $queryParams["thumbnails"] = thumbnails;
+    if (?language) $queryParams["language"] = language;
+    if (?categoryRecommendationsInclude) $queryParams["categoryRecommendations.include"] = categoryRecommendationsInclude;
+    if (?country) $queryParams["country"] = country;
+    if (?rankBy) $queryParams["rankBy"] = rankBy;
+    if (?restrictBy) $queryParams["restrictBy"] = restrictBy;
+    if (?q) $queryParams["q"] = q;
+    if (?redirectsEnabled) $queryParams["redirects.enabled"] = redirectsEnabled;
+    if (?redirectsUseGcsConfig) $queryParams["redirects.useGcsConfig"] = redirectsUseGcsConfig;
+    if (?relatedQueriesEnabled) $queryParams["relatedQueries.enabled"] = relatedQueriesEnabled;
+    if (?categoryRecommendationsUseGcsConfig) $queryParams["categoryRecommendations.useGcsConfig"] = categoryRecommendationsUseGcsConfig;
+    if (?promotionsUseGcsConfig) $queryParams["promotions.useGcsConfig"] = promotionsUseGcsConfig;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -196,7 +196,7 @@ class ProductsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{source}/products";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -227,7 +227,7 @@ class ProductsResource extends core.Object {
    *    * [attributeFilter] Comma separated list of attributes to return
    *    * [recommendationsUseGcsConfig] This parameter is currently ignored
    */
-  core.Future<Product> get(core.String source, core.int accountId, core.String productIdType, core.String productId, [core.String categoriesInclude = UNSPECIFIED, core.bool recommendationsEnabled = UNSPECIFIED, core.String thumbnails = UNSPECIFIED, core.bool plusOneUseGcsConfig = UNSPECIFIED, core.String taxonomy = UNSPECIFIED, core.bool categoriesUseGcsConfig = UNSPECIFIED, core.String plusOneStyles = UNSPECIFIED, core.String recommendationsInclude = UNSPECIFIED, core.bool categoriesEnabled = UNSPECIFIED, core.String location = UNSPECIFIED, core.bool plusOneEnabled = UNSPECIFIED, core.String attributeFilter = UNSPECIFIED, core.bool recommendationsUseGcsConfig = UNSPECIFIED]) {
+  core.Future<Product> get(core.String source, core.int accountId, core.String productIdType, core.String productId, {core.String categoriesInclude, core.bool recommendationsEnabled, core.String thumbnails, core.bool plusOneUseGcsConfig, core.String taxonomy, core.bool categoriesUseGcsConfig, core.String plusOneStyles, core.String recommendationsInclude, core.bool categoriesEnabled, core.String location, core.bool plusOneEnabled, core.String attributeFilter, core.bool recommendationsUseGcsConfig}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
@@ -235,19 +235,19 @@ class ProductsResource extends core.Object {
     $pathParams["accountId"] = accountId;
     $pathParams["productIdType"] = productIdType;
     $pathParams["productId"] = productId;
-    if (UNSPECIFIED != categoriesInclude) $queryParams["categories.include"] = categoriesInclude;
-    if (UNSPECIFIED != recommendationsEnabled) $queryParams["recommendations.enabled"] = recommendationsEnabled;
-    if (UNSPECIFIED != thumbnails) $queryParams["thumbnails"] = thumbnails;
-    if (UNSPECIFIED != plusOneUseGcsConfig) $queryParams["plusOne.useGcsConfig"] = plusOneUseGcsConfig;
-    if (UNSPECIFIED != taxonomy) $queryParams["taxonomy"] = taxonomy;
-    if (UNSPECIFIED != categoriesUseGcsConfig) $queryParams["categories.useGcsConfig"] = categoriesUseGcsConfig;
-    if (UNSPECIFIED != plusOneStyles) $queryParams["plusOne.styles"] = plusOneStyles;
-    if (UNSPECIFIED != recommendationsInclude) $queryParams["recommendations.include"] = recommendationsInclude;
-    if (UNSPECIFIED != categoriesEnabled) $queryParams["categories.enabled"] = categoriesEnabled;
-    if (UNSPECIFIED != location) $queryParams["location"] = location;
-    if (UNSPECIFIED != plusOneEnabled) $queryParams["plusOne.enabled"] = plusOneEnabled;
-    if (UNSPECIFIED != attributeFilter) $queryParams["attributeFilter"] = attributeFilter;
-    if (UNSPECIFIED != recommendationsUseGcsConfig) $queryParams["recommendations.useGcsConfig"] = recommendationsUseGcsConfig;
+    if (?categoriesInclude) $queryParams["categories.include"] = categoriesInclude;
+    if (?recommendationsEnabled) $queryParams["recommendations.enabled"] = recommendationsEnabled;
+    if (?thumbnails) $queryParams["thumbnails"] = thumbnails;
+    if (?plusOneUseGcsConfig) $queryParams["plusOne.useGcsConfig"] = plusOneUseGcsConfig;
+    if (?taxonomy) $queryParams["taxonomy"] = taxonomy;
+    if (?categoriesUseGcsConfig) $queryParams["categories.useGcsConfig"] = categoriesUseGcsConfig;
+    if (?plusOneStyles) $queryParams["plusOne.styles"] = plusOneStyles;
+    if (?recommendationsInclude) $queryParams["recommendations.include"] = recommendationsInclude;
+    if (?categoriesEnabled) $queryParams["categories.enabled"] = categoriesEnabled;
+    if (?location) $queryParams["location"] = location;
+    if (?plusOneEnabled) $queryParams["plusOne.enabled"] = plusOneEnabled;
+    if (?attributeFilter) $queryParams["attributeFilter"] = attributeFilter;
+    if (?recommendationsUseGcsConfig) $queryParams["recommendations.useGcsConfig"] = recommendationsUseGcsConfig;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -258,7 +258,7 @@ class ProductsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{source}/products/{accountId}/{productIdType}/{productId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -271,8 +271,8 @@ class ProductsResource extends core.Object {
 // Schema .Product
 class Product extends IdentityHash {
   /**
- * Self link of product when generated for a search request. Self link of product when generated for
- * a lookup request.
+ * Self link of product when generated for a lookup request. Self link of product when generated for
+ * a search request.
  */
   core.String selfLink;
 
@@ -1392,18 +1392,18 @@ class ShoppingModelRecommendationsJsonV1RecommendationList extends IdentityHash 
 // Enum ShoppingApi.Alt
 class ShoppingApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/atom+xml */
-  static final ShoppingApiAlt ATOM = const ShoppingApiAlt._internal("atom", 0);
+  const ShoppingApiAlt ATOM = const ShoppingApiAlt._internal("atom", 0);
   /** Responses with Content-Type of application/json */
-  static final ShoppingApiAlt JSON = const ShoppingApiAlt._internal("json", 1);
+  const ShoppingApiAlt JSON = const ShoppingApiAlt._internal("json", 1);
 
   /** All values of this enumeration */
-  static final core.List<ShoppingApiAlt> values = const <ShoppingApiAlt>[
+  const core.List<ShoppingApiAlt> values = const <ShoppingApiAlt>[
     ATOM,
     JSON,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <ShoppingApiAlt>{ 
+  const _valuesMap = const <ShoppingApiAlt>{ 
     "atom": ATOM,
     "json": JSON,
   };

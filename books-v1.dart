@@ -17,7 +17,7 @@
 #import('dart:json');
 
 #import('utils.dart');
-#import('http.dart');
+#import('http.dart', prefix:'http');
 
 // API BooksApi
 /**
@@ -27,22 +27,22 @@ class BooksApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
   final core.String baseUrl;
   /** How we should identify ourselves to the service. */
-  Authenticator authenticator;
+  http.Authenticator authenticator;
   /** The client library version */
   final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
   final core.String applicationName;
-  BooksApi get _$service() => this;
+  BooksApi get _$service => this;
   LayersResource _layers;
-  LayersResource get layers() => _layers;
+  LayersResource get layers => _layers;
   BookshelvesResource _bookshelves;
-  BookshelvesResource get bookshelves() => _bookshelves;
+  BookshelvesResource get bookshelves => _bookshelves;
   MyconfigResource _myconfig;
-  MyconfigResource get myconfig() => _myconfig;
+  MyconfigResource get myconfig => _myconfig;
   VolumesResource _volumes;
-  VolumesResource get volumes() => _volumes;
+  VolumesResource get volumes => _volumes;
   MylibraryResource _mylibrary;
-  MylibraryResource get mylibrary() => _mylibrary;
+  MylibraryResource get mylibrary => _mylibrary;
   
   /** Returns response with indentations and line breaks. */
   core.bool prettyPrint;
@@ -75,10 +75,10 @@ class BooksApi extends core.Object {
   BooksApiAlt alt;
 
 
-  BooksApi([this.baseUrl = "https://www.googleapis.com/books/v1/", applicationName, this.authenticator]) :
+  BooksApi({this.baseUrl:"https://www.googleapis.com/books/v1/", applicationName, this.authenticator}) :
       this.applicationName = (applicationName == null) ? null : applicationName
-          .replaceAll(const core.RegExp(@'\s+'), '_')
-          .replaceAll(const core.RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+          .replaceAll(const core.RegExp(r'\s+'), '_')
+          .replaceAll(const core.RegExp(r'[^-_.,0-9a-zA-Z]'), '')
   { 
     _layers = new LayersResource._internal(this);
     _bookshelves = new BookshelvesResource._internal(this);
@@ -86,9 +86,9 @@ class BooksApi extends core.Object {
     _volumes = new VolumesResource._internal(this);
     _mylibrary = new MylibraryResource._internal(this);
   }
-  core.String get userAgent() {
+  core.String get userAgent {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}books/v1/20120806 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}books/v1/20120822 google-api-dart-client/${clientVersion}";
   }
 
 
@@ -119,15 +119,15 @@ class LayersResource extends core.Object {
   Maximum: 200.
    *    * [source] String to identify the originator of this request.
    */
-  core.Future<Layersummaries> list(core.String volumeId, [core.String pageToken = UNSPECIFIED, core.String contentVersion = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String source = UNSPECIFIED]) {
+  core.Future<Layersummaries> list(core.String volumeId, {core.String pageToken, core.String contentVersion, core.int maxResults, core.String source}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["volumeId"] = volumeId;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != contentVersion) $queryParams["contentVersion"] = contentVersion;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
-    if (UNSPECIFIED != source) $queryParams["source"] = source;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?contentVersion) $queryParams["contentVersion"] = contentVersion;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
+    if (?source) $queryParams["source"] = source;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -138,7 +138,7 @@ class LayersResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "volumes/{volumeId}/layersummary";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -156,14 +156,14 @@ class LayersResource extends core.Object {
    *    * [source] String to identify the originator of this request.
    *    * [contentVersion] The content version for the requested volume.
    */
-  core.Future<Layersummary> get(core.String volumeId, core.String summaryId, [core.String source = UNSPECIFIED, core.String contentVersion = UNSPECIFIED]) {
+  core.Future<Layersummary> get(core.String volumeId, core.String summaryId, {core.String source, core.String contentVersion}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["volumeId"] = volumeId;
     $pathParams["summaryId"] = summaryId;
-    if (UNSPECIFIED != source) $queryParams["source"] = source;
-    if (UNSPECIFIED != contentVersion) $queryParams["contentVersion"] = contentVersion;
+    if (?source) $queryParams["source"] = source;
+    if (?contentVersion) $queryParams["contentVersion"] = contentVersion;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -174,7 +174,7 @@ class LayersResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "volumes/{volumeId}/layersummary/{summaryId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -214,23 +214,23 @@ class LayersAnnotationDataResourceResource extends core.Object {
    *    * [w] The requested pixel width for any images. If width is provided height must also be provided.
    *    * [updatedMin] RFC 3339 timestamp to restrict to items updated since this timestamp (inclusive).
    */
-  core.Future<Annotationsdata> list(core.String volumeId, core.String layerId, core.String contentVersion, [core.int scale = UNSPECIFIED, core.String source = UNSPECIFIED, core.String locale = UNSPECIFIED, core.int h = UNSPECIFIED, core.String updatedMax = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.List<core.String> annotationDataId = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.int w = UNSPECIFIED, core.String updatedMin = UNSPECIFIED]) {
+  core.Future<Annotationsdata> list(core.String volumeId, core.String layerId, core.String contentVersion, {core.int scale, core.String source, core.String locale, core.int h, core.String updatedMax, core.int maxResults, core.List<core.String> annotationDataId, core.String pageToken, core.int w, core.String updatedMin}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["volumeId"] = volumeId;
     $pathParams["layerId"] = layerId;
-    if (UNSPECIFIED != contentVersion) $queryParams["contentVersion"] = contentVersion;
-    if (UNSPECIFIED != scale) $queryParams["scale"] = scale;
-    if (UNSPECIFIED != source) $queryParams["source"] = source;
-    if (UNSPECIFIED != locale) $queryParams["locale"] = locale;
-    if (UNSPECIFIED != h) $queryParams["h"] = h;
-    if (UNSPECIFIED != updatedMax) $queryParams["updatedMax"] = updatedMax;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
-    if (UNSPECIFIED != annotationDataId) $queryParams["annotationDataId"] = annotationDataId;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != w) $queryParams["w"] = w;
-    if (UNSPECIFIED != updatedMin) $queryParams["updatedMin"] = updatedMin;
+    if (?contentVersion) $queryParams["contentVersion"] = contentVersion;
+    if (?scale) $queryParams["scale"] = scale;
+    if (?source) $queryParams["source"] = source;
+    if (?locale) $queryParams["locale"] = locale;
+    if (?h) $queryParams["h"] = h;
+    if (?updatedMax) $queryParams["updatedMax"] = updatedMax;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
+    if (?annotationDataId) $queryParams["annotationDataId"] = annotationDataId;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?w) $queryParams["w"] = w;
+    if (?updatedMin) $queryParams["updatedMin"] = updatedMin;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -241,7 +241,7 @@ class LayersAnnotationDataResourceResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "volumes/{volumeId}/layers/{layerId}/data";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -266,19 +266,19 @@ class LayersAnnotationDataResourceResource extends core.Object {
    *    * [source] String to identify the originator of this request.
    *    * [w] The requested pixel width for any images. If width is provided height must also be provided.
    */
-  core.Future<Annotationdata> get(core.String volumeId, core.String layerId, core.String annotationDataId, core.String contentVersion, [core.int scale = UNSPECIFIED, core.String locale = UNSPECIFIED, core.int h = UNSPECIFIED, core.String source = UNSPECIFIED, core.int w = UNSPECIFIED]) {
+  core.Future<Annotationdata> get(core.String volumeId, core.String layerId, core.String annotationDataId, core.String contentVersion, {core.int scale, core.String locale, core.int h, core.String source, core.int w}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["volumeId"] = volumeId;
     $pathParams["layerId"] = layerId;
     $pathParams["annotationDataId"] = annotationDataId;
-    if (UNSPECIFIED != contentVersion) $queryParams["contentVersion"] = contentVersion;
-    if (UNSPECIFIED != scale) $queryParams["scale"] = scale;
-    if (UNSPECIFIED != locale) $queryParams["locale"] = locale;
-    if (UNSPECIFIED != h) $queryParams["h"] = h;
-    if (UNSPECIFIED != source) $queryParams["source"] = source;
-    if (UNSPECIFIED != w) $queryParams["w"] = w;
+    if (?contentVersion) $queryParams["contentVersion"] = contentVersion;
+    if (?scale) $queryParams["scale"] = scale;
+    if (?locale) $queryParams["locale"] = locale;
+    if (?h) $queryParams["h"] = h;
+    if (?source) $queryParams["source"] = source;
+    if (?w) $queryParams["w"] = w;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -289,7 +289,7 @@ class LayersAnnotationDataResourceResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "volumes/{volumeId}/layers/{layerId}/data/{annotationDataId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -328,24 +328,24 @@ class LayersVolumeAnnotationsResourceResource extends core.Object {
    *    * [startOffset] The start offset to start retrieving data from.
    *    * [startPosition] The start position to start retrieving data from.
    */
-  core.Future<Volumeannotations> list(core.String volumeId, core.String layerId, core.String contentVersion, [core.bool showDeleted = UNSPECIFIED, core.String endPosition = UNSPECIFIED, core.String endOffset = UNSPECIFIED, core.String locale = UNSPECIFIED, core.String updatedMin = UNSPECIFIED, core.String updatedMax = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.String source = UNSPECIFIED, core.String startOffset = UNSPECIFIED, core.String startPosition = UNSPECIFIED]) {
+  core.Future<Volumeannotations> list(core.String volumeId, core.String layerId, core.String contentVersion, {core.bool showDeleted, core.String endPosition, core.String endOffset, core.String locale, core.String updatedMin, core.String updatedMax, core.int maxResults, core.String pageToken, core.String source, core.String startOffset, core.String startPosition}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["volumeId"] = volumeId;
     $pathParams["layerId"] = layerId;
-    if (UNSPECIFIED != contentVersion) $queryParams["contentVersion"] = contentVersion;
-    if (UNSPECIFIED != showDeleted) $queryParams["showDeleted"] = showDeleted;
-    if (UNSPECIFIED != endPosition) $queryParams["endPosition"] = endPosition;
-    if (UNSPECIFIED != endOffset) $queryParams["endOffset"] = endOffset;
-    if (UNSPECIFIED != locale) $queryParams["locale"] = locale;
-    if (UNSPECIFIED != updatedMin) $queryParams["updatedMin"] = updatedMin;
-    if (UNSPECIFIED != updatedMax) $queryParams["updatedMax"] = updatedMax;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != source) $queryParams["source"] = source;
-    if (UNSPECIFIED != startOffset) $queryParams["startOffset"] = startOffset;
-    if (UNSPECIFIED != startPosition) $queryParams["startPosition"] = startPosition;
+    if (?contentVersion) $queryParams["contentVersion"] = contentVersion;
+    if (?showDeleted) $queryParams["showDeleted"] = showDeleted;
+    if (?endPosition) $queryParams["endPosition"] = endPosition;
+    if (?endOffset) $queryParams["endOffset"] = endOffset;
+    if (?locale) $queryParams["locale"] = locale;
+    if (?updatedMin) $queryParams["updatedMin"] = updatedMin;
+    if (?updatedMax) $queryParams["updatedMax"] = updatedMax;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?source) $queryParams["source"] = source;
+    if (?startOffset) $queryParams["startOffset"] = startOffset;
+    if (?startPosition) $queryParams["startPosition"] = startPosition;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -356,7 +356,7 @@ class LayersVolumeAnnotationsResourceResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "volumes/{volumeId}/layers/{layerId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -375,15 +375,15 @@ class LayersVolumeAnnotationsResourceResource extends core.Object {
    *    * [locale] The locale information for the data. ISO-639-1 language and ISO-3166-1 country code. Ex: 'en_US'.
    *    * [source] String to identify the originator of this request.
    */
-  core.Future<Volumeannotation> get(core.String volumeId, core.String layerId, core.String annotationId, [core.String locale = UNSPECIFIED, core.String source = UNSPECIFIED]) {
+  core.Future<Volumeannotation> get(core.String volumeId, core.String layerId, core.String annotationId, {core.String locale, core.String source}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["volumeId"] = volumeId;
     $pathParams["layerId"] = layerId;
     $pathParams["annotationId"] = annotationId;
-    if (UNSPECIFIED != locale) $queryParams["locale"] = locale;
-    if (UNSPECIFIED != source) $queryParams["source"] = source;
+    if (?locale) $queryParams["locale"] = locale;
+    if (?source) $queryParams["source"] = source;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -394,7 +394,7 @@ class LayersVolumeAnnotationsResourceResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "volumes/{volumeId}/layers/{layerId}/annotations/{annotationId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -419,12 +419,12 @@ class BookshelvesResource extends core.Object {
    *    * [userId] ID of user for whom to retrieve bookshelves.
    *    * [source] String to identify the originator of this request.
    */
-  core.Future<Bookshelves> list(core.String userId, [core.String source = UNSPECIFIED]) {
+  core.Future<Bookshelves> list(core.String userId, {core.String source}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["userId"] = userId;
-    if (UNSPECIFIED != source) $queryParams["source"] = source;
+    if (?source) $queryParams["source"] = source;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -435,7 +435,7 @@ class BookshelvesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "users/{userId}/bookshelves";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -452,13 +452,13 @@ class BookshelvesResource extends core.Object {
    *    * [shelf] ID of bookshelf to retrieve.
    *    * [source] String to identify the originator of this request.
    */
-  core.Future<Bookshelf> get(core.String userId, core.String shelf, [core.String source = UNSPECIFIED]) {
+  core.Future<Bookshelf> get(core.String userId, core.String shelf, {core.String source}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["userId"] = userId;
     $pathParams["shelf"] = shelf;
-    if (UNSPECIFIED != source) $queryParams["source"] = source;
+    if (?source) $queryParams["source"] = source;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -469,7 +469,7 @@ class BookshelvesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "users/{userId}/bookshelves/{shelf}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -501,16 +501,16 @@ class BookshelvesVolumesResourceResource extends core.Object {
 
   Minimum: 0.
    */
-  core.Future<Volumes> list(core.String userId, core.String shelf, [core.bool showPreorders = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String source = UNSPECIFIED, core.int startIndex = UNSPECIFIED]) {
+  core.Future<Volumes> list(core.String userId, core.String shelf, {core.bool showPreorders, core.int maxResults, core.String source, core.int startIndex}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["userId"] = userId;
     $pathParams["shelf"] = shelf;
-    if (UNSPECIFIED != showPreorders) $queryParams["showPreorders"] = showPreorders;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
-    if (UNSPECIFIED != source) $queryParams["source"] = source;
-    if (UNSPECIFIED != startIndex) $queryParams["startIndex"] = startIndex;
+    if (?showPreorders) $queryParams["showPreorders"] = showPreorders;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
+    if (?source) $queryParams["source"] = source;
+    if (?startIndex) $queryParams["startIndex"] = startIndex;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -521,7 +521,7 @@ class BookshelvesVolumesResourceResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "users/{userId}/bookshelves/{shelf}/volumes";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -546,14 +546,14 @@ class MyconfigResource extends core.Object {
    *    * [locale] ISO-639-1, ISO-3166-1 codes for message localization, i.e. en_US.
    *    * [source] String to identify the originator of this request.
    */
-  core.Future<DownloadAccesses> releaseDownloadAccess(core.List<core.String> volumeIds, core.String cpksver, [core.String locale = UNSPECIFIED, core.String source = UNSPECIFIED]) {
+  core.Future<DownloadAccesses> releaseDownloadAccess(core.List<core.String> volumeIds, core.String cpksver, {core.String locale, core.String source}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    if (UNSPECIFIED != volumeIds) $queryParams["volumeIds"] = volumeIds;
-    if (UNSPECIFIED != cpksver) $queryParams["cpksver"] = cpksver;
-    if (UNSPECIFIED != locale) $queryParams["locale"] = locale;
-    if (UNSPECIFIED != source) $queryParams["source"] = source;
+    if (?volumeIds) $queryParams["volumeIds"] = volumeIds;
+    if (?cpksver) $queryParams["cpksver"] = cpksver;
+    if (?locale) $queryParams["locale"] = locale;
+    if (?source) $queryParams["source"] = source;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -564,7 +564,7 @@ class MyconfigResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "myconfig/releaseDownloadAccess";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -583,15 +583,15 @@ class MyconfigResource extends core.Object {
    *    * [cpksver] The device/version ID from which to request the restrictions.
    *    * [locale] ISO-639-1, ISO-3166-1 codes for message localization, i.e. en_US.
    */
-  core.Future<RequestAccess> requestAccess(core.String source, core.String volumeId, core.String nonce, core.String cpksver, [core.String locale = UNSPECIFIED]) {
+  core.Future<RequestAccess> requestAccess(core.String source, core.String volumeId, core.String nonce, core.String cpksver, {core.String locale}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    if (UNSPECIFIED != source) $queryParams["source"] = source;
-    if (UNSPECIFIED != volumeId) $queryParams["volumeId"] = volumeId;
-    if (UNSPECIFIED != nonce) $queryParams["nonce"] = nonce;
-    if (UNSPECIFIED != cpksver) $queryParams["cpksver"] = cpksver;
-    if (UNSPECIFIED != locale) $queryParams["locale"] = locale;
+    if (?source) $queryParams["source"] = source;
+    if (?volumeId) $queryParams["volumeId"] = volumeId;
+    if (?nonce) $queryParams["nonce"] = nonce;
+    if (?cpksver) $queryParams["cpksver"] = cpksver;
+    if (?locale) $queryParams["locale"] = locale;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -602,7 +602,7 @@ class MyconfigResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "myconfig/requestAccess";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -622,16 +622,16 @@ class MyconfigResource extends core.Object {
    *    * [showPreorders] Set to true to show pre-ordered books. Defaults to false.
    *    * [volumeIds] The volume(s) to request download restrictions for.
    */
-  core.Future<Volumes> syncVolumeLicenses(core.String source, core.String nonce, core.String cpksver, [core.String locale = UNSPECIFIED, core.bool showPreorders = UNSPECIFIED, core.List<core.String> volumeIds = UNSPECIFIED]) {
+  core.Future<Volumes> syncVolumeLicenses(core.String source, core.String nonce, core.String cpksver, {core.String locale, core.bool showPreorders, core.List<core.String> volumeIds}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    if (UNSPECIFIED != source) $queryParams["source"] = source;
-    if (UNSPECIFIED != nonce) $queryParams["nonce"] = nonce;
-    if (UNSPECIFIED != cpksver) $queryParams["cpksver"] = cpksver;
-    if (UNSPECIFIED != locale) $queryParams["locale"] = locale;
-    if (UNSPECIFIED != showPreorders) $queryParams["showPreorders"] = showPreorders;
-    if (UNSPECIFIED != volumeIds) $queryParams["volumeIds"] = volumeIds;
+    if (?source) $queryParams["source"] = source;
+    if (?nonce) $queryParams["nonce"] = nonce;
+    if (?cpksver) $queryParams["cpksver"] = cpksver;
+    if (?locale) $queryParams["locale"] = locale;
+    if (?showPreorders) $queryParams["showPreorders"] = showPreorders;
+    if (?volumeIds) $queryParams["volumeIds"] = volumeIds;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -642,7 +642,7 @@ class MyconfigResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "myconfig/syncVolumeLicenses";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -683,23 +683,23 @@ class VolumesResource extends core.Object {
    *    * [download] Restrict to volumes by download availability.
    *    * [partner] Restrict and brand results for partner ID.
    */
-  core.Future<Volumes> list(core.String q, [VolumesResourceListOrderBy orderBy = UNSPECIFIED, VolumesResourceListProjection projection = UNSPECIFIED, VolumesResourceListLibraryRestrict libraryRestrict = UNSPECIFIED, core.String langRestrict = UNSPECIFIED, core.bool showPreorders = UNSPECIFIED, VolumesResourceListPrintType printType = UNSPECIFIED, core.int maxResults = UNSPECIFIED, VolumesResourceListFilter filter = UNSPECIFIED, core.String source = UNSPECIFIED, core.int startIndex = UNSPECIFIED, VolumesResourceListDownload download = UNSPECIFIED, core.String partner = UNSPECIFIED]) {
+  core.Future<Volumes> list(core.String q, {VolumesResourceListOrderBy orderBy, VolumesResourceListProjection projection, VolumesResourceListLibraryRestrict libraryRestrict, core.String langRestrict, core.bool showPreorders, VolumesResourceListPrintType printType, core.int maxResults, VolumesResourceListFilter filter, core.String source, core.int startIndex, VolumesResourceListDownload download, core.String partner}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    if (UNSPECIFIED != q) $queryParams["q"] = q;
-    if (UNSPECIFIED != orderBy) $queryParams["orderBy"] = orderBy;
-    if (UNSPECIFIED != projection) $queryParams["projection"] = projection;
-    if (UNSPECIFIED != libraryRestrict) $queryParams["libraryRestrict"] = libraryRestrict;
-    if (UNSPECIFIED != langRestrict) $queryParams["langRestrict"] = langRestrict;
-    if (UNSPECIFIED != showPreorders) $queryParams["showPreorders"] = showPreorders;
-    if (UNSPECIFIED != printType) $queryParams["printType"] = printType;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
-    if (UNSPECIFIED != filter) $queryParams["filter"] = filter;
-    if (UNSPECIFIED != source) $queryParams["source"] = source;
-    if (UNSPECIFIED != startIndex) $queryParams["startIndex"] = startIndex;
-    if (UNSPECIFIED != download) $queryParams["download"] = download;
-    if (UNSPECIFIED != partner) $queryParams["partner"] = partner;
+    if (?q) $queryParams["q"] = q;
+    if (?orderBy) $queryParams["orderBy"] = orderBy;
+    if (?projection) $queryParams["projection"] = projection;
+    if (?libraryRestrict) $queryParams["libraryRestrict"] = libraryRestrict;
+    if (?langRestrict) $queryParams["langRestrict"] = langRestrict;
+    if (?showPreorders) $queryParams["showPreorders"] = showPreorders;
+    if (?printType) $queryParams["printType"] = printType;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
+    if (?filter) $queryParams["filter"] = filter;
+    if (?source) $queryParams["source"] = source;
+    if (?startIndex) $queryParams["startIndex"] = startIndex;
+    if (?download) $queryParams["download"] = download;
+    if (?partner) $queryParams["partner"] = partner;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -710,7 +710,7 @@ class VolumesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "volumes";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -729,15 +729,15 @@ class VolumesResource extends core.Object {
    *    * [projection] Restrict information returned to a set of selected fields.
    *    * [partner] Brand results for partner ID.
    */
-  core.Future<Volume> get(core.String volumeId, [core.String source = UNSPECIFIED, core.String country = UNSPECIFIED, VolumesResourceGetProjection projection = UNSPECIFIED, core.String partner = UNSPECIFIED]) {
+  core.Future<Volume> get(core.String volumeId, {core.String source, core.String country, VolumesResourceGetProjection projection, core.String partner}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["volumeId"] = volumeId;
-    if (UNSPECIFIED != source) $queryParams["source"] = source;
-    if (UNSPECIFIED != country) $queryParams["country"] = country;
-    if (UNSPECIFIED != projection) $queryParams["projection"] = projection;
-    if (UNSPECIFIED != partner) $queryParams["partner"] = partner;
+    if (?source) $queryParams["source"] = source;
+    if (?country) $queryParams["country"] = country;
+    if (?projection) $queryParams["projection"] = projection;
+    if (?partner) $queryParams["partner"] = partner;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -748,7 +748,7 @@ class VolumesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "volumes/{volumeId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -761,18 +761,18 @@ class VolumesResource extends core.Object {
 // Enum VolumesResource.List.OrderBy
 class VolumesResourceListOrderBy extends core.Object implements core.Hashable {
   /** Most recently published. */
-  static final VolumesResourceListOrderBy NEWEST = const VolumesResourceListOrderBy._internal("newest", 0);
+  const VolumesResourceListOrderBy NEWEST = const VolumesResourceListOrderBy._internal("newest", 0);
   /** Relevance to search terms. */
-  static final VolumesResourceListOrderBy RELEVANCE = const VolumesResourceListOrderBy._internal("relevance", 1);
+  const VolumesResourceListOrderBy RELEVANCE = const VolumesResourceListOrderBy._internal("relevance", 1);
 
   /** All values of this enumeration */
-  static final core.List<VolumesResourceListOrderBy> values = const <VolumesResourceListOrderBy>[
+  const core.List<VolumesResourceListOrderBy> values = const <VolumesResourceListOrderBy>[
     NEWEST,
     RELEVANCE,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <VolumesResourceListOrderBy>{ 
+  const _valuesMap = const <VolumesResourceListOrderBy>{ 
     "newest": NEWEST,
     "relevance": RELEVANCE,
   };
@@ -792,18 +792,18 @@ class VolumesResourceListOrderBy extends core.Object implements core.Hashable {
 // Enum VolumesResource.List.Projection
 class VolumesResourceListProjection extends core.Object implements core.Hashable {
   /** Includes all volume data. */
-  static final VolumesResourceListProjection FULL = const VolumesResourceListProjection._internal("full", 0);
+  const VolumesResourceListProjection FULL = const VolumesResourceListProjection._internal("full", 0);
   /** Includes a subset of fields in volumeInfo and accessInfo. */
-  static final VolumesResourceListProjection LITE = const VolumesResourceListProjection._internal("lite", 1);
+  const VolumesResourceListProjection LITE = const VolumesResourceListProjection._internal("lite", 1);
 
   /** All values of this enumeration */
-  static final core.List<VolumesResourceListProjection> values = const <VolumesResourceListProjection>[
+  const core.List<VolumesResourceListProjection> values = const <VolumesResourceListProjection>[
     FULL,
     LITE,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <VolumesResourceListProjection>{ 
+  const _valuesMap = const <VolumesResourceListProjection>{ 
     "full": FULL,
     "lite": LITE,
   };
@@ -823,18 +823,18 @@ class VolumesResourceListProjection extends core.Object implements core.Hashable
 // Enum VolumesResource.List.LibraryRestrict
 class VolumesResourceListLibraryRestrict extends core.Object implements core.Hashable {
   /** Restrict to the user's library, any shelf. */
-  static final VolumesResourceListLibraryRestrict MY_LIBRARY = const VolumesResourceListLibraryRestrict._internal("my-library", 0);
+  const VolumesResourceListLibraryRestrict MY_LIBRARY = const VolumesResourceListLibraryRestrict._internal("my-library", 0);
   /** Do not restrict based on user's library. */
-  static final VolumesResourceListLibraryRestrict NO_RESTRICT = const VolumesResourceListLibraryRestrict._internal("no-restrict", 1);
+  const VolumesResourceListLibraryRestrict NO_RESTRICT = const VolumesResourceListLibraryRestrict._internal("no-restrict", 1);
 
   /** All values of this enumeration */
-  static final core.List<VolumesResourceListLibraryRestrict> values = const <VolumesResourceListLibraryRestrict>[
+  const core.List<VolumesResourceListLibraryRestrict> values = const <VolumesResourceListLibraryRestrict>[
     MY_LIBRARY,
     NO_RESTRICT,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <VolumesResourceListLibraryRestrict>{ 
+  const _valuesMap = const <VolumesResourceListLibraryRestrict>{ 
     "my-library": MY_LIBRARY,
     "no-restrict": NO_RESTRICT,
   };
@@ -854,21 +854,21 @@ class VolumesResourceListLibraryRestrict extends core.Object implements core.Has
 // Enum VolumesResource.List.PrintType
 class VolumesResourceListPrintType extends core.Object implements core.Hashable {
   /** All volume content types. */
-  static final VolumesResourceListPrintType ALL = const VolumesResourceListPrintType._internal("all", 0);
+  const VolumesResourceListPrintType ALL = const VolumesResourceListPrintType._internal("all", 0);
   /** Just books. */
-  static final VolumesResourceListPrintType BOOKS = const VolumesResourceListPrintType._internal("books", 1);
+  const VolumesResourceListPrintType BOOKS = const VolumesResourceListPrintType._internal("books", 1);
   /** Just magazines. */
-  static final VolumesResourceListPrintType MAGAZINES = const VolumesResourceListPrintType._internal("magazines", 2);
+  const VolumesResourceListPrintType MAGAZINES = const VolumesResourceListPrintType._internal("magazines", 2);
 
   /** All values of this enumeration */
-  static final core.List<VolumesResourceListPrintType> values = const <VolumesResourceListPrintType>[
+  const core.List<VolumesResourceListPrintType> values = const <VolumesResourceListPrintType>[
     ALL,
     BOOKS,
     MAGAZINES,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <VolumesResourceListPrintType>{ 
+  const _valuesMap = const <VolumesResourceListPrintType>{ 
     "all": ALL,
     "books": BOOKS,
     "magazines": MAGAZINES,
@@ -889,18 +889,18 @@ class VolumesResourceListPrintType extends core.Object implements core.Hashable 
 // Enum VolumesResource.List.Filter
 class VolumesResourceListFilter extends core.Object implements core.Hashable {
   /** All Google eBooks. */
-  static final VolumesResourceListFilter EBOOKS = const VolumesResourceListFilter._internal("ebooks", 0);
+  const VolumesResourceListFilter EBOOKS = const VolumesResourceListFilter._internal("ebooks", 0);
   /** Google eBook with full volume text viewability. */
-  static final VolumesResourceListFilter FREE_EBOOKS = const VolumesResourceListFilter._internal("free-ebooks", 1);
+  const VolumesResourceListFilter FREE_EBOOKS = const VolumesResourceListFilter._internal("free-ebooks", 1);
   /** Public can view entire volume text. */
-  static final VolumesResourceListFilter FULL = const VolumesResourceListFilter._internal("full", 2);
+  const VolumesResourceListFilter FULL = const VolumesResourceListFilter._internal("full", 2);
   /** Google eBook with a price. */
-  static final VolumesResourceListFilter PAID_EBOOKS = const VolumesResourceListFilter._internal("paid-ebooks", 3);
+  const VolumesResourceListFilter PAID_EBOOKS = const VolumesResourceListFilter._internal("paid-ebooks", 3);
   /** Public able to see parts of text. */
-  static final VolumesResourceListFilter PARTIAL = const VolumesResourceListFilter._internal("partial", 4);
+  const VolumesResourceListFilter PARTIAL = const VolumesResourceListFilter._internal("partial", 4);
 
   /** All values of this enumeration */
-  static final core.List<VolumesResourceListFilter> values = const <VolumesResourceListFilter>[
+  const core.List<VolumesResourceListFilter> values = const <VolumesResourceListFilter>[
     EBOOKS,
     FREE_EBOOKS,
     FULL,
@@ -909,7 +909,7 @@ class VolumesResourceListFilter extends core.Object implements core.Hashable {
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <VolumesResourceListFilter>{ 
+  const _valuesMap = const <VolumesResourceListFilter>{ 
     "ebooks": EBOOKS,
     "free-ebooks": FREE_EBOOKS,
     "full": FULL,
@@ -932,15 +932,15 @@ class VolumesResourceListFilter extends core.Object implements core.Hashable {
 // Enum VolumesResource.List.Download
 class VolumesResourceListDownload extends core.Object implements core.Hashable {
   /** All volumes with epub. */
-  static final VolumesResourceListDownload EPUB = const VolumesResourceListDownload._internal("epub", 0);
+  const VolumesResourceListDownload EPUB = const VolumesResourceListDownload._internal("epub", 0);
 
   /** All values of this enumeration */
-  static final core.List<VolumesResourceListDownload> values = const <VolumesResourceListDownload>[
+  const core.List<VolumesResourceListDownload> values = const <VolumesResourceListDownload>[
     EPUB,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <VolumesResourceListDownload>{ 
+  const _valuesMap = const <VolumesResourceListDownload>{ 
     "epub": EPUB,
   };
 
@@ -959,18 +959,18 @@ class VolumesResourceListDownload extends core.Object implements core.Hashable {
 // Enum VolumesResource.Get.Projection
 class VolumesResourceGetProjection extends core.Object implements core.Hashable {
   /** Includes all volume data. */
-  static final VolumesResourceGetProjection FULL = const VolumesResourceGetProjection._internal("full", 0);
+  const VolumesResourceGetProjection FULL = const VolumesResourceGetProjection._internal("full", 0);
   /** Includes a subset of fields in volumeInfo and accessInfo. */
-  static final VolumesResourceGetProjection LITE = const VolumesResourceGetProjection._internal("lite", 1);
+  const VolumesResourceGetProjection LITE = const VolumesResourceGetProjection._internal("lite", 1);
 
   /** All values of this enumeration */
-  static final core.List<VolumesResourceGetProjection> values = const <VolumesResourceGetProjection>[
+  const core.List<VolumesResourceGetProjection> values = const <VolumesResourceGetProjection>[
     FULL,
     LITE,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <VolumesResourceGetProjection>{ 
+  const _valuesMap = const <VolumesResourceGetProjection>{ 
     "full": FULL,
     "lite": LITE,
   };
@@ -999,29 +999,18 @@ class VolumesAssociatedResourceResource extends core.Object {
    * Return a list of associated books.
    *
    *    * [volumeId] ID of the source volume.
-   *    * [projection] Restrict information returned to a set of selected fields.
-   *    * [maxResults] Maximum number of results to return.
-
-  Minimum: 0.
-  Maximum: 40.
-   *    * [filter] Filter search results.
+   *    * [locale] ISO-639-1 language and ISO-3166-1 country code. Ex: 'en_US'. Used for generating recommendations.
    *    * [source] String to identify the originator of this request.
-   *    * [startIndex] Index of the first result to return (starts at 0)
-
-  Minimum: 0.
    *    * [association] Association type.
    */
-  core.Future<Volumes> list(core.String volumeId, [VolumesResourceVolumesAssociatedResourceResourceListProjection projection = UNSPECIFIED, core.int maxResults = UNSPECIFIED, VolumesResourceVolumesAssociatedResourceResourceListFilter filter = UNSPECIFIED, core.String source = UNSPECIFIED, core.int startIndex = UNSPECIFIED, VolumesResourceVolumesAssociatedResourceResourceListAssociation association = UNSPECIFIED]) {
+  core.Future<Volumes> list(core.String volumeId, {core.String locale, core.String source, VolumesResourceVolumesAssociatedResourceResourceListAssociation association}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["volumeId"] = volumeId;
-    if (UNSPECIFIED != projection) $queryParams["projection"] = projection;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
-    if (UNSPECIFIED != filter) $queryParams["filter"] = filter;
-    if (UNSPECIFIED != source) $queryParams["source"] = source;
-    if (UNSPECIFIED != startIndex) $queryParams["startIndex"] = startIndex;
-    if (UNSPECIFIED != association) $queryParams["association"] = association;
+    if (?locale) $queryParams["locale"] = locale;
+    if (?source) $queryParams["source"] = source;
+    if (?association) $queryParams["association"] = association;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -1032,7 +1021,7 @@ class VolumesAssociatedResourceResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "volumes/{volumeId}/associated";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1042,93 +1031,23 @@ class VolumesAssociatedResourceResource extends core.Object {
   }
 }
 
-// Enum VolumesResource.VolumesAssociatedResourceResource.List.Projection
-class VolumesResourceVolumesAssociatedResourceResourceListProjection extends core.Object implements core.Hashable {
-  /** Includes all volume data. */
-  static final VolumesResourceVolumesAssociatedResourceResourceListProjection FULL = const VolumesResourceVolumesAssociatedResourceResourceListProjection._internal("full", 0);
-  /** Includes a subset of fields in volumeInfo and accessInfo. */
-  static final VolumesResourceVolumesAssociatedResourceResourceListProjection LITE = const VolumesResourceVolumesAssociatedResourceResourceListProjection._internal("lite", 1);
-
-  /** All values of this enumeration */
-  static final core.List<VolumesResourceVolumesAssociatedResourceResourceListProjection> values = const <VolumesResourceVolumesAssociatedResourceResourceListProjection>[
-    FULL,
-    LITE,
-  ];
-
-  /** Map from string representation to enumeration value */
-  static final _valuesMap = const <VolumesResourceVolumesAssociatedResourceResourceListProjection>{ 
-    "full": FULL,
-    "lite": LITE,
-  };
-
-  /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static VolumesResourceVolumesAssociatedResourceResourceListProjection valueOf(core.String item) => _valuesMap[item];
-
-  final core.int _ordinal;
-  final core.String _value;
-  const VolumesResourceVolumesAssociatedResourceResourceListProjection._internal(core.String this._value, core.int this._ordinal);
-
-  /** Get the string representation of an enumeration value */
-  toString() => _value;
-  hashCode() => _ordinal ^ "Projection".hashCode();
-}
-
-// Enum VolumesResource.VolumesAssociatedResourceResource.List.Filter
-class VolumesResourceVolumesAssociatedResourceResourceListFilter extends core.Object implements core.Hashable {
-  /** All Google eBooks. */
-  static final VolumesResourceVolumesAssociatedResourceResourceListFilter EBOOKS = const VolumesResourceVolumesAssociatedResourceResourceListFilter._internal("ebooks", 0);
-  /** Google eBook with full volume text viewability. */
-  static final VolumesResourceVolumesAssociatedResourceResourceListFilter FREE_EBOOKS = const VolumesResourceVolumesAssociatedResourceResourceListFilter._internal("free-ebooks", 1);
-  /** Public can view entire volume text. */
-  static final VolumesResourceVolumesAssociatedResourceResourceListFilter FULL = const VolumesResourceVolumesAssociatedResourceResourceListFilter._internal("full", 2);
-  /** Google eBook with a price. */
-  static final VolumesResourceVolumesAssociatedResourceResourceListFilter PAID_EBOOKS = const VolumesResourceVolumesAssociatedResourceResourceListFilter._internal("paid-ebooks", 3);
-  /** Public able to see parts of text. */
-  static final VolumesResourceVolumesAssociatedResourceResourceListFilter PARTIAL = const VolumesResourceVolumesAssociatedResourceResourceListFilter._internal("partial", 4);
-
-  /** All values of this enumeration */
-  static final core.List<VolumesResourceVolumesAssociatedResourceResourceListFilter> values = const <VolumesResourceVolumesAssociatedResourceResourceListFilter>[
-    EBOOKS,
-    FREE_EBOOKS,
-    FULL,
-    PAID_EBOOKS,
-    PARTIAL,
-  ];
-
-  /** Map from string representation to enumeration value */
-  static final _valuesMap = const <VolumesResourceVolumesAssociatedResourceResourceListFilter>{ 
-    "ebooks": EBOOKS,
-    "free-ebooks": FREE_EBOOKS,
-    "full": FULL,
-    "paid-ebooks": PAID_EBOOKS,
-    "partial": PARTIAL,
-  };
-
-  /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static VolumesResourceVolumesAssociatedResourceResourceListFilter valueOf(core.String item) => _valuesMap[item];
-
-  final core.int _ordinal;
-  final core.String _value;
-  const VolumesResourceVolumesAssociatedResourceResourceListFilter._internal(core.String this._value, core.int this._ordinal);
-
-  /** Get the string representation of an enumeration value */
-  toString() => _value;
-  hashCode() => _ordinal ^ "Filter".hashCode();
-}
-
 // Enum VolumesResource.VolumesAssociatedResourceResource.List.Association
 class VolumesResourceVolumesAssociatedResourceResourceListAssociation extends core.Object implements core.Hashable {
-  /** Books that are complementary for additional reading. */
-  static final VolumesResourceVolumesAssociatedResourceResourceListAssociation COMPLEMENTARY = const VolumesResourceVolumesAssociatedResourceResourceListAssociation._internal("complementary", 0);
+  /** Recommendations for display end-of-sample. */
+  const VolumesResourceVolumesAssociatedResourceResourceListAssociation END_OF_SAMPLE = const VolumesResourceVolumesAssociatedResourceResourceListAssociation._internal("end-of-sample", 0);
+  /** Recommendations for display end-of-volume. */
+  const VolumesResourceVolumesAssociatedResourceResourceListAssociation END_OF_VOLUME = const VolumesResourceVolumesAssociatedResourceResourceListAssociation._internal("end-of-volume", 1);
 
   /** All values of this enumeration */
-  static final core.List<VolumesResourceVolumesAssociatedResourceResourceListAssociation> values = const <VolumesResourceVolumesAssociatedResourceResourceListAssociation>[
-    COMPLEMENTARY,
+  const core.List<VolumesResourceVolumesAssociatedResourceResourceListAssociation> values = const <VolumesResourceVolumesAssociatedResourceResourceListAssociation>[
+    END_OF_SAMPLE,
+    END_OF_VOLUME,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <VolumesResourceVolumesAssociatedResourceResourceListAssociation>{ 
-    "complementary": COMPLEMENTARY,
+  const _valuesMap = const <VolumesResourceVolumesAssociatedResourceResourceListAssociation>{ 
+    "end-of-sample": END_OF_SAMPLE,
+    "end-of-volume": END_OF_VOLUME,
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
@@ -1173,13 +1092,13 @@ class MylibraryBookshelvesResourceResource extends core.Object {
    *    * [volumeId] ID of volume to remove.
    *    * [source] String to identify the originator of this request.
    */
-  core.Future removeVolume(core.String shelf, core.String volumeId, [core.String source = UNSPECIFIED]) {
+  core.Future removeVolume(core.String shelf, core.String volumeId, {core.String source}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["shelf"] = shelf;
-    if (UNSPECIFIED != volumeId) $queryParams["volumeId"] = volumeId;
-    if (UNSPECIFIED != source) $queryParams["source"] = source;
+    if (?volumeId) $queryParams["volumeId"] = volumeId;
+    if (?source) $queryParams["source"] = source;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -1190,7 +1109,7 @@ class MylibraryBookshelvesResourceResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "mylibrary/bookshelves/{shelf}/removeVolume";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1206,12 +1125,12 @@ class MylibraryBookshelvesResourceResource extends core.Object {
    *    * [shelf] ID of bookshelf to retrieve.
    *    * [source] String to identify the originator of this request.
    */
-  core.Future<Bookshelf> get(core.String shelf, [core.String source = UNSPECIFIED]) {
+  core.Future<Bookshelf> get(core.String shelf, {core.String source}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["shelf"] = shelf;
-    if (UNSPECIFIED != source) $queryParams["source"] = source;
+    if (?source) $queryParams["source"] = source;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -1222,7 +1141,7 @@ class MylibraryBookshelvesResourceResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "mylibrary/bookshelves/{shelf}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1238,12 +1157,12 @@ class MylibraryBookshelvesResourceResource extends core.Object {
    *    * [shelf] ID of bookshelf from which to remove a volume.
    *    * [source] String to identify the originator of this request.
    */
-  core.Future clearVolumes(core.String shelf, [core.String source = UNSPECIFIED]) {
+  core.Future clearVolumes(core.String shelf, {core.String source}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["shelf"] = shelf;
-    if (UNSPECIFIED != source) $queryParams["source"] = source;
+    if (?source) $queryParams["source"] = source;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -1254,7 +1173,7 @@ class MylibraryBookshelvesResourceResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "mylibrary/bookshelves/{shelf}/clearVolumes";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1269,11 +1188,11 @@ class MylibraryBookshelvesResourceResource extends core.Object {
    *
    *    * [source] String to identify the originator of this request.
    */
-  core.Future<Bookshelves> list([core.String source = UNSPECIFIED]) {
+  core.Future<Bookshelves> list({core.String source}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    if (UNSPECIFIED != source) $queryParams["source"] = source;
+    if (?source) $queryParams["source"] = source;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -1284,7 +1203,7 @@ class MylibraryBookshelvesResourceResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "mylibrary/bookshelves";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1301,13 +1220,13 @@ class MylibraryBookshelvesResourceResource extends core.Object {
    *    * [volumeId] ID of volume to add.
    *    * [source] String to identify the originator of this request.
    */
-  core.Future addVolume(core.String shelf, core.String volumeId, [core.String source = UNSPECIFIED]) {
+  core.Future addVolume(core.String shelf, core.String volumeId, {core.String source}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["shelf"] = shelf;
-    if (UNSPECIFIED != volumeId) $queryParams["volumeId"] = volumeId;
-    if (UNSPECIFIED != source) $queryParams["source"] = source;
+    if (?volumeId) $queryParams["volumeId"] = volumeId;
+    if (?source) $queryParams["source"] = source;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -1318,7 +1237,7 @@ class MylibraryBookshelvesResourceResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "mylibrary/bookshelves/{shelf}/addVolume";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1337,14 +1256,14 @@ class MylibraryBookshelvesResourceResource extends core.Object {
    *        the first and the second and so on.)
    *    * [source] String to identify the originator of this request.
    */
-  core.Future moveVolume(core.String shelf, core.String volumeId, core.int volumePosition, [core.String source = UNSPECIFIED]) {
+  core.Future moveVolume(core.String shelf, core.String volumeId, core.int volumePosition, {core.String source}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["shelf"] = shelf;
-    if (UNSPECIFIED != volumeId) $queryParams["volumeId"] = volumeId;
-    if (UNSPECIFIED != volumePosition) $queryParams["volumePosition"] = volumePosition;
-    if (UNSPECIFIED != source) $queryParams["source"] = source;
+    if (?volumeId) $queryParams["volumeId"] = volumeId;
+    if (?volumePosition) $queryParams["volumePosition"] = volumePosition;
+    if (?source) $queryParams["source"] = source;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -1355,7 +1274,7 @@ class MylibraryBookshelvesResourceResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "mylibrary/bookshelves/{shelf}/moveVolume";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1389,18 +1308,18 @@ class MylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceRes
 
   Minimum: 0.
    */
-  core.Future<Volumes> list(core.String shelf, [MylibraryResourceMylibraryBookshelvesResourceResourceMylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceResourceResourceListProjection projection = UNSPECIFIED, core.String country = UNSPECIFIED, core.bool showPreorders = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String q = UNSPECIFIED, core.String source = UNSPECIFIED, core.int startIndex = UNSPECIFIED]) {
+  core.Future<Volumes> list(core.String shelf, {MylibraryResourceMylibraryBookshelvesResourceResourceMylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceResourceResourceListProjection projection, core.String country, core.bool showPreorders, core.int maxResults, core.String q, core.String source, core.int startIndex}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["shelf"] = shelf;
-    if (UNSPECIFIED != projection) $queryParams["projection"] = projection;
-    if (UNSPECIFIED != country) $queryParams["country"] = country;
-    if (UNSPECIFIED != showPreorders) $queryParams["showPreorders"] = showPreorders;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
-    if (UNSPECIFIED != q) $queryParams["q"] = q;
-    if (UNSPECIFIED != source) $queryParams["source"] = source;
-    if (UNSPECIFIED != startIndex) $queryParams["startIndex"] = startIndex;
+    if (?projection) $queryParams["projection"] = projection;
+    if (?country) $queryParams["country"] = country;
+    if (?showPreorders) $queryParams["showPreorders"] = showPreorders;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
+    if (?q) $queryParams["q"] = q;
+    if (?source) $queryParams["source"] = source;
+    if (?startIndex) $queryParams["startIndex"] = startIndex;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -1411,7 +1330,7 @@ class MylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceRes
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "mylibrary/bookshelves/{shelf}/volumes";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1424,18 +1343,18 @@ class MylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceRes
 // Enum MylibraryResource.MylibraryBookshelvesResourceResource.MylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceResourceResource.List.Projection
 class MylibraryResourceMylibraryBookshelvesResourceResourceMylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceResourceResourceListProjection extends core.Object implements core.Hashable {
   /** Includes all volume data. */
-  static final MylibraryResourceMylibraryBookshelvesResourceResourceMylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceResourceResourceListProjection FULL = const MylibraryResourceMylibraryBookshelvesResourceResourceMylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceResourceResourceListProjection._internal("full", 0);
+  const MylibraryResourceMylibraryBookshelvesResourceResourceMylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceResourceResourceListProjection FULL = const MylibraryResourceMylibraryBookshelvesResourceResourceMylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceResourceResourceListProjection._internal("full", 0);
   /** Includes a subset of fields in volumeInfo and accessInfo. */
-  static final MylibraryResourceMylibraryBookshelvesResourceResourceMylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceResourceResourceListProjection LITE = const MylibraryResourceMylibraryBookshelvesResourceResourceMylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceResourceResourceListProjection._internal("lite", 1);
+  const MylibraryResourceMylibraryBookshelvesResourceResourceMylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceResourceResourceListProjection LITE = const MylibraryResourceMylibraryBookshelvesResourceResourceMylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceResourceResourceListProjection._internal("lite", 1);
 
   /** All values of this enumeration */
-  static final core.List<MylibraryResourceMylibraryBookshelvesResourceResourceMylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceResourceResourceListProjection> values = const <MylibraryResourceMylibraryBookshelvesResourceResourceMylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceResourceResourceListProjection>[
+  const core.List<MylibraryResourceMylibraryBookshelvesResourceResourceMylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceResourceResourceListProjection> values = const <MylibraryResourceMylibraryBookshelvesResourceResourceMylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceResourceResourceListProjection>[
     FULL,
     LITE,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <MylibraryResourceMylibraryBookshelvesResourceResourceMylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceResourceResourceListProjection>{ 
+  const _valuesMap = const <MylibraryResourceMylibraryBookshelvesResourceResourceMylibraryBookshelvesResourceMylibraryBookshelvesVolumesResourceResourceResourceResourceListProjection>{ 
     "full": FULL,
     "lite": LITE,
   };
@@ -1469,16 +1388,16 @@ class MylibraryReadingpositionsResourceResource extends core.Object {
    *    * [contentVersion] Volume content version for which this reading position applies.
    *    * [action] Action that caused this reading position to be set.
    */
-  core.Future setPosition(core.String volumeId, core.String timestamp, core.String position, [core.String source = UNSPECIFIED, core.String contentVersion = UNSPECIFIED, MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction action = UNSPECIFIED]) {
+  core.Future setPosition(core.String volumeId, core.String timestamp, core.String position, {core.String source, core.String contentVersion, MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction action}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["volumeId"] = volumeId;
-    if (UNSPECIFIED != timestamp) $queryParams["timestamp"] = timestamp;
-    if (UNSPECIFIED != position) $queryParams["position"] = position;
-    if (UNSPECIFIED != source) $queryParams["source"] = source;
-    if (UNSPECIFIED != contentVersion) $queryParams["contentVersion"] = contentVersion;
-    if (UNSPECIFIED != action) $queryParams["action"] = action;
+    if (?timestamp) $queryParams["timestamp"] = timestamp;
+    if (?position) $queryParams["position"] = position;
+    if (?source) $queryParams["source"] = source;
+    if (?contentVersion) $queryParams["contentVersion"] = contentVersion;
+    if (?action) $queryParams["action"] = action;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -1489,7 +1408,7 @@ class MylibraryReadingpositionsResourceResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "mylibrary/readingpositions/{volumeId}/setPosition";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1506,13 +1425,13 @@ class MylibraryReadingpositionsResourceResource extends core.Object {
    *    * [source] String to identify the originator of this request.
    *    * [contentVersion] Volume content version for which this reading position is requested.
    */
-  core.Future<ReadingPosition> get(core.String volumeId, [core.String source = UNSPECIFIED, core.String contentVersion = UNSPECIFIED]) {
+  core.Future<ReadingPosition> get(core.String volumeId, {core.String source, core.String contentVersion}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["volumeId"] = volumeId;
-    if (UNSPECIFIED != source) $queryParams["source"] = source;
-    if (UNSPECIFIED != contentVersion) $queryParams["contentVersion"] = contentVersion;
+    if (?source) $queryParams["source"] = source;
+    if (?contentVersion) $queryParams["contentVersion"] = contentVersion;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -1523,7 +1442,7 @@ class MylibraryReadingpositionsResourceResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "mylibrary/readingpositions/{volumeId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1536,20 +1455,20 @@ class MylibraryReadingpositionsResourceResource extends core.Object {
 // Enum MylibraryResource.MylibraryReadingpositionsResourceResource.SetPosition.Action
 class MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction extends core.Object implements core.Hashable {
   /** User chose bookmark within volume. */
-  static final MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction BOOKMARK = const MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction._internal("bookmark", 0);
+  const MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction BOOKMARK = const MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction._internal("bookmark", 0);
   /** User selected chapter from list. */
-  static final MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction CHAPTER = const MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction._internal("chapter", 1);
+  const MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction CHAPTER = const MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction._internal("chapter", 1);
   /** Next page event. */
-  static final MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction NEXT_PAGE = const MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction._internal("next-page", 2);
+  const MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction NEXT_PAGE = const MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction._internal("next-page", 2);
   /** Previous page event. */
-  static final MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction PREV_PAGE = const MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction._internal("prev-page", 3);
+  const MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction PREV_PAGE = const MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction._internal("prev-page", 3);
   /** User navigated to page. */
-  static final MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction SCROLL = const MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction._internal("scroll", 4);
+  const MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction SCROLL = const MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction._internal("scroll", 4);
   /** User chose search results within volume. */
-  static final MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction SEARCH = const MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction._internal("search", 5);
+  const MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction SEARCH = const MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction._internal("search", 5);
 
   /** All values of this enumeration */
-  static final core.List<MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction> values = const <MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction>[
+  const core.List<MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction> values = const <MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction>[
     BOOKMARK,
     CHAPTER,
     NEXT_PAGE,
@@ -1559,7 +1478,7 @@ class MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionActio
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction>{ 
+  const _valuesMap = const <MylibraryResourceMylibraryReadingpositionsResourceResourceSetPositionAction>{ 
     "bookmark": BOOKMARK,
     "chapter": CHAPTER,
     "next-page": NEXT_PAGE,
@@ -1593,11 +1512,11 @@ class MylibraryAnnotationsResourceResource extends core.Object {
    *    * [content] the Annotation
    *    * [source] String to identify the originator of this request.
    */
-  core.Future<Annotation> insert(Annotation content, [core.String source = UNSPECIFIED]) {
+  core.Future<Annotation> insert(Annotation content, {core.String source}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    if (UNSPECIFIED != source) $queryParams["source"] = source;
+    if (?source) $queryParams["source"] = source;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -1610,7 +1529,7 @@ class MylibraryAnnotationsResourceResource extends core.Object {
     final $body = JSON.stringify(Annotation.serialize(content));
     final $path = "mylibrary/annotations";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1626,12 +1545,12 @@ class MylibraryAnnotationsResourceResource extends core.Object {
    *    * [annotationId] The ID for the annotation to retrieve.
    *    * [source] String to identify the originator of this request.
    */
-  core.Future<Annotation> get(core.String annotationId, [core.String source = UNSPECIFIED]) {
+  core.Future<Annotation> get(core.String annotationId, {core.String source}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["annotationId"] = annotationId;
-    if (UNSPECIFIED != source) $queryParams["source"] = source;
+    if (?source) $queryParams["source"] = source;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -1642,7 +1561,7 @@ class MylibraryAnnotationsResourceResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "mylibrary/annotations/{annotationId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1670,20 +1589,20 @@ class MylibraryAnnotationsResourceResource extends core.Object {
    *    * [source] String to identify the originator of this request.
    *    * [layerId] The layer ID to limit annotation by.
    */
-  core.Future<Annotations> list([core.bool showDeleted = UNSPECIFIED, core.String updatedMin = UNSPECIFIED, core.String updatedMax = UNSPECIFIED, core.String volumeId = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.List<core.String> pageIds = UNSPECIFIED, core.String contentVersion = UNSPECIFIED, core.String source = UNSPECIFIED, core.String layerId = UNSPECIFIED]) {
+  core.Future<Annotations> list({core.bool showDeleted, core.String updatedMin, core.String updatedMax, core.String volumeId, core.int maxResults, core.String pageToken, core.List<core.String> pageIds, core.String contentVersion, core.String source, core.String layerId}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    if (UNSPECIFIED != showDeleted) $queryParams["showDeleted"] = showDeleted;
-    if (UNSPECIFIED != updatedMin) $queryParams["updatedMin"] = updatedMin;
-    if (UNSPECIFIED != updatedMax) $queryParams["updatedMax"] = updatedMax;
-    if (UNSPECIFIED != volumeId) $queryParams["volumeId"] = volumeId;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != pageIds) $queryParams["pageIds"] = pageIds;
-    if (UNSPECIFIED != contentVersion) $queryParams["contentVersion"] = contentVersion;
-    if (UNSPECIFIED != source) $queryParams["source"] = source;
-    if (UNSPECIFIED != layerId) $queryParams["layerId"] = layerId;
+    if (?showDeleted) $queryParams["showDeleted"] = showDeleted;
+    if (?updatedMin) $queryParams["updatedMin"] = updatedMin;
+    if (?updatedMax) $queryParams["updatedMax"] = updatedMax;
+    if (?volumeId) $queryParams["volumeId"] = volumeId;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?pageIds) $queryParams["pageIds"] = pageIds;
+    if (?contentVersion) $queryParams["contentVersion"] = contentVersion;
+    if (?source) $queryParams["source"] = source;
+    if (?layerId) $queryParams["layerId"] = layerId;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -1694,7 +1613,7 @@ class MylibraryAnnotationsResourceResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "mylibrary/annotations";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1711,12 +1630,12 @@ class MylibraryAnnotationsResourceResource extends core.Object {
    *    * [annotationId] The ID for the annotation to update.
    *    * [source] String to identify the originator of this request.
    */
-  core.Future<Annotation> update(core.String annotationId, Annotation content, [core.String source = UNSPECIFIED]) {
+  core.Future<Annotation> update(core.String annotationId, Annotation content, {core.String source}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["annotationId"] = annotationId;
-    if (UNSPECIFIED != source) $queryParams["source"] = source;
+    if (?source) $queryParams["source"] = source;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -1729,7 +1648,7 @@ class MylibraryAnnotationsResourceResource extends core.Object {
     final $body = JSON.stringify(Annotation.serialize(content));
     final $path = "mylibrary/annotations/{annotationId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PUT", $headers);
+    final $http = new http.Request($url, "PUT", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1745,12 +1664,12 @@ class MylibraryAnnotationsResourceResource extends core.Object {
    *    * [annotationId] The ID for the annotation to delete.
    *    * [source] String to identify the originator of this request.
    */
-  core.Future delete(core.String annotationId, [core.String source = UNSPECIFIED]) {
+  core.Future delete(core.String annotationId, {core.String source}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["annotationId"] = annotationId;
-    if (UNSPECIFIED != source) $queryParams["source"] = source;
+    if (?source) $queryParams["source"] = source;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -1761,7 +1680,7 @@ class MylibraryAnnotationsResourceResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "mylibrary/annotations/{annotationId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "DELETE", $headers);
+    final $http = new http.Request($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1962,8 +1881,8 @@ class Annotationdata extends IdentityHash {
   /** The Layer id for this data. * */
   core.String layerId;
 
-  /** JSON encoded data for this annotation data. */
-  BooksLayerGeoData data;
+  
+  core.Object data;
 
   /** Unique id for this annotation data. */
   core.String id;
@@ -1981,7 +1900,7 @@ class Annotationdata extends IdentityHash {
     result.volumeId = identity(json["volumeId"]);
     result.encodedData = identity(json["encoded_data"]);
     result.layerId = identity(json["layerId"]);
-    result.data = BooksLayerGeoData.parse(json["data"]);
+    result.data = identity(json["data"]);
     result.id = identity(json["id"]);
     result.selfLink = identity(json["selfLink"]);
     return result;
@@ -1996,7 +1915,7 @@ class Annotationdata extends IdentityHash {
     result["volumeId"] = identity(value.volumeId);
     result["encoded_data"] = identity(value.encodedData);
     result["layerId"] = identity(value.layerId);
-    result["data"] = BooksLayerGeoData.serialize(value.data);
+    result["data"] = identity(value.data);
     result["id"] = identity(value.id);
     result["selfLink"] = identity(value.selfLink);
     return result;
@@ -2124,6 +2043,530 @@ class BooksAnnotationsRange extends IdentityHash {
   toString() => serialize(this).toString();
 }
 
+// Schema .BooksLayerDictData
+class BooksLayerDictData extends IdentityHash {
+  
+  BooksLayerDictDataDict dict;
+
+  
+  BooksLayerDictDataCommon common;
+
+  /** Parses an instance from its JSON representation. */
+  static BooksLayerDictData parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new BooksLayerDictData();
+    result.dict = BooksLayerDictDataDict.parse(json["dict"]);
+    result.common = BooksLayerDictDataCommon.parse(json["common"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(BooksLayerDictData value) {
+    if (value == null) return null;
+    final result = {};
+    result["dict"] = BooksLayerDictDataDict.serialize(value.dict);
+    result["common"] = BooksLayerDictDataCommon.serialize(value.common);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema BooksLayerDictData.BooksLayerDictDataCommon
+class BooksLayerDictDataCommon extends IdentityHash {
+  /**
+ * The display title and localized canonical name to use when searching for this entity on Google
+ * search.
+ */
+  core.String title;
+
+  /** Parses an instance from its JSON representation. */
+  static BooksLayerDictDataCommon parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new BooksLayerDictDataCommon();
+    result.title = identity(json["title"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(BooksLayerDictDataCommon value) {
+    if (value == null) return null;
+    final result = {};
+    result["title"] = identity(value.title);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema BooksLayerDictData.BooksLayerDictDataDict
+class BooksLayerDictDataDict extends IdentityHash {
+  /** The source, url and attribution for this dictionary data. */
+  BooksLayerDictDataDictSource source;
+
+  
+  core.List<BooksLayerDictDataDictWords> words;
+
+  /** Parses an instance from its JSON representation. */
+  static BooksLayerDictDataDict parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new BooksLayerDictDataDict();
+    result.source = BooksLayerDictDataDictSource.parse(json["source"]);
+    result.words = map(BooksLayerDictDataDictWords.parse)(json["words"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(BooksLayerDictDataDict value) {
+    if (value == null) return null;
+    final result = {};
+    result["source"] = BooksLayerDictDataDictSource.serialize(value.source);
+    result["words"] = map(BooksLayerDictDataDictWords.serialize)(value.words);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema BooksLayerDictData.BooksLayerDictDataDict.BooksLayerDictDataDictSource
+class BooksLayerDictDataDictSource extends IdentityHash {
+  
+  core.String url;
+
+  
+  core.String attribution;
+
+  /** Parses an instance from its JSON representation. */
+  static BooksLayerDictDataDictSource parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new BooksLayerDictDataDictSource();
+    result.url = identity(json["url"]);
+    result.attribution = identity(json["attribution"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(BooksLayerDictDataDictSource value) {
+    if (value == null) return null;
+    final result = {};
+    result["url"] = identity(value.url);
+    result["attribution"] = identity(value.attribution);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema BooksLayerDictData.BooksLayerDictDataDict.BooksLayerDictDataDictWords
+class BooksLayerDictDataDictWords extends IdentityHash {
+  
+  core.List<BooksLayerDictDataDictWordsDerivatives> derivatives;
+
+  
+  core.List<BooksLayerDictDataDictWordsSenses> senses;
+
+  
+  core.List<BooksLayerDictDataDictWordsExamples> examples;
+
+  /** The words with different meanings but not related words, e.g. "go" (game) and "go" (verb). */
+  BooksLayerDictDataDictWordsSource source;
+
+  /** Parses an instance from its JSON representation. */
+  static BooksLayerDictDataDictWords parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new BooksLayerDictDataDictWords();
+    result.derivatives = map(BooksLayerDictDataDictWordsDerivatives.parse)(json["derivatives"]);
+    result.senses = map(BooksLayerDictDataDictWordsSenses.parse)(json["senses"]);
+    result.examples = map(BooksLayerDictDataDictWordsExamples.parse)(json["examples"]);
+    result.source = BooksLayerDictDataDictWordsSource.parse(json["source"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(BooksLayerDictDataDictWords value) {
+    if (value == null) return null;
+    final result = {};
+    result["derivatives"] = map(BooksLayerDictDataDictWordsDerivatives.serialize)(value.derivatives);
+    result["senses"] = map(BooksLayerDictDataDictWordsSenses.serialize)(value.senses);
+    result["examples"] = map(BooksLayerDictDataDictWordsExamples.serialize)(value.examples);
+    result["source"] = BooksLayerDictDataDictWordsSource.serialize(value.source);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema BooksLayerDictData.BooksLayerDictDataDict.BooksLayerDictDataDictWords.BooksLayerDictDataDictWordsDerivatives
+class BooksLayerDictDataDictWordsDerivatives extends IdentityHash {
+  
+  BooksLayerDictDataDictWordsDerivativesSource source;
+
+  
+  core.String text;
+
+  /** Parses an instance from its JSON representation. */
+  static BooksLayerDictDataDictWordsDerivatives parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new BooksLayerDictDataDictWordsDerivatives();
+    result.source = BooksLayerDictDataDictWordsDerivativesSource.parse(json["source"]);
+    result.text = identity(json["text"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(BooksLayerDictDataDictWordsDerivatives value) {
+    if (value == null) return null;
+    final result = {};
+    result["source"] = BooksLayerDictDataDictWordsDerivativesSource.serialize(value.source);
+    result["text"] = identity(value.text);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema BooksLayerDictData.BooksLayerDictDataDict.BooksLayerDictDataDictWords.BooksLayerDictDataDictWordsDerivatives.BooksLayerDictDataDictWordsDerivativesSource
+class BooksLayerDictDataDictWordsDerivativesSource extends IdentityHash {
+  
+  core.String url;
+
+  
+  core.String attribution;
+
+  /** Parses an instance from its JSON representation. */
+  static BooksLayerDictDataDictWordsDerivativesSource parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new BooksLayerDictDataDictWordsDerivativesSource();
+    result.url = identity(json["url"]);
+    result.attribution = identity(json["attribution"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(BooksLayerDictDataDictWordsDerivativesSource value) {
+    if (value == null) return null;
+    final result = {};
+    result["url"] = identity(value.url);
+    result["attribution"] = identity(value.attribution);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema BooksLayerDictData.BooksLayerDictDataDict.BooksLayerDictDataDictWords.BooksLayerDictDataDictWordsExamples
+class BooksLayerDictDataDictWordsExamples extends IdentityHash {
+  
+  BooksLayerDictDataDictWordsExamplesSource source;
+
+  
+  core.String text;
+
+  /** Parses an instance from its JSON representation. */
+  static BooksLayerDictDataDictWordsExamples parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new BooksLayerDictDataDictWordsExamples();
+    result.source = BooksLayerDictDataDictWordsExamplesSource.parse(json["source"]);
+    result.text = identity(json["text"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(BooksLayerDictDataDictWordsExamples value) {
+    if (value == null) return null;
+    final result = {};
+    result["source"] = BooksLayerDictDataDictWordsExamplesSource.serialize(value.source);
+    result["text"] = identity(value.text);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema BooksLayerDictData.BooksLayerDictDataDict.BooksLayerDictDataDictWords.BooksLayerDictDataDictWordsExamples.BooksLayerDictDataDictWordsExamplesSource
+class BooksLayerDictDataDictWordsExamplesSource extends IdentityHash {
+  
+  core.String url;
+
+  
+  core.String attribution;
+
+  /** Parses an instance from its JSON representation. */
+  static BooksLayerDictDataDictWordsExamplesSource parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new BooksLayerDictDataDictWordsExamplesSource();
+    result.url = identity(json["url"]);
+    result.attribution = identity(json["attribution"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(BooksLayerDictDataDictWordsExamplesSource value) {
+    if (value == null) return null;
+    final result = {};
+    result["url"] = identity(value.url);
+    result["attribution"] = identity(value.attribution);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema BooksLayerDictData.BooksLayerDictDataDict.BooksLayerDictDataDictWords.BooksLayerDictDataDictWordsSenses
+class BooksLayerDictDataDictWordsSenses extends IdentityHash {
+  
+  core.String pronunciationUrl;
+
+  
+  core.List<BooksLayerDictDataDictWordsSensesSynonyms> synonyms;
+
+  
+  core.List<BooksLayerDictDataDictWordsSensesConjugations> conjugations;
+
+  
+  BooksLayerDictDataDictWordsSensesSource source;
+
+  
+  core.String pronunciation;
+
+  
+  core.String partOfSpeech;
+
+  
+  core.String syllabification;
+
+  
+  core.List<BooksLayerDictDataDictWordsSensesDefinitions> definitions;
+
+  /** Parses an instance from its JSON representation. */
+  static BooksLayerDictDataDictWordsSenses parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new BooksLayerDictDataDictWordsSenses();
+    result.pronunciationUrl = identity(json["pronunciationUrl"]);
+    result.synonyms = map(BooksLayerDictDataDictWordsSensesSynonyms.parse)(json["synonyms"]);
+    result.conjugations = map(BooksLayerDictDataDictWordsSensesConjugations.parse)(json["conjugations"]);
+    result.source = BooksLayerDictDataDictWordsSensesSource.parse(json["source"]);
+    result.pronunciation = identity(json["pronunciation"]);
+    result.partOfSpeech = identity(json["partOfSpeech"]);
+    result.syllabification = identity(json["syllabification"]);
+    result.definitions = map(BooksLayerDictDataDictWordsSensesDefinitions.parse)(json["definitions"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(BooksLayerDictDataDictWordsSenses value) {
+    if (value == null) return null;
+    final result = {};
+    result["pronunciationUrl"] = identity(value.pronunciationUrl);
+    result["synonyms"] = map(BooksLayerDictDataDictWordsSensesSynonyms.serialize)(value.synonyms);
+    result["conjugations"] = map(BooksLayerDictDataDictWordsSensesConjugations.serialize)(value.conjugations);
+    result["source"] = BooksLayerDictDataDictWordsSensesSource.serialize(value.source);
+    result["pronunciation"] = identity(value.pronunciation);
+    result["partOfSpeech"] = identity(value.partOfSpeech);
+    result["syllabification"] = identity(value.syllabification);
+    result["definitions"] = map(BooksLayerDictDataDictWordsSensesDefinitions.serialize)(value.definitions);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema BooksLayerDictData.BooksLayerDictDataDict.BooksLayerDictDataDictWords.BooksLayerDictDataDictWordsSenses.BooksLayerDictDataDictWordsSensesConjugations
+class BooksLayerDictDataDictWordsSensesConjugations extends IdentityHash {
+  
+  core.String type;
+
+  
+  core.String value;
+
+  /** Parses an instance from its JSON representation. */
+  static BooksLayerDictDataDictWordsSensesConjugations parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new BooksLayerDictDataDictWordsSensesConjugations();
+    result.type = identity(json["type"]);
+    result.value = identity(json["value"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(BooksLayerDictDataDictWordsSensesConjugations value) {
+    if (value == null) return null;
+    final result = {};
+    result["type"] = identity(value.type);
+    result["value"] = identity(value.value);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema BooksLayerDictData.BooksLayerDictDataDict.BooksLayerDictDataDictWords.BooksLayerDictDataDictWordsSenses.BooksLayerDictDataDictWordsSensesDefinitions
+class BooksLayerDictDataDictWordsSensesDefinitions extends IdentityHash {
+  
+  core.String definition;
+
+  
+  core.List<BooksLayerDictDataDictWordsSensesDefinitionsExamples> examples;
+
+  /** Parses an instance from its JSON representation. */
+  static BooksLayerDictDataDictWordsSensesDefinitions parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new BooksLayerDictDataDictWordsSensesDefinitions();
+    result.definition = identity(json["definition"]);
+    result.examples = map(BooksLayerDictDataDictWordsSensesDefinitionsExamples.parse)(json["examples"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(BooksLayerDictDataDictWordsSensesDefinitions value) {
+    if (value == null) return null;
+    final result = {};
+    result["definition"] = identity(value.definition);
+    result["examples"] = map(BooksLayerDictDataDictWordsSensesDefinitionsExamples.serialize)(value.examples);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema BooksLayerDictData.BooksLayerDictDataDict.BooksLayerDictDataDictWords.BooksLayerDictDataDictWordsSenses.BooksLayerDictDataDictWordsSensesDefinitions.BooksLayerDictDataDictWordsSensesDefinitionsExamples
+class BooksLayerDictDataDictWordsSensesDefinitionsExamples extends IdentityHash {
+  
+  BooksLayerDictDataDictWordsSensesDefinitionsExamplesSource source;
+
+  
+  core.String text;
+
+  /** Parses an instance from its JSON representation. */
+  static BooksLayerDictDataDictWordsSensesDefinitionsExamples parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new BooksLayerDictDataDictWordsSensesDefinitionsExamples();
+    result.source = BooksLayerDictDataDictWordsSensesDefinitionsExamplesSource.parse(json["source"]);
+    result.text = identity(json["text"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(BooksLayerDictDataDictWordsSensesDefinitionsExamples value) {
+    if (value == null) return null;
+    final result = {};
+    result["source"] = BooksLayerDictDataDictWordsSensesDefinitionsExamplesSource.serialize(value.source);
+    result["text"] = identity(value.text);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema BooksLayerDictData.BooksLayerDictDataDict.BooksLayerDictDataDictWords.BooksLayerDictDataDictWordsSenses.BooksLayerDictDataDictWordsSensesDefinitions.BooksLayerDictDataDictWordsSensesDefinitionsExamples.BooksLayerDictDataDictWordsSensesDefinitionsExamplesSource
+class BooksLayerDictDataDictWordsSensesDefinitionsExamplesSource extends IdentityHash {
+  
+  core.String url;
+
+  
+  core.String attribution;
+
+  /** Parses an instance from its JSON representation. */
+  static BooksLayerDictDataDictWordsSensesDefinitionsExamplesSource parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new BooksLayerDictDataDictWordsSensesDefinitionsExamplesSource();
+    result.url = identity(json["url"]);
+    result.attribution = identity(json["attribution"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(BooksLayerDictDataDictWordsSensesDefinitionsExamplesSource value) {
+    if (value == null) return null;
+    final result = {};
+    result["url"] = identity(value.url);
+    result["attribution"] = identity(value.attribution);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema BooksLayerDictData.BooksLayerDictDataDict.BooksLayerDictDataDictWords.BooksLayerDictDataDictWordsSenses.BooksLayerDictDataDictWordsSensesSource
+class BooksLayerDictDataDictWordsSensesSource extends IdentityHash {
+  
+  core.String url;
+
+  
+  core.String attribution;
+
+  /** Parses an instance from its JSON representation. */
+  static BooksLayerDictDataDictWordsSensesSource parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new BooksLayerDictDataDictWordsSensesSource();
+    result.url = identity(json["url"]);
+    result.attribution = identity(json["attribution"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(BooksLayerDictDataDictWordsSensesSource value) {
+    if (value == null) return null;
+    final result = {};
+    result["url"] = identity(value.url);
+    result["attribution"] = identity(value.attribution);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema BooksLayerDictData.BooksLayerDictDataDict.BooksLayerDictDataDictWords.BooksLayerDictDataDictWordsSenses.BooksLayerDictDataDictWordsSensesSynonyms
+class BooksLayerDictDataDictWordsSensesSynonyms extends IdentityHash {
+  
+  BooksLayerDictDataDictWordsSensesSynonymsSource source;
+
+  
+  core.String text;
+
+  /** Parses an instance from its JSON representation. */
+  static BooksLayerDictDataDictWordsSensesSynonyms parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new BooksLayerDictDataDictWordsSensesSynonyms();
+    result.source = BooksLayerDictDataDictWordsSensesSynonymsSource.parse(json["source"]);
+    result.text = identity(json["text"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(BooksLayerDictDataDictWordsSensesSynonyms value) {
+    if (value == null) return null;
+    final result = {};
+    result["source"] = BooksLayerDictDataDictWordsSensesSynonymsSource.serialize(value.source);
+    result["text"] = identity(value.text);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema BooksLayerDictData.BooksLayerDictDataDict.BooksLayerDictDataDictWords.BooksLayerDictDataDictWordsSenses.BooksLayerDictDataDictWordsSensesSynonyms.BooksLayerDictDataDictWordsSensesSynonymsSource
+class BooksLayerDictDataDictWordsSensesSynonymsSource extends IdentityHash {
+  
+  core.String url;
+
+  
+  core.String attribution;
+
+  /** Parses an instance from its JSON representation. */
+  static BooksLayerDictDataDictWordsSensesSynonymsSource parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new BooksLayerDictDataDictWordsSensesSynonymsSource();
+    result.url = identity(json["url"]);
+    result.attribution = identity(json["attribution"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(BooksLayerDictDataDictWordsSensesSynonymsSource value) {
+    if (value == null) return null;
+    final result = {};
+    result["url"] = identity(value.url);
+    result["attribution"] = identity(value.attribution);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema BooksLayerDictData.BooksLayerDictDataDict.BooksLayerDictDataDictWords.BooksLayerDictDataDictWordsSource
+class BooksLayerDictDataDictWordsSource extends IdentityHash {
+  
+  core.String url;
+
+  
+  core.String attribution;
+
+  /** Parses an instance from its JSON representation. */
+  static BooksLayerDictDataDictWordsSource parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new BooksLayerDictDataDictWordsSource();
+    result.url = identity(json["url"]);
+    result.attribution = identity(json["attribution"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(BooksLayerDictDataDictWordsSource value) {
+    if (value == null) return null;
+    final result = {};
+    result["url"] = identity(value.url);
+    result["attribution"] = identity(value.attribution);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
 // Schema .BooksLayerGeoData
 class BooksLayerGeoData extends IdentityHash {
   
@@ -2165,6 +2608,12 @@ class BooksLayerGeoDataCommon extends IdentityHash {
   /** The URL for information for this location. Ex: wikipedia link. */
   core.String snippetUrl;
 
+  /**
+ * The display title and localized canonical name to use when searching for this entity on Google
+ * search.
+ */
+  core.String title;
+
   /** Parses an instance from its JSON representation. */
   static BooksLayerGeoDataCommon parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
@@ -2173,6 +2622,7 @@ class BooksLayerGeoDataCommon extends IdentityHash {
     result.previewImageUrl = identity(json["previewImageUrl"]);
     result.snippet = identity(json["snippet"]);
     result.snippetUrl = identity(json["snippetUrl"]);
+    result.title = identity(json["title"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
@@ -2183,6 +2633,7 @@ class BooksLayerGeoDataCommon extends IdentityHash {
     result["previewImageUrl"] = identity(value.previewImageUrl);
     result["snippet"] = identity(value.snippet);
     result["snippetUrl"] = identity(value.snippetUrl);
+    result["title"] = identity(value.title);
     return result;
   }
   toString() => serialize(this).toString();
@@ -2192,12 +2643,6 @@ class BooksLayerGeoDataCommon extends IdentityHash {
 class BooksLayerGeoDataGeo extends IdentityHash {
   /** The country code of the location. */
   core.String countryCode;
-
-  /**
- * The display title and localized canonical name to use when searching for this entity on Google
- * search.
- */
-  core.String title;
 
   /**
  * The Zoom level to use for the map. Zoom levels between 0 (the lowest zoom level, in which the
@@ -2234,7 +2679,6 @@ class BooksLayerGeoDataGeo extends IdentityHash {
     if (json == null) return null;
     final result = new BooksLayerGeoDataGeo();
     result.countryCode = identity(json["countryCode"]);
-    result.title = identity(json["title"]);
     result.zoom = identity(json["zoom"]);
     result.longitude = identity(json["longitude"]);
     result.mapType = identity(json["mapType"]);
@@ -2249,7 +2693,6 @@ class BooksLayerGeoDataGeo extends IdentityHash {
     if (value == null) return null;
     final result = {};
     result["countryCode"] = identity(value.countryCode);
-    result["title"] = identity(value.title);
     result["zoom"] = identity(value.zoom);
     result["longitude"] = identity(value.longitude);
     result["mapType"] = identity(value.mapType);
@@ -3831,15 +4274,15 @@ class Volumes extends IdentityHash {
 // Enum BooksApi.Alt
 class BooksApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/json */
-  static final BooksApiAlt JSON = const BooksApiAlt._internal("json", 0);
+  const BooksApiAlt JSON = const BooksApiAlt._internal("json", 0);
 
   /** All values of this enumeration */
-  static final core.List<BooksApiAlt> values = const <BooksApiAlt>[
+  const core.List<BooksApiAlt> values = const <BooksApiAlt>[
     JSON,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <BooksApiAlt>{ 
+  const _valuesMap = const <BooksApiAlt>{ 
     "json": JSON,
   };
 

@@ -17,7 +17,7 @@
 #import('dart:json');
 
 #import('utils.dart');
-#import('http.dart');
+#import('http.dart', prefix:'http');
 
 // API ModeratorApi
 /**
@@ -27,34 +27,34 @@ class ModeratorApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
   final core.String baseUrl;
   /** How we should identify ourselves to the service. */
-  Authenticator authenticator;
+  http.Authenticator authenticator;
   /** The client library version */
   final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
   final core.String applicationName;
-  ModeratorApi get _$service() => this;
+  ModeratorApi get _$service => this;
   VotesResource _votes;
-  VotesResource get votes() => _votes;
+  VotesResource get votes => _votes;
   ResponsesResource _responses;
-  ResponsesResource get responses() => _responses;
+  ResponsesResource get responses => _responses;
   TagsResource _tags;
-  TagsResource get tags() => _tags;
+  TagsResource get tags => _tags;
   SeriesResource _series;
-  SeriesResource get series() => _series;
+  SeriesResource get series => _series;
   TopicsResource _topics;
-  TopicsResource get topics() => _topics;
+  TopicsResource get topics => _topics;
   GlobalResource _global;
-  GlobalResource get global() => _global;
+  GlobalResource get global => _global;
   ProfilesResource _profiles;
-  ProfilesResource get profiles() => _profiles;
+  ProfilesResource get profiles => _profiles;
   FeaturedResource _featured;
-  FeaturedResource get featured() => _featured;
+  FeaturedResource get featured => _featured;
   MyrecentResource _myrecent;
-  MyrecentResource get myrecent() => _myrecent;
+  MyrecentResource get myrecent => _myrecent;
   MyResource _my;
-  MyResource get my() => _my;
+  MyResource get my => _my;
   SubmissionsResource _submissions;
-  SubmissionsResource get submissions() => _submissions;
+  SubmissionsResource get submissions => _submissions;
   
   /** Returns response with indentations and line breaks. */
   core.bool prettyPrint;
@@ -87,10 +87,10 @@ class ModeratorApi extends core.Object {
   ModeratorApiAlt alt;
 
 
-  ModeratorApi([this.baseUrl = "https://www.googleapis.com/moderator/v1/", applicationName, this.authenticator]) :
+  ModeratorApi({this.baseUrl:"https://www.googleapis.com/moderator/v1/", applicationName, this.authenticator}) :
       this.applicationName = (applicationName == null) ? null : applicationName
-          .replaceAll(const core.RegExp(@'\s+'), '_')
-          .replaceAll(const core.RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+          .replaceAll(const core.RegExp(r'\s+'), '_')
+          .replaceAll(const core.RegExp(r'[^-_.,0-9a-zA-Z]'), '')
   { 
     _votes = new VotesResource._internal(this);
     _responses = new ResponsesResource._internal(this);
@@ -104,7 +104,7 @@ class ModeratorApi extends core.Object {
     _my = new MyResource._internal(this);
     _submissions = new SubmissionsResource._internal(this);
   }
-  core.String get userAgent() {
+  core.String get userAgent {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}moderator/v1/19700115 google-api-dart-client/${clientVersion}";
   }
@@ -130,13 +130,13 @@ class VotesResource extends core.Object {
    *    * [submissionId] The decimal ID of the Submission within the Series.
    *    * [unauthToken] User identifier for unauthenticated usage mode
    */
-  core.Future<Vote> insert(core.int seriesId, core.int submissionId, Vote content, [core.String unauthToken = UNSPECIFIED]) {
+  core.Future<Vote> insert(core.int seriesId, core.int submissionId, Vote content, {core.String unauthToken}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["seriesId"] = seriesId;
     $pathParams["submissionId"] = submissionId;
-    if (UNSPECIFIED != unauthToken) $queryParams["unauthToken"] = unauthToken;
+    if (?unauthToken) $queryParams["unauthToken"] = unauthToken;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -149,7 +149,7 @@ class VotesResource extends core.Object {
     final $body = JSON.stringify(Vote.serialize(content));
     final $path = "series/{seriesId}/submissions/{submissionId}/votes/@me";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -169,14 +169,14 @@ class VotesResource extends core.Object {
    *    * [userId]
    *    * [unauthToken] User identifier for unauthenticated usage mode
    */
-  core.Future<Vote> patch(core.int seriesId, core.int submissionId, Vote content, [core.String userId = UNSPECIFIED, core.String unauthToken = UNSPECIFIED]) {
+  core.Future<Vote> patch(core.int seriesId, core.int submissionId, Vote content, {core.String userId, core.String unauthToken}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["seriesId"] = seriesId;
     $pathParams["submissionId"] = submissionId;
-    if (UNSPECIFIED != userId) $queryParams["userId"] = userId;
-    if (UNSPECIFIED != unauthToken) $queryParams["unauthToken"] = unauthToken;
+    if (?userId) $queryParams["userId"] = userId;
+    if (?unauthToken) $queryParams["unauthToken"] = unauthToken;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -189,7 +189,7 @@ class VotesResource extends core.Object {
     final $body = JSON.stringify(Vote.serialize(content));
     final $path = "series/{seriesId}/submissions/{submissionId}/votes/@me";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PATCH", $headers);
+    final $http = new http.Request($url, "PATCH", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -206,13 +206,13 @@ class VotesResource extends core.Object {
    *    * [maxResults] Maximum number of results to return.
    *    * [startIndex] Index of the first result to be retrieved.
    */
-  core.Future<VoteList> list(core.int seriesId, [core.int maxResults = UNSPECIFIED, core.int startIndex = UNSPECIFIED]) {
+  core.Future<VoteList> list(core.int seriesId, {core.int maxResults, core.int startIndex}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["seriesId"] = seriesId;
-    if (UNSPECIFIED != maxResults) $queryParams["max-results"] = maxResults;
-    if (UNSPECIFIED != startIndex) $queryParams["start-index"] = startIndex;
+    if (?maxResults) $queryParams["max-results"] = maxResults;
+    if (?startIndex) $queryParams["start-index"] = startIndex;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -223,7 +223,7 @@ class VotesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "series/{seriesId}/votes/@me";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -243,14 +243,14 @@ class VotesResource extends core.Object {
    *    * [userId]
    *    * [unauthToken] User identifier for unauthenticated usage mode
    */
-  core.Future<Vote> update(core.int seriesId, core.int submissionId, Vote content, [core.String userId = UNSPECIFIED, core.String unauthToken = UNSPECIFIED]) {
+  core.Future<Vote> update(core.int seriesId, core.int submissionId, Vote content, {core.String userId, core.String unauthToken}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["seriesId"] = seriesId;
     $pathParams["submissionId"] = submissionId;
-    if (UNSPECIFIED != userId) $queryParams["userId"] = userId;
-    if (UNSPECIFIED != unauthToken) $queryParams["unauthToken"] = unauthToken;
+    if (?userId) $queryParams["userId"] = userId;
+    if (?unauthToken) $queryParams["unauthToken"] = unauthToken;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -263,7 +263,7 @@ class VotesResource extends core.Object {
     final $body = JSON.stringify(Vote.serialize(content));
     final $path = "series/{seriesId}/submissions/{submissionId}/votes/@me";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PUT", $headers);
+    final $http = new http.Request($url, "PUT", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -282,14 +282,14 @@ class VotesResource extends core.Object {
    *    * [userId]
    *    * [unauthToken] User identifier for unauthenticated usage mode
    */
-  core.Future<Vote> get(core.int seriesId, core.int submissionId, [core.String userId = UNSPECIFIED, core.String unauthToken = UNSPECIFIED]) {
+  core.Future<Vote> get(core.int seriesId, core.int submissionId, {core.String userId, core.String unauthToken}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["seriesId"] = seriesId;
     $pathParams["submissionId"] = submissionId;
-    if (UNSPECIFIED != userId) $queryParams["userId"] = userId;
-    if (UNSPECIFIED != unauthToken) $queryParams["unauthToken"] = unauthToken;
+    if (?userId) $queryParams["userId"] = userId;
+    if (?unauthToken) $queryParams["unauthToken"] = unauthToken;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -300,7 +300,7 @@ class VotesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "series/{seriesId}/submissions/{submissionId}/votes/@me";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -328,15 +328,15 @@ class ResponsesResource extends core.Object {
    *    * [unauthToken] User identifier for unauthenticated usage mode
    *    * [anonymous] Set to true to mark the new submission as anonymous.
    */
-  core.Future<Submission> insert(core.int seriesId, core.int topicId, core.int parentSubmissionId, Submission content, [core.String unauthToken = UNSPECIFIED, core.bool anonymous = UNSPECIFIED]) {
+  core.Future<Submission> insert(core.int seriesId, core.int topicId, core.int parentSubmissionId, Submission content, {core.String unauthToken, core.bool anonymous}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["seriesId"] = seriesId;
     $pathParams["topicId"] = topicId;
     $pathParams["parentSubmissionId"] = parentSubmissionId;
-    if (UNSPECIFIED != unauthToken) $queryParams["unauthToken"] = unauthToken;
-    if (UNSPECIFIED != anonymous) $queryParams["anonymous"] = anonymous;
+    if (?unauthToken) $queryParams["unauthToken"] = unauthToken;
+    if (?anonymous) $queryParams["anonymous"] = anonymous;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -349,7 +349,7 @@ class ResponsesResource extends core.Object {
     final $body = JSON.stringify(Submission.serialize(content));
     final $path = "series/{seriesId}/topics/{topicId}/submissions/{parentSubmissionId}/responses";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -372,18 +372,18 @@ class ResponsesResource extends core.Object {
    *    * [q] Search query.
    *    * [hasAttachedVideo] Specifies whether to restrict to submissions that have videos attached.
    */
-  core.Future<SubmissionList> list(core.int seriesId, core.int submissionId, [core.int maxResults = UNSPECIFIED, core.String sort = UNSPECIFIED, core.String author = UNSPECIFIED, core.int startIndex = UNSPECIFIED, core.String q = UNSPECIFIED, core.bool hasAttachedVideo = UNSPECIFIED]) {
+  core.Future<SubmissionList> list(core.int seriesId, core.int submissionId, {core.int maxResults, core.String sort, core.String author, core.int startIndex, core.String q, core.bool hasAttachedVideo}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["seriesId"] = seriesId;
     $pathParams["submissionId"] = submissionId;
-    if (UNSPECIFIED != maxResults) $queryParams["max-results"] = maxResults;
-    if (UNSPECIFIED != sort) $queryParams["sort"] = sort;
-    if (UNSPECIFIED != author) $queryParams["author"] = author;
-    if (UNSPECIFIED != startIndex) $queryParams["start-index"] = startIndex;
-    if (UNSPECIFIED != q) $queryParams["q"] = q;
-    if (UNSPECIFIED != hasAttachedVideo) $queryParams["hasAttachedVideo"] = hasAttachedVideo;
+    if (?maxResults) $queryParams["max-results"] = maxResults;
+    if (?sort) $queryParams["sort"] = sort;
+    if (?author) $queryParams["author"] = author;
+    if (?startIndex) $queryParams["start-index"] = startIndex;
+    if (?q) $queryParams["q"] = q;
+    if (?hasAttachedVideo) $queryParams["hasAttachedVideo"] = hasAttachedVideo;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -394,7 +394,7 @@ class ResponsesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "series/{seriesId}/submissions/{submissionId}/responses";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -436,7 +436,7 @@ class TagsResource extends core.Object {
     final $body = JSON.stringify(Tag.serialize(content));
     final $path = "series/{seriesId}/submissions/{submissionId}/tags";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -468,7 +468,7 @@ class TagsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "series/{seriesId}/submissions/{submissionId}/tags";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -502,7 +502,7 @@ class TagsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "series/{seriesId}/submissions/{submissionId}/tags/{tagId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "DELETE", $headers);
+    final $http = new http.Request($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -544,7 +544,7 @@ class SeriesResource extends core.Object {
     final $body = JSON.stringify(Series.serialize(content));
     final $path = "series";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -577,7 +577,7 @@ class SeriesResource extends core.Object {
     final $body = JSON.stringify(Series.serialize(content));
     final $path = "series/{seriesId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PATCH", $headers);
+    final $http = new http.Request($url, "PATCH", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -594,13 +594,13 @@ class SeriesResource extends core.Object {
    *    * [q] Search query.
    *    * [startIndex] Index of the first result to be retrieved.
    */
-  core.Future<SeriesList> list([core.int maxResults = UNSPECIFIED, core.String q = UNSPECIFIED, core.int startIndex = UNSPECIFIED]) {
+  core.Future<SeriesList> list({core.int maxResults, core.String q, core.int startIndex}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    if (UNSPECIFIED != maxResults) $queryParams["max-results"] = maxResults;
-    if (UNSPECIFIED != q) $queryParams["q"] = q;
-    if (UNSPECIFIED != startIndex) $queryParams["start-index"] = startIndex;
+    if (?maxResults) $queryParams["max-results"] = maxResults;
+    if (?q) $queryParams["q"] = q;
+    if (?startIndex) $queryParams["start-index"] = startIndex;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -611,7 +611,7 @@ class SeriesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "series";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -644,7 +644,7 @@ class SeriesResource extends core.Object {
     final $body = JSON.stringify(Series.serialize(content));
     final $path = "series/{seriesId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PUT", $headers);
+    final $http = new http.Request($url, "PUT", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -674,7 +674,7 @@ class SeriesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "series/{seriesId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -705,19 +705,19 @@ class SeriesSubmissionsResourceResource extends core.Object {
    *    * [q] Search query.
    *    * [hasAttachedVideo] Specifies whether to restrict to submissions that have videos attached.
    */
-  core.Future<SubmissionList> list(core.int seriesId, [core.String lang = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.bool includeVotes = UNSPECIFIED, core.int startIndex = UNSPECIFIED, core.String author = UNSPECIFIED, core.String sort = UNSPECIFIED, core.String q = UNSPECIFIED, core.bool hasAttachedVideo = UNSPECIFIED]) {
+  core.Future<SubmissionList> list(core.int seriesId, {core.String lang, core.int maxResults, core.bool includeVotes, core.int startIndex, core.String author, core.String sort, core.String q, core.bool hasAttachedVideo}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["seriesId"] = seriesId;
-    if (UNSPECIFIED != lang) $queryParams["lang"] = lang;
-    if (UNSPECIFIED != maxResults) $queryParams["max-results"] = maxResults;
-    if (UNSPECIFIED != includeVotes) $queryParams["includeVotes"] = includeVotes;
-    if (UNSPECIFIED != startIndex) $queryParams["start-index"] = startIndex;
-    if (UNSPECIFIED != author) $queryParams["author"] = author;
-    if (UNSPECIFIED != sort) $queryParams["sort"] = sort;
-    if (UNSPECIFIED != q) $queryParams["q"] = q;
-    if (UNSPECIFIED != hasAttachedVideo) $queryParams["hasAttachedVideo"] = hasAttachedVideo;
+    if (?lang) $queryParams["lang"] = lang;
+    if (?maxResults) $queryParams["max-results"] = maxResults;
+    if (?includeVotes) $queryParams["includeVotes"] = includeVotes;
+    if (?startIndex) $queryParams["start-index"] = startIndex;
+    if (?author) $queryParams["author"] = author;
+    if (?sort) $queryParams["sort"] = sort;
+    if (?q) $queryParams["q"] = q;
+    if (?hasAttachedVideo) $queryParams["hasAttachedVideo"] = hasAttachedVideo;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -728,7 +728,7 @@ class SeriesSubmissionsResourceResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "series/{seriesId}/submissions";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -756,17 +756,17 @@ class SeriesResponsesResourceResource extends core.Object {
    *    * [q] Search query.
    *    * [hasAttachedVideo] Specifies whether to restrict to submissions that have videos attached.
    */
-  core.Future<SeriesList> list(core.int seriesId, [core.int maxResults = UNSPECIFIED, core.String sort = UNSPECIFIED, core.String author = UNSPECIFIED, core.int startIndex = UNSPECIFIED, core.String q = UNSPECIFIED, core.bool hasAttachedVideo = UNSPECIFIED]) {
+  core.Future<SeriesList> list(core.int seriesId, {core.int maxResults, core.String sort, core.String author, core.int startIndex, core.String q, core.bool hasAttachedVideo}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["seriesId"] = seriesId;
-    if (UNSPECIFIED != maxResults) $queryParams["max-results"] = maxResults;
-    if (UNSPECIFIED != sort) $queryParams["sort"] = sort;
-    if (UNSPECIFIED != author) $queryParams["author"] = author;
-    if (UNSPECIFIED != startIndex) $queryParams["start-index"] = startIndex;
-    if (UNSPECIFIED != q) $queryParams["q"] = q;
-    if (UNSPECIFIED != hasAttachedVideo) $queryParams["hasAttachedVideo"] = hasAttachedVideo;
+    if (?maxResults) $queryParams["max-results"] = maxResults;
+    if (?sort) $queryParams["sort"] = sort;
+    if (?author) $queryParams["author"] = author;
+    if (?startIndex) $queryParams["start-index"] = startIndex;
+    if (?q) $queryParams["q"] = q;
+    if (?hasAttachedVideo) $queryParams["hasAttachedVideo"] = hasAttachedVideo;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -777,7 +777,7 @@ class SeriesResponsesResourceResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "series/{seriesId}/responses";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -819,7 +819,7 @@ class TopicsResource extends core.Object {
     final $body = JSON.stringify(Topic.serialize(content));
     final $path = "series/{seriesId}/topics";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -838,15 +838,15 @@ class TopicsResource extends core.Object {
    *    * [startIndex] Index of the first result to be retrieved.
    *    * [mode]
    */
-  core.Future<TopicList> list(core.int seriesId, [core.int maxResults = UNSPECIFIED, core.String q = UNSPECIFIED, core.int startIndex = UNSPECIFIED, core.String mode = UNSPECIFIED]) {
+  core.Future<TopicList> list(core.int seriesId, {core.int maxResults, core.String q, core.int startIndex, core.String mode}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["seriesId"] = seriesId;
-    if (UNSPECIFIED != maxResults) $queryParams["max-results"] = maxResults;
-    if (UNSPECIFIED != q) $queryParams["q"] = q;
-    if (UNSPECIFIED != startIndex) $queryParams["start-index"] = startIndex;
-    if (UNSPECIFIED != mode) $queryParams["mode"] = mode;
+    if (?maxResults) $queryParams["max-results"] = maxResults;
+    if (?q) $queryParams["q"] = q;
+    if (?startIndex) $queryParams["start-index"] = startIndex;
+    if (?mode) $queryParams["mode"] = mode;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -857,7 +857,7 @@ class TopicsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "series/{seriesId}/topics";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -892,7 +892,7 @@ class TopicsResource extends core.Object {
     final $body = JSON.stringify(Topic.serialize(content));
     final $path = "series/{seriesId}/topics/{topicId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PUT", $headers);
+    final $http = new http.Request($url, "PUT", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -924,7 +924,7 @@ class TopicsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "series/{seriesId}/topics/{topicId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -956,19 +956,19 @@ class TopicsSubmissionsResourceResource extends core.Object {
    *    * [q] Search query.
    *    * [hasAttachedVideo] Specifies whether to restrict to submissions that have videos attached.
    */
-  core.Future<SubmissionList> list(core.int seriesId, core.int topicId, [core.int maxResults = UNSPECIFIED, core.bool includeVotes = UNSPECIFIED, core.int startIndex = UNSPECIFIED, core.String author = UNSPECIFIED, core.String sort = UNSPECIFIED, core.String q = UNSPECIFIED, core.bool hasAttachedVideo = UNSPECIFIED]) {
+  core.Future<SubmissionList> list(core.int seriesId, core.int topicId, {core.int maxResults, core.bool includeVotes, core.int startIndex, core.String author, core.String sort, core.String q, core.bool hasAttachedVideo}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["seriesId"] = seriesId;
     $pathParams["topicId"] = topicId;
-    if (UNSPECIFIED != maxResults) $queryParams["max-results"] = maxResults;
-    if (UNSPECIFIED != includeVotes) $queryParams["includeVotes"] = includeVotes;
-    if (UNSPECIFIED != startIndex) $queryParams["start-index"] = startIndex;
-    if (UNSPECIFIED != author) $queryParams["author"] = author;
-    if (UNSPECIFIED != sort) $queryParams["sort"] = sort;
-    if (UNSPECIFIED != q) $queryParams["q"] = q;
-    if (UNSPECIFIED != hasAttachedVideo) $queryParams["hasAttachedVideo"] = hasAttachedVideo;
+    if (?maxResults) $queryParams["max-results"] = maxResults;
+    if (?includeVotes) $queryParams["includeVotes"] = includeVotes;
+    if (?startIndex) $queryParams["start-index"] = startIndex;
+    if (?author) $queryParams["author"] = author;
+    if (?sort) $queryParams["sort"] = sort;
+    if (?q) $queryParams["q"] = q;
+    if (?hasAttachedVideo) $queryParams["hasAttachedVideo"] = hasAttachedVideo;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -979,7 +979,7 @@ class TopicsSubmissionsResourceResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "series/{seriesId}/topics/{topicId}/submissions";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1013,13 +1013,13 @@ class GlobalSeriesResourceResource extends core.Object {
    *    * [q] Search query.
    *    * [startIndex] Index of the first result to be retrieved.
    */
-  core.Future<SeriesList> list([core.int maxResults = UNSPECIFIED, core.String q = UNSPECIFIED, core.int startIndex = UNSPECIFIED]) {
+  core.Future<SeriesList> list({core.int maxResults, core.String q, core.int startIndex}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    if (UNSPECIFIED != maxResults) $queryParams["max-results"] = maxResults;
-    if (UNSPECIFIED != q) $queryParams["q"] = q;
-    if (UNSPECIFIED != startIndex) $queryParams["start-index"] = startIndex;
+    if (?maxResults) $queryParams["max-results"] = maxResults;
+    if (?q) $queryParams["q"] = q;
+    if (?startIndex) $queryParams["start-index"] = startIndex;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -1030,7 +1030,7 @@ class GlobalSeriesResourceResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "search";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1068,7 +1068,7 @@ class ProfilesResource extends core.Object {
     final $body = JSON.stringify(Profile.serialize(content));
     final $path = "profiles/@me";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PATCH", $headers);
+    final $http = new http.Request($url, "PATCH", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1099,7 +1099,7 @@ class ProfilesResource extends core.Object {
     final $body = JSON.stringify(Profile.serialize(content));
     final $path = "profiles/@me";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PUT", $headers);
+    final $http = new http.Request($url, "PUT", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1127,7 +1127,7 @@ class ProfilesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "profiles/@me";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1172,7 +1172,7 @@ class FeaturedSeriesResourceResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "series/featured";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1217,7 +1217,7 @@ class MyrecentSeriesResourceResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "series/@me/recent";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1262,7 +1262,7 @@ class MySeriesResourceResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "series/@me/mine";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1288,14 +1288,14 @@ class SubmissionsResource extends core.Object {
    *    * [unauthToken] User identifier for unauthenticated usage mode
    *    * [anonymous] Set to true to mark the new submission as anonymous.
    */
-  core.Future<Submission> insert(core.int seriesId, core.int topicId, Submission content, [core.String unauthToken = UNSPECIFIED, core.bool anonymous = UNSPECIFIED]) {
+  core.Future<Submission> insert(core.int seriesId, core.int topicId, Submission content, {core.String unauthToken, core.bool anonymous}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["seriesId"] = seriesId;
     $pathParams["topicId"] = topicId;
-    if (UNSPECIFIED != unauthToken) $queryParams["unauthToken"] = unauthToken;
-    if (UNSPECIFIED != anonymous) $queryParams["anonymous"] = anonymous;
+    if (?unauthToken) $queryParams["unauthToken"] = unauthToken;
+    if (?anonymous) $queryParams["anonymous"] = anonymous;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -1308,7 +1308,7 @@ class SubmissionsResource extends core.Object {
     final $body = JSON.stringify(Submission.serialize(content));
     final $path = "series/{seriesId}/topics/{topicId}/submissions";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1326,14 +1326,14 @@ class SubmissionsResource extends core.Object {
    *    * [lang] The language code for the language the client prefers resuls in.
    *    * [includeVotes] Specifies whether to include the current user's vote
    */
-  core.Future<Submission> get(core.int seriesId, core.int submissionId, [core.String lang = UNSPECIFIED, core.bool includeVotes = UNSPECIFIED]) {
+  core.Future<Submission> get(core.int seriesId, core.int submissionId, {core.String lang, core.bool includeVotes}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["seriesId"] = seriesId;
     $pathParams["submissionId"] = submissionId;
-    if (UNSPECIFIED != lang) $queryParams["lang"] = lang;
-    if (UNSPECIFIED != includeVotes) $queryParams["includeVotes"] = includeVotes;
+    if (?lang) $queryParams["lang"] = lang;
+    if (?includeVotes) $queryParams["includeVotes"] = includeVotes;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -1344,7 +1344,7 @@ class SubmissionsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "series/{seriesId}/submissions/{submissionId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -2517,15 +2517,15 @@ class VoteList extends IdentityHash {
 // Enum ModeratorApi.Alt
 class ModeratorApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/json */
-  static final ModeratorApiAlt JSON = const ModeratorApiAlt._internal("json", 0);
+  const ModeratorApiAlt JSON = const ModeratorApiAlt._internal("json", 0);
 
   /** All values of this enumeration */
-  static final core.List<ModeratorApiAlt> values = const <ModeratorApiAlt>[
+  const core.List<ModeratorApiAlt> values = const <ModeratorApiAlt>[
     JSON,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <ModeratorApiAlt>{ 
+  const _valuesMap = const <ModeratorApiAlt>{ 
     "json": JSON,
   };
 

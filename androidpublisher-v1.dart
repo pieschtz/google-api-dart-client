@@ -17,7 +17,7 @@
 #import('dart:json');
 
 #import('utils.dart');
-#import('http.dart');
+#import('http.dart', prefix:'http');
 
 // API AndroidpublisherApi
 /**
@@ -27,14 +27,14 @@ class AndroidpublisherApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
   final core.String baseUrl;
   /** How we should identify ourselves to the service. */
-  Authenticator authenticator;
+  http.Authenticator authenticator;
   /** The client library version */
   final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
   final core.String applicationName;
-  AndroidpublisherApi get _$service() => this;
+  AndroidpublisherApi get _$service => this;
   PurchasesResource _purchases;
-  PurchasesResource get purchases() => _purchases;
+  PurchasesResource get purchases => _purchases;
   
   /** Returns response with indentations and line breaks. */
   core.bool prettyPrint;
@@ -67,14 +67,14 @@ class AndroidpublisherApi extends core.Object {
   AndroidpublisherApiAlt alt;
 
 
-  AndroidpublisherApi([this.baseUrl = "https://www.googleapis.com/androidpublisher/v1/applications/", applicationName, this.authenticator]) :
+  AndroidpublisherApi({this.baseUrl:"https://www.googleapis.com/androidpublisher/v1/applications/", applicationName, this.authenticator}) :
       this.applicationName = (applicationName == null) ? null : applicationName
-          .replaceAll(const core.RegExp(@'\s+'), '_')
-          .replaceAll(const core.RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+          .replaceAll(const core.RegExp(r'\s+'), '_')
+          .replaceAll(const core.RegExp(r'[^-_.,0-9a-zA-Z]'), '')
   { 
     _purchases = new PurchasesResource._internal(this);
   }
-  core.String get userAgent() {
+  core.String get userAgent {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}androidpublisher/v1/20120608 google-api-dart-client/${clientVersion}";
   }
@@ -113,7 +113,7 @@ class PurchasesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{packageName}/subscriptions/{subscriptionId}/purchases/{token}/cancel";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -148,7 +148,7 @@ class PurchasesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{packageName}/subscriptions/{subscriptionId}/purchases/{token}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -200,15 +200,15 @@ class SubscriptionPurchase extends IdentityHash {
 // Enum AndroidpublisherApi.Alt
 class AndroidpublisherApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/json */
-  static final AndroidpublisherApiAlt JSON = const AndroidpublisherApiAlt._internal("json", 0);
+  const AndroidpublisherApiAlt JSON = const AndroidpublisherApiAlt._internal("json", 0);
 
   /** All values of this enumeration */
-  static final core.List<AndroidpublisherApiAlt> values = const <AndroidpublisherApiAlt>[
+  const core.List<AndroidpublisherApiAlt> values = const <AndroidpublisherApiAlt>[
     JSON,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <AndroidpublisherApiAlt>{ 
+  const _valuesMap = const <AndroidpublisherApiAlt>{ 
     "json": JSON,
   };
 

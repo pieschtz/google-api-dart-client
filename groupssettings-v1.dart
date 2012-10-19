@@ -17,7 +17,7 @@
 #import('dart:json');
 
 #import('utils.dart');
-#import('http.dart');
+#import('http.dart', prefix:'http');
 
 // API GroupssettingsApi
 /**
@@ -27,14 +27,14 @@ class GroupssettingsApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
   final core.String baseUrl;
   /** How we should identify ourselves to the service. */
-  Authenticator authenticator;
+  http.Authenticator authenticator;
   /** The client library version */
   final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
   final core.String applicationName;
-  GroupssettingsApi get _$service() => this;
+  GroupssettingsApi get _$service => this;
   GroupsResource _groups;
-  GroupsResource get groups() => _groups;
+  GroupsResource get groups => _groups;
   
   /** Returns response with indentations and line breaks. */
   core.bool prettyPrint;
@@ -67,16 +67,16 @@ class GroupssettingsApi extends core.Object {
   GroupssettingsApiAlt alt;
 
 
-  GroupssettingsApi([this.baseUrl = "https://www.googleapis.com/groups/v1/groups/", applicationName, this.authenticator]) :
+  GroupssettingsApi({this.baseUrl:"https://www.googleapis.com/groups/v1/groups/", applicationName, this.authenticator}) :
       this.applicationName = (applicationName == null) ? null : applicationName
-          .replaceAll(const core.RegExp(@'\s+'), '_')
-          .replaceAll(const core.RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+          .replaceAll(const core.RegExp(r'\s+'), '_')
+          .replaceAll(const core.RegExp(r'[^-_.,0-9a-zA-Z]'), '')
   { 
     _groups = new GroupsResource._internal(this);
   }
-  core.String get userAgent() {
+  core.String get userAgent {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}groupssettings/v1/20120724 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}groupssettings/v1/20120831 google-api-dart-client/${clientVersion}";
   }
 
 
@@ -114,7 +114,7 @@ class GroupsResource extends core.Object {
     final $body = JSON.stringify(Groups.serialize(content));
     final $path = "{groupUniqueId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PATCH", $headers);
+    final $http = new http.Request($url, "PATCH", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -147,7 +147,7 @@ class GroupsResource extends core.Object {
     final $body = JSON.stringify(Groups.serialize(content));
     final $path = "{groupUniqueId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PUT", $headers);
+    final $http = new http.Request($url, "PUT", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -177,7 +177,7 @@ class GroupsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{groupUniqueId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -193,10 +193,10 @@ class Groups extends IdentityHash {
   core.String allowExternalMembers;
 
   /**
- * Permissions to join the group. Possible values are: ANYONE_CAN_JOIN ALL_IN_DOMAIN_CAN_JOIN
- * INVITED_CAN_JOIN CAN_REQUEST_TO_JOIN
+ * Permissions to post messages to the group. Possible values are: NONE_CAN_POST
+ * ALL_MANAGERS_CAN_POST ALL_MEMBERS_CAN_POST ALL_IN_DOMAIN_CAN_POST ANYONE_CAN_POST
  */
-  core.String whoCanJoin;
+  core.String whoCanPostMessage;
 
   /** Primary language for the group. */
   core.String primaryLanguage;
@@ -209,6 +209,9 @@ class Groups extends IdentityHash {
 
   /** Default message deny notification message */
   core.String defaultMessageDenyNotificationText;
+
+  /** If this groups should be included in global address list or not. */
+  core.String includeInGlobalAddressList;
 
   /** If the group is archive only */
   core.String archiveOnly;
@@ -250,10 +253,10 @@ class Groups extends IdentityHash {
   core.String messageDisplayFont;
 
   /**
- * Permissions to post messages to the group. Possible values are: NONE_CAN_POST
- * ALL_MANAGERS_CAN_POST ALL_MEMBERS_CAN_POST ALL_IN_DOMAIN_CAN_POST ANYONE_CAN_POST
+ * Permissions to join the group. Possible values are: ANYONE_CAN_JOIN ALL_IN_DOMAIN_CAN_JOIN
+ * INVITED_CAN_JOIN CAN_REQUEST_TO_JOIN
  */
-  core.String whoCanPostMessage;
+  core.String whoCanJoin;
 
   /** Name of the Group */
   core.String name;
@@ -266,6 +269,12 @@ class Groups extends IdentityHash {
  * ALL_MANAGERS_CAN_INVITE
  */
   core.String whoCanInvite;
+
+  /**
+ * Moderation level for messages detected as spam. Possible values are: ALLOW MODERATE
+ * SILENTLY_MODERATE REJECT
+ */
+  core.String spamModerationLevel;
 
   /**
  * Permissions to view group. Possbile values are: ANYONE_CAN_VIEW ALL_IN_DOMAIN_CAN_VIEW
@@ -287,10 +296,11 @@ class Groups extends IdentityHash {
     if (json == null) return null;
     final result = new Groups();
     result.allowExternalMembers = identity(json["allowExternalMembers"]);
-    result.whoCanJoin = identity(json["whoCanJoin"]);
+    result.whoCanPostMessage = identity(json["whoCanPostMessage"]);
     result.primaryLanguage = identity(json["primaryLanguage"]);
     result.whoCanViewMembership = identity(json["whoCanViewMembership"]);
     result.defaultMessageDenyNotificationText = identity(json["defaultMessageDenyNotificationText"]);
+    result.includeInGlobalAddressList = identity(json["includeInGlobalAddressList"]);
     result.archiveOnly = identity(json["archiveOnly"]);
     result.isArchived = identity(json["isArchived"]);
     result.membersCanPostAsTheGroup = identity(json["membersCanPostAsTheGroup"]);
@@ -302,10 +312,11 @@ class Groups extends IdentityHash {
     result.customReplyTo = identity(json["customReplyTo"]);
     result.sendMessageDenyNotification = identity(json["sendMessageDenyNotification"]);
     result.messageDisplayFont = identity(json["messageDisplayFont"]);
-    result.whoCanPostMessage = identity(json["whoCanPostMessage"]);
+    result.whoCanJoin = identity(json["whoCanJoin"]);
     result.name = identity(json["name"]);
     result.kind = identity(json["kind"]);
     result.whoCanInvite = identity(json["whoCanInvite"]);
+    result.spamModerationLevel = identity(json["spamModerationLevel"]);
     result.whoCanViewGroup = identity(json["whoCanViewGroup"]);
     result.showInGroupDirectory = identity(json["showInGroupDirectory"]);
     result.maxMessageBytes = identity(json["maxMessageBytes"]);
@@ -317,10 +328,11 @@ class Groups extends IdentityHash {
     if (value == null) return null;
     final result = {};
     result["allowExternalMembers"] = identity(value.allowExternalMembers);
-    result["whoCanJoin"] = identity(value.whoCanJoin);
+    result["whoCanPostMessage"] = identity(value.whoCanPostMessage);
     result["primaryLanguage"] = identity(value.primaryLanguage);
     result["whoCanViewMembership"] = identity(value.whoCanViewMembership);
     result["defaultMessageDenyNotificationText"] = identity(value.defaultMessageDenyNotificationText);
+    result["includeInGlobalAddressList"] = identity(value.includeInGlobalAddressList);
     result["archiveOnly"] = identity(value.archiveOnly);
     result["isArchived"] = identity(value.isArchived);
     result["membersCanPostAsTheGroup"] = identity(value.membersCanPostAsTheGroup);
@@ -332,10 +344,11 @@ class Groups extends IdentityHash {
     result["customReplyTo"] = identity(value.customReplyTo);
     result["sendMessageDenyNotification"] = identity(value.sendMessageDenyNotification);
     result["messageDisplayFont"] = identity(value.messageDisplayFont);
-    result["whoCanPostMessage"] = identity(value.whoCanPostMessage);
+    result["whoCanJoin"] = identity(value.whoCanJoin);
     result["name"] = identity(value.name);
     result["kind"] = identity(value.kind);
     result["whoCanInvite"] = identity(value.whoCanInvite);
+    result["spamModerationLevel"] = identity(value.spamModerationLevel);
     result["whoCanViewGroup"] = identity(value.whoCanViewGroup);
     result["showInGroupDirectory"] = identity(value.showInGroupDirectory);
     result["maxMessageBytes"] = identity(value.maxMessageBytes);
@@ -348,18 +361,18 @@ class Groups extends IdentityHash {
 // Enum GroupssettingsApi.Alt
 class GroupssettingsApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/atom+xml */
-  static final GroupssettingsApiAlt ATOM = const GroupssettingsApiAlt._internal("atom", 0);
+  const GroupssettingsApiAlt ATOM = const GroupssettingsApiAlt._internal("atom", 0);
   /** Responses with Content-Type of application/json */
-  static final GroupssettingsApiAlt JSON = const GroupssettingsApiAlt._internal("json", 1);
+  const GroupssettingsApiAlt JSON = const GroupssettingsApiAlt._internal("json", 1);
 
   /** All values of this enumeration */
-  static final core.List<GroupssettingsApiAlt> values = const <GroupssettingsApiAlt>[
+  const core.List<GroupssettingsApiAlt> values = const <GroupssettingsApiAlt>[
     ATOM,
     JSON,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <GroupssettingsApiAlt>{ 
+  const _valuesMap = const <GroupssettingsApiAlt>{ 
     "atom": ATOM,
     "json": JSON,
   };

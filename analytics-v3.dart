@@ -17,7 +17,7 @@
 #import('dart:json');
 
 #import('utils.dart');
-#import('http.dart');
+#import('http.dart', prefix:'http');
 
 // API AnalyticsApi
 /**
@@ -27,16 +27,16 @@ class AnalyticsApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
   final core.String baseUrl;
   /** How we should identify ourselves to the service. */
-  Authenticator authenticator;
+  http.Authenticator authenticator;
   /** The client library version */
   final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
   final core.String applicationName;
-  AnalyticsApi get _$service() => this;
+  AnalyticsApi get _$service => this;
   ManagementResource _management;
-  ManagementResource get management() => _management;
+  ManagementResource get management => _management;
   DataResource _data;
-  DataResource get data() => _data;
+  DataResource get data => _data;
   
   /** Returns response with indentations and line breaks. */
   core.bool prettyPrint;
@@ -69,19 +69,22 @@ class AnalyticsApi extends core.Object {
   AnalyticsApiAlt alt;
 
 
-  AnalyticsApi([this.baseUrl = "https://www.googleapis.com/analytics/v3/", applicationName, this.authenticator]) :
+  AnalyticsApi({this.baseUrl:"https://www.googleapis.com/analytics/v3/", applicationName, this.authenticator}) :
       this.applicationName = (applicationName == null) ? null : applicationName
-          .replaceAll(const core.RegExp(@'\s+'), '_')
-          .replaceAll(const core.RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+          .replaceAll(const core.RegExp(r'\s+'), '_')
+          .replaceAll(const core.RegExp(r'[^-_.,0-9a-zA-Z]'), '')
   { 
     _management = new ManagementResource._internal(this);
     _data = new DataResource._internal(this);
   }
-  core.String get userAgent() {
+  core.String get userAgent {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}analytics/v3/20120808 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}analytics/v3/20121007 google-api-dart-client/${clientVersion}";
   }
 
+
+  /** OAuth2 scope: View and manage your Google Analytics data */
+  static final core.String ANALYTICS_SCOPE = "https://www.googleapis.com/auth/analytics";
 
   /** OAuth2 scope: View your Google Analytics data */
   static final core.String ANALYTICS_READONLY_SCOPE = "https://www.googleapis.com/auth/analytics.readonly";
@@ -123,13 +126,13 @@ class ManagementWebpropertiesResourceResource extends core.Object {
 
   Minimum: 1.
    */
-  core.Future<Webproperties> list(core.String accountId, [core.int maxResults = UNSPECIFIED, core.int startIndex = UNSPECIFIED]) {
+  core.Future<Webproperties> list(core.String accountId, {core.int maxResults, core.int startIndex}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["accountId"] = accountId;
-    if (UNSPECIFIED != maxResults) $queryParams["max-results"] = maxResults;
-    if (UNSPECIFIED != startIndex) $queryParams["start-index"] = startIndex;
+    if (?maxResults) $queryParams["max-results"] = maxResults;
+    if (?startIndex) $queryParams["start-index"] = startIndex;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -140,7 +143,7 @@ class ManagementWebpropertiesResourceResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "management/accounts/{accountId}/webproperties";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -166,12 +169,12 @@ class ManagementSegmentsResourceResource extends core.Object {
 
   Minimum: 1.
    */
-  core.Future<Segments> list([core.int maxResults = UNSPECIFIED, core.int startIndex = UNSPECIFIED]) {
+  core.Future<Segments> list({core.int maxResults, core.int startIndex}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    if (UNSPECIFIED != maxResults) $queryParams["max-results"] = maxResults;
-    if (UNSPECIFIED != startIndex) $queryParams["start-index"] = startIndex;
+    if (?maxResults) $queryParams["max-results"] = maxResults;
+    if (?startIndex) $queryParams["start-index"] = startIndex;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -182,7 +185,7 @@ class ManagementSegmentsResourceResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "management/segments";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -208,12 +211,12 @@ class ManagementAccountsResourceResource extends core.Object {
 
   Minimum: 1.
    */
-  core.Future<Accounts> list([core.int maxResults = UNSPECIFIED, core.int startIndex = UNSPECIFIED]) {
+  core.Future<Accounts> list({core.int maxResults, core.int startIndex}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    if (UNSPECIFIED != maxResults) $queryParams["max-results"] = maxResults;
-    if (UNSPECIFIED != startIndex) $queryParams["start-index"] = startIndex;
+    if (?maxResults) $queryParams["max-results"] = maxResults;
+    if (?startIndex) $queryParams["start-index"] = startIndex;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -224,7 +227,7 @@ class ManagementAccountsResourceResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "management/accounts";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -256,15 +259,15 @@ class ManagementGoalsResourceResource extends core.Object {
 
   Minimum: 1.
    */
-  core.Future<Goals> list(core.String accountId, core.String webPropertyId, core.String profileId, [core.int maxResults = UNSPECIFIED, core.int startIndex = UNSPECIFIED]) {
+  core.Future<Goals> list(core.String accountId, core.String webPropertyId, core.String profileId, {core.int maxResults, core.int startIndex}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["accountId"] = accountId;
     $pathParams["webPropertyId"] = webPropertyId;
     $pathParams["profileId"] = profileId;
-    if (UNSPECIFIED != maxResults) $queryParams["max-results"] = maxResults;
-    if (UNSPECIFIED != startIndex) $queryParams["start-index"] = startIndex;
+    if (?maxResults) $queryParams["max-results"] = maxResults;
+    if (?startIndex) $queryParams["start-index"] = startIndex;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -275,7 +278,7 @@ class ManagementGoalsResourceResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles/{profileId}/goals";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -305,14 +308,14 @@ class ManagementProfilesResourceResource extends core.Object {
 
   Minimum: 1.
    */
-  core.Future<Profiles> list(core.String accountId, core.String webPropertyId, [core.int maxResults = UNSPECIFIED, core.int startIndex = UNSPECIFIED]) {
+  core.Future<Profiles> list(core.String accountId, core.String webPropertyId, {core.int maxResults, core.int startIndex}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["accountId"] = accountId;
     $pathParams["webPropertyId"] = webPropertyId;
-    if (UNSPECIFIED != maxResults) $queryParams["max-results"] = maxResults;
-    if (UNSPECIFIED != startIndex) $queryParams["start-index"] = startIndex;
+    if (?maxResults) $queryParams["max-results"] = maxResults;
+    if (?startIndex) $queryParams["start-index"] = startIndex;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -323,7 +326,7 @@ class ManagementProfilesResourceResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "management/accounts/{accountId}/webproperties/{webPropertyId}/profiles";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -373,19 +376,19 @@ class DataMcfResourceResource extends core.Object {
   Minimum: 1.
    *    * [filters] A comma-separated list of dimension or metric filters to be applied to the Analytics data.
    */
-  core.Future<McfData> get(core.String ids, core.String startDate, core.String endDate, core.String metrics, [core.int maxResults = UNSPECIFIED, core.String sort = UNSPECIFIED, core.String dimensions = UNSPECIFIED, core.int startIndex = UNSPECIFIED, core.String filters = UNSPECIFIED]) {
+  core.Future<McfData> get(core.String ids, core.String startDate, core.String endDate, core.String metrics, {core.int maxResults, core.String sort, core.String dimensions, core.int startIndex, core.String filters}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    if (UNSPECIFIED != ids) $queryParams["ids"] = ids;
-    if (UNSPECIFIED != startDate) $queryParams["start-date"] = startDate;
-    if (UNSPECIFIED != endDate) $queryParams["end-date"] = endDate;
-    if (UNSPECIFIED != metrics) $queryParams["metrics"] = metrics;
-    if (UNSPECIFIED != maxResults) $queryParams["max-results"] = maxResults;
-    if (UNSPECIFIED != sort) $queryParams["sort"] = sort;
-    if (UNSPECIFIED != dimensions) $queryParams["dimensions"] = dimensions;
-    if (UNSPECIFIED != startIndex) $queryParams["start-index"] = startIndex;
-    if (UNSPECIFIED != filters) $queryParams["filters"] = filters;
+    if (?ids) $queryParams["ids"] = ids;
+    if (?startDate) $queryParams["start-date"] = startDate;
+    if (?endDate) $queryParams["end-date"] = endDate;
+    if (?metrics) $queryParams["metrics"] = metrics;
+    if (?maxResults) $queryParams["max-results"] = maxResults;
+    if (?sort) $queryParams["sort"] = sort;
+    if (?dimensions) $queryParams["dimensions"] = dimensions;
+    if (?startIndex) $queryParams["start-index"] = startIndex;
+    if (?filters) $queryParams["filters"] = filters;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -396,7 +399,7 @@ class DataMcfResourceResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "data/mcf";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -434,20 +437,20 @@ class DataGaResourceResource extends core.Object {
    *    * [segment] An Analytics advanced segment to be applied to data.
    *    * [filters] A comma-separated list of dimension or metric filters to be applied to Analytics data.
    */
-  core.Future<GaData> get(core.String ids, core.String startDate, core.String endDate, core.String metrics, [core.int maxResults = UNSPECIFIED, core.String sort = UNSPECIFIED, core.String dimensions = UNSPECIFIED, core.int startIndex = UNSPECIFIED, core.String segment = UNSPECIFIED, core.String filters = UNSPECIFIED]) {
+  core.Future<GaData> get(core.String ids, core.String startDate, core.String endDate, core.String metrics, {core.int maxResults, core.String sort, core.String dimensions, core.int startIndex, core.String segment, core.String filters}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    if (UNSPECIFIED != ids) $queryParams["ids"] = ids;
-    if (UNSPECIFIED != startDate) $queryParams["start-date"] = startDate;
-    if (UNSPECIFIED != endDate) $queryParams["end-date"] = endDate;
-    if (UNSPECIFIED != metrics) $queryParams["metrics"] = metrics;
-    if (UNSPECIFIED != maxResults) $queryParams["max-results"] = maxResults;
-    if (UNSPECIFIED != sort) $queryParams["sort"] = sort;
-    if (UNSPECIFIED != dimensions) $queryParams["dimensions"] = dimensions;
-    if (UNSPECIFIED != startIndex) $queryParams["start-index"] = startIndex;
-    if (UNSPECIFIED != segment) $queryParams["segment"] = segment;
-    if (UNSPECIFIED != filters) $queryParams["filters"] = filters;
+    if (?ids) $queryParams["ids"] = ids;
+    if (?startDate) $queryParams["start-date"] = startDate;
+    if (?endDate) $queryParams["end-date"] = endDate;
+    if (?metrics) $queryParams["metrics"] = metrics;
+    if (?maxResults) $queryParams["max-results"] = maxResults;
+    if (?sort) $queryParams["sort"] = sort;
+    if (?dimensions) $queryParams["dimensions"] = dimensions;
+    if (?startIndex) $queryParams["start-index"] = startIndex;
+    if (?segment) $queryParams["segment"] = segment;
+    if (?filters) $queryParams["filters"] = filters;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -458,7 +461,7 @@ class DataGaResourceResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "data/ga";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -560,7 +563,7 @@ class Accounts extends IdentityHash {
 
   /**
  * The maximum number of entries the response can contain, regardless of the actual number of
- * entries returned. Its value ranges from 1 to 10,000 with a value of 1000 by default, or otherwise
+ * entries returned. Its value ranges from 1 to 1000 with a value of 1000 by default, or otherwise
  * specified by the max-results query parameter.
  */
   core.int itemsPerPage;
@@ -1204,8 +1207,8 @@ class Goals extends IdentityHash {
 
   /**
  * The maximum number of resources the response can contain, regardless of the actual number of
- * resources returned. Its value ranges from 1 to 10,000 with a value of 1000 by default, or
- * otherwise specified by the max-results query parameter.
+ * resources returned. Its value ranges from 1 to 1000 with a value of 1000 by default, or otherwise
+ * specified by the max-results query parameter.
  */
   core.int itemsPerPage;
 
@@ -1504,7 +1507,7 @@ class McfDataQuery extends IdentityHash {
 
 // Schema McfData.McfDataRows
 class McfDataRows extends IdentityHash {
-  /** A primitive metric value. A primitive dimension value. */
+  /** A primitive dimension value. A primitive metric value. */
   core.String primitiveValue;
 
   /** A conversion path dimension value, containing a list of interactions with their attributes. */
@@ -1582,6 +1585,9 @@ class Profile extends IdentityHash {
   /** The site search query parameters for this profile. */
   core.String siteSearchQueryParameters;
 
+  /** Website URL for this profile. */
+  core.String websiteUrl;
+
   /** The currency type associated with this profile. */
   core.String currency;
 
@@ -1590,6 +1596,9 @@ class Profile extends IdentityHash {
 
   /** Child link for this profile. Points to the list of goals for this profile. */
   ProfileChildLink childLink;
+
+  /** E-commerce tracking parameter for this profile. */
+  core.bool eCommerceTracking;
 
   /** Time zone for which this profile has been configured. */
   core.String timezone;
@@ -1621,9 +1630,11 @@ class Profile extends IdentityHash {
     result.webPropertyId = identity(json["webPropertyId"]);
     result.updated = identity(json["updated"]);
     result.siteSearchQueryParameters = identity(json["siteSearchQueryParameters"]);
+    result.websiteUrl = identity(json["websiteUrl"]);
     result.currency = identity(json["currency"]);
     result.internalWebPropertyId = identity(json["internalWebPropertyId"]);
     result.childLink = ProfileChildLink.parse(json["childLink"]);
+    result.eCommerceTracking = identity(json["eCommerceTracking"]);
     result.timezone = identity(json["timezone"]);
     result.siteSearchCategoryParameters = identity(json["siteSearchCategoryParameters"]);
     result.parentLink = ProfileParentLink.parse(json["parentLink"]);
@@ -1644,9 +1655,11 @@ class Profile extends IdentityHash {
     result["webPropertyId"] = identity(value.webPropertyId);
     result["updated"] = identity(value.updated);
     result["siteSearchQueryParameters"] = identity(value.siteSearchQueryParameters);
+    result["websiteUrl"] = identity(value.websiteUrl);
     result["currency"] = identity(value.currency);
     result["internalWebPropertyId"] = identity(value.internalWebPropertyId);
     result["childLink"] = ProfileChildLink.serialize(value.childLink);
+    result["eCommerceTracking"] = identity(value.eCommerceTracking);
     result["timezone"] = identity(value.timezone);
     result["siteSearchCategoryParameters"] = identity(value.siteSearchCategoryParameters);
     result["parentLink"] = ProfileParentLink.serialize(value.parentLink);
@@ -1725,8 +1738,8 @@ class Profiles extends IdentityHash {
 
   /**
  * The maximum number of resources the response can contain, regardless of the actual number of
- * resources returned. Its value ranges from 1 to 10,000 with a value of 1000 by default, or
- * otherwise specified by the max-results query parameter.
+ * resources returned. Its value ranges from 1 to 1000 with a value of 1000 by default, or otherwise
+ * specified by the max-results query parameter.
  */
   core.int itemsPerPage;
 
@@ -1848,8 +1861,8 @@ class Segments extends IdentityHash {
 
   /**
  * The maximum number of resources the response can contain, regardless of the actual number of
- * resources returned. Its value ranges from 1 to 10,000 with a value of 1000 by default, or
- * otherwise specified by the max-results query parameter.
+ * resources returned. Its value ranges from 1 to 1000 with a value of 1000 by default, or otherwise
+ * specified by the max-results query parameter.
  */
   core.int itemsPerPage;
 
@@ -1914,8 +1927,8 @@ class Webproperties extends IdentityHash {
 
   /**
  * The maximum number of resources the response can contain, regardless of the actual number of
- * resources returned. Its value ranges from 1 to 10,000 with a value of 1000 by default, or
- * otherwise specified by the max-results query parameter.
+ * resources returned. Its value ranges from 1 to 1000 with a value of 1000 by default, or otherwise
+ * specified by the max-results query parameter.
  */
   core.int itemsPerPage;
 
@@ -2096,15 +2109,15 @@ class WebpropertyParentLink extends IdentityHash {
 // Enum AnalyticsApi.Alt
 class AnalyticsApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/json */
-  static final AnalyticsApiAlt JSON = const AnalyticsApiAlt._internal("json", 0);
+  const AnalyticsApiAlt JSON = const AnalyticsApiAlt._internal("json", 0);
 
   /** All values of this enumeration */
-  static final core.List<AnalyticsApiAlt> values = const <AnalyticsApiAlt>[
+  const core.List<AnalyticsApiAlt> values = const <AnalyticsApiAlt>[
     JSON,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <AnalyticsApiAlt>{ 
+  const _valuesMap = const <AnalyticsApiAlt>{ 
     "json": JSON,
   };
 

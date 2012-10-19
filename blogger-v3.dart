@@ -17,7 +17,7 @@
 #import('dart:json');
 
 #import('utils.dart');
-#import('http.dart');
+#import('http.dart', prefix:'http');
 
 // API BloggerApi
 /**
@@ -27,22 +27,22 @@ class BloggerApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
   final core.String baseUrl;
   /** How we should identify ourselves to the service. */
-  Authenticator authenticator;
+  http.Authenticator authenticator;
   /** The client library version */
   final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
   final core.String applicationName;
-  BloggerApi get _$service() => this;
+  BloggerApi get _$service => this;
   BlogsResource _blogs;
-  BlogsResource get blogs() => _blogs;
+  BlogsResource get blogs => _blogs;
   PostsResource _posts;
-  PostsResource get posts() => _posts;
+  PostsResource get posts => _posts;
   PagesResource _pages;
-  PagesResource get pages() => _pages;
+  PagesResource get pages => _pages;
   CommentsResource _comments;
-  CommentsResource get comments() => _comments;
+  CommentsResource get comments => _comments;
   UsersResource _users;
-  UsersResource get users() => _users;
+  UsersResource get users => _users;
   
   /** Returns response with indentations and line breaks. */
   core.bool prettyPrint;
@@ -75,10 +75,10 @@ class BloggerApi extends core.Object {
   BloggerApiAlt alt;
 
 
-  BloggerApi([this.baseUrl = "https://www.googleapis.com/blogger/v3/", applicationName, this.authenticator]) :
+  BloggerApi({this.baseUrl:"https://www.googleapis.com/blogger/v3/", applicationName, this.authenticator}) :
       this.applicationName = (applicationName == null) ? null : applicationName
-          .replaceAll(const core.RegExp(@'\s+'), '_')
-          .replaceAll(const core.RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+          .replaceAll(const core.RegExp(r'\s+'), '_')
+          .replaceAll(const core.RegExp(r'[^-_.,0-9a-zA-Z]'), '')
   { 
     _blogs = new BlogsResource._internal(this);
     _posts = new PostsResource._internal(this);
@@ -86,7 +86,7 @@ class BloggerApi extends core.Object {
     _comments = new CommentsResource._internal(this);
     _users = new UsersResource._internal(this);
   }
-  core.String get userAgent() {
+  core.String get userAgent {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}blogger/v3/20120508 google-api-dart-client/${clientVersion}";
   }
@@ -127,7 +127,7 @@ class BlogsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "users/{userId}/blogs";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -142,11 +142,11 @@ class BlogsResource extends core.Object {
    *
    *    * [url] The URL of the blog to retrieve.
    */
-  core.Future<Blog> getByUrl([core.String url = UNSPECIFIED]) {
+  core.Future<Blog> getByUrl({core.String url}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    if (UNSPECIFIED != url) $queryParams["url"] = url;
+    if (?url) $queryParams["url"] = url;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -157,7 +157,7 @@ class BlogsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "blogs/byurl";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -173,12 +173,12 @@ class BlogsResource extends core.Object {
    *    * [blogId] The ID of the blog to get.
    *    * [maxPosts] Maximum number of posts to pull back with the blog.
    */
-  core.Future<Blog> get(core.String blogId, [core.int maxPosts = UNSPECIFIED]) {
+  core.Future<Blog> get(core.String blogId, {core.int maxPosts}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["blogId"] = blogId;
-    if (UNSPECIFIED != maxPosts) $queryParams["maxPosts"] = maxPosts;
+    if (?maxPosts) $queryParams["maxPosts"] = maxPosts;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -189,7 +189,7 @@ class BlogsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "blogs/{blogId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -229,7 +229,7 @@ class PostsResource extends core.Object {
     final $body = JSON.stringify(Post.serialize(content));
     final $path = "blogs/{blogId}/posts";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -245,12 +245,12 @@ class PostsResource extends core.Object {
    *    * [blogId] ID of the blog to fetch the post from.
    *    * [q] Query terms to search this blog for matching posts.
    */
-  core.Future<PostList> search(core.String blogId, [core.String q = UNSPECIFIED]) {
+  core.Future<PostList> search(core.String blogId, {core.String q}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["blogId"] = blogId;
-    if (UNSPECIFIED != q) $queryParams["q"] = q;
+    if (?q) $queryParams["q"] = q;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -261,7 +261,7 @@ class PostsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "blogs/{blogId}/posts/search";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -278,13 +278,13 @@ class PostsResource extends core.Object {
    *    * [postId] The ID of the post
    *    * [maxComments] Maximum number of comments to pull back on a post.
    */
-  core.Future<Post> get(core.String blogId, core.String postId, [core.int maxComments = UNSPECIFIED]) {
+  core.Future<Post> get(core.String blogId, core.String postId, {core.int maxComments}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["blogId"] = blogId;
     $pathParams["postId"] = postId;
-    if (UNSPECIFIED != maxComments) $queryParams["maxComments"] = maxComments;
+    if (?maxComments) $queryParams["maxComments"] = maxComments;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -295,7 +295,7 @@ class PostsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "blogs/{blogId}/posts/{postId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -316,17 +316,17 @@ class PostsResource extends core.Object {
    *    * [pageToken] Continuation token if the request is paged.
    *    * [fetchBodies] Whether the body content of posts is included.
    */
-  core.Future<PostList> list(core.String blogId, [core.String startDate = UNSPECIFIED, core.String endDate = UNSPECIFIED, core.String labels = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.bool fetchBodies = UNSPECIFIED]) {
+  core.Future<PostList> list(core.String blogId, {core.String startDate, core.String endDate, core.String labels, core.int maxResults, core.String pageToken, core.bool fetchBodies}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["blogId"] = blogId;
-    if (UNSPECIFIED != startDate) $queryParams["startDate"] = startDate;
-    if (UNSPECIFIED != endDate) $queryParams["endDate"] = endDate;
-    if (UNSPECIFIED != labels) $queryParams["labels"] = labels;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != fetchBodies) $queryParams["fetchBodies"] = fetchBodies;
+    if (?startDate) $queryParams["startDate"] = startDate;
+    if (?endDate) $queryParams["endDate"] = endDate;
+    if (?labels) $queryParams["labels"] = labels;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?fetchBodies) $queryParams["fetchBodies"] = fetchBodies;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -337,7 +337,7 @@ class PostsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "blogs/{blogId}/posts";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -372,7 +372,7 @@ class PostsResource extends core.Object {
     final $body = JSON.stringify(Post.serialize(content));
     final $path = "blogs/{blogId}/posts/{postId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PUT", $headers);
+    final $http = new http.Request($url, "PUT", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -389,13 +389,13 @@ class PostsResource extends core.Object {
    *    * [path] Path of the Post to retrieve.
    *    * [maxComments] Maximum number of comments to pull back on a post.
    */
-  core.Future<Post> getByPath(core.String blogId, [core.String path = UNSPECIFIED, core.int maxComments = UNSPECIFIED]) {
+  core.Future<Post> getByPath(core.String blogId, {core.String path, core.int maxComments}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["blogId"] = blogId;
-    if (UNSPECIFIED != path) $queryParams["path"] = path;
-    if (UNSPECIFIED != maxComments) $queryParams["maxComments"] = maxComments;
+    if (?path) $queryParams["path"] = path;
+    if (?maxComments) $queryParams["maxComments"] = maxComments;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -406,7 +406,7 @@ class PostsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "blogs/{blogId}/posts/bypath";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -441,7 +441,7 @@ class PostsResource extends core.Object {
     final $body = JSON.stringify(Post.serialize(content));
     final $path = "blogs/{blogId}/posts/{postId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PATCH", $headers);
+    final $http = new http.Request($url, "PATCH", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -473,7 +473,7 @@ class PostsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "blogs/{blogId}/posts/{postId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "DELETE", $headers);
+    final $http = new http.Request($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -496,12 +496,12 @@ class PagesResource extends core.Object {
    *    * [blogId] ID of the blog to fetch pages from.
    *    * [fetchBodies] Whether to retrieve the Page bodies.
    */
-  core.Future<PageList> list(core.String blogId, [core.bool fetchBodies = UNSPECIFIED]) {
+  core.Future<PageList> list(core.String blogId, {core.bool fetchBodies}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["blogId"] = blogId;
-    if (UNSPECIFIED != fetchBodies) $queryParams["fetchBodies"] = fetchBodies;
+    if (?fetchBodies) $queryParams["fetchBodies"] = fetchBodies;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -512,7 +512,7 @@ class PagesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "blogs/{blogId}/pages";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -544,7 +544,7 @@ class PagesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "blogs/{blogId}/pages/{pageId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -572,17 +572,17 @@ class CommentsResource extends core.Object {
    *    * [pageToken] Continuation token if request is paged.
    *    * [fetchBodies] Whether the body content of the comments is included.
    */
-  core.Future<CommentList> list(core.String blogId, core.String postId, [core.String startDate = UNSPECIFIED, core.String endDate = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.bool fetchBodies = UNSPECIFIED]) {
+  core.Future<CommentList> list(core.String blogId, core.String postId, {core.String startDate, core.String endDate, core.int maxResults, core.String pageToken, core.bool fetchBodies}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["blogId"] = blogId;
     $pathParams["postId"] = postId;
-    if (UNSPECIFIED != startDate) $queryParams["startDate"] = startDate;
-    if (UNSPECIFIED != endDate) $queryParams["endDate"] = endDate;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != fetchBodies) $queryParams["fetchBodies"] = fetchBodies;
+    if (?startDate) $queryParams["startDate"] = startDate;
+    if (?endDate) $queryParams["endDate"] = endDate;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?fetchBodies) $queryParams["fetchBodies"] = fetchBodies;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -593,7 +593,7 @@ class CommentsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "blogs/{blogId}/posts/{postId}/comments";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -627,7 +627,7 @@ class CommentsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "blogs/{blogId}/posts/{postId}/comments/{commentId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -664,7 +664,7 @@ class UsersResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "users/{userId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1666,15 +1666,15 @@ class UserLocale extends IdentityHash {
 // Enum BloggerApi.Alt
 class BloggerApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/json */
-  static final BloggerApiAlt JSON = const BloggerApiAlt._internal("json", 0);
+  const BloggerApiAlt JSON = const BloggerApiAlt._internal("json", 0);
 
   /** All values of this enumeration */
-  static final core.List<BloggerApiAlt> values = const <BloggerApiAlt>[
+  const core.List<BloggerApiAlt> values = const <BloggerApiAlt>[
     JSON,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <BloggerApiAlt>{ 
+  const _valuesMap = const <BloggerApiAlt>{ 
     "json": JSON,
   };
 

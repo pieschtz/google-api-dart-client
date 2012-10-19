@@ -17,7 +17,7 @@
 #import('dart:json');
 
 #import('utils.dart');
-#import('http.dart');
+#import('http.dart', prefix:'http');
 
 // API ComputeApi
 /**
@@ -27,34 +27,34 @@ class ComputeApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
   final core.String baseUrl;
   /** How we should identify ourselves to the service. */
-  Authenticator authenticator;
+  http.Authenticator authenticator;
   /** The client library version */
   final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
   final core.String applicationName;
-  ComputeApi get _$service() => this;
+  ComputeApi get _$service => this;
   OperationsResource _operations;
-  OperationsResource get operations() => _operations;
+  OperationsResource get operations => _operations;
   KernelsResource _kernels;
-  KernelsResource get kernels() => _kernels;
+  KernelsResource get kernels => _kernels;
   DisksResource _disks;
-  DisksResource get disks() => _disks;
+  DisksResource get disks => _disks;
   SnapshotsResource _snapshots;
-  SnapshotsResource get snapshots() => _snapshots;
+  SnapshotsResource get snapshots => _snapshots;
   ZonesResource _zones;
-  ZonesResource get zones() => _zones;
+  ZonesResource get zones => _zones;
   InstancesResource _instances;
-  InstancesResource get instances() => _instances;
+  InstancesResource get instances => _instances;
   MachineTypesResource _machineTypes;
-  MachineTypesResource get machineTypes() => _machineTypes;
+  MachineTypesResource get machineTypes => _machineTypes;
   ImagesResource _images;
-  ImagesResource get images() => _images;
+  ImagesResource get images => _images;
   FirewallsResource _firewalls;
-  FirewallsResource get firewalls() => _firewalls;
+  FirewallsResource get firewalls => _firewalls;
   NetworksResource _networks;
-  NetworksResource get networks() => _networks;
+  NetworksResource get networks => _networks;
   ProjectsResource _projects;
-  ProjectsResource get projects() => _projects;
+  ProjectsResource get projects => _projects;
   
   /** Returns response with indentations and line breaks. */
   core.bool prettyPrint;
@@ -87,10 +87,10 @@ class ComputeApi extends core.Object {
   ComputeApiAlt alt;
 
 
-  ComputeApi([this.baseUrl = "https://www.googleapis.com/compute/v1beta12/projects/", applicationName, this.authenticator]) :
+  ComputeApi({this.baseUrl:"https://www.googleapis.com/compute/v1beta12/projects/", applicationName, this.authenticator}) :
       this.applicationName = (applicationName == null) ? null : applicationName
-          .replaceAll(const core.RegExp(@'\s+'), '_')
-          .replaceAll(const core.RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+          .replaceAll(const core.RegExp(r'\s+'), '_')
+          .replaceAll(const core.RegExp(r'[^-_.,0-9a-zA-Z]'), '')
   { 
     _operations = new OperationsResource._internal(this);
     _kernels = new KernelsResource._internal(this);
@@ -104,7 +104,7 @@ class ComputeApi extends core.Object {
     _networks = new NetworksResource._internal(this);
     _projects = new ProjectsResource._internal(this);
   }
-  core.String get userAgent() {
+  core.String get userAgent {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}compute/v1beta12/20120712 google-api-dart-client/${clientVersion}";
   }
@@ -149,7 +149,7 @@ class OperationsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{project}/operations/{operation}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -167,15 +167,18 @@ class OperationsResource extends core.Object {
    *    * [pageToken] Optional. Tag returned by a previous list request truncated by maxResults. Used to continue a
    *        previous list request.
    *    * [maxResults] Optional. Maximum count of results to be returned. Maximum and default value is 100.
+  Default: 100.
+   *        Minimum: 0.
+  Maximum: 100.
    */
-  core.Future<OperationList> list(core.String project, [core.String filter = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
+  core.Future<OperationList> list(core.String project, {core.String filter, core.String pageToken, core.int maxResults}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["project"] = project;
-    if (UNSPECIFIED != filter) $queryParams["filter"] = filter;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
+    if (?filter) $queryParams["filter"] = filter;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -186,7 +189,7 @@ class OperationsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{project}/operations";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -218,7 +221,7 @@ class OperationsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{project}/operations/{operation}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "DELETE", $headers);
+    final $http = new http.Request($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -243,15 +246,18 @@ class KernelsResource extends core.Object {
    *    * [pageToken] Optional. Tag returned by a previous list request truncated by maxResults. Used to continue a
    *        previous list request.
    *    * [maxResults] Optional. Maximum count of results to be returned. Maximum and default value is 100.
+  Default: 100.
+   *        Minimum: 0.
+  Maximum: 100.
    */
-  core.Future<KernelList> list(core.String project, [core.String filter = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
+  core.Future<KernelList> list(core.String project, {core.String filter, core.String pageToken, core.int maxResults}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["project"] = project;
-    if (UNSPECIFIED != filter) $queryParams["filter"] = filter;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
+    if (?filter) $queryParams["filter"] = filter;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -262,7 +268,7 @@ class KernelsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{project}/kernels";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -294,7 +300,7 @@ class KernelsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{project}/kernels/{kernel}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -335,7 +341,7 @@ class DisksResource extends core.Object {
     final $body = JSON.stringify(Disk.serialize(content));
     final $path = "{project}/disks";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -367,7 +373,7 @@ class DisksResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{project}/disks/{disk}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -385,15 +391,18 @@ class DisksResource extends core.Object {
    *    * [pageToken] Optional. Tag returned by a previous list request truncated by maxResults. Used to continue a
    *        previous list request.
    *    * [maxResults] Optional. Maximum count of results to be returned. Maximum and default value is 100.
+  Default: 100.
+   *        Minimum: 0.
+  Maximum: 100.
    */
-  core.Future<DiskList> list(core.String project, [core.String filter = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
+  core.Future<DiskList> list(core.String project, {core.String filter, core.String pageToken, core.int maxResults}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["project"] = project;
-    if (UNSPECIFIED != filter) $queryParams["filter"] = filter;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
+    if (?filter) $queryParams["filter"] = filter;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -404,7 +413,7 @@ class DisksResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{project}/disks";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -436,7 +445,7 @@ class DisksResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{project}/disks/{disk}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "DELETE", $headers);
+    final $http = new http.Request($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -477,7 +486,7 @@ class SnapshotsResource extends core.Object {
     final $body = JSON.stringify(Snapshot.serialize(content));
     final $path = "{project}/snapshots";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -509,7 +518,7 @@ class SnapshotsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{project}/snapshots/{snapshot}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -527,15 +536,18 @@ class SnapshotsResource extends core.Object {
    *    * [pageToken] Optional. Tag returned by a previous list request truncated by maxResults. Used to continue a
    *        previous list request.
    *    * [maxResults] Optional. Maximum count of results to be returned. Maximum and default value is 100.
+  Default: 100.
+   *        Minimum: 0.
+  Maximum: 100.
    */
-  core.Future<SnapshotList> list(core.String project, [core.String filter = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
+  core.Future<SnapshotList> list(core.String project, {core.String filter, core.String pageToken, core.int maxResults}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["project"] = project;
-    if (UNSPECIFIED != filter) $queryParams["filter"] = filter;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
+    if (?filter) $queryParams["filter"] = filter;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -546,7 +558,7 @@ class SnapshotsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{project}/snapshots";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -578,7 +590,7 @@ class SnapshotsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{project}/snapshots/{snapshot}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "DELETE", $headers);
+    final $http = new http.Request($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -603,15 +615,18 @@ class ZonesResource extends core.Object {
    *    * [pageToken] Optional. Tag returned by a previous list request truncated by maxResults. Used to continue a
    *        previous list request.
    *    * [maxResults] Optional. Maximum count of results to be returned. Maximum and default value is 100.
+  Default: 100.
+   *        Minimum: 0.
+  Maximum: 100.
    */
-  core.Future<ZoneList> list(core.String project, [core.String filter = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
+  core.Future<ZoneList> list(core.String project, {core.String filter, core.String pageToken, core.int maxResults}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["project"] = project;
-    if (UNSPECIFIED != filter) $queryParams["filter"] = filter;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
+    if (?filter) $queryParams["filter"] = filter;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -622,7 +637,7 @@ class ZonesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{project}/zones";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -654,7 +669,7 @@ class ZonesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{project}/zones/{zone}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -694,7 +709,7 @@ class InstancesResource extends core.Object {
     final $body = JSON.stringify(Instance.serialize(content));
     final $path = "{project}/instances";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -718,8 +733,8 @@ class InstancesResource extends core.Object {
     final $pathParams = {};
     $pathParams["project"] = project;
     $pathParams["instance"] = instance;
-    if (UNSPECIFIED != accessConfig) $queryParams["access_config"] = accessConfig;
-    if (UNSPECIFIED != networkInterface) $queryParams["network_interface"] = networkInterface;
+    if (?accessConfig) $queryParams["access_config"] = accessConfig;
+    if (?networkInterface) $queryParams["network_interface"] = networkInterface;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -730,7 +745,7 @@ class InstancesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{project}/instances/{instance}/delete-access-config";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -762,7 +777,7 @@ class InstancesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{project}/instances/{instance}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -780,15 +795,18 @@ class InstancesResource extends core.Object {
    *    * [pageToken] Optional. Tag returned by a previous list request truncated by maxResults. Used to continue a
    *        previous list request.
    *    * [maxResults] Optional. Maximum count of results to be returned. Maximum and default value is 100.
+  Default: 100.
+   *        Minimum: 0.
+  Maximum: 100.
    */
-  core.Future<InstanceList> list(core.String project, [core.String filter = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
+  core.Future<InstanceList> list(core.String project, {core.String filter, core.String pageToken, core.int maxResults}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["project"] = project;
-    if (UNSPECIFIED != filter) $queryParams["filter"] = filter;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
+    if (?filter) $queryParams["filter"] = filter;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -799,7 +817,7 @@ class InstancesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{project}/instances";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -823,7 +841,7 @@ class InstancesResource extends core.Object {
     final $pathParams = {};
     $pathParams["project"] = project;
     $pathParams["instance"] = instance;
-    if (UNSPECIFIED != networkInterface) $queryParams["network_interface"] = networkInterface;
+    if (?networkInterface) $queryParams["network_interface"] = networkInterface;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -836,7 +854,7 @@ class InstancesResource extends core.Object {
     final $body = JSON.stringify(AccessConfig.serialize(content));
     final $path = "{project}/instances/{instance}/add-access-config";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -868,7 +886,7 @@ class InstancesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{project}/instances/{instance}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "DELETE", $headers);
+    final $http = new http.Request($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -893,15 +911,18 @@ class MachineTypesResource extends core.Object {
    *    * [pageToken] Optional. Tag returned by a previous list request truncated by maxResults. Used to continue a
    *        previous list request.
    *    * [maxResults] Optional. Maximum count of results to be returned. Maximum and default value is 100.
+  Default: 100.
+   *        Minimum: 0.
+  Maximum: 100.
    */
-  core.Future<MachineTypeList> list(core.String project, [core.String filter = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
+  core.Future<MachineTypeList> list(core.String project, {core.String filter, core.String pageToken, core.int maxResults}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["project"] = project;
-    if (UNSPECIFIED != filter) $queryParams["filter"] = filter;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
+    if (?filter) $queryParams["filter"] = filter;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -912,7 +933,7 @@ class MachineTypesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{project}/machine-types";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -944,7 +965,7 @@ class MachineTypesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{project}/machine-types/{machineType}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -984,7 +1005,7 @@ class ImagesResource extends core.Object {
     final $body = JSON.stringify(Image.serialize(content));
     final $path = "{project}/images";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1016,7 +1037,7 @@ class ImagesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{project}/images/{image}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1034,15 +1055,18 @@ class ImagesResource extends core.Object {
    *    * [pageToken] Optional. Tag returned by a previous list request truncated by maxResults. Used to continue a
    *        previous list request.
    *    * [maxResults] Optional. Maximum count of results to be returned. Maximum and default value is 100.
+  Default: 100.
+   *        Minimum: 0.
+  Maximum: 100.
    */
-  core.Future<ImageList> list(core.String project, [core.String filter = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
+  core.Future<ImageList> list(core.String project, {core.String filter, core.String pageToken, core.int maxResults}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["project"] = project;
-    if (UNSPECIFIED != filter) $queryParams["filter"] = filter;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
+    if (?filter) $queryParams["filter"] = filter;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -1053,7 +1077,7 @@ class ImagesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{project}/images";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1085,7 +1109,7 @@ class ImagesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{project}/images/{image}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "DELETE", $headers);
+    final $http = new http.Request($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1125,7 +1149,7 @@ class FirewallsResource extends core.Object {
     final $body = JSON.stringify(Firewall.serialize(content));
     final $path = "{project}/firewalls";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1157,7 +1181,7 @@ class FirewallsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{project}/firewalls/{firewall}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1175,15 +1199,18 @@ class FirewallsResource extends core.Object {
    *    * [pageToken] Optional. Tag returned by a previous list request truncated by maxResults. Used to continue a
    *        previous list request.
    *    * [maxResults] Optional. Maximum count of results to be returned. Maximum and default value is 100.
+  Default: 100.
+   *        Minimum: 0.
+  Maximum: 100.
    */
-  core.Future<FirewallList> list(core.String project, [core.String filter = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
+  core.Future<FirewallList> list(core.String project, {core.String filter, core.String pageToken, core.int maxResults}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["project"] = project;
-    if (UNSPECIFIED != filter) $queryParams["filter"] = filter;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
+    if (?filter) $queryParams["filter"] = filter;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -1194,7 +1221,7 @@ class FirewallsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{project}/firewalls";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1229,7 +1256,7 @@ class FirewallsResource extends core.Object {
     final $body = JSON.stringify(Firewall.serialize(content));
     final $path = "{project}/firewalls/{firewall}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PUT", $headers);
+    final $http = new http.Request($url, "PUT", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1265,7 +1292,7 @@ class FirewallsResource extends core.Object {
     final $body = JSON.stringify(Firewall.serialize(content));
     final $path = "{project}/firewalls/{firewall}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PATCH", $headers);
+    final $http = new http.Request($url, "PATCH", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1297,7 +1324,7 @@ class FirewallsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{project}/firewalls/{firewall}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "DELETE", $headers);
+    final $http = new http.Request($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1337,7 +1364,7 @@ class NetworksResource extends core.Object {
     final $body = JSON.stringify(Network.serialize(content));
     final $path = "{project}/networks";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1369,7 +1396,7 @@ class NetworksResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{project}/networks/{network}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1387,15 +1414,18 @@ class NetworksResource extends core.Object {
    *    * [pageToken] Optional. Tag returned by a previous list request truncated by maxResults. Used to continue a
    *        previous list request.
    *    * [maxResults] Optional. Maximum count of results to be returned. Maximum and default value is 100.
+  Default: 100.
+   *        Minimum: 0.
+  Maximum: 100.
    */
-  core.Future<NetworkList> list(core.String project, [core.String filter = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
+  core.Future<NetworkList> list(core.String project, {core.String filter, core.String pageToken, core.int maxResults}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["project"] = project;
-    if (UNSPECIFIED != filter) $queryParams["filter"] = filter;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
+    if (?filter) $queryParams["filter"] = filter;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -1406,7 +1436,7 @@ class NetworksResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{project}/networks";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1438,7 +1468,7 @@ class NetworksResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{project}/networks/{network}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "DELETE", $headers);
+    final $http = new http.Request($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1479,7 +1509,7 @@ class ProjectsResource extends core.Object {
     final $body = JSON.stringify(Metadata.serialize(content));
     final $path = "{project}/set-common-instance-metadata";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1509,7 +1539,7 @@ class ProjectsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{project}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1630,7 +1660,7 @@ class AttachedDisk extends IdentityHash {
 
 // Schema .Disk
 class Disk extends IdentityHash {
-  /** The status of disk creation. */
+  /** The status of disk creation (output only). */
   core.String status;
 
   /**
@@ -1723,7 +1753,7 @@ class Disk extends IdentityHash {
 
 // Schema .DiskList
 class DiskList extends IdentityHash {
-  /** A token used to continue a truncated list request. */
+  /** A token used to continue a truncated list request (output only). */
   core.String nextPageToken;
 
   /** The persistent disk resources. */
@@ -1895,7 +1925,7 @@ class FirewallAllowed extends IdentityHash {
 
 // Schema .FirewallList
 class FirewallList extends IdentityHash {
-  /** A token used to continue a truncated list request. */
+  /** A token used to continue a truncated list request (output only). */
   core.String nextPageToken;
 
   /** The firewall resources. */
@@ -1904,10 +1934,10 @@ class FirewallList extends IdentityHash {
   /** Type of resource. */
   core.String kind;
 
-  /** Unique identifier for the resource; defined by the server. */
+  /** Unique identifier for the resource; defined by the server (output only). */
   core.String id;
 
-  /** Server defined URL for this resource. */
+  /** Server defined URL for this resource (output only). */
   core.String selfLink;
 
   /** Parses an instance from its JSON representation. */
@@ -2032,7 +2062,7 @@ class ImageDiskSnapshot extends IdentityHash {
 
 // Schema .ImageList
 class ImageList extends IdentityHash {
-  /** A token used to continue a truncated list request. */
+  /** A token used to continue a truncated list request (output only). */
   core.String nextPageToken;
 
   /** The disk image resources. */
@@ -2249,7 +2279,7 @@ class Instance extends IdentityHash {
 
 // Schema .InstanceList
 class InstanceList extends IdentityHash {
-  /** A token used to continue a truncated list request. */
+  /** A token used to continue a truncated list request (output only). */
   core.String nextPageToken;
 
   /** A list of instance resources. */
@@ -2338,7 +2368,7 @@ class Kernel extends IdentityHash {
 
 // Schema .KernelList
 class KernelList extends IdentityHash {
-  /** A token used to continue a truncated list request. */
+  /** A token used to continue a truncated list request (output only). */
   core.String nextPageToken;
 
   /** The kernel resources. */
@@ -2419,7 +2449,7 @@ class MachineType extends IdentityHash {
   /** Server defined URL for the resource (output only). */
   core.String selfLink;
 
-  /** Count of physical CPUs reserved on the virtual machine host. */
+  /** Count of physical CPUs reserved on the virtual machine host. Deprecated. */
   core.int hostCpus;
 
   /** Parses an instance from its JSON representation. */
@@ -2489,7 +2519,7 @@ class MachineTypeEphemeralDisks extends IdentityHash {
 
 // Schema .MachineTypeList
 class MachineTypeList extends IdentityHash {
-  /** A token used to continue a truncated list request. */
+  /** A token used to continue a truncated list request (output only). */
   core.String nextPageToken;
 
   /** The machine type resources. */
@@ -2568,8 +2598,7 @@ class MetadataItems extends IdentityHash {
   /**
  * Key for the metadata entry. Keys must conform to the following regexp: [a-zA-Z0-9-_]+, and be
  * less than 128 bytes in length. This is reflected as part of a URL in the metadata server.
- * Additionally, to avoid ambiguity, keys must not conflict with any other metadata keys for the
- * project.
+ * Additionally, to avoid ambiguity, keys must be unique.
  */
   core.String key;
 
@@ -2717,7 +2746,7 @@ class NetworkInterface extends IdentityHash {
 
 // Schema .NetworkList
 class NetworkList extends IdentityHash {
-  /** A token used to continue a truncated list request. */
+  /** A token used to continue a truncated list request (output only). */
   core.String nextPageToken;
 
   /** The network resources. */
@@ -2941,7 +2970,7 @@ class OperationErrorErrors extends IdentityHash {
 
 // Schema .OperationList
 class OperationList extends IdentityHash {
-  /** A token used to continue a truncated list request. */
+  /** A token used to continue a truncated list request (output only). */
   core.String nextPageToken;
 
   /** The operation resources. */
@@ -3189,7 +3218,7 @@ class Snapshot extends IdentityHash {
 
 // Schema .SnapshotList
 class SnapshotList extends IdentityHash {
-  /** A token used to continue a truncated list request. */
+  /** A token used to continue a truncated list request (output only). */
   core.String nextPageToken;
 
   /** The persistent snapshot resources. */
@@ -3296,7 +3325,7 @@ class Zone extends IdentityHash {
 
 // Schema .ZoneList
 class ZoneList extends IdentityHash {
-  /** A token used to continue a truncated list request. */
+  /** A token used to continue a truncated list request (output only). */
   core.String nextPageToken;
 
   /** The zone resources. */
@@ -3376,15 +3405,15 @@ class ZoneMaintenanceWindows extends IdentityHash {
 // Enum ComputeApi.Alt
 class ComputeApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/json */
-  static final ComputeApiAlt JSON = const ComputeApiAlt._internal("json", 0);
+  const ComputeApiAlt JSON = const ComputeApiAlt._internal("json", 0);
 
   /** All values of this enumeration */
-  static final core.List<ComputeApiAlt> values = const <ComputeApiAlt>[
+  const core.List<ComputeApiAlt> values = const <ComputeApiAlt>[
     JSON,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <ComputeApiAlt>{ 
+  const _valuesMap = const <ComputeApiAlt>{ 
     "json": JSON,
   };
 

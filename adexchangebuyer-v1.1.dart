@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#library('adexchangebuyer-v1');
+#library('adexchangebuyer-v1.1');
 #import('dart:core', prefix: 'core');
 #import('dart:json');
 
 #import('utils.dart');
-#import('http.dart');
+#import('http.dart', prefix:'http');
 
 // API AdexchangebuyerApi
 /**
@@ -27,18 +27,18 @@ class AdexchangebuyerApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
   final core.String baseUrl;
   /** How we should identify ourselves to the service. */
-  Authenticator authenticator;
+  http.Authenticator authenticator;
   /** The client library version */
   final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
   final core.String applicationName;
-  AdexchangebuyerApi get _$service() => this;
+  AdexchangebuyerApi get _$service => this;
   DirectDealsResource _directDeals;
-  DirectDealsResource get directDeals() => _directDeals;
+  DirectDealsResource get directDeals => _directDeals;
   AccountsResource _accounts;
-  AccountsResource get accounts() => _accounts;
+  AccountsResource get accounts => _accounts;
   CreativesResource _creatives;
-  CreativesResource get creatives() => _creatives;
+  CreativesResource get creatives => _creatives;
   
   /** Returns response with indentations and line breaks. */
   core.bool prettyPrint;
@@ -71,18 +71,18 @@ class AdexchangebuyerApi extends core.Object {
   AdexchangebuyerApiAlt alt;
 
 
-  AdexchangebuyerApi([this.baseUrl = "https://www.googleapis.com/adexchangebuyer/v1/", applicationName, this.authenticator]) :
+  AdexchangebuyerApi({this.baseUrl:"https://www.googleapis.com/adexchangebuyer/v1.1/", applicationName, this.authenticator}) :
       this.applicationName = (applicationName == null) ? null : applicationName
-          .replaceAll(const core.RegExp(@'\s+'), '_')
-          .replaceAll(const core.RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+          .replaceAll(const core.RegExp(r'\s+'), '_')
+          .replaceAll(const core.RegExp(r'[^-_.,0-9a-zA-Z]'), '')
   { 
     _directDeals = new DirectDealsResource._internal(this);
     _accounts = new AccountsResource._internal(this);
     _creatives = new CreativesResource._internal(this);
   }
-  core.String get userAgent() {
+  core.String get userAgent {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}adexchangebuyer/v1/20120718 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}adexchangebuyer/v1.1/20120718 google-api-dart-client/${clientVersion}";
   }
 
 
@@ -115,7 +115,7 @@ class DirectDealsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "directdeals";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -145,7 +145,7 @@ class DirectDealsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "directdeals/{id}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -185,7 +185,7 @@ class AccountsResource extends core.Object {
     final $body = JSON.stringify(Account.serialize(content));
     final $path = "accounts/{id}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PATCH", $headers);
+    final $http = new http.Request($url, "PATCH", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -213,7 +213,7 @@ class AccountsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "accounts";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -246,7 +246,7 @@ class AccountsResource extends core.Object {
     final $body = JSON.stringify(Account.serialize(content));
     final $path = "accounts/{id}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PUT", $headers);
+    final $http = new http.Request($url, "PUT", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -276,7 +276,7 @@ class AccountsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "accounts/{id}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -314,7 +314,7 @@ class CreativesResource extends core.Object {
     final $body = JSON.stringify(Creative.serialize(content));
     final $path = "creatives";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -327,18 +327,20 @@ class CreativesResource extends core.Object {
   /**
    * Retrieves a list of the authenticated user's active creatives.
    *
+   *    * [statusFilter] When specified, only creatives having the given status are returned.
    *    * [pageToken] A continuation token, used to page through ad clients. To retrieve the next page, set this parameter
    *        to the value of "nextPageToken" from the previous response. Optional.
    *    * [maxResults] Maximum number of entries returned on one result page. If not set, the default is 100. Optional.
    *        Minimum: 1.
   Maximum: 1000.
    */
-  core.Future<CreativesList> list([core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
+  core.Future<CreativesList> list({CreativesResourceListStatusFilter statusFilter, core.String pageToken, core.int maxResults}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
+    if (?statusFilter) $queryParams["statusFilter"] = statusFilter;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -349,7 +351,7 @@ class CreativesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "creatives";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -364,15 +366,13 @@ class CreativesResource extends core.Object {
    *
    *    * [accountId] The id for the account that will serve this creative.
    *    * [buyerCreativeId] The buyer-specific id for this creative.
-   *    * [adgroupId] The adgroup this creative belongs to.
    */
-  core.Future<Creative> get(core.int accountId, core.String buyerCreativeId, core.String adgroupId) {
+  core.Future<Creative> get(core.int accountId, core.String buyerCreativeId) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["accountId"] = accountId;
     $pathParams["buyerCreativeId"] = buyerCreativeId;
-    if (UNSPECIFIED != adgroupId) $queryParams["adgroupId"] = adgroupId;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -383,7 +383,7 @@ class CreativesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "creatives/{accountId}/{buyerCreativeId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -391,6 +391,41 @@ class CreativesResource extends core.Object {
         .chain((final $req) => $req.request())
         .transform((final $text) => Creative.parse(JSON.parse($text)));
   }
+}
+
+// Enum CreativesResource.List.StatusFilter
+class CreativesResourceListStatusFilter extends core.Object implements core.Hashable {
+  /** Creatives which have been approved. */
+  const CreativesResourceListStatusFilter APPROVED = const CreativesResourceListStatusFilter._internal("approved", 0);
+  /** Creatives which have been disapproved. */
+  const CreativesResourceListStatusFilter DISAPPROVED = const CreativesResourceListStatusFilter._internal("disapproved", 1);
+  /** Creatives whose status is not yet checked. */
+  const CreativesResourceListStatusFilter NOT_CHECKED = const CreativesResourceListStatusFilter._internal("not_checked", 2);
+
+  /** All values of this enumeration */
+  const core.List<CreativesResourceListStatusFilter> values = const <CreativesResourceListStatusFilter>[
+    APPROVED,
+    DISAPPROVED,
+    NOT_CHECKED,
+  ];
+
+  /** Map from string representation to enumeration value */
+  const _valuesMap = const <CreativesResourceListStatusFilter>{ 
+    "approved": APPROVED,
+    "disapproved": DISAPPROVED,
+    "not_checked": NOT_CHECKED,
+  };
+
+  /** Get the enumeration value with a specified string representation, or null if none matches. */
+  static CreativesResourceListStatusFilter valueOf(core.String item) => _valuesMap[item];
+
+  final core.int _ordinal;
+  final core.String _value;
+  const CreativesResourceListStatusFilter._internal(core.String this._value, core.int this._ordinal);
+
+  /** Get the string representation of an enumeration value */
+  toString() => _value;
+  hashCode() => _ordinal ^ "StatusFilter".hashCode();
 }
 
 // Schema .Account
@@ -451,6 +486,13 @@ class AccountBidderLocation extends IdentityHash {
   /** The URL to which the Ad Exchange will send bid requests. */
   core.String url;
 
+  /**
+ * The geographical region the Ad Exchange should send requests from. Only used by some quota
+ * systems, but always setting the value is recommended. Allowed values: - ASIA - EUROPE - US_EAST -
+ * US_WEST
+ */
+  core.String region;
+
   /** The maximum queries per second the Ad Exchange will send. */
   core.int maximumQps;
 
@@ -459,6 +501,7 @@ class AccountBidderLocation extends IdentityHash {
     if (json == null) return null;
     final result = new AccountBidderLocation();
     result.url = identity(json["url"]);
+    result.region = identity(json["region"]);
     result.maximumQps = identity(json["maximumQps"]);
     return result;
   }
@@ -467,6 +510,7 @@ class AccountBidderLocation extends IdentityHash {
     if (value == null) return null;
     final result = {};
     result["url"] = identity(value.url);
+    result["region"] = identity(value.region);
     result["maximumQps"] = identity(value.maximumQps);
     return result;
   }
@@ -508,8 +552,8 @@ class Creative extends IdentityHash {
   /** The name of the company being advertised in the creative. */
   core.String advertiserName;
 
-  /** The pretargeting adgroup id that this creative will be associated with. */
-  core.String adgroupId;
+  /** Resource type. */
+  core.String kind;
 
   /** The url to fetch a video ad. If set, HTMLSnippet should not be set. */
   core.String videoURL;
@@ -519,9 +563,6 @@ class Creative extends IdentityHash {
 
   /** All attributes for the ads that may be shown from this snippet. */
   core.List<core.int> attribute;
-
-  /** Resource type. */
-  core.String kind;
 
   /** Ad height. */
   core.int height;
@@ -567,11 +608,10 @@ class Creative extends IdentityHash {
     final result = new Creative();
     result.productCategories = map(identity)(json["productCategories"]);
     result.advertiserName = identity(json["advertiserName"]);
-    result.adgroupId = identity(json["adgroupId"]);
+    result.kind = identity(json["kind"]);
     result.videoURL = identity(json["videoURL"]);
     result.width = identity(json["width"]);
     result.attribute = map(identity)(json["attribute"]);
-    result.kind = identity(json["kind"]);
     result.height = identity(json["height"]);
     result.advertiserId = map(identity)(json["advertiserId"]);
     result.hTMLSnippet = identity(json["HTMLSnippet"]);
@@ -590,11 +630,10 @@ class Creative extends IdentityHash {
     final result = {};
     result["productCategories"] = map(identity)(value.productCategories);
     result["advertiserName"] = identity(value.advertiserName);
-    result["adgroupId"] = identity(value.adgroupId);
+    result["kind"] = identity(value.kind);
     result["videoURL"] = identity(value.videoURL);
     result["width"] = identity(value.width);
     result["attribute"] = map(identity)(value.attribute);
-    result["kind"] = identity(value.kind);
     result["height"] = identity(value.height);
     result["advertiserId"] = map(identity)(value.advertiserId);
     result["HTMLSnippet"] = identity(value.hTMLSnippet);
@@ -743,15 +782,15 @@ class DirectDealsList extends IdentityHash {
 // Enum AdexchangebuyerApi.Alt
 class AdexchangebuyerApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/json */
-  static final AdexchangebuyerApiAlt JSON = const AdexchangebuyerApiAlt._internal("json", 0);
+  const AdexchangebuyerApiAlt JSON = const AdexchangebuyerApiAlt._internal("json", 0);
 
   /** All values of this enumeration */
-  static final core.List<AdexchangebuyerApiAlt> values = const <AdexchangebuyerApiAlt>[
+  const core.List<AdexchangebuyerApiAlt> values = const <AdexchangebuyerApiAlt>[
     JSON,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <AdexchangebuyerApiAlt>{ 
+  const _valuesMap = const <AdexchangebuyerApiAlt>{ 
     "json": JSON,
   };
 

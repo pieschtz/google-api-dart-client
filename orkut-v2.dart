@@ -17,7 +17,7 @@
 #import('dart:json');
 
 #import('utils.dart');
-#import('http.dart');
+#import('http.dart', prefix:'http');
 
 // API OrkutApi
 /**
@@ -27,44 +27,44 @@ class OrkutApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
   final core.String baseUrl;
   /** How we should identify ourselves to the service. */
-  Authenticator authenticator;
+  http.Authenticator authenticator;
   /** The client library version */
   final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
   final core.String applicationName;
-  OrkutApi get _$service() => this;
+  OrkutApi get _$service => this;
   CommunityMembersResource _communityMembers;
-  CommunityMembersResource get communityMembers() => _communityMembers;
+  CommunityMembersResource get communityMembers => _communityMembers;
   ActivitiesResource _activities;
-  ActivitiesResource get activities() => _activities;
+  ActivitiesResource get activities => _activities;
   CommunityPollCommentsResource _communityPollComments;
-  CommunityPollCommentsResource get communityPollComments() => _communityPollComments;
+  CommunityPollCommentsResource get communityPollComments => _communityPollComments;
   CommunityPollsResource _communityPolls;
-  CommunityPollsResource get communityPolls() => _communityPolls;
+  CommunityPollsResource get communityPolls => _communityPolls;
   CommunityMessagesResource _communityMessages;
-  CommunityMessagesResource get communityMessages() => _communityMessages;
+  CommunityMessagesResource get communityMessages => _communityMessages;
   CommunityTopicsResource _communityTopics;
-  CommunityTopicsResource get communityTopics() => _communityTopics;
+  CommunityTopicsResource get communityTopics => _communityTopics;
   CommentsResource _comments;
-  CommentsResource get comments() => _comments;
+  CommentsResource get comments => _comments;
   AclResource _acl;
-  AclResource get acl() => _acl;
+  AclResource get acl => _acl;
   CommunityRelatedResource _communityRelated;
-  CommunityRelatedResource get communityRelated() => _communityRelated;
+  CommunityRelatedResource get communityRelated => _communityRelated;
   ScrapsResource _scraps;
-  ScrapsResource get scraps() => _scraps;
+  ScrapsResource get scraps => _scraps;
   CommunityPollVotesResource _communityPollVotes;
-  CommunityPollVotesResource get communityPollVotes() => _communityPollVotes;
+  CommunityPollVotesResource get communityPollVotes => _communityPollVotes;
   CommunitiesResource _communities;
-  CommunitiesResource get communities() => _communities;
+  CommunitiesResource get communities => _communities;
   CommunityFollowResource _communityFollow;
-  CommunityFollowResource get communityFollow() => _communityFollow;
+  CommunityFollowResource get communityFollow => _communityFollow;
   ActivityVisibilityResource _activityVisibility;
-  ActivityVisibilityResource get activityVisibility() => _activityVisibility;
+  ActivityVisibilityResource get activityVisibility => _activityVisibility;
   BadgesResource _badges;
-  BadgesResource get badges() => _badges;
+  BadgesResource get badges => _badges;
   CountersResource _counters;
-  CountersResource get counters() => _counters;
+  CountersResource get counters => _counters;
   
   /** Returns response with indentations and line breaks. */
   core.bool prettyPrint;
@@ -97,10 +97,10 @@ class OrkutApi extends core.Object {
   OrkutApiAlt alt;
 
 
-  OrkutApi([this.baseUrl = "https://www.googleapis.com/orkut/v2/", applicationName, this.authenticator]) :
+  OrkutApi({this.baseUrl:"https://www.googleapis.com/orkut/v2/", applicationName, this.authenticator}) :
       this.applicationName = (applicationName == null) ? null : applicationName
-          .replaceAll(const core.RegExp(@'\s+'), '_')
-          .replaceAll(const core.RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+          .replaceAll(const core.RegExp(r'\s+'), '_')
+          .replaceAll(const core.RegExp(r'[^-_.,0-9a-zA-Z]'), '')
   { 
     _communityMembers = new CommunityMembersResource._internal(this);
     _activities = new ActivitiesResource._internal(this);
@@ -119,7 +119,7 @@ class OrkutApi extends core.Object {
     _badges = new BadgesResource._internal(this);
     _counters = new CountersResource._internal(this);
   }
-  core.String get userAgent() {
+  core.String get userAgent {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}orkut/v2/20120223 google-api-dart-client/${clientVersion}";
   }
@@ -161,7 +161,7 @@ class CommunityMembersResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "communities/{communityId}/members/{userId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -178,13 +178,13 @@ class CommunityMembersResource extends core.Object {
    *    * [userId] ID of the user.
    *    * [hl] Specifies the interface language (host language) of your user interface.
    */
-  core.Future<CommunityMembers> get(core.int communityId, core.String userId, [core.String hl = UNSPECIFIED]) {
+  core.Future<CommunityMembers> get(core.int communityId, core.String userId, {core.String hl}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["communityId"] = communityId;
     $pathParams["userId"] = userId;
-    if (UNSPECIFIED != hl) $queryParams["hl"] = hl;
+    if (?hl) $queryParams["hl"] = hl;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -195,7 +195,7 @@ class CommunityMembersResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "communities/{communityId}/members/{userId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -218,15 +218,15 @@ class CommunityMembersResource extends core.Object {
   Minimum: 1.
    *    * [hl] Specifies the interface language (host language) of your user interface.
    */
-  core.Future<CommunityMembersList> list(core.int communityId, [core.String pageToken = UNSPECIFIED, core.bool friendsOnly = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String hl = UNSPECIFIED]) {
+  core.Future<CommunityMembersList> list(core.int communityId, {core.String pageToken, core.bool friendsOnly, core.int maxResults, core.String hl}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["communityId"] = communityId;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != friendsOnly) $queryParams["friendsOnly"] = friendsOnly;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
-    if (UNSPECIFIED != hl) $queryParams["hl"] = hl;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?friendsOnly) $queryParams["friendsOnly"] = friendsOnly;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
+    if (?hl) $queryParams["hl"] = hl;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -237,7 +237,7 @@ class CommunityMembersResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "communities/{communityId}/members";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -269,7 +269,7 @@ class CommunityMembersResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "communities/{communityId}/members/{userId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "DELETE", $headers);
+    final $http = new http.Request($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -299,15 +299,15 @@ class ActivitiesResource extends core.Object {
   Maximum: 100.
    *    * [hl] Specifies the interface language (host language) of your user interface.
    */
-  core.Future<ActivityList> list(core.String userId, ActivitiesResourceListCollection collection, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String hl = UNSPECIFIED]) {
+  core.Future<ActivityList> list(core.String userId, ActivitiesResourceListCollection collection, {core.String pageToken, core.int maxResults, core.String hl}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["userId"] = userId;
     $pathParams["collection"] = collection;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
-    if (UNSPECIFIED != hl) $queryParams["hl"] = hl;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
+    if (?hl) $queryParams["hl"] = hl;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -318,7 +318,7 @@ class ActivitiesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "people/{userId}/activities/{collection}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -348,7 +348,7 @@ class ActivitiesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "activities/{activityId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "DELETE", $headers);
+    final $http = new http.Request($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -363,24 +363,24 @@ class ActivitiesResourceListCollection extends core.Object implements core.Hasha
   /**
  * All activities created by the specified user that the authenticated user is authorized to view.
  */
-  static final ActivitiesResourceListCollection ALL = const ActivitiesResourceListCollection._internal("all", 0);
+  const ActivitiesResourceListCollection ALL = const ActivitiesResourceListCollection._internal("all", 0);
   /** The specified user's scrapbook. */
-  static final ActivitiesResourceListCollection SCRAPS = const ActivitiesResourceListCollection._internal("scraps", 1);
+  const ActivitiesResourceListCollection SCRAPS = const ActivitiesResourceListCollection._internal("scraps", 1);
   /**
  * The specified user's stream feed, intended for consumption. This includes activities posted by
  * people that the user is following, and activities in which the user has been mentioned.
  */
-  static final ActivitiesResourceListCollection STREAM = const ActivitiesResourceListCollection._internal("stream", 2);
+  const ActivitiesResourceListCollection STREAM = const ActivitiesResourceListCollection._internal("stream", 2);
 
   /** All values of this enumeration */
-  static final core.List<ActivitiesResourceListCollection> values = const <ActivitiesResourceListCollection>[
+  const core.List<ActivitiesResourceListCollection> values = const <ActivitiesResourceListCollection>[
     ALL,
     SCRAPS,
     STREAM,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <ActivitiesResourceListCollection>{ 
+  const _valuesMap = const <ActivitiesResourceListCollection>{ 
     "all": ALL,
     "scraps": SCRAPS,
     "stream": STREAM,
@@ -430,7 +430,7 @@ class CommunityPollCommentsResource extends core.Object {
     final $body = JSON.stringify(CommunityPollComment.serialize(content));
     final $path = "communities/{communityId}/polls/{pollId}/comments";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -451,15 +451,15 @@ class CommunityPollCommentsResource extends core.Object {
   Minimum: 1.
    *    * [hl] Specifies the interface language (host language) of your user interface.
    */
-  core.Future<CommunityPollCommentList> list(core.int communityId, core.String pollId, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String hl = UNSPECIFIED]) {
+  core.Future<CommunityPollCommentList> list(core.int communityId, core.String pollId, {core.String pageToken, core.int maxResults, core.String hl}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["communityId"] = communityId;
     $pathParams["pollId"] = pollId;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
-    if (UNSPECIFIED != hl) $queryParams["hl"] = hl;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
+    if (?hl) $queryParams["hl"] = hl;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -470,7 +470,7 @@ class CommunityPollCommentsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "communities/{communityId}/polls/{pollId}/comments";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -497,14 +497,14 @@ class CommunityPollsResource extends core.Object {
   Minimum: 1.
    *    * [hl] Specifies the interface language (host language) of your user interface.
    */
-  core.Future<CommunityPollList> list(core.int communityId, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String hl = UNSPECIFIED]) {
+  core.Future<CommunityPollList> list(core.int communityId, {core.String pageToken, core.int maxResults, core.String hl}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["communityId"] = communityId;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
-    if (UNSPECIFIED != hl) $queryParams["hl"] = hl;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
+    if (?hl) $queryParams["hl"] = hl;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -515,7 +515,7 @@ class CommunityPollsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "communities/{communityId}/polls";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -532,13 +532,13 @@ class CommunityPollsResource extends core.Object {
    *    * [pollId] The ID of the poll to get.
    *    * [hl] Specifies the interface language (host language) of your user interface.
    */
-  core.Future<CommunityPoll> get(core.int communityId, core.String pollId, [core.String hl = UNSPECIFIED]) {
+  core.Future<CommunityPoll> get(core.int communityId, core.String pollId, {core.String hl}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["communityId"] = communityId;
     $pathParams["pollId"] = pollId;
-    if (UNSPECIFIED != hl) $queryParams["hl"] = hl;
+    if (?hl) $queryParams["hl"] = hl;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -549,7 +549,7 @@ class CommunityPollsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "communities/{communityId}/polls/{pollId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -591,7 +591,7 @@ class CommunityMessagesResource extends core.Object {
     final $body = JSON.stringify(CommunityMessage.serialize(content));
     final $path = "communities/{communityId}/topics/{topicId}/messages";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -613,15 +613,15 @@ class CommunityMessagesResource extends core.Object {
   Maximum: 100.
    *    * [hl] Specifies the interface language (host language) of your user interface.
    */
-  core.Future<CommunityMessageList> list(core.int communityId, core.String topicId, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String hl = UNSPECIFIED]) {
+  core.Future<CommunityMessageList> list(core.int communityId, core.String topicId, {core.String pageToken, core.int maxResults, core.String hl}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["communityId"] = communityId;
     $pathParams["topicId"] = topicId;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
-    if (UNSPECIFIED != hl) $queryParams["hl"] = hl;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
+    if (?hl) $queryParams["hl"] = hl;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -632,7 +632,7 @@ class CommunityMessagesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "communities/{communityId}/topics/{topicId}/messages";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -666,7 +666,7 @@ class CommunityMessagesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "communities/{communityId}/topics/{topicId}/messages/{messageId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "DELETE", $headers);
+    final $http = new http.Request($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -690,12 +690,12 @@ class CommunityTopicsResource extends core.Object {
    *    * [communityId] The ID of the community the topic should be added to.
    *    * [isShout] Whether this topic is a shout.
    */
-  core.Future<CommunityTopic> insert(core.int communityId, CommunityTopic content, [core.bool isShout = UNSPECIFIED]) {
+  core.Future<CommunityTopic> insert(core.int communityId, CommunityTopic content, {core.bool isShout}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["communityId"] = communityId;
-    if (UNSPECIFIED != isShout) $queryParams["isShout"] = isShout;
+    if (?isShout) $queryParams["isShout"] = isShout;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -708,7 +708,7 @@ class CommunityTopicsResource extends core.Object {
     final $body = JSON.stringify(CommunityTopic.serialize(content));
     final $path = "communities/{communityId}/topics";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -725,13 +725,13 @@ class CommunityTopicsResource extends core.Object {
    *    * [topicId] The ID of the topic to get.
    *    * [hl] Specifies the interface language (host language) of your user interface.
    */
-  core.Future<CommunityTopic> get(core.int communityId, core.String topicId, [core.String hl = UNSPECIFIED]) {
+  core.Future<CommunityTopic> get(core.int communityId, core.String topicId, {core.String hl}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["communityId"] = communityId;
     $pathParams["topicId"] = topicId;
-    if (UNSPECIFIED != hl) $queryParams["hl"] = hl;
+    if (?hl) $queryParams["hl"] = hl;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -742,7 +742,7 @@ class CommunityTopicsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "communities/{communityId}/topics/{topicId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -763,14 +763,14 @@ class CommunityTopicsResource extends core.Object {
   Maximum: 100.
    *    * [hl] Specifies the interface language (host language) of your user interface.
    */
-  core.Future<CommunityTopicList> list(core.int communityId, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String hl = UNSPECIFIED]) {
+  core.Future<CommunityTopicList> list(core.int communityId, {core.String pageToken, core.int maxResults, core.String hl}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["communityId"] = communityId;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
-    if (UNSPECIFIED != hl) $queryParams["hl"] = hl;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
+    if (?hl) $queryParams["hl"] = hl;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -781,7 +781,7 @@ class CommunityTopicsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "communities/{communityId}/topics";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -813,7 +813,7 @@ class CommunityTopicsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "communities/{communityId}/topics/{topicId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "DELETE", $headers);
+    final $http = new http.Request($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -853,7 +853,7 @@ class CommentsResource extends core.Object {
     final $body = JSON.stringify(Comment.serialize(content));
     final $path = "activities/{activityId}/comments";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -869,12 +869,12 @@ class CommentsResource extends core.Object {
    *    * [commentId] ID of the comment to get.
    *    * [hl] Specifies the interface language (host language) of your user interface.
    */
-  core.Future<Comment> get(core.String commentId, [core.String hl = UNSPECIFIED]) {
+  core.Future<Comment> get(core.String commentId, {core.String hl}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["commentId"] = commentId;
-    if (UNSPECIFIED != hl) $queryParams["hl"] = hl;
+    if (?hl) $queryParams["hl"] = hl;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -885,7 +885,7 @@ class CommentsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "comments/{commentId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -907,15 +907,15 @@ class CommentsResource extends core.Object {
   Minimum: 1.
    *    * [hl] Specifies the interface language (host language) of your user interface.
    */
-  core.Future<CommentList> list(core.String activityId, [CommentsResourceListOrderBy orderBy = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String hl = UNSPECIFIED]) {
+  core.Future<CommentList> list(core.String activityId, {CommentsResourceListOrderBy orderBy, core.String pageToken, core.int maxResults, core.String hl}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["activityId"] = activityId;
-    if (UNSPECIFIED != orderBy) $queryParams["orderBy"] = orderBy;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
-    if (UNSPECIFIED != hl) $queryParams["hl"] = hl;
+    if (?orderBy) $queryParams["orderBy"] = orderBy;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
+    if (?hl) $queryParams["hl"] = hl;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -926,7 +926,7 @@ class CommentsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "activities/{activityId}/comments";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -956,7 +956,7 @@ class CommentsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "comments/{commentId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "DELETE", $headers);
+    final $http = new http.Request($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -969,18 +969,18 @@ class CommentsResource extends core.Object {
 // Enum CommentsResource.List.OrderBy
 class CommentsResourceListOrderBy extends core.Object implements core.Hashable {
   /** Use ascending sort order. */
-  static final CommentsResourceListOrderBy ASCENDING = const CommentsResourceListOrderBy._internal("ascending", 0);
+  const CommentsResourceListOrderBy ASCENDING = const CommentsResourceListOrderBy._internal("ascending", 0);
   /** Use descending sort order. */
-  static final CommentsResourceListOrderBy DESCENDING = const CommentsResourceListOrderBy._internal("descending", 1);
+  const CommentsResourceListOrderBy DESCENDING = const CommentsResourceListOrderBy._internal("descending", 1);
 
   /** All values of this enumeration */
-  static final core.List<CommentsResourceListOrderBy> values = const <CommentsResourceListOrderBy>[
+  const core.List<CommentsResourceListOrderBy> values = const <CommentsResourceListOrderBy>[
     ASCENDING,
     DESCENDING,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <CommentsResourceListOrderBy>{ 
+  const _valuesMap = const <CommentsResourceListOrderBy>{ 
     "ascending": ASCENDING,
     "descending": DESCENDING,
   };
@@ -1026,7 +1026,7 @@ class AclResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "activities/{activityId}/acl/{userId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "DELETE", $headers);
+    final $http = new http.Request($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1049,12 +1049,12 @@ class CommunityRelatedResource extends core.Object {
    *    * [communityId] The ID of the community whose related communities will be listed.
    *    * [hl] Specifies the interface language (host language) of your user interface.
    */
-  core.Future<CommunityList> list(core.int communityId, [core.String hl = UNSPECIFIED]) {
+  core.Future<CommunityList> list(core.int communityId, {core.String hl}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["communityId"] = communityId;
-    if (UNSPECIFIED != hl) $queryParams["hl"] = hl;
+    if (?hl) $queryParams["hl"] = hl;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -1065,7 +1065,7 @@ class CommunityRelatedResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "communities/{communityId}/related";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1103,7 +1103,7 @@ class ScrapsResource extends core.Object {
     final $body = JSON.stringify(Activity.serialize(content));
     final $path = "activities/scraps";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1145,7 +1145,7 @@ class CommunityPollVotesResource extends core.Object {
     final $body = JSON.stringify(CommunityPollVote.serialize(content));
     final $path = "communities/{communityId}/polls/{pollId}/votes";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1172,14 +1172,14 @@ class CommunitiesResource extends core.Object {
   Minimum: 1.
    *    * [hl] Specifies the interface language (host language) of your user interface.
    */
-  core.Future<CommunityList> list(core.String userId, [CommunitiesResourceListOrderBy orderBy = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String hl = UNSPECIFIED]) {
+  core.Future<CommunityList> list(core.String userId, {CommunitiesResourceListOrderBy orderBy, core.int maxResults, core.String hl}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["userId"] = userId;
-    if (UNSPECIFIED != orderBy) $queryParams["orderBy"] = orderBy;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
-    if (UNSPECIFIED != hl) $queryParams["hl"] = hl;
+    if (?orderBy) $queryParams["orderBy"] = orderBy;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
+    if (?hl) $queryParams["hl"] = hl;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -1190,7 +1190,7 @@ class CommunitiesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "people/{userId}/communities";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1206,12 +1206,12 @@ class CommunitiesResource extends core.Object {
    *    * [communityId] The ID of the community to get.
    *    * [hl] Specifies the interface language (host language) of your user interface.
    */
-  core.Future<Community> get(core.int communityId, [core.String hl = UNSPECIFIED]) {
+  core.Future<Community> get(core.int communityId, {core.String hl}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["communityId"] = communityId;
-    if (UNSPECIFIED != hl) $queryParams["hl"] = hl;
+    if (?hl) $queryParams["hl"] = hl;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -1222,7 +1222,7 @@ class CommunitiesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "communities/{communityId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1235,21 +1235,21 @@ class CommunitiesResource extends core.Object {
 // Enum CommunitiesResource.List.OrderBy
 class CommunitiesResourceListOrderBy extends core.Object implements core.Hashable {
   /** Returns the communities sorted by a fixed, natural order. */
-  static final CommunitiesResourceListOrderBy ID = const CommunitiesResourceListOrderBy._internal("id", 0);
+  const CommunitiesResourceListOrderBy ID = const CommunitiesResourceListOrderBy._internal("id", 0);
   /**
  * Returns the communities ranked accordingly to how they are displayed on the orkut web
  * application.
  */
-  static final CommunitiesResourceListOrderBy RANKED = const CommunitiesResourceListOrderBy._internal("ranked", 1);
+  const CommunitiesResourceListOrderBy RANKED = const CommunitiesResourceListOrderBy._internal("ranked", 1);
 
   /** All values of this enumeration */
-  static final core.List<CommunitiesResourceListOrderBy> values = const <CommunitiesResourceListOrderBy>[
+  const core.List<CommunitiesResourceListOrderBy> values = const <CommunitiesResourceListOrderBy>[
     ID,
     RANKED,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <CommunitiesResourceListOrderBy>{ 
+  const _valuesMap = const <CommunitiesResourceListOrderBy>{ 
     "id": ID,
     "ranked": RANKED,
   };
@@ -1295,7 +1295,7 @@ class CommunityFollowResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "communities/{communityId}/followers/{userId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1327,7 +1327,7 @@ class CommunityFollowResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "communities/{communityId}/followers/{userId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "DELETE", $headers);
+    final $http = new http.Request($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1367,7 +1367,7 @@ class ActivityVisibilityResource extends core.Object {
     final $body = JSON.stringify(Visibility.serialize(content));
     final $path = "activities/{activityId}/visibility";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PATCH", $headers);
+    final $http = new http.Request($url, "PATCH", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1400,7 +1400,7 @@ class ActivityVisibilityResource extends core.Object {
     final $body = JSON.stringify(Visibility.serialize(content));
     final $path = "activities/{activityId}/visibility";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PUT", $headers);
+    final $http = new http.Request($url, "PUT", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1430,7 +1430,7 @@ class ActivityVisibilityResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "activities/{activityId}/visibility";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1467,7 +1467,7 @@ class BadgesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "people/{userId}/badges";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1499,7 +1499,7 @@ class BadgesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "people/{userId}/badges/{badgeId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1536,7 +1536,7 @@ class CountersResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "people/{userId}/counters";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -3318,15 +3318,15 @@ class Visibility extends IdentityHash {
 // Enum OrkutApi.Alt
 class OrkutApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/json */
-  static final OrkutApiAlt JSON = const OrkutApiAlt._internal("json", 0);
+  const OrkutApiAlt JSON = const OrkutApiAlt._internal("json", 0);
 
   /** All values of this enumeration */
-  static final core.List<OrkutApiAlt> values = const <OrkutApiAlt>[
+  const core.List<OrkutApiAlt> values = const <OrkutApiAlt>[
     JSON,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <OrkutApiAlt>{ 
+  const _valuesMap = const <OrkutApiAlt>{ 
     "json": JSON,
   };
 

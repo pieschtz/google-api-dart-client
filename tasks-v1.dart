@@ -17,7 +17,7 @@
 #import('dart:json');
 
 #import('utils.dart');
-#import('http.dart');
+#import('http.dart', prefix:'http');
 
 // API TasksApi
 /**
@@ -27,16 +27,16 @@ class TasksApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
   final core.String baseUrl;
   /** How we should identify ourselves to the service. */
-  Authenticator authenticator;
+  http.Authenticator authenticator;
   /** The client library version */
   final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
   final core.String applicationName;
-  TasksApi get _$service() => this;
+  TasksApi get _$service => this;
   TasksResource _tasks;
-  TasksResource get tasks() => _tasks;
+  TasksResource get tasks => _tasks;
   TasklistsResource _tasklists;
-  TasklistsResource get tasklists() => _tasklists;
+  TasklistsResource get tasklists => _tasklists;
   
   /** Returns response with indentations and line breaks. */
   core.bool prettyPrint;
@@ -69,15 +69,15 @@ class TasksApi extends core.Object {
   TasksApiAlt alt;
 
 
-  TasksApi([this.baseUrl = "https://www.googleapis.com/tasks/v1/", applicationName, this.authenticator]) :
+  TasksApi({this.baseUrl:"https://www.googleapis.com/tasks/v1/", applicationName, this.authenticator}) :
       this.applicationName = (applicationName == null) ? null : applicationName
-          .replaceAll(const core.RegExp(@'\s+'), '_')
-          .replaceAll(const core.RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+          .replaceAll(const core.RegExp(r'\s+'), '_')
+          .replaceAll(const core.RegExp(r'[^-_.,0-9a-zA-Z]'), '')
   { 
     _tasks = new TasksResource._internal(this);
     _tasklists = new TasklistsResource._internal(this);
   }
-  core.String get userAgent() {
+  core.String get userAgent {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}tasks/v1/20111027 google-api-dart-client/${clientVersion}";
   }
@@ -107,13 +107,13 @@ class TasksResource extends core.Object {
    *    * [previous] Previous sibling task identifier. If the task is created at the first position among its siblings,
    *        this parameter is omitted. Optional.
    */
-  core.Future<Task> insert(core.String tasklist, Task content, [core.String parent = UNSPECIFIED, core.String previous = UNSPECIFIED]) {
+  core.Future<Task> insert(core.String tasklist, Task content, {core.String parent, core.String previous}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["tasklist"] = tasklist;
-    if (UNSPECIFIED != parent) $queryParams["parent"] = parent;
-    if (UNSPECIFIED != previous) $queryParams["previous"] = previous;
+    if (?parent) $queryParams["parent"] = parent;
+    if (?previous) $queryParams["previous"] = previous;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -126,7 +126,7 @@ class TasksResource extends core.Object {
     final $body = JSON.stringify(Task.serialize(content));
     final $path = "lists/{tasklist}/tasks";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -158,7 +158,7 @@ class TasksResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "lists/{tasklist}/tasks/{task}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -189,7 +189,7 @@ class TasksResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "lists/{tasklist}/clear";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -210,14 +210,14 @@ class TasksResource extends core.Object {
    *    * [previous] New previous sibling task identifier. If the task is moved to the first position among its siblings,
    *        this parameter is omitted. Optional.
    */
-  core.Future<Task> move(core.String tasklist, core.String task, [core.String parent = UNSPECIFIED, core.String previous = UNSPECIFIED]) {
+  core.Future<Task> move(core.String tasklist, core.String task, {core.String parent, core.String previous}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["tasklist"] = tasklist;
     $pathParams["task"] = task;
-    if (UNSPECIFIED != parent) $queryParams["parent"] = parent;
-    if (UNSPECIFIED != previous) $queryParams["previous"] = previous;
+    if (?parent) $queryParams["parent"] = parent;
+    if (?previous) $queryParams["previous"] = previous;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -228,7 +228,7 @@ class TasksResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "lists/{tasklist}/tasks/{task}/move";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -258,21 +258,21 @@ class TasksResource extends core.Object {
    *    * [dueMin] Lower bound for a task's due date (as a RFC 3339 timestamp) to filter by. Optional. The default is
    *        not to filter by due date.
    */
-  core.Future<Tasks> list(core.String tasklist, [core.String dueMax = UNSPECIFIED, core.bool showDeleted = UNSPECIFIED, core.String updatedMin = UNSPECIFIED, core.String completedMin = UNSPECIFIED, core.String maxResults = UNSPECIFIED, core.bool showCompleted = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.String completedMax = UNSPECIFIED, core.bool showHidden = UNSPECIFIED, core.String dueMin = UNSPECIFIED]) {
+  core.Future<Tasks> list(core.String tasklist, {core.String dueMax, core.bool showDeleted, core.String updatedMin, core.String completedMin, core.String maxResults, core.bool showCompleted, core.String pageToken, core.String completedMax, core.bool showHidden, core.String dueMin}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["tasklist"] = tasklist;
-    if (UNSPECIFIED != dueMax) $queryParams["dueMax"] = dueMax;
-    if (UNSPECIFIED != showDeleted) $queryParams["showDeleted"] = showDeleted;
-    if (UNSPECIFIED != updatedMin) $queryParams["updatedMin"] = updatedMin;
-    if (UNSPECIFIED != completedMin) $queryParams["completedMin"] = completedMin;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
-    if (UNSPECIFIED != showCompleted) $queryParams["showCompleted"] = showCompleted;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != completedMax) $queryParams["completedMax"] = completedMax;
-    if (UNSPECIFIED != showHidden) $queryParams["showHidden"] = showHidden;
-    if (UNSPECIFIED != dueMin) $queryParams["dueMin"] = dueMin;
+    if (?dueMax) $queryParams["dueMax"] = dueMax;
+    if (?showDeleted) $queryParams["showDeleted"] = showDeleted;
+    if (?updatedMin) $queryParams["updatedMin"] = updatedMin;
+    if (?completedMin) $queryParams["completedMin"] = completedMin;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
+    if (?showCompleted) $queryParams["showCompleted"] = showCompleted;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?completedMax) $queryParams["completedMax"] = completedMax;
+    if (?showHidden) $queryParams["showHidden"] = showHidden;
+    if (?dueMin) $queryParams["dueMin"] = dueMin;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -283,7 +283,7 @@ class TasksResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "lists/{tasklist}/tasks";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -318,7 +318,7 @@ class TasksResource extends core.Object {
     final $body = JSON.stringify(Task.serialize(content));
     final $path = "lists/{tasklist}/tasks/{task}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PUT", $headers);
+    final $http = new http.Request($url, "PUT", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -353,7 +353,7 @@ class TasksResource extends core.Object {
     final $body = JSON.stringify(Task.serialize(content));
     final $path = "lists/{tasklist}/tasks/{task}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PATCH", $headers);
+    final $http = new http.Request($url, "PATCH", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -385,7 +385,7 @@ class TasksResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "lists/{tasklist}/tasks/{task}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "DELETE", $headers);
+    final $http = new http.Request($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -423,7 +423,7 @@ class TasklistsResource extends core.Object {
     final $body = JSON.stringify(TaskList.serialize(content));
     final $path = "users/@me/lists";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -453,7 +453,7 @@ class TasklistsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "users/@me/lists/{tasklist}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -469,12 +469,12 @@ class TasklistsResource extends core.Object {
    *    * [pageToken] Token specifying the result page to return. Optional.
    *    * [maxResults] Maximum number of task lists returned on one page. Optional. The default is 100.
    */
-  core.Future<TaskLists> list([core.String pageToken = UNSPECIFIED, core.String maxResults = UNSPECIFIED]) {
+  core.Future<TaskLists> list({core.String pageToken, core.String maxResults}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -485,7 +485,7 @@ class TasklistsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "users/@me/lists";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -518,7 +518,7 @@ class TasklistsResource extends core.Object {
     final $body = JSON.stringify(TaskList.serialize(content));
     final $path = "users/@me/lists/{tasklist}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PUT", $headers);
+    final $http = new http.Request($url, "PUT", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -551,7 +551,7 @@ class TasklistsResource extends core.Object {
     final $body = JSON.stringify(TaskList.serialize(content));
     final $path = "users/@me/lists/{tasklist}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PATCH", $headers);
+    final $http = new http.Request($url, "PATCH", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -581,7 +581,7 @@ class TasklistsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "users/@me/lists/{tasklist}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "DELETE", $headers);
+    final $http = new http.Request($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -854,15 +854,15 @@ class Tasks extends IdentityHash {
 // Enum TasksApi.Alt
 class TasksApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/json */
-  static final TasksApiAlt JSON = const TasksApiAlt._internal("json", 0);
+  const TasksApiAlt JSON = const TasksApiAlt._internal("json", 0);
 
   /** All values of this enumeration */
-  static final core.List<TasksApiAlt> values = const <TasksApiAlt>[
+  const core.List<TasksApiAlt> values = const <TasksApiAlt>[
     JSON,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <TasksApiAlt>{ 
+  const _valuesMap = const <TasksApiAlt>{ 
     "json": JSON,
   };
 

@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#library('dfareporting-v1');
+#library('dfareporting-v1.1');
 #import('dart:core', prefix: 'core');
 #import('dart:json');
 
 #import('utils.dart');
-#import('http.dart');
+#import('http.dart', prefix:'http');
 
 // API DfareportingApi
 /**
@@ -27,20 +27,20 @@ class DfareportingApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
   final core.String baseUrl;
   /** How we should identify ourselves to the service. */
-  Authenticator authenticator;
+  http.Authenticator authenticator;
   /** The client library version */
   final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
   final core.String applicationName;
-  DfareportingApi get _$service() => this;
+  DfareportingApi get _$service => this;
   FilesResource _files;
-  FilesResource get files() => _files;
+  FilesResource get files => _files;
   DimensionValuesResource _dimensionValues;
-  DimensionValuesResource get dimensionValues() => _dimensionValues;
+  DimensionValuesResource get dimensionValues => _dimensionValues;
   UserProfilesResource _userProfiles;
-  UserProfilesResource get userProfiles() => _userProfiles;
+  UserProfilesResource get userProfiles => _userProfiles;
   ReportsResource _reports;
-  ReportsResource get reports() => _reports;
+  ReportsResource get reports => _reports;
   
   /** Returns response with indentations and line breaks. */
   core.bool prettyPrint;
@@ -73,19 +73,19 @@ class DfareportingApi extends core.Object {
   DfareportingApiAlt alt;
 
 
-  DfareportingApi([this.baseUrl = "https://www.googleapis.com/dfareporting/v1/", applicationName, this.authenticator]) :
+  DfareportingApi({this.baseUrl:"https://www.googleapis.com/dfareporting/v1.1/", applicationName, this.authenticator}) :
       this.applicationName = (applicationName == null) ? null : applicationName
-          .replaceAll(const core.RegExp(@'\s+'), '_')
-          .replaceAll(const core.RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+          .replaceAll(const core.RegExp(r'\s+'), '_')
+          .replaceAll(const core.RegExp(r'[^-_.,0-9a-zA-Z]'), '')
   { 
     _files = new FilesResource._internal(this);
     _dimensionValues = new DimensionValuesResource._internal(this);
     _userProfiles = new UserProfilesResource._internal(this);
     _reports = new ReportsResource._internal(this);
   }
-  core.String get userAgent() {
+  core.String get userAgent {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}dfareporting/v1/20120519 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}dfareporting/v1.1/20120831 google-api-dart-client/${clientVersion}";
   }
 
 
@@ -103,9 +103,9 @@ class FilesResource extends core.Object {
   /**
    * Lists files for a user profile.
    *
-   *    * [profileId] The DFA profile id.
+   *    * [profileId] The DFA profile ID.
    *    * [pageToken] The value of the nextToken from the previous result page.
-   *    * [sortField] The field to sort the list by.
+   *    * [sortField] The field by which to sort the list.
   Default: LAST_MODIFIED_TIME.
    *    * [sortOrder] Order of sorted results, default is 'DESCENDING'.
   Default: DESCENDING.
@@ -114,15 +114,15 @@ class FilesResource extends core.Object {
   Minimum: 0.
   Maximum: 10.
    */
-  core.Future<FileList> list(core.String profileId, [core.String pageToken = UNSPECIFIED, FilesResourceListSortField sortField = UNSPECIFIED, FilesResourceListSortOrder sortOrder = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
+  core.Future<FileList> list(core.String profileId, {core.String pageToken, FilesResourceListSortField sortField, FilesResourceListSortOrder sortOrder, core.int maxResults}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["profileId"] = profileId;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != sortField) $queryParams["sortField"] = sortField;
-    if (UNSPECIFIED != sortOrder) $queryParams["sortOrder"] = sortOrder;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?sortField) $queryParams["sortField"] = sortField;
+    if (?sortOrder) $queryParams["sortOrder"] = sortOrder;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -133,7 +133,7 @@ class FilesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "userprofiles/{profileId}/files";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -145,19 +145,19 @@ class FilesResource extends core.Object {
 
 // Enum FilesResource.List.SortField
 class FilesResourceListSortField extends core.Object implements core.Hashable {
-  /** Sort by file id. */
-  static final FilesResourceListSortField ID = const FilesResourceListSortField._internal("ID", 0);
+  /** Sort by file ID. */
+  const FilesResourceListSortField ID = const FilesResourceListSortField._internal("ID", 0);
   /** Sort by 'lastmodifiedAt' field. */
-  static final FilesResourceListSortField LAST_MODIFIED_TIME = const FilesResourceListSortField._internal("LAST_MODIFIED_TIME", 1);
+  const FilesResourceListSortField LAST_MODIFIED_TIME = const FilesResourceListSortField._internal("LAST_MODIFIED_TIME", 1);
 
   /** All values of this enumeration */
-  static final core.List<FilesResourceListSortField> values = const <FilesResourceListSortField>[
+  const core.List<FilesResourceListSortField> values = const <FilesResourceListSortField>[
     ID,
     LAST_MODIFIED_TIME,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <FilesResourceListSortField>{ 
+  const _valuesMap = const <FilesResourceListSortField>{ 
     "ID": ID,
     "LAST_MODIFIED_TIME": LAST_MODIFIED_TIME,
   };
@@ -177,18 +177,18 @@ class FilesResourceListSortField extends core.Object implements core.Hashable {
 // Enum FilesResource.List.SortOrder
 class FilesResourceListSortOrder extends core.Object implements core.Hashable {
   /** Ascending order. */
-  static final FilesResourceListSortOrder ASCENDING = const FilesResourceListSortOrder._internal("ASCENDING", 0);
+  const FilesResourceListSortOrder ASCENDING = const FilesResourceListSortOrder._internal("ASCENDING", 0);
   /** Descending order. */
-  static final FilesResourceListSortOrder DESCENDING = const FilesResourceListSortOrder._internal("DESCENDING", 1);
+  const FilesResourceListSortOrder DESCENDING = const FilesResourceListSortOrder._internal("DESCENDING", 1);
 
   /** All values of this enumeration */
-  static final core.List<FilesResourceListSortOrder> values = const <FilesResourceListSortOrder>[
+  const core.List<FilesResourceListSortOrder> values = const <FilesResourceListSortOrder>[
     ASCENDING,
     DESCENDING,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <FilesResourceListSortOrder>{ 
+  const _valuesMap = const <FilesResourceListSortOrder>{ 
     "ASCENDING": ASCENDING,
     "DESCENDING": DESCENDING,
   };
@@ -216,20 +216,20 @@ class DimensionValuesResource extends core.Object {
    * Retrieves list of report dimension values for a list of filters.
    *
    *    * [content] the DimensionValueRequest
-   *    * [profileId] The DFA user profile id.
+   *    * [profileId] The DFA user profile ID.
    *    * [pageToken] The value of the nextToken from the previous result page.
    *    * [maxResults] Maximum number of results to return.
 
   Minimum: 0.
   Maximum: 100.
    */
-  core.Future<DimensionValueList> query(core.String profileId, DimensionValueRequest content, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
+  core.Future<DimensionValueList> query(core.String profileId, DimensionValueRequest content, {core.String pageToken, core.int maxResults}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["profileId"] = profileId;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -242,7 +242,7 @@ class DimensionValuesResource extends core.Object {
     final $body = JSON.stringify(DimensionValueRequest.serialize(content));
     final $path = "userprofiles/{profileId}/dimensionvalues/query";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -277,7 +277,7 @@ class UserProfilesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "userprofiles";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -288,9 +288,9 @@ class UserProfilesResource extends core.Object {
 
   // Method UserProfilesResource.Get
   /**
-   * Gets one user profile by id.
+   * Gets one user profile by ID.
    *
-   *    * [profileId] The user profile id.
+   *    * [profileId] The user profile ID.
    */
   core.Future<UserProfile> get(core.String profileId) {
     final $queryParams = {};
@@ -307,7 +307,7 @@ class UserProfilesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "userprofiles/{profileId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -330,7 +330,7 @@ class ReportsResource extends core.Object {
    * Creates a report.
    *
    *    * [content] the Report
-   *    * [profileId] The DFA user profile id.
+   *    * [profileId] The DFA user profile ID.
    */
   core.Future<Report> insert(core.String profileId, Report content) {
     final $queryParams = {};
@@ -349,7 +349,7 @@ class ReportsResource extends core.Object {
     final $body = JSON.stringify(Report.serialize(content));
     final $path = "userprofiles/{profileId}/reports";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -362,17 +362,17 @@ class ReportsResource extends core.Object {
   /**
    * Runs a report.
    *
-   *    * [profileId] The DFA profile id.
-   *    * [reportId] The id of the report.
+   *    * [profileId] The DFA profile ID.
+   *    * [reportId] The ID of the report.
    *    * [synchronous] If set and true, tries to run the report synchronously.
    */
-  core.Future<File> run(core.String profileId, core.String reportId, [core.bool synchronous = UNSPECIFIED]) {
+  core.Future<File> run(core.String profileId, core.String reportId, {core.bool synchronous}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["profileId"] = profileId;
     $pathParams["reportId"] = reportId;
-    if (UNSPECIFIED != synchronous) $queryParams["synchronous"] = synchronous;
+    if (?synchronous) $queryParams["synchronous"] = synchronous;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -383,7 +383,7 @@ class ReportsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "userprofiles/{profileId}/reports/{reportId}/run";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -394,10 +394,10 @@ class ReportsResource extends core.Object {
 
   // Method ReportsResource.Get
   /**
-   * Retrieves a report by its id.
+   * Retrieves a report by its ID.
    *
-   *    * [profileId] The DFA user profile id.
-   *    * [reportId] The id of the report.
+   *    * [profileId] The DFA user profile ID.
+   *    * [reportId] The ID of the report.
    */
   core.Future<Report> get(core.String profileId, core.String reportId) {
     final $queryParams = {};
@@ -415,7 +415,7 @@ class ReportsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "userprofiles/{profileId}/reports/{reportId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -428,9 +428,9 @@ class ReportsResource extends core.Object {
   /**
    * Retrieves list of reports.
    *
-   *    * [profileId] The DFA user profile id.
+   *    * [profileId] The DFA user profile ID.
    *    * [pageToken] The value of the nextToken from the previous result page.
-   *    * [sortField] The field to sort the list by.
+   *    * [sortField] The field by which to sort the list.
   Default: LAST_MODIFIED_TIME.
    *    * [sortOrder] Order of sorted results, default is 'DESCENDING'.
   Default: DESCENDING.
@@ -439,15 +439,15 @@ class ReportsResource extends core.Object {
   Minimum: 0.
   Maximum: 10.
    */
-  core.Future<ReportList> list(core.String profileId, [core.String pageToken = UNSPECIFIED, ReportsResourceListSortField sortField = UNSPECIFIED, ReportsResourceListSortOrder sortOrder = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
+  core.Future<ReportList> list(core.String profileId, {core.String pageToken, ReportsResourceListSortField sortField, ReportsResourceListSortOrder sortOrder, core.int maxResults}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["profileId"] = profileId;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != sortField) $queryParams["sortField"] = sortField;
-    if (UNSPECIFIED != sortOrder) $queryParams["sortOrder"] = sortOrder;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?sortField) $queryParams["sortField"] = sortField;
+    if (?sortOrder) $queryParams["sortOrder"] = sortOrder;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -458,7 +458,7 @@ class ReportsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "userprofiles/{profileId}/reports";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -472,8 +472,8 @@ class ReportsResource extends core.Object {
    * Updates a report.
    *
    *    * [content] the Report
-   *    * [profileId] The DFA user profile id.
-   *    * [reportId] The id of the report.
+   *    * [profileId] The DFA user profile ID.
+   *    * [reportId] The ID of the report.
    */
   core.Future<Report> update(core.String profileId, core.String reportId, Report content) {
     final $queryParams = {};
@@ -493,7 +493,7 @@ class ReportsResource extends core.Object {
     final $body = JSON.stringify(Report.serialize(content));
     final $path = "userprofiles/{profileId}/reports/{reportId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PUT", $headers);
+    final $http = new http.Request($url, "PUT", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -507,8 +507,8 @@ class ReportsResource extends core.Object {
    * Updates a report. This method supports patch semantics.
    *
    *    * [content] the Report
-   *    * [profileId] The DFA user profile id.
-   *    * [reportId] The id of the report.
+   *    * [profileId] The DFA user profile ID.
+   *    * [reportId] The ID of the report.
    */
   core.Future<Report> patch(core.String profileId, core.String reportId, Report content) {
     final $queryParams = {};
@@ -528,7 +528,7 @@ class ReportsResource extends core.Object {
     final $body = JSON.stringify(Report.serialize(content));
     final $path = "userprofiles/{profileId}/reports/{reportId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PATCH", $headers);
+    final $http = new http.Request($url, "PATCH", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -539,10 +539,10 @@ class ReportsResource extends core.Object {
 
   // Method ReportsResource.Delete
   /**
-   * Deletes a report by its id.
+   * Deletes a report by its ID.
    *
-   *    * [profileId] The DFA user profile id.
-   *    * [reportId] The id of the report.
+   *    * [profileId] The DFA user profile ID.
+   *    * [reportId] The ID of the report.
    */
   core.Future delete(core.String profileId, core.String reportId) {
     final $queryParams = {};
@@ -560,7 +560,7 @@ class ReportsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "userprofiles/{profileId}/reports/{reportId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "DELETE", $headers);
+    final $http = new http.Request($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -572,22 +572,22 @@ class ReportsResource extends core.Object {
 
 // Enum ReportsResource.List.SortField
 class ReportsResourceListSortField extends core.Object implements core.Hashable {
-  /** Sort by report id. */
-  static final ReportsResourceListSortField ID = const ReportsResourceListSortField._internal("ID", 0);
+  /** Sort by report ID. */
+  const ReportsResourceListSortField ID = const ReportsResourceListSortField._internal("ID", 0);
   /** Sort by 'lastModifiedTime' field. */
-  static final ReportsResourceListSortField LAST_MODIFIED_TIME = const ReportsResourceListSortField._internal("LAST_MODIFIED_TIME", 1);
-  /** Sort by display name of reports. */
-  static final ReportsResourceListSortField NAME = const ReportsResourceListSortField._internal("NAME", 2);
+  const ReportsResourceListSortField LAST_MODIFIED_TIME = const ReportsResourceListSortField._internal("LAST_MODIFIED_TIME", 1);
+  /** Sort by name of reports. */
+  const ReportsResourceListSortField NAME = const ReportsResourceListSortField._internal("NAME", 2);
 
   /** All values of this enumeration */
-  static final core.List<ReportsResourceListSortField> values = const <ReportsResourceListSortField>[
+  const core.List<ReportsResourceListSortField> values = const <ReportsResourceListSortField>[
     ID,
     LAST_MODIFIED_TIME,
     NAME,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <ReportsResourceListSortField>{ 
+  const _valuesMap = const <ReportsResourceListSortField>{ 
     "ID": ID,
     "LAST_MODIFIED_TIME": LAST_MODIFIED_TIME,
     "NAME": NAME,
@@ -608,18 +608,18 @@ class ReportsResourceListSortField extends core.Object implements core.Hashable 
 // Enum ReportsResource.List.SortOrder
 class ReportsResourceListSortOrder extends core.Object implements core.Hashable {
   /** Ascending order. */
-  static final ReportsResourceListSortOrder ASCENDING = const ReportsResourceListSortOrder._internal("ASCENDING", 0);
+  const ReportsResourceListSortOrder ASCENDING = const ReportsResourceListSortOrder._internal("ASCENDING", 0);
   /** Descending order. */
-  static final ReportsResourceListSortOrder DESCENDING = const ReportsResourceListSortOrder._internal("DESCENDING", 1);
+  const ReportsResourceListSortOrder DESCENDING = const ReportsResourceListSortOrder._internal("DESCENDING", 1);
 
   /** All values of this enumeration */
-  static final core.List<ReportsResourceListSortOrder> values = const <ReportsResourceListSortOrder>[
+  const core.List<ReportsResourceListSortOrder> values = const <ReportsResourceListSortOrder>[
     ASCENDING,
     DESCENDING,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <ReportsResourceListSortOrder>{ 
+  const _valuesMap = const <ReportsResourceListSortOrder>{ 
     "ASCENDING": ASCENDING,
     "DESCENDING": DESCENDING,
   };
@@ -647,9 +647,9 @@ class ReportsFilesResourceResource extends core.Object {
   /**
    * Lists files for a report.
    *
-   *    * [profileId] The DFA profile id.
-   *    * [reportId] The id of the parent report.
-   *    * [sortField] The field to sort the list by.
+   *    * [profileId] The DFA profile ID.
+   *    * [reportId] The ID of the parent report.
+   *    * [sortField] The field by which to sort the list.
   Default: LAST_MODIFIED_TIME.
    *    * [maxResults] Maximum number of results to return.
 
@@ -659,16 +659,16 @@ class ReportsFilesResourceResource extends core.Object {
    *    * [sortOrder] Order of sorted results, default is 'DESCENDING'.
   Default: DESCENDING.
    */
-  core.Future<FileList> list(core.String profileId, core.String reportId, [ReportsResourceReportsFilesResourceResourceListSortField sortField = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String pageToken = UNSPECIFIED, ReportsResourceReportsFilesResourceResourceListSortOrder sortOrder = UNSPECIFIED]) {
+  core.Future<FileList> list(core.String profileId, core.String reportId, {ReportsResourceReportsFilesResourceResourceListSortField sortField, core.int maxResults, core.String pageToken, ReportsResourceReportsFilesResourceResourceListSortOrder sortOrder}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["profileId"] = profileId;
     $pathParams["reportId"] = reportId;
-    if (UNSPECIFIED != sortField) $queryParams["sortField"] = sortField;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != sortOrder) $queryParams["sortOrder"] = sortOrder;
+    if (?sortField) $queryParams["sortField"] = sortField;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?sortOrder) $queryParams["sortOrder"] = sortOrder;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -679,7 +679,7 @@ class ReportsFilesResourceResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "userprofiles/{profileId}/reports/{reportId}/files";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -692,9 +692,9 @@ class ReportsFilesResourceResource extends core.Object {
   /**
    * Retrieves a report file.
    *
-   *    * [profileId] The DFA profile id.
-   *    * [reportId] The id of the report.
-   *    * [fileId] The id of the report file.
+   *    * [profileId] The DFA profile ID.
+   *    * [reportId] The ID of the report.
+   *    * [fileId] The ID of the report file.
    */
   core.Future<File> get(core.String profileId, core.String reportId, core.String fileId) {
     final $queryParams = {};
@@ -713,7 +713,7 @@ class ReportsFilesResourceResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "userprofiles/{profileId}/reports/{reportId}/files/{fileId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -725,19 +725,19 @@ class ReportsFilesResourceResource extends core.Object {
 
 // Enum ReportsResource.ReportsFilesResourceResource.List.SortField
 class ReportsResourceReportsFilesResourceResourceListSortField extends core.Object implements core.Hashable {
-  /** Sort by file id. */
-  static final ReportsResourceReportsFilesResourceResourceListSortField ID = const ReportsResourceReportsFilesResourceResourceListSortField._internal("ID", 0);
+  /** Sort by file ID. */
+  const ReportsResourceReportsFilesResourceResourceListSortField ID = const ReportsResourceReportsFilesResourceResourceListSortField._internal("ID", 0);
   /** Sort by 'lastmodifiedAt' field. */
-  static final ReportsResourceReportsFilesResourceResourceListSortField LAST_MODIFIED_TIME = const ReportsResourceReportsFilesResourceResourceListSortField._internal("LAST_MODIFIED_TIME", 1);
+  const ReportsResourceReportsFilesResourceResourceListSortField LAST_MODIFIED_TIME = const ReportsResourceReportsFilesResourceResourceListSortField._internal("LAST_MODIFIED_TIME", 1);
 
   /** All values of this enumeration */
-  static final core.List<ReportsResourceReportsFilesResourceResourceListSortField> values = const <ReportsResourceReportsFilesResourceResourceListSortField>[
+  const core.List<ReportsResourceReportsFilesResourceResourceListSortField> values = const <ReportsResourceReportsFilesResourceResourceListSortField>[
     ID,
     LAST_MODIFIED_TIME,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <ReportsResourceReportsFilesResourceResourceListSortField>{ 
+  const _valuesMap = const <ReportsResourceReportsFilesResourceResourceListSortField>{ 
     "ID": ID,
     "LAST_MODIFIED_TIME": LAST_MODIFIED_TIME,
   };
@@ -757,18 +757,18 @@ class ReportsResourceReportsFilesResourceResourceListSortField extends core.Obje
 // Enum ReportsResource.ReportsFilesResourceResource.List.SortOrder
 class ReportsResourceReportsFilesResourceResourceListSortOrder extends core.Object implements core.Hashable {
   /** Ascending order. */
-  static final ReportsResourceReportsFilesResourceResourceListSortOrder ASCENDING = const ReportsResourceReportsFilesResourceResourceListSortOrder._internal("ASCENDING", 0);
+  const ReportsResourceReportsFilesResourceResourceListSortOrder ASCENDING = const ReportsResourceReportsFilesResourceResourceListSortOrder._internal("ASCENDING", 0);
   /** Descending order. */
-  static final ReportsResourceReportsFilesResourceResourceListSortOrder DESCENDING = const ReportsResourceReportsFilesResourceResourceListSortOrder._internal("DESCENDING", 1);
+  const ReportsResourceReportsFilesResourceResourceListSortOrder DESCENDING = const ReportsResourceReportsFilesResourceResourceListSortOrder._internal("DESCENDING", 1);
 
   /** All values of this enumeration */
-  static final core.List<ReportsResourceReportsFilesResourceResourceListSortOrder> values = const <ReportsResourceReportsFilesResourceResourceListSortOrder>[
+  const core.List<ReportsResourceReportsFilesResourceResourceListSortOrder> values = const <ReportsResourceReportsFilesResourceResourceListSortOrder>[
     ASCENDING,
     DESCENDING,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <ReportsResourceReportsFilesResourceResourceListSortOrder>{ 
+  const _valuesMap = const <ReportsResourceReportsFilesResourceResourceListSortOrder>{ 
     "ASCENDING": ASCENDING,
     "DESCENDING": DESCENDING,
   };
@@ -785,15 +785,122 @@ class ReportsResourceReportsFilesResourceResourceListSortOrder extends core.Obje
   hashCode() => _ordinal ^ "SortOrder".hashCode();
 }
 
+// Schema .Activities
+class Activities extends IdentityHash {
+  /** The kind of resource this is, in this case dfareporting#activities. */
+  core.String kind;
+
+  /**
+ * List of activity filters. The dimension values need to be all either of type "dfa:activity" or
+ * "dfa:activityGroup".
+ */
+  core.List<DimensionValue> filters;
+
+  /** List of names of floodlight activity metrics. */
+  core.List<core.String> metricNames;
+
+  /** Parses an instance from its JSON representation. */
+  static Activities parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new Activities();
+    result.kind = identity(json["kind"]);
+    result.filters = map(DimensionValue.parse)(json["filters"]);
+    result.metricNames = map(identity)(json["metricNames"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(Activities value) {
+    if (value == null) return null;
+    final result = {};
+    result["kind"] = identity(value.kind);
+    result["filters"] = map(DimensionValue.serialize)(value.filters);
+    result["metricNames"] = map(identity)(value.metricNames);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema .CustomRichMediaEvents
+class CustomRichMediaEvents extends IdentityHash {
+  /** The kind of resource this is, in this case dfareporting#customRichMediaEvents. */
+  core.String kind;
+
+  /**
+ * List of custom rich media event IDs. Dimension values must be all of type
+ * dfa:richMediaEventTypeIdAndName.
+ */
+  core.List<DimensionValue> filteredEventIds;
+
+  /** Parses an instance from its JSON representation. */
+  static CustomRichMediaEvents parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new CustomRichMediaEvents();
+    result.kind = identity(json["kind"]);
+    result.filteredEventIds = map(DimensionValue.parse)(json["filteredEventIds"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(CustomRichMediaEvents value) {
+    if (value == null) return null;
+    final result = {};
+    result["kind"] = identity(value.kind);
+    result["filteredEventIds"] = map(DimensionValue.serialize)(value.filteredEventIds);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema .DateRange
+class DateRange extends IdentityHash {
+  /** The start date of the date range, inclusive. A string of the format: "yyyy-MM-dd". */
+  core.String startDate;
+
+  /** The kind of resource this is, in this case dfareporting#dateRange. */
+  core.String kind;
+
+  /** The end date of the date range, inclusive. A string of the format: "yyyy-MM-dd". */
+  core.String endDate;
+
+  /**
+ * The date range relative to the date of when the report is run, one of: - "TODAY" - "YESTERDAY" -
+ * "WEEK_TO_DATE" - "MONTH_TO_DATE" - "QUARTER_TO_DATE" - "YEAR_TO_DATE" - "PREVIOUS_WEEK" -
+ * "PREVIOUS_MONTH" - "PREVIOUS_QUARTER" - "PREVIOUS_YEAR" - "LAST_7_DAYS" - "LAST_30_DAYS" -
+ * "LAST_90_DAYS" - "LAST_365_DAYS" - "LAST_24_MONTHS"
+ */
+  core.String relativeDateRange;
+
+  /** Parses an instance from its JSON representation. */
+  static DateRange parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new DateRange();
+    result.startDate = identity(json["startDate"]);
+    result.kind = identity(json["kind"]);
+    result.endDate = identity(json["endDate"]);
+    result.relativeDateRange = identity(json["relativeDateRange"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(DateRange value) {
+    if (value == null) return null;
+    final result = {};
+    result["startDate"] = identity(value.startDate);
+    result["kind"] = identity(value.kind);
+    result["endDate"] = identity(value.endDate);
+    result["relativeDateRange"] = identity(value.relativeDateRange);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
 // Schema .DimensionFilter
 class DimensionFilter extends IdentityHash {
   /** The name of the dimension to filter. */
   core.String dimensionName;
 
-  /** Kind of resource this is, in this case dfareporting#dimensionFilter. */
+  /** The kind of resource this is, in this case dfareporting#dimensionFilter. */
   core.String kind;
 
-  /** The value of the dimension to filter for. */
+  /** The value of the dimension to filter. */
   core.String value;
 
   /** Parses an instance from its JSON representation. */
@@ -819,13 +926,13 @@ class DimensionFilter extends IdentityHash {
 
 // Schema .DimensionValue
 class DimensionValue extends IdentityHash {
-  /** Name of the dimension. */
+  /** The name of the dimension. */
   core.String dimensionName;
 
-  /** Kind of resource this is, in this case dfareporting#dimensionValue. */
+  /** The kind of resource this is, in this case dfareporting#dimensionValue. */
   core.String kind;
 
-  /** ETag of this response for caching purposes. */
+  /** The eTag of this response for caching purposes. */
   core.String etag;
 
   /** The ID associated with the value if available. */
@@ -871,10 +978,10 @@ class DimensionValueList extends IdentityHash {
   /** The dimension values returned in this response. */
   core.List<DimensionValue> items;
 
-  /** Kind of list this is, in this case dfareporting#dimensionValueList. */
+  /** The kind of list this is, in this case dfareporting#dimensionValueList. */
   core.String kind;
 
-  /** ETag of this response for caching purposes. */
+  /** The eTag of this response for caching purposes. */
   core.String etag;
 
   /** Parses an instance from its JSON representation. */
@@ -902,7 +1009,7 @@ class DimensionValueList extends IdentityHash {
 
 // Schema .DimensionValueRequest
 class DimensionValueRequest extends IdentityHash {
-  /** The name of the dimension values should be requested for. */
+  /** The name of the dimension for which values should be requested. */
   core.String dimensionName;
 
   /**
@@ -911,7 +1018,7 @@ class DimensionValueRequest extends IdentityHash {
  */
   core.String startDate;
 
-  /** Kind of request this is, in this case dfareporting#dimensionValueRequest. */
+  /** The kind of request this is, in this case dfareporting#dimensionValueRequest. */
   core.String kind;
 
   /**
@@ -920,7 +1027,7 @@ class DimensionValueRequest extends IdentityHash {
  */
   core.String endDate;
 
-  /** List of filters to filter values by. The filters are ANDed. */
+  /** The list of filters by which to filter values. The filters are ANDed. */
   core.List<DimensionFilter> filters;
 
   /** Parses an instance from its JSON representation. */
@@ -956,16 +1063,22 @@ class File extends IdentityHash {
  */
   core.String status;
 
-  /** Kind of resource this is, in this case dfareporting#file. */
+  /** The kind of resource this is, in this case dfareporting#file. */
   core.String kind;
 
-  /** The date range for which the file has report data. */
-  FileDateRange dateRange;
+  /** The output format of the report. Only available once the file is available. */
+  core.String format;
+
+  /**
+ * The date range for which the file has report data. The date range will always be the absolute
+ * date range for which the report is run.
+ */
+  DateRange dateRange;
 
   /** The file name of the file. */
   core.String fileName;
 
-  /** ETag of this response for caching purposes. */
+  /** The eTag of this response for caching purposes. */
   core.String etag;
 
   /** The ID of the report this file was generated from. */
@@ -986,7 +1099,8 @@ class File extends IdentityHash {
     final result = new File();
     result.status = identity(json["status"]);
     result.kind = identity(json["kind"]);
-    result.dateRange = FileDateRange.parse(json["dateRange"]);
+    result.format = identity(json["format"]);
+    result.dateRange = DateRange.parse(json["dateRange"]);
     result.fileName = identity(json["fileName"]);
     result.etag = identity(json["etag"]);
     result.reportId = identity(json["reportId"]);
@@ -1001,40 +1115,14 @@ class File extends IdentityHash {
     final result = {};
     result["status"] = identity(value.status);
     result["kind"] = identity(value.kind);
-    result["dateRange"] = FileDateRange.serialize(value.dateRange);
+    result["format"] = identity(value.format);
+    result["dateRange"] = DateRange.serialize(value.dateRange);
     result["fileName"] = identity(value.fileName);
     result["etag"] = identity(value.etag);
     result["reportId"] = identity(value.reportId);
     result["urls"] = FileUrls.serialize(value.urls);
     result["lastModifiedTime"] = identity(value.lastModifiedTime);
     result["id"] = identity(value.id);
-    return result;
-  }
-  toString() => serialize(this).toString();
-}
-
-// Schema File.FileDateRange
-class FileDateRange extends IdentityHash {
-  /** The start date of the date range, inclusive. A string of the format: "yyyy-MM-dd". */
-  core.String startDate;
-
-  /** The end date of the date range, inclusive. A string of the format: "yyyy-MM-dd". */
-  core.String endDate;
-
-  /** Parses an instance from its JSON representation. */
-  static FileDateRange parse(core.Map<core.String, core.Object> json) {
-    if (json == null) return null;
-    final result = new FileDateRange();
-    result.startDate = identity(json["startDate"]);
-    result.endDate = identity(json["endDate"]);
-    return result;
-  }
-  /** Converts an instance to its JSON representation. */
-  static core.Object serialize(FileDateRange value) {
-    if (value == null) return null;
-    final result = {};
-    result["startDate"] = identity(value.startDate);
-    result["endDate"] = identity(value.endDate);
     return result;
   }
   toString() => serialize(this).toString();
@@ -1052,10 +1140,10 @@ class FileList extends IdentityHash {
   /** The files returned in this response. */
   core.List<File> items;
 
-  /** Kind of list this is, in this case dfareporting#fileList. */
+  /** The kind of list this is, in this case dfareporting#fileList. */
   core.String kind;
 
-  /** ETag of this response for caching purposes. */
+  /** The eTag of this response for caching purposes. */
   core.String etag;
 
   /** Parses an instance from its JSON representation. */
@@ -1083,28 +1171,6 @@ class FileList extends IdentityHash {
 
 // Schema File.FileUrls
 class FileUrls extends IdentityHash {
-  /** Urls for generated CSV data. */
-  FileUrlsCsv csv;
-
-  /** Parses an instance from its JSON representation. */
-  static FileUrls parse(core.Map<core.String, core.Object> json) {
-    if (json == null) return null;
-    final result = new FileUrls();
-    result.csv = FileUrlsCsv.parse(json["csv"]);
-    return result;
-  }
-  /** Converts an instance to its JSON representation. */
-  static core.Object serialize(FileUrls value) {
-    if (value == null) return null;
-    final result = {};
-    result["csv"] = FileUrlsCsv.serialize(value.csv);
-    return result;
-  }
-  toString() => serialize(this).toString();
-}
-
-// Schema File.FileUrls.FileUrlsCsv
-class FileUrlsCsv extends IdentityHash {
   /** The url for downloading the report data through a browser. */
   core.String browserUrl;
 
@@ -1112,15 +1178,15 @@ class FileUrlsCsv extends IdentityHash {
   core.String apiUrl;
 
   /** Parses an instance from its JSON representation. */
-  static FileUrlsCsv parse(core.Map<core.String, core.Object> json) {
+  static FileUrls parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
-    final result = new FileUrlsCsv();
+    final result = new FileUrls();
     result.browserUrl = identity(json["browserUrl"]);
     result.apiUrl = identity(json["apiUrl"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static core.Object serialize(FileUrlsCsv value) {
+  static core.Object serialize(FileUrls value) {
     if (value == null) return null;
     final result = {};
     result["browserUrl"] = identity(value.browserUrl);
@@ -1130,12 +1196,50 @@ class FileUrlsCsv extends IdentityHash {
   toString() => serialize(this).toString();
 }
 
-// Schema .Report
-class Report extends IdentityHash {
-  /** Kind of resource this is, in this case dfareporting#report. */
+// Schema .Recipient
+class Recipient extends IdentityHash {
+  /** The kind of resource this is, in this case dfareporting#recipient. */
   core.String kind;
 
-  /** The subbaccount id this report belongs to if applicable. */
+  /**
+ * The delivery type for the recipient, one of: - "ATTACHMENT"  (support for additional options will
+ * be added later)
+ */
+  core.String deliveryType;
+
+  /** The email address of the recipient. */
+  core.String email;
+
+  /** Parses an instance from its JSON representation. */
+  static Recipient parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new Recipient();
+    result.kind = identity(json["kind"]);
+    result.deliveryType = identity(json["deliveryType"]);
+    result.email = identity(json["email"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(Recipient value) {
+    if (value == null) return null;
+    final result = {};
+    result["kind"] = identity(value.kind);
+    result["deliveryType"] = identity(value.deliveryType);
+    result["email"] = identity(value.email);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema .Report
+class Report extends IdentityHash {
+  /** The report criteria for a report of type "PATH_TO_CONVERSION". */
+  ReportPathToConversionCriteria pathToConversionCriteria;
+
+  /** The kind of resource this is, in this case dfareporting#report. */
+  core.String kind;
+
+  /** The subbaccount ID to which this report belongs if applicable. */
   core.String subAccountId;
 
   /** The name of the report. */
@@ -1147,45 +1251,78 @@ class Report extends IdentityHash {
  */
   ReportSchedule schedule;
 
+  /**
+ * The output format of the report, currently only "CSV" is supported. If not specified, default
+ * format is "CSV". Note that the actual format in the completed report file might differ if for
+ * instance the report's size exceeds the format's capabilities. "CSV" will then be the fallback
+ * format.
+ */
+  core.String format;
+
   /** The user profile id of the owner of this report. */
   core.String ownerProfileId;
 
-  /** The file name used when generating report files for this report. */
-  core.String fileName;
+  /** The report criteria for a report of type "REACH". */
+  ReportReachCriteria reachCriteria;
 
-  /** ETag of this response for caching purposes. */
+  /** The report criteria for a report of type "FLOODLIGHT". */
+  ReportFloodlightCriteria floodlightCriteria;
+
+  /** The report criteria for a report of type "ACTIVE_GRP". */
+  ReportActiveGrpCriteria activeGrpCriteria;
+
+  /** The report's email delivery settings. */
+  ReportDelivery delivery;
+
+  /** The eTag of this response for caching purposes. */
   core.String etag;
 
-  /** The report criteria. */
+  /** The report criteria for a report of type "STANDARD". */
   ReportCriteria criteria;
-
-  /** The timestamp (in milliseconds since epoch) of when this report was last modified. */
-  core.String lastModifiedTime;
-
-  /** The type of the report, currently only "STANDARD" is supported. */
-  core.String type;
 
   /** The unique ID identifying this report resource. */
   core.String id;
 
-  /** The account id this report belongs to. */
+  /** The timestamp (in milliseconds since epoch) of when this report was last modified. */
+  core.String lastModifiedTime;
+
+  /** The file name used when generating report files for this report. */
+  core.String fileName;
+
+  /**
+ * The type of the report, one of: - STANDARD - REACH - ACTIVE_GRP - PATH_TO_CONVERSION - FLOODLIGHT
+ * - CROSS_DIMENSION_REACH
+ */
+  core.String type;
+
+  /** The report criteria for a report of type "CROSS_DIMENSION_REACH". */
+  ReportCrossDimensionReachCriteria crossDimensionReachCriteria;
+
+  /** The account ID to which this report belongs. */
   core.String accountId;
 
   /** Parses an instance from its JSON representation. */
   static Report parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new Report();
+    result.pathToConversionCriteria = ReportPathToConversionCriteria.parse(json["pathToConversionCriteria"]);
     result.kind = identity(json["kind"]);
     result.subAccountId = identity(json["subAccountId"]);
     result.name = identity(json["name"]);
     result.schedule = ReportSchedule.parse(json["schedule"]);
+    result.format = identity(json["format"]);
     result.ownerProfileId = identity(json["ownerProfileId"]);
-    result.fileName = identity(json["fileName"]);
+    result.reachCriteria = ReportReachCriteria.parse(json["reachCriteria"]);
+    result.floodlightCriteria = ReportFloodlightCriteria.parse(json["floodlightCriteria"]);
+    result.activeGrpCriteria = ReportActiveGrpCriteria.parse(json["activeGrpCriteria"]);
+    result.delivery = ReportDelivery.parse(json["delivery"]);
     result.etag = identity(json["etag"]);
     result.criteria = ReportCriteria.parse(json["criteria"]);
-    result.lastModifiedTime = identity(json["lastModifiedTime"]);
-    result.type = identity(json["type"]);
     result.id = identity(json["id"]);
+    result.lastModifiedTime = identity(json["lastModifiedTime"]);
+    result.fileName = identity(json["fileName"]);
+    result.type = identity(json["type"]);
+    result.crossDimensionReachCriteria = ReportCrossDimensionReachCriteria.parse(json["crossDimensionReachCriteria"]);
     result.accountId = identity(json["accountId"]);
     return result;
   }
@@ -1193,18 +1330,67 @@ class Report extends IdentityHash {
   static core.Object serialize(Report value) {
     if (value == null) return null;
     final result = {};
+    result["pathToConversionCriteria"] = ReportPathToConversionCriteria.serialize(value.pathToConversionCriteria);
     result["kind"] = identity(value.kind);
     result["subAccountId"] = identity(value.subAccountId);
     result["name"] = identity(value.name);
     result["schedule"] = ReportSchedule.serialize(value.schedule);
+    result["format"] = identity(value.format);
     result["ownerProfileId"] = identity(value.ownerProfileId);
-    result["fileName"] = identity(value.fileName);
+    result["reachCriteria"] = ReportReachCriteria.serialize(value.reachCriteria);
+    result["floodlightCriteria"] = ReportFloodlightCriteria.serialize(value.floodlightCriteria);
+    result["activeGrpCriteria"] = ReportActiveGrpCriteria.serialize(value.activeGrpCriteria);
+    result["delivery"] = ReportDelivery.serialize(value.delivery);
     result["etag"] = identity(value.etag);
     result["criteria"] = ReportCriteria.serialize(value.criteria);
-    result["lastModifiedTime"] = identity(value.lastModifiedTime);
-    result["type"] = identity(value.type);
     result["id"] = identity(value.id);
+    result["lastModifiedTime"] = identity(value.lastModifiedTime);
+    result["fileName"] = identity(value.fileName);
+    result["type"] = identity(value.type);
+    result["crossDimensionReachCriteria"] = ReportCrossDimensionReachCriteria.serialize(value.crossDimensionReachCriteria);
     result["accountId"] = identity(value.accountId);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema Report.ReportActiveGrpCriteria
+class ReportActiveGrpCriteria extends IdentityHash {
+  /** The date range this report should be run for. */
+  DateRange dateRange;
+
+  /** The list of names of metrics the report should include. */
+  core.List<core.String> metricNames;
+
+  /**
+ * The list of filters on which dimensions are filtered. Filters for different dimensions are ANDed,
+ * filters for the same dimension are grouped together and ORed. A valid active GRP report needs to
+ * have exactly one DimensionValue for the United States in addition to any advertiser or campaign
+ * dimension values.
+ */
+  core.List<DimensionValue> dimensionFilters;
+
+  /** The list of dimensions the report should include. */
+  core.List<SortedDimension> dimensions;
+
+  /** Parses an instance from its JSON representation. */
+  static ReportActiveGrpCriteria parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new ReportActiveGrpCriteria();
+    result.dateRange = DateRange.parse(json["dateRange"]);
+    result.metricNames = map(identity)(json["metricNames"]);
+    result.dimensionFilters = map(DimensionValue.parse)(json["dimensionFilters"]);
+    result.dimensions = map(SortedDimension.parse)(json["dimensions"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(ReportActiveGrpCriteria value) {
+    if (value == null) return null;
+    final result = {};
+    result["dateRange"] = DateRange.serialize(value.dateRange);
+    result["metricNames"] = map(identity)(value.metricNames);
+    result["dimensionFilters"] = map(DimensionValue.serialize)(value.dimensionFilters);
+    result["dimensions"] = map(SortedDimension.serialize)(value.dimensions);
     return result;
   }
   toString() => serialize(this).toString();
@@ -1213,8 +1399,150 @@ class Report extends IdentityHash {
 // Schema Report.ReportCriteria
 class ReportCriteria extends IdentityHash {
   /** Activity group. */
-  ReportCriteriaActivities activities;
+  Activities activities;
 
+  /** The list of standard dimensions the report should include. */
+  core.List<SortedDimension> dimensions;
+
+  /** The list of names of metrics the report should include. */
+  core.List<core.String> metricNames;
+
+  /** The date range for which this report should be run. */
+  DateRange dateRange;
+
+  /**
+ * The list of filters on which dimensions are filtered. Filters for different dimensions are ANDed,
+ * filters for the same dimension are grouped together and ORed.
+ */
+  core.List<DimensionValue> dimensionFilters;
+
+  /** Custom Rich Media Events group. */
+  CustomRichMediaEvents customRichMediaEvents;
+
+  /** Parses an instance from its JSON representation. */
+  static ReportCriteria parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new ReportCriteria();
+    result.activities = Activities.parse(json["activities"]);
+    result.dimensions = map(SortedDimension.parse)(json["dimensions"]);
+    result.metricNames = map(identity)(json["metricNames"]);
+    result.dateRange = DateRange.parse(json["dateRange"]);
+    result.dimensionFilters = map(DimensionValue.parse)(json["dimensionFilters"]);
+    result.customRichMediaEvents = CustomRichMediaEvents.parse(json["customRichMediaEvents"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(ReportCriteria value) {
+    if (value == null) return null;
+    final result = {};
+    result["activities"] = Activities.serialize(value.activities);
+    result["dimensions"] = map(SortedDimension.serialize)(value.dimensions);
+    result["metricNames"] = map(identity)(value.metricNames);
+    result["dateRange"] = DateRange.serialize(value.dateRange);
+    result["dimensionFilters"] = map(DimensionValue.serialize)(value.dimensionFilters);
+    result["customRichMediaEvents"] = CustomRichMediaEvents.serialize(value.customRichMediaEvents);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema Report.ReportCrossDimensionReachCriteria
+class ReportCrossDimensionReachCriteria extends IdentityHash {
+  /** The list of dimensions the report should include. */
+  core.List<SortedDimension> breakdown;
+
+  /** The list of names of overlap metrics the report should include. */
+  core.List<core.String> overlapMetricNames;
+
+  /** The list of names of metrics the report should include. */
+  core.List<core.String> metricNames;
+
+  /** The date range this report should be run for. */
+  DateRange dateRange;
+
+  /** The list of filters on which dimensions are filtered. */
+  core.List<DimensionValue> dimensionFilters;
+
+  /** Whether the report is pivoted or not. Defaults to true. */
+  core.bool pivoted;
+
+  /**
+ * The dimension option, one of: - "ADVERTISER" - "CAMPAIGN" - "SITE_BY_ADVERTISER" -
+ * "SITE_BY_CAMPAIGN"
+ */
+  core.String dimension;
+
+  /** Parses an instance from its JSON representation. */
+  static ReportCrossDimensionReachCriteria parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new ReportCrossDimensionReachCriteria();
+    result.breakdown = map(SortedDimension.parse)(json["breakdown"]);
+    result.overlapMetricNames = map(identity)(json["overlapMetricNames"]);
+    result.metricNames = map(identity)(json["metricNames"]);
+    result.dateRange = DateRange.parse(json["dateRange"]);
+    result.dimensionFilters = map(DimensionValue.parse)(json["dimensionFilters"]);
+    result.pivoted = identity(json["pivoted"]);
+    result.dimension = identity(json["dimension"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(ReportCrossDimensionReachCriteria value) {
+    if (value == null) return null;
+    final result = {};
+    result["breakdown"] = map(SortedDimension.serialize)(value.breakdown);
+    result["overlapMetricNames"] = map(identity)(value.overlapMetricNames);
+    result["metricNames"] = map(identity)(value.metricNames);
+    result["dateRange"] = DateRange.serialize(value.dateRange);
+    result["dimensionFilters"] = map(DimensionValue.serialize)(value.dimensionFilters);
+    result["pivoted"] = identity(value.pivoted);
+    result["dimension"] = identity(value.dimension);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema Report.ReportDelivery
+class ReportDelivery extends IdentityHash {
+  /** The message to be sent with each email. */
+  core.String message;
+
+  /**
+ * The type of delivery for the owner to receive, if enabled. One of: - "ATTACHMENT"  (support for
+ * additional options will be added later)
+ */
+  core.String emailOwnerDeliveryType;
+
+  /** The list of recipients to which to email the report. */
+  core.List<Recipient> recipients;
+
+  /** Whether the report should be emailed to the report owner. */
+  core.bool emailOwner;
+
+  /** Parses an instance from its JSON representation. */
+  static ReportDelivery parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new ReportDelivery();
+    result.message = identity(json["message"]);
+    result.emailOwnerDeliveryType = identity(json["emailOwnerDeliveryType"]);
+    result.recipients = map(Recipient.parse)(json["recipients"]);
+    result.emailOwner = identity(json["emailOwner"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(ReportDelivery value) {
+    if (value == null) return null;
+    final result = {};
+    result["message"] = identity(value.message);
+    result["emailOwnerDeliveryType"] = identity(value.emailOwnerDeliveryType);
+    result["recipients"] = map(Recipient.serialize)(value.recipients);
+    result["emailOwner"] = identity(value.emailOwner);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema Report.ReportFloodlightCriteria
+class ReportFloodlightCriteria extends IdentityHash {
   /** The list of dimensions the report should include. */
   core.List<SortedDimension> dimensions;
 
@@ -1222,131 +1550,84 @@ class ReportCriteria extends IdentityHash {
   core.List<core.String> metricNames;
 
   /** The date range this report should be run for. */
-  ReportCriteriaDateRange dateRange;
+  DateRange dateRange;
 
   /**
- * The list of filters dimensions are filtered on. Filters for different dimensions are ANDed,
+ * The list of filters on which dimensions are filtered. Filters for different dimensions are ANDed,
  * filters for the same dimension are grouped together and ORed.
  */
   core.List<DimensionValue> dimensionFilters;
 
-  /** Custom Rich Media Events group. */
-  ReportCriteriaCustomRichMediaEvents customRichMediaEvents;
+  /**
+ * The floodlight ID for which to show data in this report. All advertisers associated with that ID
+ * will automatically be added. The dimension of the value needs to be 'dfa:floodlightConfigId'.
+ */
+  DimensionValue floodlightConfigId;
+
+  /** The properties of the report. */
+  ReportFloodlightCriteriaReportProperties reportProperties;
 
   /** Parses an instance from its JSON representation. */
-  static ReportCriteria parse(core.Map<core.String, core.Object> json) {
+  static ReportFloodlightCriteria parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
-    final result = new ReportCriteria();
-    result.activities = ReportCriteriaActivities.parse(json["activities"]);
+    final result = new ReportFloodlightCriteria();
     result.dimensions = map(SortedDimension.parse)(json["dimensions"]);
     result.metricNames = map(identity)(json["metricNames"]);
-    result.dateRange = ReportCriteriaDateRange.parse(json["dateRange"]);
+    result.dateRange = DateRange.parse(json["dateRange"]);
     result.dimensionFilters = map(DimensionValue.parse)(json["dimensionFilters"]);
-    result.customRichMediaEvents = ReportCriteriaCustomRichMediaEvents.parse(json["customRichMediaEvents"]);
+    result.floodlightConfigId = DimensionValue.parse(json["floodlightConfigId"]);
+    result.reportProperties = ReportFloodlightCriteriaReportProperties.parse(json["reportProperties"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static core.Object serialize(ReportCriteria value) {
+  static core.Object serialize(ReportFloodlightCriteria value) {
     if (value == null) return null;
     final result = {};
-    result["activities"] = ReportCriteriaActivities.serialize(value.activities);
     result["dimensions"] = map(SortedDimension.serialize)(value.dimensions);
     result["metricNames"] = map(identity)(value.metricNames);
-    result["dateRange"] = ReportCriteriaDateRange.serialize(value.dateRange);
+    result["dateRange"] = DateRange.serialize(value.dateRange);
     result["dimensionFilters"] = map(DimensionValue.serialize)(value.dimensionFilters);
-    result["customRichMediaEvents"] = ReportCriteriaCustomRichMediaEvents.serialize(value.customRichMediaEvents);
+    result["floodlightConfigId"] = DimensionValue.serialize(value.floodlightConfigId);
+    result["reportProperties"] = ReportFloodlightCriteriaReportProperties.serialize(value.reportProperties);
     return result;
   }
   toString() => serialize(this).toString();
 }
 
-// Schema Report.ReportCriteria.ReportCriteriaActivities
-class ReportCriteriaActivities extends IdentityHash {
+// Schema Report.ReportFloodlightCriteria.ReportFloodlightCriteriaReportProperties
+class ReportFloodlightCriteriaReportProperties extends IdentityHash {
   /**
- * List of activity filters. The dimension values need to be all either of type "dfa:activity" or
- * "dfa:activityGroup".
+ * Include conversions that have no associated cookies and no exposures. Its therefore impossible to
+ * know how the user was exposed to your ads during the lookback window prior to a conversion.
  */
-  core.List<DimensionValue> filters;
+  core.bool includeUnattributedIPConversions;
 
-  /** List of names of floodlight activity metrics. */
-  core.List<core.String> metricNames;
+  /**
+ * Include conversions of users with a DoubleClick cookie but without an exposure. That means the
+ * user did not click or see an ad from the advertiser within the Floodlight group, or that the
+ * interaction happened outside the lookback window.
+ */
+  core.bool includeUnattributedCookieConversions;
+
+  /** Include conversions that have no cookie, but do have an exposure path. */
+  core.bool includeAttributedIPConversions;
 
   /** Parses an instance from its JSON representation. */
-  static ReportCriteriaActivities parse(core.Map<core.String, core.Object> json) {
+  static ReportFloodlightCriteriaReportProperties parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
-    final result = new ReportCriteriaActivities();
-    result.filters = map(DimensionValue.parse)(json["filters"]);
-    result.metricNames = map(identity)(json["metricNames"]);
+    final result = new ReportFloodlightCriteriaReportProperties();
+    result.includeUnattributedIPConversions = identity(json["includeUnattributedIPConversions"]);
+    result.includeUnattributedCookieConversions = identity(json["includeUnattributedCookieConversions"]);
+    result.includeAttributedIPConversions = identity(json["includeAttributedIPConversions"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
-  static core.Object serialize(ReportCriteriaActivities value) {
+  static core.Object serialize(ReportFloodlightCriteriaReportProperties value) {
     if (value == null) return null;
     final result = {};
-    result["filters"] = map(DimensionValue.serialize)(value.filters);
-    result["metricNames"] = map(identity)(value.metricNames);
-    return result;
-  }
-  toString() => serialize(this).toString();
-}
-
-// Schema Report.ReportCriteria.ReportCriteriaCustomRichMediaEvents
-class ReportCriteriaCustomRichMediaEvents extends IdentityHash {
-  /**
- * List of custom rich media event IDs. Dimension values must be all of type
- * dfa:richMediaEventTypeIdAndName.
- */
-  core.List<DimensionValue> filteredEventIds;
-
-  /** Parses an instance from its JSON representation. */
-  static ReportCriteriaCustomRichMediaEvents parse(core.Map<core.String, core.Object> json) {
-    if (json == null) return null;
-    final result = new ReportCriteriaCustomRichMediaEvents();
-    result.filteredEventIds = map(DimensionValue.parse)(json["filteredEventIds"]);
-    return result;
-  }
-  /** Converts an instance to its JSON representation. */
-  static core.Object serialize(ReportCriteriaCustomRichMediaEvents value) {
-    if (value == null) return null;
-    final result = {};
-    result["filteredEventIds"] = map(DimensionValue.serialize)(value.filteredEventIds);
-    return result;
-  }
-  toString() => serialize(this).toString();
-}
-
-// Schema Report.ReportCriteria.ReportCriteriaDateRange
-class ReportCriteriaDateRange extends IdentityHash {
-  /** The start date of the date range, inclusive. A string of the format: "yyyy-MM-dd". */
-  core.String startDate;
-
-  /**
- * The date range relative to the date of when the report is run, one of: - "TODAY" - "YESTERDAY" -
- * "WEEK_TO_DATE" - "MONTH_TO_DATE" - "QUARTER_TO_DATE" - "YEAR_TO_DATE" - "PREVIOUS_WEEK" -
- * "PREVIOUS_MONTH" - "PREVIOUS_QUARTER" - "PREVIOUS_YEAR" - "LAST_7_DAYS" - "LAST_30_DAYS" -
- * "LAST_90_DAYS" - "LAST_365_DAYS" - "LAST_24_MONTHS"
- */
-  core.String relativeDateRange;
-
-  /** The end date of the date range, inclusive. A string of the format: "yyyy-MM-dd". */
-  core.String endDate;
-
-  /** Parses an instance from its JSON representation. */
-  static ReportCriteriaDateRange parse(core.Map<core.String, core.Object> json) {
-    if (json == null) return null;
-    final result = new ReportCriteriaDateRange();
-    result.startDate = identity(json["startDate"]);
-    result.relativeDateRange = identity(json["relativeDateRange"]);
-    result.endDate = identity(json["endDate"]);
-    return result;
-  }
-  /** Converts an instance to its JSON representation. */
-  static core.Object serialize(ReportCriteriaDateRange value) {
-    if (value == null) return null;
-    final result = {};
-    result["startDate"] = identity(value.startDate);
-    result["relativeDateRange"] = identity(value.relativeDateRange);
-    result["endDate"] = identity(value.endDate);
+    result["includeUnattributedIPConversions"] = identity(value.includeUnattributedIPConversions);
+    result["includeUnattributedCookieConversions"] = identity(value.includeUnattributedCookieConversions);
+    result["includeAttributedIPConversions"] = identity(value.includeAttributedIPConversions);
     return result;
   }
   toString() => serialize(this).toString();
@@ -1364,10 +1645,10 @@ class ReportList extends IdentityHash {
   /** The reports returned in this response. */
   core.List<Report> items;
 
-  /** Kind of list this is, in this case dfareporting#reportList. */
+  /** The kind of list this is, in this case dfareporting#reportList. */
   core.String kind;
 
-  /** ETag of this response for caching purposes. */
+  /** The eTag of this response for caching purposes. */
   core.String etag;
 
   /** Parses an instance from its JSON representation. */
@@ -1388,6 +1669,209 @@ class ReportList extends IdentityHash {
     result["items"] = map(Report.serialize)(value.items);
     result["kind"] = identity(value.kind);
     result["etag"] = identity(value.etag);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema Report.ReportPathToConversionCriteria
+class ReportPathToConversionCriteria extends IdentityHash {
+  /** The list of conversion dimensions the report should include. */
+  core.List<SortedDimension> conversionDimensions;
+
+  /** The list of names of metrics the report should include. */
+  core.List<core.String> metricNames;
+
+  /** The date range this report should be run for. */
+  DateRange dateRange;
+
+  /** The properties of the report. */
+  ReportPathToConversionCriteriaReportProperties reportProperties;
+
+  /** The list of per interaction dimensions the report should include. */
+  core.List<SortedDimension> perInteractionDimensions;
+
+  /** The list of 'dfa:activity' values to filter on. */
+  core.List<DimensionValue> activityFilters;
+
+  /**
+ * The floodlight ID for which to show data in this report. All advertisers associated with that ID
+ * will automatically be added. The dimension of the value needs to be 'dfa:floodlightConfigId'.
+ */
+  DimensionValue floodlightConfigId;
+
+  /** The list of custom floodlight variables the report should include. */
+  core.List<SortedDimension> customFloodlightVariables;
+
+  /** Parses an instance from its JSON representation. */
+  static ReportPathToConversionCriteria parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new ReportPathToConversionCriteria();
+    result.conversionDimensions = map(SortedDimension.parse)(json["conversionDimensions"]);
+    result.metricNames = map(identity)(json["metricNames"]);
+    result.dateRange = DateRange.parse(json["dateRange"]);
+    result.reportProperties = ReportPathToConversionCriteriaReportProperties.parse(json["reportProperties"]);
+    result.perInteractionDimensions = map(SortedDimension.parse)(json["perInteractionDimensions"]);
+    result.activityFilters = map(DimensionValue.parse)(json["activityFilters"]);
+    result.floodlightConfigId = DimensionValue.parse(json["floodlightConfigId"]);
+    result.customFloodlightVariables = map(SortedDimension.parse)(json["customFloodlightVariables"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(ReportPathToConversionCriteria value) {
+    if (value == null) return null;
+    final result = {};
+    result["conversionDimensions"] = map(SortedDimension.serialize)(value.conversionDimensions);
+    result["metricNames"] = map(identity)(value.metricNames);
+    result["dateRange"] = DateRange.serialize(value.dateRange);
+    result["reportProperties"] = ReportPathToConversionCriteriaReportProperties.serialize(value.reportProperties);
+    result["perInteractionDimensions"] = map(SortedDimension.serialize)(value.perInteractionDimensions);
+    result["activityFilters"] = map(DimensionValue.serialize)(value.activityFilters);
+    result["floodlightConfigId"] = DimensionValue.serialize(value.floodlightConfigId);
+    result["customFloodlightVariables"] = map(SortedDimension.serialize)(value.customFloodlightVariables);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema Report.ReportPathToConversionCriteria.ReportPathToConversionCriteriaReportProperties
+class ReportPathToConversionCriteriaReportProperties extends IdentityHash {
+  /**
+ * DFA checks to see if a click interaction occurred within the specified period of time before a
+ * conversion. By default the value is pulled from Floodlight or you can manually enter a custom
+ * value. Valid values: 1-90.
+ */
+  core.int clicksLookbackWindow;
+
+  /** Enable pivoting on interaction path. */
+  core.bool pivotOnInteractionPath;
+
+  /**
+ * DFA checks to see if an impression interaction occurred within the specified period of time
+ * before a conversion. By default the value is pulled from Floodlight or you can manually enter a
+ * custom value. Valid values: 1-90.
+ */
+  core.int impressionsLookbackWindow;
+
+  /**
+ * Include conversions that have no associated cookies and no exposures. Its therefore impossible to
+ * know how the user was exposed to your ads during the lookback window prior to a conversion.
+ */
+  core.bool includeUnattributedIPConversions;
+
+  /**
+ * Include conversions of users with a DoubleClick cookie but without an exposure. That means the
+ * user did not click or see an ad from the advertiser within the Floodlight group, or that the
+ * interaction happened outside the lookback window.
+ */
+  core.bool includeUnattributedCookieConversions;
+
+  /**
+ * The maximum amount of time that can take place between interactions (clicks or impressions) by
+ * the same user. Valid values: 1-90.
+ */
+  core.int maximumInteractionGap;
+
+  /** Include conversions that have no cookie, but do have an exposure path. */
+  core.bool includeAttributedIPConversions;
+
+  /**
+ * The maximum number of click interactions to include in the report. Advertisers currently paying
+ * for E2C reports get up to 200 (100 clicks, 100 impressions). If another advertiser in your
+ * network is paying for E2C, you can have up to 5 total exposures per report.
+ */
+  core.int maximumClickInteractions;
+
+  /**
+ * The maximum number of click interactions to include in the report. Advertisers currently paying
+ * for E2C reports get up to 200 (100 clicks, 100 impressions). If another advertiser in your
+ * network is paying for E2C, you can have up to 5 total exposures per report.
+ */
+  core.int maximumImpressionInteractions;
+
+  /** Parses an instance from its JSON representation. */
+  static ReportPathToConversionCriteriaReportProperties parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new ReportPathToConversionCriteriaReportProperties();
+    result.clicksLookbackWindow = identity(json["clicksLookbackWindow"]);
+    result.pivotOnInteractionPath = identity(json["pivotOnInteractionPath"]);
+    result.impressionsLookbackWindow = identity(json["impressionsLookbackWindow"]);
+    result.includeUnattributedIPConversions = identity(json["includeUnattributedIPConversions"]);
+    result.includeUnattributedCookieConversions = identity(json["includeUnattributedCookieConversions"]);
+    result.maximumInteractionGap = identity(json["maximumInteractionGap"]);
+    result.includeAttributedIPConversions = identity(json["includeAttributedIPConversions"]);
+    result.maximumClickInteractions = identity(json["maximumClickInteractions"]);
+    result.maximumImpressionInteractions = identity(json["maximumImpressionInteractions"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(ReportPathToConversionCriteriaReportProperties value) {
+    if (value == null) return null;
+    final result = {};
+    result["clicksLookbackWindow"] = identity(value.clicksLookbackWindow);
+    result["pivotOnInteractionPath"] = identity(value.pivotOnInteractionPath);
+    result["impressionsLookbackWindow"] = identity(value.impressionsLookbackWindow);
+    result["includeUnattributedIPConversions"] = identity(value.includeUnattributedIPConversions);
+    result["includeUnattributedCookieConversions"] = identity(value.includeUnattributedCookieConversions);
+    result["maximumInteractionGap"] = identity(value.maximumInteractionGap);
+    result["includeAttributedIPConversions"] = identity(value.includeAttributedIPConversions);
+    result["maximumClickInteractions"] = identity(value.maximumClickInteractions);
+    result["maximumImpressionInteractions"] = identity(value.maximumImpressionInteractions);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema Report.ReportReachCriteria
+class ReportReachCriteria extends IdentityHash {
+  /** Activity group. */
+  Activities activities;
+
+  /** The list of dimensions the report should include. */
+  core.List<SortedDimension> dimensions;
+
+  /** The list of names of metrics the report should include. */
+  core.List<core.String> metricNames;
+
+  /** The date range this report should be run for. */
+  DateRange dateRange;
+
+  /**
+ * The list of filters on which dimensions are filtered. Filters for different dimensions are ANDed,
+ * filters for the same dimension are grouped together and ORed.
+ */
+  core.List<DimensionValue> dimensionFilters;
+
+  /** The list of names of  Reach By Frequency metrics the report should include. */
+  core.List<core.String> reachByFrequencyMetricNames;
+
+  /** Custom Rich Media Events group. */
+  CustomRichMediaEvents customRichMediaEvents;
+
+  /** Parses an instance from its JSON representation. */
+  static ReportReachCriteria parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new ReportReachCriteria();
+    result.activities = Activities.parse(json["activities"]);
+    result.dimensions = map(SortedDimension.parse)(json["dimensions"]);
+    result.metricNames = map(identity)(json["metricNames"]);
+    result.dateRange = DateRange.parse(json["dateRange"]);
+    result.dimensionFilters = map(DimensionValue.parse)(json["dimensionFilters"]);
+    result.reachByFrequencyMetricNames = map(identity)(json["reachByFrequencyMetricNames"]);
+    result.customRichMediaEvents = CustomRichMediaEvents.parse(json["customRichMediaEvents"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(ReportReachCriteria value) {
+    if (value == null) return null;
+    final result = {};
+    result["activities"] = Activities.serialize(value.activities);
+    result["dimensions"] = map(SortedDimension.serialize)(value.dimensions);
+    result["metricNames"] = map(identity)(value.metricNames);
+    result["dateRange"] = DateRange.serialize(value.dateRange);
+    result["dimensionFilters"] = map(DimensionValue.serialize)(value.dimensionFilters);
+    result["reachByFrequencyMetricNames"] = map(identity)(value.reachByFrequencyMetricNames);
+    result["customRichMediaEvents"] = CustomRichMediaEvents.serialize(value.customRichMediaEvents);
     return result;
   }
   toString() => serialize(this).toString();
@@ -1420,14 +1904,14 @@ class ReportSchedule extends IdentityHash {
   core.bool active;
 
   /**
- * The interval the report is repeated for, one of: - "DAILY", also requires field "every" to be
- * set. - "WEEKLY", also requires fields "every" and "repeatsOnWeekDays" to be set. -
+ * The interval for which the report is repeated, one of: - "DAILY", also requires field "every" to
+ * be set. - "WEEKLY", also requires fields "every" and "repeatsOnWeekDays" to be set. -
  * "TWICE_A_MONTH" - "MONTHLY", also requires fields "every" and "runsOnDayOfMonth" to be set. -
  * "QUARTERLY" - "YEARLY"
  */
   core.String repeats;
 
-  /** List of week days "WEEKLY" scheduled reports should run on. */
+  /** List of week days "WEEKLY" on which scheduled reports should run. */
   core.List<core.String> repeatsOnWeekDays;
 
   /** Parses an instance from its JSON representation. */
@@ -1461,7 +1945,7 @@ class ReportSchedule extends IdentityHash {
 
 // Schema .SortedDimension
 class SortedDimension extends IdentityHash {
-  /** Kind of resource this is, in this case dfareporting#sortedDimension. */
+  /** The kind of resource this is, in this case dfareporting#sortedDimension. */
   core.String kind;
 
   /** The name of the dimension. */
@@ -1498,7 +1982,7 @@ class UserProfile extends IdentityHash {
   /** The user name. */
   core.String userName;
 
-  /** Kind of resource this is, in this case dfareporting#userProfile. */
+  /** The kind of resource this is, in this case dfareporting#userProfile. */
   core.String kind;
 
   /** The sub account ID this profile belongs to if applicable. */
@@ -1507,7 +1991,7 @@ class UserProfile extends IdentityHash {
   /** The account name this profile belongs to. */
   core.String accountName;
 
-  /** ETag of this response for caching purposes. */
+  /** The eTag of this response for caching purposes. */
   core.String etag;
 
   /** The sub account name this profile belongs to if applicable. */
@@ -1516,7 +2000,7 @@ class UserProfile extends IdentityHash {
   /** The unique ID of the user profile. */
   core.String profileId;
 
-  /** The account ID this profile belongs to. */
+  /** The account ID to which this profile belongs. */
   core.String accountId;
 
   /** Parses an instance from its JSON representation. */
@@ -1555,10 +2039,10 @@ class UserProfileList extends IdentityHash {
   /** The user profiles returned in this response. */
   core.List<UserProfile> items;
 
-  /** Kind of list this is, in this case dfareporting#userProfileList. */
+  /** The kind of list this is, in this case dfareporting#userProfileList. */
   core.String kind;
 
-  /** ETag of this response for caching purposes. */
+  /** The eTag of this response for caching purposes. */
   core.String etag;
 
   /** Parses an instance from its JSON representation. */
@@ -1585,15 +2069,15 @@ class UserProfileList extends IdentityHash {
 // Enum DfareportingApi.Alt
 class DfareportingApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/json */
-  static final DfareportingApiAlt JSON = const DfareportingApiAlt._internal("json", 0);
+  const DfareportingApiAlt JSON = const DfareportingApiAlt._internal("json", 0);
 
   /** All values of this enumeration */
-  static final core.List<DfareportingApiAlt> values = const <DfareportingApiAlt>[
+  const core.List<DfareportingApiAlt> values = const <DfareportingApiAlt>[
     JSON,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <DfareportingApiAlt>{ 
+  const _valuesMap = const <DfareportingApiAlt>{ 
     "json": JSON,
   };
 

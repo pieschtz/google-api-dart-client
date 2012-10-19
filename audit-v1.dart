@@ -17,7 +17,7 @@
 #import('dart:json');
 
 #import('utils.dart');
-#import('http.dart');
+#import('http.dart', prefix:'http');
 
 // API AuditApi
 /**
@@ -27,14 +27,14 @@ class AuditApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
   final core.String baseUrl;
   /** How we should identify ourselves to the service. */
-  Authenticator authenticator;
+  http.Authenticator authenticator;
   /** The client library version */
   final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
   final core.String applicationName;
-  AuditApi get _$service() => this;
+  AuditApi get _$service => this;
   ActivitiesResource _activities;
-  ActivitiesResource get activities() => _activities;
+  ActivitiesResource get activities => _activities;
   
   /** Returns response with indentations and line breaks. */
   core.bool prettyPrint;
@@ -67,14 +67,14 @@ class AuditApi extends core.Object {
   AuditApiAlt alt;
 
 
-  AuditApi([this.baseUrl = "https://www.googleapis.com/apps/reporting/audit/v1/", applicationName, this.authenticator]) :
+  AuditApi({this.baseUrl:"https://www.googleapis.com/apps/reporting/audit/v1/", applicationName, this.authenticator}) :
       this.applicationName = (applicationName == null) ? null : applicationName
-          .replaceAll(const core.RegExp(@'\s+'), '_')
-          .replaceAll(const core.RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+          .replaceAll(const core.RegExp(r'\s+'), '_')
+          .replaceAll(const core.RegExp(r'[^-_.,0-9a-zA-Z]'), '')
   { 
     _activities = new ActivitiesResource._internal(this);
   }
-  core.String get userAgent() {
+  core.String get userAgent {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}audit/v1/20111110 google-api-dart-client/${clientVersion}";
   }
@@ -108,22 +108,22 @@ class ActivitiesResource extends core.Object {
    *    * [endTime] Return events which occured at or before this time.
    *    * [continuationToken] Next page URL.
    */
-  core.Future<Activities> list(core.String customerId, core.String applicationId, [core.String actorEmail = UNSPECIFIED, core.String actorApplicationId = UNSPECIFIED, core.String actorIpAddress = UNSPECIFIED, ActivitiesResourceListCaller caller = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String eventName = UNSPECIFIED, core.String parameters = UNSPECIFIED, core.String startTime = UNSPECIFIED, core.String endTime = UNSPECIFIED, core.String continuationToken = UNSPECIFIED]) {
+  core.Future<Activities> list(core.String customerId, core.String applicationId, {core.String actorEmail, core.String actorApplicationId, core.String actorIpAddress, ActivitiesResourceListCaller caller, core.int maxResults, core.String eventName, core.String parameters, core.String startTime, core.String endTime, core.String continuationToken}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["customerId"] = customerId;
     $pathParams["applicationId"] = applicationId;
-    if (UNSPECIFIED != actorEmail) $queryParams["actorEmail"] = actorEmail;
-    if (UNSPECIFIED != actorApplicationId) $queryParams["actorApplicationId"] = actorApplicationId;
-    if (UNSPECIFIED != actorIpAddress) $queryParams["actorIpAddress"] = actorIpAddress;
-    if (UNSPECIFIED != caller) $queryParams["caller"] = caller;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
-    if (UNSPECIFIED != eventName) $queryParams["eventName"] = eventName;
-    if (UNSPECIFIED != parameters) $queryParams["parameters"] = parameters;
-    if (UNSPECIFIED != startTime) $queryParams["startTime"] = startTime;
-    if (UNSPECIFIED != endTime) $queryParams["endTime"] = endTime;
-    if (UNSPECIFIED != continuationToken) $queryParams["continuationToken"] = continuationToken;
+    if (?actorEmail) $queryParams["actorEmail"] = actorEmail;
+    if (?actorApplicationId) $queryParams["actorApplicationId"] = actorApplicationId;
+    if (?actorIpAddress) $queryParams["actorIpAddress"] = actorIpAddress;
+    if (?caller) $queryParams["caller"] = caller;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
+    if (?eventName) $queryParams["eventName"] = eventName;
+    if (?parameters) $queryParams["parameters"] = parameters;
+    if (?startTime) $queryParams["startTime"] = startTime;
+    if (?endTime) $queryParams["endTime"] = endTime;
+    if (?continuationToken) $queryParams["continuationToken"] = continuationToken;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -134,7 +134,7 @@ class ActivitiesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{customerId}/{applicationId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -147,18 +147,18 @@ class ActivitiesResource extends core.Object {
 // Enum ActivitiesResource.List.Caller
 class ActivitiesResourceListCaller extends core.Object implements core.Hashable {
   /** Caller is an application owner. */
-  static final ActivitiesResourceListCaller APPLICATION_OWNER = const ActivitiesResourceListCaller._internal("application_owner", 0);
+  const ActivitiesResourceListCaller APPLICATION_OWNER = const ActivitiesResourceListCaller._internal("application_owner", 0);
   /** Caller is a customer. */
-  static final ActivitiesResourceListCaller CUSTOMER = const ActivitiesResourceListCaller._internal("customer", 1);
+  const ActivitiesResourceListCaller CUSTOMER = const ActivitiesResourceListCaller._internal("customer", 1);
 
   /** All values of this enumeration */
-  static final core.List<ActivitiesResourceListCaller> values = const <ActivitiesResourceListCaller>[
+  const core.List<ActivitiesResourceListCaller> values = const <ActivitiesResourceListCaller>[
     APPLICATION_OWNER,
     CUSTOMER,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <ActivitiesResourceListCaller>{ 
+  const _valuesMap = const <ActivitiesResourceListCaller>{ 
     "application_owner": APPLICATION_OWNER,
     "customer": CUSTOMER,
   };
@@ -390,18 +390,18 @@ class ActivityId extends IdentityHash {
 // Enum AuditApi.Alt
 class AuditApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/atom+xml */
-  static final AuditApiAlt ATOM = const AuditApiAlt._internal("atom", 0);
+  const AuditApiAlt ATOM = const AuditApiAlt._internal("atom", 0);
   /** Responses with Content-Type of application/json */
-  static final AuditApiAlt JSON = const AuditApiAlt._internal("json", 1);
+  const AuditApiAlt JSON = const AuditApiAlt._internal("json", 1);
 
   /** All values of this enumeration */
-  static final core.List<AuditApiAlt> values = const <AuditApiAlt>[
+  const core.List<AuditApiAlt> values = const <AuditApiAlt>[
     ATOM,
     JSON,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <AuditApiAlt>{ 
+  const _valuesMap = const <AuditApiAlt>{ 
     "atom": ATOM,
     "json": JSON,
   };

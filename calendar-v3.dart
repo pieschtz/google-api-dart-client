@@ -17,7 +17,7 @@
 #import('dart:json');
 
 #import('utils.dart');
-#import('http.dart');
+#import('http.dart', prefix:'http');
 
 // API CalendarApi
 /**
@@ -27,26 +27,26 @@ class CalendarApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
   final core.String baseUrl;
   /** How we should identify ourselves to the service. */
-  Authenticator authenticator;
+  http.Authenticator authenticator;
   /** The client library version */
   final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
   final core.String applicationName;
-  CalendarApi get _$service() => this;
+  CalendarApi get _$service => this;
   FreebusyResource _freebusy;
-  FreebusyResource get freebusy() => _freebusy;
+  FreebusyResource get freebusy => _freebusy;
   SettingsResource _settings;
-  SettingsResource get settings() => _settings;
+  SettingsResource get settings => _settings;
   CalendarListResource _calendarList;
-  CalendarListResource get calendarList() => _calendarList;
+  CalendarListResource get calendarList => _calendarList;
   CalendarsResource _calendars;
-  CalendarsResource get calendars() => _calendars;
+  CalendarsResource get calendars => _calendars;
   AclResource _acl;
-  AclResource get acl() => _acl;
+  AclResource get acl => _acl;
   ColorsResource _colors;
-  ColorsResource get colors() => _colors;
+  ColorsResource get colors => _colors;
   EventsResource _events;
-  EventsResource get events() => _events;
+  EventsResource get events => _events;
   
   /** Returns response with indentations and line breaks. */
   core.bool prettyPrint;
@@ -79,10 +79,10 @@ class CalendarApi extends core.Object {
   CalendarApiAlt alt;
 
 
-  CalendarApi([this.baseUrl = "https://www.googleapis.com/calendar/v3/", applicationName, this.authenticator]) :
+  CalendarApi({this.baseUrl:"https://www.googleapis.com/calendar/v3/", applicationName, this.authenticator}) :
       this.applicationName = (applicationName == null) ? null : applicationName
-          .replaceAll(const core.RegExp(@'\s+'), '_')
-          .replaceAll(const core.RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+          .replaceAll(const core.RegExp(r'\s+'), '_')
+          .replaceAll(const core.RegExp(r'[^-_.,0-9a-zA-Z]'), '')
   { 
     _freebusy = new FreebusyResource._internal(this);
     _settings = new SettingsResource._internal(this);
@@ -92,9 +92,9 @@ class CalendarApi extends core.Object {
     _colors = new ColorsResource._internal(this);
     _events = new EventsResource._internal(this);
   }
-  core.String get userAgent() {
+  core.String get userAgent {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}calendar/v3/20120726 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}calendar/v3/20120831 google-api-dart-client/${clientVersion}";
   }
 
 
@@ -133,7 +133,7 @@ class FreebusyResource extends core.Object {
     final $body = JSON.stringify(FreeBusyRequest.serialize(content));
     final $path = "freeBusy";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -168,7 +168,7 @@ class SettingsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "users/me/settings";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -198,7 +198,7 @@ class SettingsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "users/me/settings/{setting}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -223,11 +223,11 @@ class CalendarListResource extends core.Object {
    *        If this feature is used, the index-based 'color' field will be set to the best matching
    *        option automatically. Optional. The default is False.
    */
-  core.Future<CalendarListEntry> insert(CalendarListEntry content, [core.bool colorRgbFormat = UNSPECIFIED]) {
+  core.Future<CalendarListEntry> insert(CalendarListEntry content, {core.bool colorRgbFormat}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    if (UNSPECIFIED != colorRgbFormat) $queryParams["colorRgbFormat"] = colorRgbFormat;
+    if (?colorRgbFormat) $queryParams["colorRgbFormat"] = colorRgbFormat;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -240,7 +240,7 @@ class CalendarListResource extends core.Object {
     final $body = JSON.stringify(CalendarListEntry.serialize(content));
     final $path = "users/me/calendarList";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -270,7 +270,7 @@ class CalendarListResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "users/me/calendarList/{calendarId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -291,14 +291,14 @@ class CalendarListResource extends core.Object {
    *    * [minAccessRole] The minimum access role for the user in the returned entires. Optional. The default is no
    *        restriction.
    */
-  core.Future<CalendarList> list([core.String pageToken = UNSPECIFIED, core.bool showHidden = UNSPECIFIED, core.int maxResults = UNSPECIFIED, CalendarListResourceListMinAccessRole minAccessRole = UNSPECIFIED]) {
+  core.Future<CalendarList> list({core.String pageToken, core.bool showHidden, core.int maxResults, CalendarListResourceListMinAccessRole minAccessRole}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != showHidden) $queryParams["showHidden"] = showHidden;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
-    if (UNSPECIFIED != minAccessRole) $queryParams["minAccessRole"] = minAccessRole;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?showHidden) $queryParams["showHidden"] = showHidden;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
+    if (?minAccessRole) $queryParams["minAccessRole"] = minAccessRole;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -309,7 +309,7 @@ class CalendarListResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "users/me/calendarList";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -328,12 +328,12 @@ class CalendarListResource extends core.Object {
    *        If this feature is used, the index-based 'color' field will be set to the best matching
    *        option automatically. Optional. The default is False.
    */
-  core.Future<CalendarListEntry> update(core.String calendarId, CalendarListEntry content, [core.bool colorRgbFormat = UNSPECIFIED]) {
+  core.Future<CalendarListEntry> update(core.String calendarId, CalendarListEntry content, {core.bool colorRgbFormat}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["calendarId"] = calendarId;
-    if (UNSPECIFIED != colorRgbFormat) $queryParams["colorRgbFormat"] = colorRgbFormat;
+    if (?colorRgbFormat) $queryParams["colorRgbFormat"] = colorRgbFormat;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -346,7 +346,7 @@ class CalendarListResource extends core.Object {
     final $body = JSON.stringify(CalendarListEntry.serialize(content));
     final $path = "users/me/calendarList/{calendarId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PUT", $headers);
+    final $http = new http.Request($url, "PUT", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -365,12 +365,12 @@ class CalendarListResource extends core.Object {
    *        If this feature is used, the index-based 'color' field will be set to the best matching
    *        option automatically. Optional. The default is False.
    */
-  core.Future<CalendarListEntry> patch(core.String calendarId, CalendarListEntry content, [core.bool colorRgbFormat = UNSPECIFIED]) {
+  core.Future<CalendarListEntry> patch(core.String calendarId, CalendarListEntry content, {core.bool colorRgbFormat}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["calendarId"] = calendarId;
-    if (UNSPECIFIED != colorRgbFormat) $queryParams["colorRgbFormat"] = colorRgbFormat;
+    if (?colorRgbFormat) $queryParams["colorRgbFormat"] = colorRgbFormat;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -383,7 +383,7 @@ class CalendarListResource extends core.Object {
     final $body = JSON.stringify(CalendarListEntry.serialize(content));
     final $path = "users/me/calendarList/{calendarId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PATCH", $headers);
+    final $http = new http.Request($url, "PATCH", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -413,7 +413,7 @@ class CalendarListResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "users/me/calendarList/{calendarId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "DELETE", $headers);
+    final $http = new http.Request($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -426,16 +426,16 @@ class CalendarListResource extends core.Object {
 // Enum CalendarListResource.List.MinAccessRole
 class CalendarListResourceListMinAccessRole extends core.Object implements core.Hashable {
   /** The user can read free/busy information. */
-  static final CalendarListResourceListMinAccessRole FREEBUSYREADER = const CalendarListResourceListMinAccessRole._internal("freeBusyReader", 0);
+  const CalendarListResourceListMinAccessRole FREEBUSYREADER = const CalendarListResourceListMinAccessRole._internal("freeBusyReader", 0);
   /** The user can read and modify events and access control lists. */
-  static final CalendarListResourceListMinAccessRole OWNER = const CalendarListResourceListMinAccessRole._internal("owner", 1);
+  const CalendarListResourceListMinAccessRole OWNER = const CalendarListResourceListMinAccessRole._internal("owner", 1);
   /** The user can read events that are not private. */
-  static final CalendarListResourceListMinAccessRole READER = const CalendarListResourceListMinAccessRole._internal("reader", 2);
+  const CalendarListResourceListMinAccessRole READER = const CalendarListResourceListMinAccessRole._internal("reader", 2);
   /** The user can read and modify events. */
-  static final CalendarListResourceListMinAccessRole WRITER = const CalendarListResourceListMinAccessRole._internal("writer", 3);
+  const CalendarListResourceListMinAccessRole WRITER = const CalendarListResourceListMinAccessRole._internal("writer", 3);
 
   /** All values of this enumeration */
-  static final core.List<CalendarListResourceListMinAccessRole> values = const <CalendarListResourceListMinAccessRole>[
+  const core.List<CalendarListResourceListMinAccessRole> values = const <CalendarListResourceListMinAccessRole>[
     FREEBUSYREADER,
     OWNER,
     READER,
@@ -443,7 +443,7 @@ class CalendarListResourceListMinAccessRole extends core.Object implements core.
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <CalendarListResourceListMinAccessRole>{ 
+  const _valuesMap = const <CalendarListResourceListMinAccessRole>{ 
     "freeBusyReader": FREEBUSYREADER,
     "owner": OWNER,
     "reader": READER,
@@ -490,7 +490,7 @@ class CalendarsResource extends core.Object {
     final $body = JSON.stringify(Calendar.serialize(content));
     final $path = "calendars";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -520,7 +520,7 @@ class CalendarsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "calendars/{calendarId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -551,7 +551,7 @@ class CalendarsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "calendars/{calendarId}/clear";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -584,7 +584,7 @@ class CalendarsResource extends core.Object {
     final $body = JSON.stringify(Calendar.serialize(content));
     final $path = "calendars/{calendarId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PUT", $headers);
+    final $http = new http.Request($url, "PUT", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -617,7 +617,7 @@ class CalendarsResource extends core.Object {
     final $body = JSON.stringify(Calendar.serialize(content));
     final $path = "calendars/{calendarId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PATCH", $headers);
+    final $http = new http.Request($url, "PATCH", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -647,7 +647,7 @@ class CalendarsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "calendars/{calendarId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "DELETE", $headers);
+    final $http = new http.Request($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -687,7 +687,7 @@ class AclResource extends core.Object {
     final $body = JSON.stringify(AclRule.serialize(content));
     final $path = "calendars/{calendarId}/acl";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -719,7 +719,7 @@ class AclResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "calendars/{calendarId}/acl/{ruleId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -749,7 +749,7 @@ class AclResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "calendars/{calendarId}/acl";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -784,7 +784,7 @@ class AclResource extends core.Object {
     final $body = JSON.stringify(AclRule.serialize(content));
     final $path = "calendars/{calendarId}/acl/{ruleId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PUT", $headers);
+    final $http = new http.Request($url, "PUT", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -819,7 +819,7 @@ class AclResource extends core.Object {
     final $body = JSON.stringify(AclRule.serialize(content));
     final $path = "calendars/{calendarId}/acl/{ruleId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PATCH", $headers);
+    final $http = new http.Request($url, "PATCH", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -851,7 +851,7 @@ class AclResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "calendars/{calendarId}/acl/{ruleId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "DELETE", $headers);
+    final $http = new http.Request($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -886,7 +886,7 @@ class ColorsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "colors";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -910,12 +910,12 @@ class EventsResource extends core.Object {
    *    * [calendarId] Calendar identifier.
    *    * [sendNotifications] Whether to send notifications about the creation of the new event. Optional. The default is False.
    */
-  core.Future<Event> insert(core.String calendarId, Event content, [core.bool sendNotifications = UNSPECIFIED]) {
+  core.Future<Event> insert(core.String calendarId, Event content, {core.bool sendNotifications}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["calendarId"] = calendarId;
-    if (UNSPECIFIED != sendNotifications) $queryParams["sendNotifications"] = sendNotifications;
+    if (?sendNotifications) $queryParams["sendNotifications"] = sendNotifications;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -928,7 +928,7 @@ class EventsResource extends core.Object {
     final $body = JSON.stringify(Event.serialize(content));
     final $path = "calendars/{calendarId}/events";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -954,15 +954,15 @@ class EventsResource extends core.Object {
 
   Minimum: 1.
    */
-  core.Future<Event> get(core.String calendarId, core.String eventId, [core.String timeZone = UNSPECIFIED, core.bool alwaysIncludeEmail = UNSPECIFIED, core.int maxAttendees = UNSPECIFIED]) {
+  core.Future<Event> get(core.String calendarId, core.String eventId, {core.String timeZone, core.bool alwaysIncludeEmail, core.int maxAttendees}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["calendarId"] = calendarId;
     $pathParams["eventId"] = eventId;
-    if (UNSPECIFIED != timeZone) $queryParams["timeZone"] = timeZone;
-    if (UNSPECIFIED != alwaysIncludeEmail) $queryParams["alwaysIncludeEmail"] = alwaysIncludeEmail;
-    if (UNSPECIFIED != maxAttendees) $queryParams["maxAttendees"] = maxAttendees;
+    if (?timeZone) $queryParams["timeZone"] = timeZone;
+    if (?alwaysIncludeEmail) $queryParams["alwaysIncludeEmail"] = alwaysIncludeEmail;
+    if (?maxAttendees) $queryParams["maxAttendees"] = maxAttendees;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -973,7 +973,7 @@ class EventsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "calendars/{calendarId}/events/{eventId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -992,14 +992,14 @@ class EventsResource extends core.Object {
    *    * [sendNotifications] Whether to send notifications about the change of the event's organizer. Optional. The default is
    *        False.
    */
-  core.Future<Event> move(core.String calendarId, core.String eventId, core.String destination, [core.bool sendNotifications = UNSPECIFIED]) {
+  core.Future<Event> move(core.String calendarId, core.String eventId, core.String destination, {core.bool sendNotifications}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["calendarId"] = calendarId;
     $pathParams["eventId"] = eventId;
-    if (UNSPECIFIED != destination) $queryParams["destination"] = destination;
-    if (UNSPECIFIED != sendNotifications) $queryParams["sendNotifications"] = sendNotifications;
+    if (?destination) $queryParams["destination"] = destination;
+    if (?sendNotifications) $queryParams["sendNotifications"] = sendNotifications;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -1010,7 +1010,7 @@ class EventsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "calendars/{calendarId}/events/{eventId}/move";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1027,7 +1027,8 @@ class EventsResource extends core.Object {
    *    * [orderBy] The order of the events returned in the result. Optional. The default is an unspecified, stable
    *        order.
    *    * [showHiddenInvitations] Whether to include hidden invitations in the result. Optional. The default is False.
-   *    * [showDeleted] Whether to include deleted events (with 'eventStatus' equals 'cancelled') in the result. Optional.
+   *    * [showDeleted] Whether to include deleted single events (with 'status' equals 'cancelled') in the result. Cancelled
+   *        instances of recurring events will still be included if 'singleEvents' is False. Optional.
    *        The default is False.
    *    * [iCalUID] Specifies iCalendar UID (iCalUID) of events to be included in the response. Optional.
    *    * [updatedMin] Lower bound for an event's last modification time (as a RFC 3339 timestamp) to filter by. Optional.
@@ -1056,25 +1057,25 @@ class EventsResource extends core.Object {
 
   Minimum: 1.
    */
-  core.Future<Events> list(core.String calendarId, [EventsResourceListOrderBy orderBy = UNSPECIFIED, core.bool showHiddenInvitations = UNSPECIFIED, core.bool showDeleted = UNSPECIFIED, core.String iCalUID = UNSPECIFIED, core.String updatedMin = UNSPECIFIED, core.bool singleEvents = UNSPECIFIED, core.bool alwaysIncludeEmail = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String q = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.String timeMin = UNSPECIFIED, core.String timeZone = UNSPECIFIED, core.String timeMax = UNSPECIFIED, core.int maxAttendees = UNSPECIFIED]) {
+  core.Future<Events> list(core.String calendarId, {EventsResourceListOrderBy orderBy, core.bool showHiddenInvitations, core.bool showDeleted, core.String iCalUID, core.String updatedMin, core.bool singleEvents, core.bool alwaysIncludeEmail, core.int maxResults, core.String q, core.String pageToken, core.String timeMin, core.String timeZone, core.String timeMax, core.int maxAttendees}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["calendarId"] = calendarId;
-    if (UNSPECIFIED != orderBy) $queryParams["orderBy"] = orderBy;
-    if (UNSPECIFIED != showHiddenInvitations) $queryParams["showHiddenInvitations"] = showHiddenInvitations;
-    if (UNSPECIFIED != showDeleted) $queryParams["showDeleted"] = showDeleted;
-    if (UNSPECIFIED != iCalUID) $queryParams["iCalUID"] = iCalUID;
-    if (UNSPECIFIED != updatedMin) $queryParams["updatedMin"] = updatedMin;
-    if (UNSPECIFIED != singleEvents) $queryParams["singleEvents"] = singleEvents;
-    if (UNSPECIFIED != alwaysIncludeEmail) $queryParams["alwaysIncludeEmail"] = alwaysIncludeEmail;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
-    if (UNSPECIFIED != q) $queryParams["q"] = q;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != timeMin) $queryParams["timeMin"] = timeMin;
-    if (UNSPECIFIED != timeZone) $queryParams["timeZone"] = timeZone;
-    if (UNSPECIFIED != timeMax) $queryParams["timeMax"] = timeMax;
-    if (UNSPECIFIED != maxAttendees) $queryParams["maxAttendees"] = maxAttendees;
+    if (?orderBy) $queryParams["orderBy"] = orderBy;
+    if (?showHiddenInvitations) $queryParams["showHiddenInvitations"] = showHiddenInvitations;
+    if (?showDeleted) $queryParams["showDeleted"] = showDeleted;
+    if (?iCalUID) $queryParams["iCalUID"] = iCalUID;
+    if (?updatedMin) $queryParams["updatedMin"] = updatedMin;
+    if (?singleEvents) $queryParams["singleEvents"] = singleEvents;
+    if (?alwaysIncludeEmail) $queryParams["alwaysIncludeEmail"] = alwaysIncludeEmail;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
+    if (?q) $queryParams["q"] = q;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?timeMin) $queryParams["timeMin"] = timeMin;
+    if (?timeZone) $queryParams["timeZone"] = timeZone;
+    if (?timeMax) $queryParams["timeMax"] = timeMax;
+    if (?maxAttendees) $queryParams["maxAttendees"] = maxAttendees;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -1085,7 +1086,7 @@ class EventsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "calendars/{calendarId}/events";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1109,14 +1110,14 @@ class EventsResource extends core.Object {
    *    * [sendNotifications] Whether to send notifications about the event update (e.g. attendee's responses, title changes,
    *        etc.). Optional. The default is False.
    */
-  core.Future<Event> update(core.String calendarId, core.String eventId, Event content, [core.bool alwaysIncludeEmail = UNSPECIFIED, core.bool sendNotifications = UNSPECIFIED]) {
+  core.Future<Event> update(core.String calendarId, core.String eventId, Event content, {core.bool alwaysIncludeEmail, core.bool sendNotifications}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["calendarId"] = calendarId;
     $pathParams["eventId"] = eventId;
-    if (UNSPECIFIED != alwaysIncludeEmail) $queryParams["alwaysIncludeEmail"] = alwaysIncludeEmail;
-    if (UNSPECIFIED != sendNotifications) $queryParams["sendNotifications"] = sendNotifications;
+    if (?alwaysIncludeEmail) $queryParams["alwaysIncludeEmail"] = alwaysIncludeEmail;
+    if (?sendNotifications) $queryParams["sendNotifications"] = sendNotifications;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -1129,7 +1130,7 @@ class EventsResource extends core.Object {
     final $body = JSON.stringify(Event.serialize(content));
     final $path = "calendars/{calendarId}/events/{eventId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PUT", $headers);
+    final $http = new http.Request($url, "PUT", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1153,14 +1154,14 @@ class EventsResource extends core.Object {
    *    * [sendNotifications] Whether to send notifications about the event update (e.g. attendee's responses, title changes,
    *        etc.). Optional. The default is False.
    */
-  core.Future<Event> patch(core.String calendarId, core.String eventId, Event content, [core.bool alwaysIncludeEmail = UNSPECIFIED, core.bool sendNotifications = UNSPECIFIED]) {
+  core.Future<Event> patch(core.String calendarId, core.String eventId, Event content, {core.bool alwaysIncludeEmail, core.bool sendNotifications}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["calendarId"] = calendarId;
     $pathParams["eventId"] = eventId;
-    if (UNSPECIFIED != alwaysIncludeEmail) $queryParams["alwaysIncludeEmail"] = alwaysIncludeEmail;
-    if (UNSPECIFIED != sendNotifications) $queryParams["sendNotifications"] = sendNotifications;
+    if (?alwaysIncludeEmail) $queryParams["alwaysIncludeEmail"] = alwaysIncludeEmail;
+    if (?sendNotifications) $queryParams["sendNotifications"] = sendNotifications;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -1173,7 +1174,7 @@ class EventsResource extends core.Object {
     final $body = JSON.stringify(Event.serialize(content));
     final $path = "calendars/{calendarId}/events/{eventId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PATCH", $headers);
+    final $http = new http.Request($url, "PATCH", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1206,19 +1207,19 @@ class EventsResource extends core.Object {
 
   Minimum: 1.
    */
-  core.Future<Events> instances(core.String calendarId, core.String eventId, [core.bool showDeleted = UNSPECIFIED, core.bool alwaysIncludeEmail = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.String timeZone = UNSPECIFIED, core.String originalStart = UNSPECIFIED, core.int maxAttendees = UNSPECIFIED]) {
+  core.Future<Events> instances(core.String calendarId, core.String eventId, {core.bool showDeleted, core.bool alwaysIncludeEmail, core.int maxResults, core.String pageToken, core.String timeZone, core.String originalStart, core.int maxAttendees}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["calendarId"] = calendarId;
     $pathParams["eventId"] = eventId;
-    if (UNSPECIFIED != showDeleted) $queryParams["showDeleted"] = showDeleted;
-    if (UNSPECIFIED != alwaysIncludeEmail) $queryParams["alwaysIncludeEmail"] = alwaysIncludeEmail;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != timeZone) $queryParams["timeZone"] = timeZone;
-    if (UNSPECIFIED != originalStart) $queryParams["originalStart"] = originalStart;
-    if (UNSPECIFIED != maxAttendees) $queryParams["maxAttendees"] = maxAttendees;
+    if (?showDeleted) $queryParams["showDeleted"] = showDeleted;
+    if (?alwaysIncludeEmail) $queryParams["alwaysIncludeEmail"] = alwaysIncludeEmail;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?timeZone) $queryParams["timeZone"] = timeZone;
+    if (?originalStart) $queryParams["originalStart"] = originalStart;
+    if (?maxAttendees) $queryParams["maxAttendees"] = maxAttendees;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -1229,7 +1230,7 @@ class EventsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "calendars/{calendarId}/events/{eventId}/instances";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1262,7 +1263,7 @@ class EventsResource extends core.Object {
     final $body = JSON.stringify(Event.serialize(content));
     final $path = "calendars/{calendarId}/events/import";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1279,13 +1280,13 @@ class EventsResource extends core.Object {
    *    * [text] The text describing the event to be created.
    *    * [sendNotifications] Whether to send notifications about the creation of the event. Optional. The default is False.
    */
-  core.Future<Event> quickAdd(core.String calendarId, core.String text, [core.bool sendNotifications = UNSPECIFIED]) {
+  core.Future<Event> quickAdd(core.String calendarId, core.String text, {core.bool sendNotifications}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["calendarId"] = calendarId;
-    if (UNSPECIFIED != text) $queryParams["text"] = text;
-    if (UNSPECIFIED != sendNotifications) $queryParams["sendNotifications"] = sendNotifications;
+    if (?text) $queryParams["text"] = text;
+    if (?sendNotifications) $queryParams["sendNotifications"] = sendNotifications;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -1296,7 +1297,7 @@ class EventsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "calendars/{calendarId}/events/quickAdd";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1313,13 +1314,13 @@ class EventsResource extends core.Object {
    *    * [eventId] Event identifier.
    *    * [sendNotifications] Whether to send notifications about the deletion of the event. Optional. The default is False.
    */
-  core.Future delete(core.String calendarId, core.String eventId, [core.bool sendNotifications = UNSPECIFIED]) {
+  core.Future delete(core.String calendarId, core.String eventId, {core.bool sendNotifications}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["calendarId"] = calendarId;
     $pathParams["eventId"] = eventId;
-    if (UNSPECIFIED != sendNotifications) $queryParams["sendNotifications"] = sendNotifications;
+    if (?sendNotifications) $queryParams["sendNotifications"] = sendNotifications;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -1330,7 +1331,7 @@ class EventsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "calendars/{calendarId}/events/{eventId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "DELETE", $headers);
+    final $http = new http.Request($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1346,18 +1347,18 @@ class EventsResourceListOrderBy extends core.Object implements core.Hashable {
  * Order by the start date/time (ascending). This is only available when querying single events
  * (i.e. the parameter "singleEvents" is True)
  */
-  static final EventsResourceListOrderBy STARTTIME = const EventsResourceListOrderBy._internal("startTime", 0);
+  const EventsResourceListOrderBy STARTTIME = const EventsResourceListOrderBy._internal("startTime", 0);
   /** Order by last modification time (ascending). */
-  static final EventsResourceListOrderBy UPDATED = const EventsResourceListOrderBy._internal("updated", 1);
+  const EventsResourceListOrderBy UPDATED = const EventsResourceListOrderBy._internal("updated", 1);
 
   /** All values of this enumeration */
-  static final core.List<EventsResourceListOrderBy> values = const <EventsResourceListOrderBy>[
+  const core.List<EventsResourceListOrderBy> values = const <EventsResourceListOrderBy>[
     STARTTIME,
     UPDATED,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <EventsResourceListOrderBy>{ 
+  const _valuesMap = const <EventsResourceListOrderBy>{ 
     "startTime": STARTTIME,
     "updated": UPDATED,
   };
@@ -1820,6 +1821,9 @@ class Event extends IdentityHash {
   /** Identifier of the event. */
   core.String id;
 
+  /** An absolute link to the Google+ hangout associated with this event. Read-only. */
+  core.String hangoutLink;
+
   /** The attendees of the event. */
   core.List<EventAttendee> attendees;
 
@@ -1973,6 +1977,7 @@ class Event extends IdentityHash {
     result.organizer = EventOrganizer.parse(json["organizer"]);
     result.summary = identity(json["summary"]);
     result.id = identity(json["id"]);
+    result.hangoutLink = identity(json["hangoutLink"]);
     result.attendees = map(EventAttendee.parse)(json["attendees"]);
     result.htmlLink = identity(json["htmlLink"]);
     result.recurrence = map(identity)(json["recurrence"]);
@@ -2013,6 +2018,7 @@ class Event extends IdentityHash {
     result["organizer"] = EventOrganizer.serialize(value.organizer);
     result["summary"] = identity(value.summary);
     result["id"] = identity(value.id);
+    result["hangoutLink"] = identity(value.hangoutLink);
     result["attendees"] = map(EventAttendee.serialize)(value.attendees);
     result["htmlLink"] = identity(value.htmlLink);
     result["recurrence"] = map(identity)(value.recurrence);
@@ -2738,15 +2744,15 @@ class TimePeriod extends IdentityHash {
 // Enum CalendarApi.Alt
 class CalendarApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/json */
-  static final CalendarApiAlt JSON = const CalendarApiAlt._internal("json", 0);
+  const CalendarApiAlt JSON = const CalendarApiAlt._internal("json", 0);
 
   /** All values of this enumeration */
-  static final core.List<CalendarApiAlt> values = const <CalendarApiAlt>[
+  const core.List<CalendarApiAlt> values = const <CalendarApiAlt>[
     JSON,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <CalendarApiAlt>{ 
+  const _valuesMap = const <CalendarApiAlt>{ 
     "json": JSON,
   };
 

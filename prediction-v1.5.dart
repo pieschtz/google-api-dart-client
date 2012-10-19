@@ -17,7 +17,7 @@
 #import('dart:json');
 
 #import('utils.dart');
-#import('http.dart');
+#import('http.dart', prefix:'http');
 
 // API PredictionApi
 /**
@@ -27,16 +27,16 @@ class PredictionApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
   final core.String baseUrl;
   /** How we should identify ourselves to the service. */
-  Authenticator authenticator;
+  http.Authenticator authenticator;
   /** The client library version */
   final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
   final core.String applicationName;
-  PredictionApi get _$service() => this;
+  PredictionApi get _$service => this;
   TrainedmodelsResource _trainedmodels;
-  TrainedmodelsResource get trainedmodels() => _trainedmodels;
+  TrainedmodelsResource get trainedmodels => _trainedmodels;
   HostedmodelsResource _hostedmodels;
-  HostedmodelsResource get hostedmodels() => _hostedmodels;
+  HostedmodelsResource get hostedmodels => _hostedmodels;
   
   /** Returns response with indentations and line breaks. */
   core.bool prettyPrint;
@@ -69,17 +69,17 @@ class PredictionApi extends core.Object {
   PredictionApiAlt alt;
 
 
-  PredictionApi([this.baseUrl = "https://www.googleapis.com/prediction/v1.5/", applicationName, this.authenticator]) :
+  PredictionApi({this.baseUrl:"https://www.googleapis.com/prediction/v1.5/", applicationName, this.authenticator}) :
       this.applicationName = (applicationName == null) ? null : applicationName
-          .replaceAll(const core.RegExp(@'\s+'), '_')
-          .replaceAll(const core.RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+          .replaceAll(const core.RegExp(r'\s+'), '_')
+          .replaceAll(const core.RegExp(r'[^-_.,0-9a-zA-Z]'), '')
   { 
     _trainedmodels = new TrainedmodelsResource._internal(this);
     _hostedmodels = new HostedmodelsResource._internal(this);
   }
-  core.String get userAgent() {
+  core.String get userAgent {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}prediction/v1.5/20120614 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}prediction/v1.5/20120724 google-api-dart-client/${clientVersion}";
   }
 
 
@@ -118,7 +118,7 @@ class TrainedmodelsResource extends core.Object {
     final $body = JSON.stringify(Training.serialize(content));
     final $path = "trainedmodels";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -148,7 +148,7 @@ class TrainedmodelsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "trainedmodels/{id}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -181,7 +181,7 @@ class TrainedmodelsResource extends core.Object {
     final $body = JSON.stringify(Input.serialize(content));
     final $path = "trainedmodels/{id}/predict";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -199,12 +199,12 @@ class TrainedmodelsResource extends core.Object {
 
   Minimum: 0.
    */
-  core.Future<List> list([core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
+  core.Future<List> list({core.String pageToken, core.int maxResults}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -215,7 +215,7 @@ class TrainedmodelsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "trainedmodels/list";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -248,7 +248,7 @@ class TrainedmodelsResource extends core.Object {
     final $body = JSON.stringify(Update.serialize(content));
     final $path = "trainedmodels/{id}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PUT", $headers);
+    final $http = new http.Request($url, "PUT", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -278,7 +278,7 @@ class TrainedmodelsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "trainedmodels/{id}/analyze";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -308,7 +308,7 @@ class TrainedmodelsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "trainedmodels/{id}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "DELETE", $headers);
+    final $http = new http.Request($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -348,7 +348,7 @@ class HostedmodelsResource extends core.Object {
     final $body = JSON.stringify(Input.serialize(content));
     final $path = "hostedmodels/{hostedModelName}/predict";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -995,7 +995,7 @@ class Update extends IdentityHash {
   /** The input features for this instance */
   core.List<core.Object> csvInstance;
 
-  /** The true class label of this instance */
+  /** The class label of this instance */
   core.String label;
 
   /** Parses an instance from its JSON representation. */
@@ -1020,15 +1020,15 @@ class Update extends IdentityHash {
 // Enum PredictionApi.Alt
 class PredictionApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/json */
-  static final PredictionApiAlt JSON = const PredictionApiAlt._internal("json", 0);
+  const PredictionApiAlt JSON = const PredictionApiAlt._internal("json", 0);
 
   /** All values of this enumeration */
-  static final core.List<PredictionApiAlt> values = const <PredictionApiAlt>[
+  const core.List<PredictionApiAlt> values = const <PredictionApiAlt>[
     JSON,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <PredictionApiAlt>{ 
+  const _valuesMap = const <PredictionApiAlt>{ 
     "json": JSON,
   };
 

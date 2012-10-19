@@ -17,7 +17,7 @@
 #import('dart:json');
 
 #import('utils.dart');
-#import('http.dart');
+#import('http.dart', prefix:'http');
 
 // API GanApi
 /**
@@ -27,22 +27,22 @@ class GanApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
   final core.String baseUrl;
   /** How we should identify ourselves to the service. */
-  Authenticator authenticator;
+  http.Authenticator authenticator;
   /** The client library version */
   final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
   final core.String applicationName;
-  GanApi get _$service() => this;
+  GanApi get _$service => this;
   AdvertisersResource _advertisers;
-  AdvertisersResource get advertisers() => _advertisers;
+  AdvertisersResource get advertisers => _advertisers;
   CcOffersResource _ccOffers;
-  CcOffersResource get ccOffers() => _ccOffers;
+  CcOffersResource get ccOffers => _ccOffers;
   EventsResource _events;
-  EventsResource get events() => _events;
+  EventsResource get events => _events;
   LinksResource _links;
-  LinksResource get links() => _links;
+  LinksResource get links => _links;
   PublishersResource _publishers;
-  PublishersResource get publishers() => _publishers;
+  PublishersResource get publishers => _publishers;
   
   /** Returns response with indentations and line breaks. */
   core.bool prettyPrint;
@@ -75,10 +75,10 @@ class GanApi extends core.Object {
   GanApiAlt alt;
 
 
-  GanApi([this.baseUrl = "https://www.googleapis.com/gan/v1beta1/", applicationName, this.authenticator]) :
+  GanApi({this.baseUrl:"https://www.googleapis.com/gan/v1beta1/", applicationName, this.authenticator}) :
       this.applicationName = (applicationName == null) ? null : applicationName
-          .replaceAll(const core.RegExp(@'\s+'), '_')
-          .replaceAll(const core.RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+          .replaceAll(const core.RegExp(r'\s+'), '_')
+          .replaceAll(const core.RegExp(r'[^-_.,0-9a-zA-Z]'), '')
   { 
     _advertisers = new AdvertisersResource._internal(this);
     _ccOffers = new CcOffersResource._internal(this);
@@ -86,9 +86,9 @@ class GanApi extends core.Object {
     _links = new LinksResource._internal(this);
     _publishers = new PublishersResource._internal(this);
   }
-  core.String get userAgent() {
+  core.String get userAgent {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}gan/v1beta1/20120727 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}gan/v1beta1/20121013 google-api-dart-client/${clientVersion}";
   }
 
 
@@ -133,19 +133,19 @@ class AdvertisersResource extends core.Object {
   Minimum: 1.
   Maximum: 4.
    */
-  core.Future<Advertisers> list(AdvertisersResourceListRole role, core.String roleId, [AdvertisersResourceListRelationshipStatus relationshipStatus = UNSPECIFIED, core.double minSevenDayEpc = UNSPECIFIED, core.String advertiserCategory = UNSPECIFIED, core.double minNinetyDayEpc = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.int minPayoutRank = UNSPECIFIED]) {
+  core.Future<Advertisers> list(AdvertisersResourceListRole role, core.String roleId, {AdvertisersResourceListRelationshipStatus relationshipStatus, core.double minSevenDayEpc, core.String advertiserCategory, core.double minNinetyDayEpc, core.String pageToken, core.int maxResults, core.int minPayoutRank}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["role"] = role;
     $pathParams["roleId"] = roleId;
-    if (UNSPECIFIED != relationshipStatus) $queryParams["relationshipStatus"] = relationshipStatus;
-    if (UNSPECIFIED != minSevenDayEpc) $queryParams["minSevenDayEpc"] = minSevenDayEpc;
-    if (UNSPECIFIED != advertiserCategory) $queryParams["advertiserCategory"] = advertiserCategory;
-    if (UNSPECIFIED != minNinetyDayEpc) $queryParams["minNinetyDayEpc"] = minNinetyDayEpc;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
-    if (UNSPECIFIED != minPayoutRank) $queryParams["minPayoutRank"] = minPayoutRank;
+    if (?relationshipStatus) $queryParams["relationshipStatus"] = relationshipStatus;
+    if (?minSevenDayEpc) $queryParams["minSevenDayEpc"] = minSevenDayEpc;
+    if (?advertiserCategory) $queryParams["advertiserCategory"] = advertiserCategory;
+    if (?minNinetyDayEpc) $queryParams["minNinetyDayEpc"] = minNinetyDayEpc;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
+    if (?minPayoutRank) $queryParams["minPayoutRank"] = minPayoutRank;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -156,7 +156,7 @@ class AdvertisersResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{role}/{roleId}/advertisers";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -175,13 +175,13 @@ class AdvertisersResource extends core.Object {
    *    * [roleId] The ID of the requesting advertiser or publisher.
    *    * [advertiserId] The ID of the advertiser to look up. Optional.
    */
-  core.Future<Advertiser> get(AdvertisersResourceGetRole role, core.String roleId, [core.String advertiserId = UNSPECIFIED]) {
+  core.Future<Advertiser> get(AdvertisersResourceGetRole role, core.String roleId, {core.String advertiserId}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["role"] = role;
     $pathParams["roleId"] = roleId;
-    if (UNSPECIFIED != advertiserId) $queryParams["advertiserId"] = advertiserId;
+    if (?advertiserId) $queryParams["advertiserId"] = advertiserId;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -192,7 +192,7 @@ class AdvertisersResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{role}/{roleId}/advertiser";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -205,18 +205,18 @@ class AdvertisersResource extends core.Object {
 // Enum AdvertisersResource.List.Role
 class AdvertisersResourceListRole extends core.Object implements core.Hashable {
   /** The requester is requesting as an advertiser. */
-  static final AdvertisersResourceListRole ADVERTISERS = const AdvertisersResourceListRole._internal("advertisers", 0);
+  const AdvertisersResourceListRole ADVERTISERS = const AdvertisersResourceListRole._internal("advertisers", 0);
   /** The requester is requesting as a publisher. */
-  static final AdvertisersResourceListRole PUBLISHERS = const AdvertisersResourceListRole._internal("publishers", 1);
+  const AdvertisersResourceListRole PUBLISHERS = const AdvertisersResourceListRole._internal("publishers", 1);
 
   /** All values of this enumeration */
-  static final core.List<AdvertisersResourceListRole> values = const <AdvertisersResourceListRole>[
+  const core.List<AdvertisersResourceListRole> values = const <AdvertisersResourceListRole>[
     ADVERTISERS,
     PUBLISHERS,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <AdvertisersResourceListRole>{ 
+  const _valuesMap = const <AdvertisersResourceListRole>{ 
     "advertisers": ADVERTISERS,
     "publishers": PUBLISHERS,
   };
@@ -236,24 +236,24 @@ class AdvertisersResourceListRole extends core.Object implements core.Hashable {
 // Enum AdvertisersResource.List.RelationshipStatus
 class AdvertisersResourceListRelationshipStatus extends core.Object implements core.Hashable {
   /** An advertiser that has approved your application. */
-  static final AdvertisersResourceListRelationshipStatus APPROVED = const AdvertisersResourceListRelationshipStatus._internal("approved", 0);
+  const AdvertisersResourceListRelationshipStatus APPROVED = const AdvertisersResourceListRelationshipStatus._internal("approved", 0);
   /** An advertiser program that's accepting new publishers. */
-  static final AdvertisersResourceListRelationshipStatus AVAILABLE = const AdvertisersResourceListRelationshipStatus._internal("available", 1);
+  const AdvertisersResourceListRelationshipStatus AVAILABLE = const AdvertisersResourceListRelationshipStatus._internal("available", 1);
   /**
  * Deactivated means either the advertiser has removed you from their program, or it could also mean
  * that you chose to remove yourself from the advertiser's program.
  */
-  static final AdvertisersResourceListRelationshipStatus DEACTIVATED = const AdvertisersResourceListRelationshipStatus._internal("deactivated", 2);
+  const AdvertisersResourceListRelationshipStatus DEACTIVATED = const AdvertisersResourceListRelationshipStatus._internal("deactivated", 2);
   /** An advertiser that did not approve your application. */
-  static final AdvertisersResourceListRelationshipStatus DECLINED = const AdvertisersResourceListRelationshipStatus._internal("declined", 3);
+  const AdvertisersResourceListRelationshipStatus DECLINED = const AdvertisersResourceListRelationshipStatus._internal("declined", 3);
   /**
  * An advertiser program that you've already applied to, but they haven't yet decided to approve or
  * decline your application.
  */
-  static final AdvertisersResourceListRelationshipStatus PENDING = const AdvertisersResourceListRelationshipStatus._internal("pending", 4);
+  const AdvertisersResourceListRelationshipStatus PENDING = const AdvertisersResourceListRelationshipStatus._internal("pending", 4);
 
   /** All values of this enumeration */
-  static final core.List<AdvertisersResourceListRelationshipStatus> values = const <AdvertisersResourceListRelationshipStatus>[
+  const core.List<AdvertisersResourceListRelationshipStatus> values = const <AdvertisersResourceListRelationshipStatus>[
     APPROVED,
     AVAILABLE,
     DEACTIVATED,
@@ -262,7 +262,7 @@ class AdvertisersResourceListRelationshipStatus extends core.Object implements c
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <AdvertisersResourceListRelationshipStatus>{ 
+  const _valuesMap = const <AdvertisersResourceListRelationshipStatus>{ 
     "approved": APPROVED,
     "available": AVAILABLE,
     "deactivated": DEACTIVATED,
@@ -285,18 +285,18 @@ class AdvertisersResourceListRelationshipStatus extends core.Object implements c
 // Enum AdvertisersResource.Get.Role
 class AdvertisersResourceGetRole extends core.Object implements core.Hashable {
   /** The requester is requesting as an advertiser. */
-  static final AdvertisersResourceGetRole ADVERTISERS = const AdvertisersResourceGetRole._internal("advertisers", 0);
+  const AdvertisersResourceGetRole ADVERTISERS = const AdvertisersResourceGetRole._internal("advertisers", 0);
   /** The requester is requesting as a publisher. */
-  static final AdvertisersResourceGetRole PUBLISHERS = const AdvertisersResourceGetRole._internal("publishers", 1);
+  const AdvertisersResourceGetRole PUBLISHERS = const AdvertisersResourceGetRole._internal("publishers", 1);
 
   /** All values of this enumeration */
-  static final core.List<AdvertisersResourceGetRole> values = const <AdvertisersResourceGetRole>[
+  const core.List<AdvertisersResourceGetRole> values = const <AdvertisersResourceGetRole>[
     ADVERTISERS,
     PUBLISHERS,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <AdvertisersResourceGetRole>{ 
+  const _valuesMap = const <AdvertisersResourceGetRole>{ 
     "advertisers": ADVERTISERS,
     "publishers": PUBLISHERS,
   };
@@ -327,13 +327,13 @@ class CcOffersResource extends core.Object {
    *    * [advertiser] The advertiser ID of a card issuer whose offers to include. Optional, may be repeated.
    *    * [projection] The set of fields to return.
    */
-  core.Future<CcOffers> list(core.String publisher, [core.List<core.String> advertiser = UNSPECIFIED, CcOffersResourceListProjection projection = UNSPECIFIED]) {
+  core.Future<CcOffers> list(core.String publisher, {core.List<core.String> advertiser, CcOffersResourceListProjection projection}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["publisher"] = publisher;
-    if (UNSPECIFIED != advertiser) $queryParams["advertiser"] = advertiser;
-    if (UNSPECIFIED != projection) $queryParams["projection"] = projection;
+    if (?advertiser) $queryParams["advertiser"] = advertiser;
+    if (?projection) $queryParams["projection"] = projection;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -344,7 +344,7 @@ class CcOffersResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "publishers/{publisher}/ccOffers";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -357,18 +357,18 @@ class CcOffersResource extends core.Object {
 // Enum CcOffersResource.List.Projection
 class CcOffersResourceListProjection extends core.Object implements core.Hashable {
   /** Include all offer fields. This is the default. */
-  static final CcOffersResourceListProjection FULL = const CcOffersResourceListProjection._internal("full", 0);
+  const CcOffersResourceListProjection FULL = const CcOffersResourceListProjection._internal("full", 0);
   /** Include only the basic fields needed to display an offer. */
-  static final CcOffersResourceListProjection SUMMARY = const CcOffersResourceListProjection._internal("summary", 1);
+  const CcOffersResourceListProjection SUMMARY = const CcOffersResourceListProjection._internal("summary", 1);
 
   /** All values of this enumeration */
-  static final core.List<CcOffersResourceListProjection> values = const <CcOffersResourceListProjection>[
+  const core.List<CcOffersResourceListProjection> values = const <CcOffersResourceListProjection>[
     FULL,
     SUMMARY,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <CcOffersResourceListProjection>{ 
+  const _valuesMap = const <CcOffersResourceListProjection>{ 
     "full": FULL,
     "summary": SUMMARY,
   };
@@ -430,28 +430,28 @@ class EventsResource extends core.Object {
    *    * [publisherId] Caret(^) delimited list of publisher IDs. Filters out all events that do not reference one of the
    *        given publishers IDs. Only used when under advertiser role. Optional.
    */
-  core.Future<Events> list(EventsResourceListRole role, core.String roleId, [core.String orderId = UNSPECIFIED, core.String sku = UNSPECIFIED, core.String eventDateMax = UNSPECIFIED, EventsResourceListType type = UNSPECIFIED, core.String linkId = UNSPECIFIED, core.String modifyDateMin = UNSPECIFIED, core.String eventDateMin = UNSPECIFIED, core.String memberId = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String advertiserId = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.String productCategory = UNSPECIFIED, EventsResourceListChargeType chargeType = UNSPECIFIED, core.String modifyDateMax = UNSPECIFIED, EventsResourceListStatus status = UNSPECIFIED, core.String publisherId = UNSPECIFIED]) {
+  core.Future<Events> list(EventsResourceListRole role, core.String roleId, {core.String orderId, core.String sku, core.String eventDateMax, EventsResourceListType type, core.String linkId, core.String modifyDateMin, core.String eventDateMin, core.String memberId, core.int maxResults, core.String advertiserId, core.String pageToken, core.String productCategory, EventsResourceListChargeType chargeType, core.String modifyDateMax, EventsResourceListStatus status, core.String publisherId}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["role"] = role;
     $pathParams["roleId"] = roleId;
-    if (UNSPECIFIED != orderId) $queryParams["orderId"] = orderId;
-    if (UNSPECIFIED != sku) $queryParams["sku"] = sku;
-    if (UNSPECIFIED != eventDateMax) $queryParams["eventDateMax"] = eventDateMax;
-    if (UNSPECIFIED != type) $queryParams["type"] = type;
-    if (UNSPECIFIED != linkId) $queryParams["linkId"] = linkId;
-    if (UNSPECIFIED != modifyDateMin) $queryParams["modifyDateMin"] = modifyDateMin;
-    if (UNSPECIFIED != eventDateMin) $queryParams["eventDateMin"] = eventDateMin;
-    if (UNSPECIFIED != memberId) $queryParams["memberId"] = memberId;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
-    if (UNSPECIFIED != advertiserId) $queryParams["advertiserId"] = advertiserId;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != productCategory) $queryParams["productCategory"] = productCategory;
-    if (UNSPECIFIED != chargeType) $queryParams["chargeType"] = chargeType;
-    if (UNSPECIFIED != modifyDateMax) $queryParams["modifyDateMax"] = modifyDateMax;
-    if (UNSPECIFIED != status) $queryParams["status"] = status;
-    if (UNSPECIFIED != publisherId) $queryParams["publisherId"] = publisherId;
+    if (?orderId) $queryParams["orderId"] = orderId;
+    if (?sku) $queryParams["sku"] = sku;
+    if (?eventDateMax) $queryParams["eventDateMax"] = eventDateMax;
+    if (?type) $queryParams["type"] = type;
+    if (?linkId) $queryParams["linkId"] = linkId;
+    if (?modifyDateMin) $queryParams["modifyDateMin"] = modifyDateMin;
+    if (?eventDateMin) $queryParams["eventDateMin"] = eventDateMin;
+    if (?memberId) $queryParams["memberId"] = memberId;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
+    if (?advertiserId) $queryParams["advertiserId"] = advertiserId;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?productCategory) $queryParams["productCategory"] = productCategory;
+    if (?chargeType) $queryParams["chargeType"] = chargeType;
+    if (?modifyDateMax) $queryParams["modifyDateMax"] = modifyDateMax;
+    if (?status) $queryParams["status"] = status;
+    if (?publisherId) $queryParams["publisherId"] = publisherId;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -462,7 +462,7 @@ class EventsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{role}/{roleId}/events";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -475,18 +475,18 @@ class EventsResource extends core.Object {
 // Enum EventsResource.List.Role
 class EventsResourceListRole extends core.Object implements core.Hashable {
   /** The requester is requesting as an advertiser. */
-  static final EventsResourceListRole ADVERTISERS = const EventsResourceListRole._internal("advertisers", 0);
+  const EventsResourceListRole ADVERTISERS = const EventsResourceListRole._internal("advertisers", 0);
   /** The requester is requesting as a publisher. */
-  static final EventsResourceListRole PUBLISHERS = const EventsResourceListRole._internal("publishers", 1);
+  const EventsResourceListRole PUBLISHERS = const EventsResourceListRole._internal("publishers", 1);
 
   /** All values of this enumeration */
-  static final core.List<EventsResourceListRole> values = const <EventsResourceListRole>[
+  const core.List<EventsResourceListRole> values = const <EventsResourceListRole>[
     ADVERTISERS,
     PUBLISHERS,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <EventsResourceListRole>{ 
+  const _valuesMap = const <EventsResourceListRole>{ 
     "advertisers": ADVERTISERS,
     "publishers": PUBLISHERS,
   };
@@ -509,24 +509,24 @@ class EventsResourceListType extends core.Object implements core.Hashable {
  * The completion of an application, sign-up, or other process. For example, an action occurs if a
  * user clicks an ad for a credit card and completes an application for that card.
  */
-  static final EventsResourceListType ACTION = const EventsResourceListType._internal("action", 0);
+  const EventsResourceListType ACTION = const EventsResourceListType._internal("action", 0);
   /** A charge event is typically a payment between an advertiser, publisher or Google. */
-  static final EventsResourceListType CHARGE = const EventsResourceListType._internal("charge", 1);
+  const EventsResourceListType CHARGE = const EventsResourceListType._internal("charge", 1);
   /**
  * A conversion event, typically an e-commerce transaction. Some advertisers use a transaction to
  * record other types of events, such as magazine subscriptions.
  */
-  static final EventsResourceListType TRANSACTION = const EventsResourceListType._internal("transaction", 2);
+  const EventsResourceListType TRANSACTION = const EventsResourceListType._internal("transaction", 2);
 
   /** All values of this enumeration */
-  static final core.List<EventsResourceListType> values = const <EventsResourceListType>[
+  const core.List<EventsResourceListType> values = const <EventsResourceListType>[
     ACTION,
     CHARGE,
     TRANSACTION,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <EventsResourceListType>{ 
+  const _valuesMap = const <EventsResourceListType>{ 
     "action": ACTION,
     "charge": CHARGE,
     "transaction": TRANSACTION,
@@ -549,20 +549,20 @@ class EventsResourceListChargeType extends core.Object implements core.Hashable 
   /**
  * A credit increases the publisher's payout amount and decreases the advertiser's invoice amount.
  */
-  static final EventsResourceListChargeType CREDIT = const EventsResourceListChargeType._internal("credit", 0);
+  const EventsResourceListChargeType CREDIT = const EventsResourceListChargeType._internal("credit", 0);
   /** A debit reduces the publisher's payout and increases the advertiser's invoice amount. */
-  static final EventsResourceListChargeType DEBIT = const EventsResourceListChargeType._internal("debit", 1);
+  const EventsResourceListChargeType DEBIT = const EventsResourceListChargeType._internal("debit", 1);
   /** A payment made to Google by an advertiser as a minimum monthly network fee. */
-  static final EventsResourceListChargeType MONTHLY_MINIMUM = const EventsResourceListChargeType._internal("monthly_minimum", 2);
+  const EventsResourceListChargeType MONTHLY_MINIMUM = const EventsResourceListChargeType._internal("monthly_minimum", 2);
   /** Catch all. Default if unset */
-  static final EventsResourceListChargeType OTHER = const EventsResourceListChargeType._internal("other", 3);
+  const EventsResourceListChargeType OTHER = const EventsResourceListChargeType._internal("other", 3);
   /** A one time payment made from an advertiser to a publisher. */
-  static final EventsResourceListChargeType SLOTTING_FEE = const EventsResourceListChargeType._internal("slotting_fee", 4);
+  const EventsResourceListChargeType SLOTTING_FEE = const EventsResourceListChargeType._internal("slotting_fee", 4);
   /** A payment from an advertiser to a publisher for the publisher maintaining a high tier level */
-  static final EventsResourceListChargeType TIER_BONUS = const EventsResourceListChargeType._internal("tier_bonus", 5);
+  const EventsResourceListChargeType TIER_BONUS = const EventsResourceListChargeType._internal("tier_bonus", 5);
 
   /** All values of this enumeration */
-  static final core.List<EventsResourceListChargeType> values = const <EventsResourceListChargeType>[
+  const core.List<EventsResourceListChargeType> values = const <EventsResourceListChargeType>[
     CREDIT,
     DEBIT,
     MONTHLY_MINIMUM,
@@ -572,7 +572,7 @@ class EventsResourceListChargeType extends core.Object implements core.Hashable 
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <EventsResourceListChargeType>{ 
+  const _valuesMap = const <EventsResourceListChargeType>{ 
     "credit": CREDIT,
     "debit": DEBIT,
     "monthly_minimum": MONTHLY_MINIMUM,
@@ -596,18 +596,18 @@ class EventsResourceListChargeType extends core.Object implements core.Hashable 
 // Enum EventsResource.List.Status
 class EventsResourceListStatus extends core.Object implements core.Hashable {
   /** Event is currently active. */
-  static final EventsResourceListStatus ACTIVE = const EventsResourceListStatus._internal("active", 0);
+  const EventsResourceListStatus ACTIVE = const EventsResourceListStatus._internal("active", 0);
   /** Event is currently canceled. */
-  static final EventsResourceListStatus CANCELED = const EventsResourceListStatus._internal("canceled", 1);
+  const EventsResourceListStatus CANCELED = const EventsResourceListStatus._internal("canceled", 1);
 
   /** All values of this enumeration */
-  static final core.List<EventsResourceListStatus> values = const <EventsResourceListStatus>[
+  const core.List<EventsResourceListStatus> values = const <EventsResourceListStatus>[
     ACTIVE,
     CANCELED,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <EventsResourceListStatus>{ 
+  const _valuesMap = const <EventsResourceListStatus>{ 
     "active": ACTIVE,
     "canceled": CANCELED,
   };
@@ -656,7 +656,7 @@ class LinksResource extends core.Object {
     final $body = JSON.stringify(Link.serialize(content));
     final $path = "{role}/{roleId}/link";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -674,8 +674,10 @@ class LinksResource extends core.Object {
    *    * [linkType] The type of the link.
    *    * [startDateMin] The beginning of the start date range.
    *    * [assetSize] The size of the given asset.
+   *    * [searchText] Field for full text search across title and merchandising text, supports link id search.
+   *    * [createDateMax] The end of the create date range.
+   *    * [createDateMin] The beginning of the create date range.
    *    * [relationshipStatus] The status of the relationship.
-   *    * [advertiserCategory] The advertiser's primary vertical.
    *    * [maxResults] Max number of items to return in this page. Optional. Defaults to 20.
 
   Minimum: 0.
@@ -686,23 +688,25 @@ class LinksResource extends core.Object {
    *    * [promotionType] The promotion type.
    *    * [authorship] The role of the author of the link.
    */
-  core.Future<Links> list(LinksResourceListRole role, core.String roleId, [LinksResourceListLinkType linkType = UNSPECIFIED, core.String startDateMin = UNSPECIFIED, core.List<core.String> assetSize = UNSPECIFIED, LinksResourceListRelationshipStatus relationshipStatus = UNSPECIFIED, LinksResourceListAdvertiserCategory advertiserCategory = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.List<core.String> advertiserId = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.String startDateMax = UNSPECIFIED, LinksResourceListPromotionType promotionType = UNSPECIFIED, LinksResourceListAuthorship authorship = UNSPECIFIED]) {
+  core.Future<Links> list(LinksResourceListRole role, core.String roleId, {LinksResourceListLinkType linkType, core.String startDateMin, core.List<core.String> assetSize, core.String searchText, core.String createDateMax, core.String createDateMin, LinksResourceListRelationshipStatus relationshipStatus, core.int maxResults, core.List<core.String> advertiserId, core.String pageToken, core.String startDateMax, LinksResourceListPromotionType promotionType, LinksResourceListAuthorship authorship}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["role"] = role;
     $pathParams["roleId"] = roleId;
-    if (UNSPECIFIED != linkType) $queryParams["linkType"] = linkType;
-    if (UNSPECIFIED != startDateMin) $queryParams["startDateMin"] = startDateMin;
-    if (UNSPECIFIED != assetSize) $queryParams["assetSize"] = assetSize;
-    if (UNSPECIFIED != relationshipStatus) $queryParams["relationshipStatus"] = relationshipStatus;
-    if (UNSPECIFIED != advertiserCategory) $queryParams["advertiserCategory"] = advertiserCategory;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
-    if (UNSPECIFIED != advertiserId) $queryParams["advertiserId"] = advertiserId;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != startDateMax) $queryParams["startDateMax"] = startDateMax;
-    if (UNSPECIFIED != promotionType) $queryParams["promotionType"] = promotionType;
-    if (UNSPECIFIED != authorship) $queryParams["authorship"] = authorship;
+    if (?linkType) $queryParams["linkType"] = linkType;
+    if (?startDateMin) $queryParams["startDateMin"] = startDateMin;
+    if (?assetSize) $queryParams["assetSize"] = assetSize;
+    if (?searchText) $queryParams["searchText"] = searchText;
+    if (?createDateMax) $queryParams["createDateMax"] = createDateMax;
+    if (?createDateMin) $queryParams["createDateMin"] = createDateMin;
+    if (?relationshipStatus) $queryParams["relationshipStatus"] = relationshipStatus;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
+    if (?advertiserId) $queryParams["advertiserId"] = advertiserId;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?startDateMax) $queryParams["startDateMax"] = startDateMax;
+    if (?promotionType) $queryParams["promotionType"] = promotionType;
+    if (?authorship) $queryParams["authorship"] = authorship;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -713,7 +717,7 @@ class LinksResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{role}/{roleId}/links";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -749,7 +753,7 @@ class LinksResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{role}/{roleId}/link/{linkId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -762,18 +766,18 @@ class LinksResource extends core.Object {
 // Enum LinksResource.Insert.Role
 class LinksResourceInsertRole extends core.Object implements core.Hashable {
   /** The requester is requesting as an advertiser. */
-  static final LinksResourceInsertRole ADVERTISERS = const LinksResourceInsertRole._internal("advertisers", 0);
+  const LinksResourceInsertRole ADVERTISERS = const LinksResourceInsertRole._internal("advertisers", 0);
   /** The requester is requesting as a publisher. */
-  static final LinksResourceInsertRole PUBLISHERS = const LinksResourceInsertRole._internal("publishers", 1);
+  const LinksResourceInsertRole PUBLISHERS = const LinksResourceInsertRole._internal("publishers", 1);
 
   /** All values of this enumeration */
-  static final core.List<LinksResourceInsertRole> values = const <LinksResourceInsertRole>[
+  const core.List<LinksResourceInsertRole> values = const <LinksResourceInsertRole>[
     ADVERTISERS,
     PUBLISHERS,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <LinksResourceInsertRole>{ 
+  const _valuesMap = const <LinksResourceInsertRole>{ 
     "advertisers": ADVERTISERS,
     "publishers": PUBLISHERS,
   };
@@ -793,18 +797,18 @@ class LinksResourceInsertRole extends core.Object implements core.Hashable {
 // Enum LinksResource.List.Role
 class LinksResourceListRole extends core.Object implements core.Hashable {
   /** The requester is requesting as an advertiser. */
-  static final LinksResourceListRole ADVERTISERS = const LinksResourceListRole._internal("advertisers", 0);
+  const LinksResourceListRole ADVERTISERS = const LinksResourceListRole._internal("advertisers", 0);
   /** The requester is requesting as a publisher. */
-  static final LinksResourceListRole PUBLISHERS = const LinksResourceListRole._internal("publishers", 1);
+  const LinksResourceListRole PUBLISHERS = const LinksResourceListRole._internal("publishers", 1);
 
   /** All values of this enumeration */
-  static final core.List<LinksResourceListRole> values = const <LinksResourceListRole>[
+  const core.List<LinksResourceListRole> values = const <LinksResourceListRole>[
     ADVERTISERS,
     PUBLISHERS,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <LinksResourceListRole>{ 
+  const _valuesMap = const <LinksResourceListRole>{ 
     "advertisers": ADVERTISERS,
     "publishers": PUBLISHERS,
   };
@@ -824,18 +828,18 @@ class LinksResourceListRole extends core.Object implements core.Hashable {
 // Enum LinksResource.List.LinkType
 class LinksResourceListLinkType extends core.Object implements core.Hashable {
   
-  static final LinksResourceListLinkType BANNER = const LinksResourceListLinkType._internal("banner", 0);
+  const LinksResourceListLinkType BANNER = const LinksResourceListLinkType._internal("banner", 0);
   
-  static final LinksResourceListLinkType TEXT = const LinksResourceListLinkType._internal("text", 1);
+  const LinksResourceListLinkType TEXT = const LinksResourceListLinkType._internal("text", 1);
 
   /** All values of this enumeration */
-  static final core.List<LinksResourceListLinkType> values = const <LinksResourceListLinkType>[
+  const core.List<LinksResourceListLinkType> values = const <LinksResourceListLinkType>[
     BANNER,
     TEXT,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <LinksResourceListLinkType>{ 
+  const _valuesMap = const <LinksResourceListLinkType>{ 
     "banner": BANNER,
     "text": TEXT,
   };
@@ -855,18 +859,18 @@ class LinksResourceListLinkType extends core.Object implements core.Hashable {
 // Enum LinksResource.List.RelationshipStatus
 class LinksResourceListRelationshipStatus extends core.Object implements core.Hashable {
   
-  static final LinksResourceListRelationshipStatus APPROVED = const LinksResourceListRelationshipStatus._internal("approved", 0);
+  const LinksResourceListRelationshipStatus APPROVED = const LinksResourceListRelationshipStatus._internal("approved", 0);
   
-  static final LinksResourceListRelationshipStatus AVAILABLE = const LinksResourceListRelationshipStatus._internal("available", 1);
+  const LinksResourceListRelationshipStatus AVAILABLE = const LinksResourceListRelationshipStatus._internal("available", 1);
 
   /** All values of this enumeration */
-  static final core.List<LinksResourceListRelationshipStatus> values = const <LinksResourceListRelationshipStatus>[
+  const core.List<LinksResourceListRelationshipStatus> values = const <LinksResourceListRelationshipStatus>[
     APPROVED,
     AVAILABLE,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <LinksResourceListRelationshipStatus>{ 
+  const _valuesMap = const <LinksResourceListRelationshipStatus>{ 
     "approved": APPROVED,
     "available": AVAILABLE,
   };
@@ -883,246 +887,35 @@ class LinksResourceListRelationshipStatus extends core.Object implements core.Ha
   hashCode() => _ordinal ^ "RelationshipStatus".hashCode();
 }
 
-// Enum LinksResource.List.AdvertiserCategory
-class LinksResourceListAdvertiserCategory extends core.Object implements core.Hashable {
-  
-  static final LinksResourceListAdvertiserCategory APPAREL_ACCESSORIES = const LinksResourceListAdvertiserCategory._internal("apparel_accessories", 0);
-  
-  static final LinksResourceListAdvertiserCategory APPLIANCES_ELECTRONICS = const LinksResourceListAdvertiserCategory._internal("appliances_electronics", 1);
-  
-  static final LinksResourceListAdvertiserCategory AUTO_DEALER = const LinksResourceListAdvertiserCategory._internal("auto_dealer", 2);
-  
-  static final LinksResourceListAdvertiserCategory AUTOMOTIVE = const LinksResourceListAdvertiserCategory._internal("automotive", 3);
-  
-  static final LinksResourceListAdvertiserCategory BABIES_KIDS = const LinksResourceListAdvertiserCategory._internal("babies_kids", 4);
-  
-  static final LinksResourceListAdvertiserCategory BLOGS_PERSONAL_SITES = const LinksResourceListAdvertiserCategory._internal("blogs_personal_sites", 5);
-  
-  static final LinksResourceListAdvertiserCategory BOOKS_MAGAZINES = const LinksResourceListAdvertiserCategory._internal("books_magazines", 6);
-  
-  static final LinksResourceListAdvertiserCategory COMPUTERS = const LinksResourceListAdvertiserCategory._internal("computers", 7);
-  
-  static final LinksResourceListAdvertiserCategory DATING = const LinksResourceListAdvertiserCategory._internal("dating", 8);
-  
-  static final LinksResourceListAdvertiserCategory DEPARTMENT_STORES = const LinksResourceListAdvertiserCategory._internal("department_stores", 9);
-  
-  static final LinksResourceListAdvertiserCategory EDUCATION = const LinksResourceListAdvertiserCategory._internal("education", 10);
-  
-  static final LinksResourceListAdvertiserCategory EMPLOYMENT = const LinksResourceListAdvertiserCategory._internal("employment", 11);
-  
-  static final LinksResourceListAdvertiserCategory FINANCIAL_CREDIT_CARDS = const LinksResourceListAdvertiserCategory._internal("financial_credit_cards", 12);
-  
-  static final LinksResourceListAdvertiserCategory FINANCIAL_OTHER = const LinksResourceListAdvertiserCategory._internal("financial_other", 13);
-  
-  static final LinksResourceListAdvertiserCategory FLOWERS_GIFTS = const LinksResourceListAdvertiserCategory._internal("flowers_gifts", 14);
-  
-  static final LinksResourceListAdvertiserCategory GROCERY = const LinksResourceListAdvertiserCategory._internal("grocery", 15);
-  
-  static final LinksResourceListAdvertiserCategory HEALTH_BEAUTY = const LinksResourceListAdvertiserCategory._internal("health_beauty", 16);
-  
-  static final LinksResourceListAdvertiserCategory HOME_GARDEN = const LinksResourceListAdvertiserCategory._internal("home_garden", 17);
-  
-  static final LinksResourceListAdvertiserCategory HOSTING_DOMAIN = const LinksResourceListAdvertiserCategory._internal("hosting_domain", 18);
-  
-  static final LinksResourceListAdvertiserCategory INTERNET_PROVIDERS = const LinksResourceListAdvertiserCategory._internal("internet_providers", 19);
-  
-  static final LinksResourceListAdvertiserCategory LEGAL = const LinksResourceListAdvertiserCategory._internal("legal", 20);
-  
-  static final LinksResourceListAdvertiserCategory MEDIA_ENTERTAINMENT = const LinksResourceListAdvertiserCategory._internal("media_entertainment", 21);
-  
-  static final LinksResourceListAdvertiserCategory MEDICAL = const LinksResourceListAdvertiserCategory._internal("medical", 22);
-  
-  static final LinksResourceListAdvertiserCategory MOVIES_GAMES = const LinksResourceListAdvertiserCategory._internal("movies_games", 23);
-  
-  static final LinksResourceListAdvertiserCategory MUSIC = const LinksResourceListAdvertiserCategory._internal("music", 24);
-  
-  static final LinksResourceListAdvertiserCategory NONPROFIT = const LinksResourceListAdvertiserCategory._internal("nonprofit", 25);
-  
-  static final LinksResourceListAdvertiserCategory OFFICE_SUPPLIES = const LinksResourceListAdvertiserCategory._internal("office_supplies", 26);
-  
-  static final LinksResourceListAdvertiserCategory ONLINE_GAMES = const LinksResourceListAdvertiserCategory._internal("online_games", 27);
-  
-  static final LinksResourceListAdvertiserCategory OUTDOOR = const LinksResourceListAdvertiserCategory._internal("outdoor", 28);
-  
-  static final LinksResourceListAdvertiserCategory PETS = const LinksResourceListAdvertiserCategory._internal("pets", 29);
-  
-  static final LinksResourceListAdvertiserCategory REAL_ESTATE = const LinksResourceListAdvertiserCategory._internal("real_estate", 30);
-  
-  static final LinksResourceListAdvertiserCategory RESTAURANTS = const LinksResourceListAdvertiserCategory._internal("restaurants", 31);
-  
-  static final LinksResourceListAdvertiserCategory SPORT_FITNESS = const LinksResourceListAdvertiserCategory._internal("sport_fitness", 32);
-  
-  static final LinksResourceListAdvertiserCategory TELECOM = const LinksResourceListAdvertiserCategory._internal("telecom", 33);
-  
-  static final LinksResourceListAdvertiserCategory TICKETING = const LinksResourceListAdvertiserCategory._internal("ticketing", 34);
-  
-  static final LinksResourceListAdvertiserCategory TOYS_HOBBIES = const LinksResourceListAdvertiserCategory._internal("toys_hobbies", 35);
-  
-  static final LinksResourceListAdvertiserCategory TRAVEL = const LinksResourceListAdvertiserCategory._internal("travel", 36);
-  
-  static final LinksResourceListAdvertiserCategory UTILITIES = const LinksResourceListAdvertiserCategory._internal("utilities", 37);
-  
-  static final LinksResourceListAdvertiserCategory WHOLESALE_RELATIONSHIP = const LinksResourceListAdvertiserCategory._internal("wholesale_relationship", 38);
-  
-  static final LinksResourceListAdvertiserCategory WINE_SPIRITS = const LinksResourceListAdvertiserCategory._internal("wine_spirits", 39);
-
-  /** All values of this enumeration */
-  static final core.List<LinksResourceListAdvertiserCategory> values = const <LinksResourceListAdvertiserCategory>[
-    APPAREL_ACCESSORIES,
-    APPLIANCES_ELECTRONICS,
-    AUTO_DEALER,
-    AUTOMOTIVE,
-    BABIES_KIDS,
-    BLOGS_PERSONAL_SITES,
-    BOOKS_MAGAZINES,
-    COMPUTERS,
-    DATING,
-    DEPARTMENT_STORES,
-    EDUCATION,
-    EMPLOYMENT,
-    FINANCIAL_CREDIT_CARDS,
-    FINANCIAL_OTHER,
-    FLOWERS_GIFTS,
-    GROCERY,
-    HEALTH_BEAUTY,
-    HOME_GARDEN,
-    HOSTING_DOMAIN,
-    INTERNET_PROVIDERS,
-    LEGAL,
-    MEDIA_ENTERTAINMENT,
-    MEDICAL,
-    MOVIES_GAMES,
-    MUSIC,
-    NONPROFIT,
-    OFFICE_SUPPLIES,
-    ONLINE_GAMES,
-    OUTDOOR,
-    PETS,
-    REAL_ESTATE,
-    RESTAURANTS,
-    SPORT_FITNESS,
-    TELECOM,
-    TICKETING,
-    TOYS_HOBBIES,
-    TRAVEL,
-    UTILITIES,
-    WHOLESALE_RELATIONSHIP,
-    WINE_SPIRITS,
-  ];
-
-  /** Map from string representation to enumeration value */
-  static final _valuesMap = const <LinksResourceListAdvertiserCategory>{ 
-    "apparel_accessories": APPAREL_ACCESSORIES,
-    "appliances_electronics": APPLIANCES_ELECTRONICS,
-    "auto_dealer": AUTO_DEALER,
-    "automotive": AUTOMOTIVE,
-    "babies_kids": BABIES_KIDS,
-    "blogs_personal_sites": BLOGS_PERSONAL_SITES,
-    "books_magazines": BOOKS_MAGAZINES,
-    "computers": COMPUTERS,
-    "dating": DATING,
-    "department_stores": DEPARTMENT_STORES,
-    "education": EDUCATION,
-    "employment": EMPLOYMENT,
-    "financial_credit_cards": FINANCIAL_CREDIT_CARDS,
-    "financial_other": FINANCIAL_OTHER,
-    "flowers_gifts": FLOWERS_GIFTS,
-    "grocery": GROCERY,
-    "health_beauty": HEALTH_BEAUTY,
-    "home_garden": HOME_GARDEN,
-    "hosting_domain": HOSTING_DOMAIN,
-    "internet_providers": INTERNET_PROVIDERS,
-    "legal": LEGAL,
-    "media_entertainment": MEDIA_ENTERTAINMENT,
-    "medical": MEDICAL,
-    "movies_games": MOVIES_GAMES,
-    "music": MUSIC,
-    "nonprofit": NONPROFIT,
-    "office_supplies": OFFICE_SUPPLIES,
-    "online_games": ONLINE_GAMES,
-    "outdoor": OUTDOOR,
-    "pets": PETS,
-    "real_estate": REAL_ESTATE,
-    "restaurants": RESTAURANTS,
-    "sport_fitness": SPORT_FITNESS,
-    "telecom": TELECOM,
-    "ticketing": TICKETING,
-    "toys_hobbies": TOYS_HOBBIES,
-    "travel": TRAVEL,
-    "utilities": UTILITIES,
-    "wholesale_relationship": WHOLESALE_RELATIONSHIP,
-    "wine_spirits": WINE_SPIRITS,
-  };
-
-  /** Get the enumeration value with a specified string representation, or null if none matches. */
-  static LinksResourceListAdvertiserCategory valueOf(core.String item) => _valuesMap[item];
-
-  final core.int _ordinal;
-  final core.String _value;
-  const LinksResourceListAdvertiserCategory._internal(core.String this._value, core.int this._ordinal);
-
-  /** Get the string representation of an enumeration value */
-  toString() => _value;
-  hashCode() => _ordinal ^ "AdvertiserCategory".hashCode();
-}
-
 // Enum LinksResource.List.PromotionType
 class LinksResourceListPromotionType extends core.Object implements core.Hashable {
   
-  static final LinksResourceListPromotionType BUY_GET = const LinksResourceListPromotionType._internal("buy_get", 0);
+  const LinksResourceListPromotionType COUPON = const LinksResourceListPromotionType._internal("coupon", 0);
   
-  static final LinksResourceListPromotionType COUPON = const LinksResourceListPromotionType._internal("coupon", 1);
+  const LinksResourceListPromotionType FREE_GIFT = const LinksResourceListPromotionType._internal("free_gift", 1);
   
-  static final LinksResourceListPromotionType FREE_GIFT = const LinksResourceListPromotionType._internal("free_gift", 2);
+  const LinksResourceListPromotionType FREE_SHIPPING = const LinksResourceListPromotionType._internal("free_shipping", 2);
   
-  static final LinksResourceListPromotionType FREE_GIFT_WRAP = const LinksResourceListPromotionType._internal("free_gift_wrap", 3);
+  const LinksResourceListPromotionType PERCENT_OFF = const LinksResourceListPromotionType._internal("percent_off", 3);
   
-  static final LinksResourceListPromotionType FREE_SHIPPING = const LinksResourceListPromotionType._internal("free_shipping", 4);
-  
-  static final LinksResourceListPromotionType NONE = const LinksResourceListPromotionType._internal("none", 5);
-  
-  static final LinksResourceListPromotionType ONGOING = const LinksResourceListPromotionType._internal("ongoing", 6);
-  
-  static final LinksResourceListPromotionType PERCENT_OFF = const LinksResourceListPromotionType._internal("percent_off", 7);
-  
-  static final LinksResourceListPromotionType PRICE_CUT = const LinksResourceListPromotionType._internal("price_cut", 8);
-  
-  static final LinksResourceListPromotionType PRODUCT_PROMOTION = const LinksResourceListPromotionType._internal("product_promotion", 9);
-  
-  static final LinksResourceListPromotionType SALE = const LinksResourceListPromotionType._internal("sale", 10);
-  
-  static final LinksResourceListPromotionType SWEEPSTAKES = const LinksResourceListPromotionType._internal("sweepstakes", 11);
+  const LinksResourceListPromotionType PRICE_CUT = const LinksResourceListPromotionType._internal("price_cut", 4);
 
   /** All values of this enumeration */
-  static final core.List<LinksResourceListPromotionType> values = const <LinksResourceListPromotionType>[
-    BUY_GET,
+  const core.List<LinksResourceListPromotionType> values = const <LinksResourceListPromotionType>[
     COUPON,
     FREE_GIFT,
-    FREE_GIFT_WRAP,
     FREE_SHIPPING,
-    NONE,
-    ONGOING,
     PERCENT_OFF,
     PRICE_CUT,
-    PRODUCT_PROMOTION,
-    SALE,
-    SWEEPSTAKES,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <LinksResourceListPromotionType>{ 
-    "buy_get": BUY_GET,
+  const _valuesMap = const <LinksResourceListPromotionType>{ 
     "coupon": COUPON,
     "free_gift": FREE_GIFT,
-    "free_gift_wrap": FREE_GIFT_WRAP,
     "free_shipping": FREE_SHIPPING,
-    "none": NONE,
-    "ongoing": ONGOING,
     "percent_off": PERCENT_OFF,
     "price_cut": PRICE_CUT,
-    "product_promotion": PRODUCT_PROMOTION,
-    "sale": SALE,
-    "sweepstakes": SWEEPSTAKES,
   };
 
   /** Get the enumeration value with a specified string representation, or null if none matches. */
@@ -1140,18 +933,18 @@ class LinksResourceListPromotionType extends core.Object implements core.Hashabl
 // Enum LinksResource.List.Authorship
 class LinksResourceListAuthorship extends core.Object implements core.Hashable {
   
-  static final LinksResourceListAuthorship ADVERTISER = const LinksResourceListAuthorship._internal("advertiser", 0);
+  const LinksResourceListAuthorship ADVERTISER = const LinksResourceListAuthorship._internal("advertiser", 0);
   
-  static final LinksResourceListAuthorship PUBLISHER = const LinksResourceListAuthorship._internal("publisher", 1);
+  const LinksResourceListAuthorship PUBLISHER = const LinksResourceListAuthorship._internal("publisher", 1);
 
   /** All values of this enumeration */
-  static final core.List<LinksResourceListAuthorship> values = const <LinksResourceListAuthorship>[
+  const core.List<LinksResourceListAuthorship> values = const <LinksResourceListAuthorship>[
     ADVERTISER,
     PUBLISHER,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <LinksResourceListAuthorship>{ 
+  const _valuesMap = const <LinksResourceListAuthorship>{ 
     "advertiser": ADVERTISER,
     "publisher": PUBLISHER,
   };
@@ -1171,18 +964,18 @@ class LinksResourceListAuthorship extends core.Object implements core.Hashable {
 // Enum LinksResource.Get.Role
 class LinksResourceGetRole extends core.Object implements core.Hashable {
   /** The requester is requesting as an advertiser. */
-  static final LinksResourceGetRole ADVERTISERS = const LinksResourceGetRole._internal("advertisers", 0);
+  const LinksResourceGetRole ADVERTISERS = const LinksResourceGetRole._internal("advertisers", 0);
   /** The requester is requesting as a publisher. */
-  static final LinksResourceGetRole PUBLISHERS = const LinksResourceGetRole._internal("publishers", 1);
+  const LinksResourceGetRole PUBLISHERS = const LinksResourceGetRole._internal("publishers", 1);
 
   /** All values of this enumeration */
-  static final core.List<LinksResourceGetRole> values = const <LinksResourceGetRole>[
+  const core.List<LinksResourceGetRole> values = const <LinksResourceGetRole>[
     ADVERTISERS,
     PUBLISHERS,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <LinksResourceGetRole>{ 
+  const _valuesMap = const <LinksResourceGetRole>{ 
     "advertisers": ADVERTISERS,
     "publishers": PUBLISHERS,
   };
@@ -1234,19 +1027,19 @@ class PublishersResource extends core.Object {
   Minimum: 1.
   Maximum: 4.
    */
-  core.Future<Publishers> list(PublishersResourceListRole role, core.String roleId, [core.String publisherCategory = UNSPECIFIED, PublishersResourceListRelationshipStatus relationshipStatus = UNSPECIFIED, core.double minSevenDayEpc = UNSPECIFIED, core.double minNinetyDayEpc = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.int minPayoutRank = UNSPECIFIED]) {
+  core.Future<Publishers> list(PublishersResourceListRole role, core.String roleId, {core.String publisherCategory, PublishersResourceListRelationshipStatus relationshipStatus, core.double minSevenDayEpc, core.double minNinetyDayEpc, core.String pageToken, core.int maxResults, core.int minPayoutRank}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["role"] = role;
     $pathParams["roleId"] = roleId;
-    if (UNSPECIFIED != publisherCategory) $queryParams["publisherCategory"] = publisherCategory;
-    if (UNSPECIFIED != relationshipStatus) $queryParams["relationshipStatus"] = relationshipStatus;
-    if (UNSPECIFIED != minSevenDayEpc) $queryParams["minSevenDayEpc"] = minSevenDayEpc;
-    if (UNSPECIFIED != minNinetyDayEpc) $queryParams["minNinetyDayEpc"] = minNinetyDayEpc;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
-    if (UNSPECIFIED != minPayoutRank) $queryParams["minPayoutRank"] = minPayoutRank;
+    if (?publisherCategory) $queryParams["publisherCategory"] = publisherCategory;
+    if (?relationshipStatus) $queryParams["relationshipStatus"] = relationshipStatus;
+    if (?minSevenDayEpc) $queryParams["minSevenDayEpc"] = minSevenDayEpc;
+    if (?minNinetyDayEpc) $queryParams["minNinetyDayEpc"] = minNinetyDayEpc;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
+    if (?minPayoutRank) $queryParams["minPayoutRank"] = minPayoutRank;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -1257,7 +1050,7 @@ class PublishersResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{role}/{roleId}/publishers";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1276,13 +1069,13 @@ class PublishersResource extends core.Object {
    *    * [roleId] The ID of the requesting advertiser or publisher.
    *    * [publisherId] The ID of the publisher to look up. Optional.
    */
-  core.Future<Publisher> get(PublishersResourceGetRole role, core.String roleId, [core.String publisherId = UNSPECIFIED]) {
+  core.Future<Publisher> get(PublishersResourceGetRole role, core.String roleId, {core.String publisherId}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["role"] = role;
     $pathParams["roleId"] = roleId;
-    if (UNSPECIFIED != publisherId) $queryParams["publisherId"] = publisherId;
+    if (?publisherId) $queryParams["publisherId"] = publisherId;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -1293,7 +1086,7 @@ class PublishersResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{role}/{roleId}/publisher";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1306,18 +1099,18 @@ class PublishersResource extends core.Object {
 // Enum PublishersResource.List.Role
 class PublishersResourceListRole extends core.Object implements core.Hashable {
   /** The requester is requesting as an advertiser. */
-  static final PublishersResourceListRole ADVERTISERS = const PublishersResourceListRole._internal("advertisers", 0);
+  const PublishersResourceListRole ADVERTISERS = const PublishersResourceListRole._internal("advertisers", 0);
   /** The requester is requesting as a publisher. */
-  static final PublishersResourceListRole PUBLISHERS = const PublishersResourceListRole._internal("publishers", 1);
+  const PublishersResourceListRole PUBLISHERS = const PublishersResourceListRole._internal("publishers", 1);
 
   /** All values of this enumeration */
-  static final core.List<PublishersResourceListRole> values = const <PublishersResourceListRole>[
+  const core.List<PublishersResourceListRole> values = const <PublishersResourceListRole>[
     ADVERTISERS,
     PUBLISHERS,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <PublishersResourceListRole>{ 
+  const _valuesMap = const <PublishersResourceListRole>{ 
     "advertisers": ADVERTISERS,
     "publishers": PUBLISHERS,
   };
@@ -1337,24 +1130,24 @@ class PublishersResourceListRole extends core.Object implements core.Hashable {
 // Enum PublishersResource.List.RelationshipStatus
 class PublishersResourceListRelationshipStatus extends core.Object implements core.Hashable {
   /** Publishers you've approved to your program. */
-  static final PublishersResourceListRelationshipStatus APPROVED = const PublishersResourceListRelationshipStatus._internal("approved", 0);
+  const PublishersResourceListRelationshipStatus APPROVED = const PublishersResourceListRelationshipStatus._internal("approved", 0);
   /** Publishers available for you to recruit. */
-  static final PublishersResourceListRelationshipStatus AVAILABLE = const PublishersResourceListRelationshipStatus._internal("available", 1);
+  const PublishersResourceListRelationshipStatus AVAILABLE = const PublishersResourceListRelationshipStatus._internal("available", 1);
   /**
  * A publisher that you terminated from your program. Publishers also have the ability to remove
  * themselves from your program.
  */
-  static final PublishersResourceListRelationshipStatus DEACTIVATED = const PublishersResourceListRelationshipStatus._internal("deactivated", 2);
+  const PublishersResourceListRelationshipStatus DEACTIVATED = const PublishersResourceListRelationshipStatus._internal("deactivated", 2);
   /** A publisher that you did not approve to your program. */
-  static final PublishersResourceListRelationshipStatus DECLINED = const PublishersResourceListRelationshipStatus._internal("declined", 3);
+  const PublishersResourceListRelationshipStatus DECLINED = const PublishersResourceListRelationshipStatus._internal("declined", 3);
   /**
  * Publishers that have applied to your program. We recommend reviewing and deciding on pending
  * publishers on a weekly basis.
  */
-  static final PublishersResourceListRelationshipStatus PENDING = const PublishersResourceListRelationshipStatus._internal("pending", 4);
+  const PublishersResourceListRelationshipStatus PENDING = const PublishersResourceListRelationshipStatus._internal("pending", 4);
 
   /** All values of this enumeration */
-  static final core.List<PublishersResourceListRelationshipStatus> values = const <PublishersResourceListRelationshipStatus>[
+  const core.List<PublishersResourceListRelationshipStatus> values = const <PublishersResourceListRelationshipStatus>[
     APPROVED,
     AVAILABLE,
     DEACTIVATED,
@@ -1363,7 +1156,7 @@ class PublishersResourceListRelationshipStatus extends core.Object implements co
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <PublishersResourceListRelationshipStatus>{ 
+  const _valuesMap = const <PublishersResourceListRelationshipStatus>{ 
     "approved": APPROVED,
     "available": AVAILABLE,
     "deactivated": DEACTIVATED,
@@ -1386,18 +1179,18 @@ class PublishersResourceListRelationshipStatus extends core.Object implements co
 // Enum PublishersResource.Get.Role
 class PublishersResourceGetRole extends core.Object implements core.Hashable {
   /** The requester is requesting as an advertiser. */
-  static final PublishersResourceGetRole ADVERTISERS = const PublishersResourceGetRole._internal("advertisers", 0);
+  const PublishersResourceGetRole ADVERTISERS = const PublishersResourceGetRole._internal("advertisers", 0);
   /** The requester is requesting as a publisher. */
-  static final PublishersResourceGetRole PUBLISHERS = const PublishersResourceGetRole._internal("publishers", 1);
+  const PublishersResourceGetRole PUBLISHERS = const PublishersResourceGetRole._internal("publishers", 1);
 
   /** All values of this enumeration */
-  static final core.List<PublishersResourceGetRole> values = const <PublishersResourceGetRole>[
+  const core.List<PublishersResourceGetRole> values = const <PublishersResourceGetRole>[
     ADVERTISERS,
     PUBLISHERS,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <PublishersResourceGetRole>{ 
+  const _valuesMap = const <PublishersResourceGetRole>{ 
     "advertisers": ADVERTISERS,
     "publishers": PUBLISHERS,
   };
@@ -1437,19 +1230,15 @@ class Advertiser extends IdentityHash {
   /** Description of the website the advertiser advertises from. */
   core.String description;
 
-  /**
- * A rank based on commissions paid to publishers over the past 90 days. A number between 1 and 4
- * where 4 means the top quartile (most money paid) and 1 means the bottom quartile (least money
- * paid).
- */
-  core.String payoutRank;
+  /** List of merchant center ids for this advertiser */
+  core.List<core.String> merchantCenterIds;
 
   /** The default link id for this advertiser. */
   core.String defaultLinkId;
 
   /**
  * The sum of fees paid to publishers divided by the total number of clicks over the past seven
- * days. Values are multiplied by 100 for display purposes.
+ * days. This value should be multiplied by 100 at the time of display.
  */
   Money epcSevenDayAverage;
 
@@ -1463,8 +1252,15 @@ class Advertiser extends IdentityHash {
   core.String status;
 
   /**
+ * A rank based on commissions paid to publishers over the past 90 days. A number between 1 and 4
+ * where 4 means the top quartile (most money paid) and 1 means the bottom quartile (least money
+ * paid).
+ */
+  core.String payoutRank;
+
+  /**
  * The sum of fees paid to publishers divided by the total number of clicks over the past three
- * months. Values are multiplied by 100 for display purposes.
+ * months. This value should be multiplied by 100 at the time of display.
  */
   Money epcNinetyDayAverage;
 
@@ -1479,6 +1275,9 @@ class Advertiser extends IdentityHash {
 
   /** URL to the logo this advertiser uses on the Google Affiliate Network. */
   core.String logoUrl;
+
+  /** List of redirect URLs for this advertiser */
+  core.List<core.String> redirectDomains;
 
   /** The ID of this advertiser. */
   core.String id;
@@ -1499,16 +1298,18 @@ class Advertiser extends IdentityHash {
     result.siteUrl = identity(json["siteUrl"]);
     result.contactPhone = identity(json["contactPhone"]);
     result.description = identity(json["description"]);
-    result.payoutRank = identity(json["payoutRank"]);
+    result.merchantCenterIds = map(identity)(json["merchantCenterIds"]);
     result.defaultLinkId = identity(json["defaultLinkId"]);
     result.epcSevenDayAverage = Money.parse(json["epcSevenDayAverage"]);
     result.commissionDuration = identity(json["commissionDuration"]);
     result.status = identity(json["status"]);
+    result.payoutRank = identity(json["payoutRank"]);
     result.epcNinetyDayAverage = Money.parse(json["epcNinetyDayAverage"]);
     result.allowPublisherCreatedLinks = identity(json["allowPublisherCreatedLinks"]);
     result.item = Advertiser.parse(json["item"]);
     result.joinDate = identity(json["joinDate"]);
     result.logoUrl = identity(json["logoUrl"]);
+    result.redirectDomains = map(identity)(json["redirectDomains"]);
     result.id = identity(json["id"]);
     result.productFeedsEnabled = identity(json["productFeedsEnabled"]);
     result.name = identity(json["name"]);
@@ -1524,16 +1325,18 @@ class Advertiser extends IdentityHash {
     result["siteUrl"] = identity(value.siteUrl);
     result["contactPhone"] = identity(value.contactPhone);
     result["description"] = identity(value.description);
-    result["payoutRank"] = identity(value.payoutRank);
+    result["merchantCenterIds"] = map(identity)(value.merchantCenterIds);
     result["defaultLinkId"] = identity(value.defaultLinkId);
     result["epcSevenDayAverage"] = Money.serialize(value.epcSevenDayAverage);
     result["commissionDuration"] = identity(value.commissionDuration);
     result["status"] = identity(value.status);
+    result["payoutRank"] = identity(value.payoutRank);
     result["epcNinetyDayAverage"] = Money.serialize(value.epcNinetyDayAverage);
     result["allowPublisherCreatedLinks"] = identity(value.allowPublisherCreatedLinks);
     result["item"] = Advertiser.serialize(value.item);
     result["joinDate"] = identity(value.joinDate);
     result["logoUrl"] = identity(value.logoUrl);
+    result["redirectDomains"] = map(identity)(value.redirectDomains);
     result["id"] = identity(value.id);
     result["productFeedsEnabled"] = identity(value.productFeedsEnabled);
     result["name"] = identity(value.name);
@@ -2306,8 +2109,14 @@ class Link extends IdentityHash {
   /** The logical name for this link. */
   core.String name;
 
-  /** Date that this link becomes active. */
-  core.String startDate;
+  /** Special offers on the link. */
+  LinkSpecialOffers specialOffers;
+
+  /**
+ * The sum of fees paid to publishers divided by the total number of clicks over the past seven days
+ * on this link. This value should be multiplied by 100 at the time of display.
+ */
+  Money epcSevenDayAverage;
 
   /** Date that this link was created. */
   core.String createDate;
@@ -2315,11 +2124,17 @@ class Link extends IdentityHash {
   /** image alt text. */
   core.String imageAltText;
 
-  /** The ID of this link. */
-  core.String id;
+  /**
+ * The sum of fees paid to publishers divided by the total number of clicks over the past three
+ * months on this link. This value should be multiplied by 100 at the time of display.
+ */
+  Money epcNinetyDayAverage;
 
   /** The advertiser id for the advertiser who owns this link. */
   core.String advertiserId;
+
+  /** The ID of this link. */
+  core.String id;
 
   /** Tracking url for impressions. */
   core.String impressionTrackingUrl;
@@ -2332,6 +2147,9 @@ class Link extends IdentityHash {
 
   /** Authorship */
   core.String authorship;
+
+  /** Date that this link becomes active. */
+  core.String startDate;
 
   /** Availability. */
   core.String availability;
@@ -2352,15 +2170,18 @@ class Link extends IdentityHash {
     result.endDate = identity(json["endDate"]);
     result.description = identity(json["description"]);
     result.name = identity(json["name"]);
-    result.startDate = identity(json["startDate"]);
+    result.specialOffers = LinkSpecialOffers.parse(json["specialOffers"]);
+    result.epcSevenDayAverage = Money.parse(json["epcSevenDayAverage"]);
     result.createDate = identity(json["createDate"]);
     result.imageAltText = identity(json["imageAltText"]);
-    result.id = identity(json["id"]);
+    result.epcNinetyDayAverage = Money.parse(json["epcNinetyDayAverage"]);
     result.advertiserId = identity(json["advertiserId"]);
+    result.id = identity(json["id"]);
     result.impressionTrackingUrl = identity(json["impressionTrackingUrl"]);
     result.promotionType = identity(json["promotionType"]);
     result.duration = identity(json["duration"]);
     result.authorship = identity(json["authorship"]);
+    result.startDate = identity(json["startDate"]);
     result.availability = identity(json["availability"]);
     result.clickTrackingUrl = identity(json["clickTrackingUrl"]);
     result.destinationUrl = identity(json["destinationUrl"]);
@@ -2376,18 +2197,78 @@ class Link extends IdentityHash {
     result["endDate"] = identity(value.endDate);
     result["description"] = identity(value.description);
     result["name"] = identity(value.name);
-    result["startDate"] = identity(value.startDate);
+    result["specialOffers"] = LinkSpecialOffers.serialize(value.specialOffers);
+    result["epcSevenDayAverage"] = Money.serialize(value.epcSevenDayAverage);
     result["createDate"] = identity(value.createDate);
     result["imageAltText"] = identity(value.imageAltText);
-    result["id"] = identity(value.id);
+    result["epcNinetyDayAverage"] = Money.serialize(value.epcNinetyDayAverage);
     result["advertiserId"] = identity(value.advertiserId);
+    result["id"] = identity(value.id);
     result["impressionTrackingUrl"] = identity(value.impressionTrackingUrl);
     result["promotionType"] = identity(value.promotionType);
     result["duration"] = identity(value.duration);
     result["authorship"] = identity(value.authorship);
+    result["startDate"] = identity(value.startDate);
     result["availability"] = identity(value.availability);
     result["clickTrackingUrl"] = identity(value.clickTrackingUrl);
     result["destinationUrl"] = identity(value.destinationUrl);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema Link.LinkSpecialOffers
+class LinkSpecialOffers extends IdentityHash {
+  /** Price cut on the purchase */
+  Money priceCut;
+
+  /** Minimum purchase amount for price cut promotion */
+  Money priceCutMin;
+
+  /** Whether there is free shipping */
+  core.bool freeShipping;
+
+  /** List of promotion code associated with the link */
+  core.List<core.String> promotionCodes;
+
+  /** Percent off on the purchase */
+  core.double percentOff;
+
+  /** Minimum purchase amount for percent off promotion */
+  Money percentOffMin;
+
+  /** Whether there is a free gift */
+  core.bool freeGift;
+
+  /** Minimum purchase amount for free shipping promotion */
+  Money freeShippingMin;
+
+  /** Parses an instance from its JSON representation. */
+  static LinkSpecialOffers parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new LinkSpecialOffers();
+    result.priceCut = Money.parse(json["priceCut"]);
+    result.priceCutMin = Money.parse(json["priceCutMin"]);
+    result.freeShipping = identity(json["freeShipping"]);
+    result.promotionCodes = map(identity)(json["promotionCodes"]);
+    result.percentOff = identity(json["percentOff"]);
+    result.percentOffMin = Money.parse(json["percentOffMin"]);
+    result.freeGift = identity(json["freeGift"]);
+    result.freeShippingMin = Money.parse(json["freeShippingMin"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(LinkSpecialOffers value) {
+    if (value == null) return null;
+    final result = {};
+    result["priceCut"] = Money.serialize(value.priceCut);
+    result["priceCutMin"] = Money.serialize(value.priceCutMin);
+    result["freeShipping"] = identity(value.freeShipping);
+    result["promotionCodes"] = map(identity)(value.promotionCodes);
+    result["percentOff"] = identity(value.percentOff);
+    result["percentOffMin"] = Money.serialize(value.percentOffMin);
+    result["freeGift"] = identity(value.freeGift);
+    result["freeShippingMin"] = Money.serialize(value.freeShippingMin);
     return result;
   }
   toString() => serialize(this).toString();
@@ -2575,15 +2456,15 @@ class Publishers extends IdentityHash {
 // Enum GanApi.Alt
 class GanApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/json */
-  static final GanApiAlt JSON = const GanApiAlt._internal("json", 0);
+  const GanApiAlt JSON = const GanApiAlt._internal("json", 0);
 
   /** All values of this enumeration */
-  static final core.List<GanApiAlt> values = const <GanApiAlt>[
+  const core.List<GanApiAlt> values = const <GanApiAlt>[
     JSON,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <GanApiAlt>{ 
+  const _valuesMap = const <GanApiAlt>{ 
     "json": JSON,
   };
 

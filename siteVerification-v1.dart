@@ -17,7 +17,7 @@
 #import('dart:json');
 
 #import('utils.dart');
-#import('http.dart');
+#import('http.dart', prefix:'http');
 
 // API SiteVerificationApi
 /**
@@ -27,14 +27,14 @@ class SiteVerificationApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
   final core.String baseUrl;
   /** How we should identify ourselves to the service. */
-  Authenticator authenticator;
+  http.Authenticator authenticator;
   /** The client library version */
   final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
   final core.String applicationName;
-  SiteVerificationApi get _$service() => this;
+  SiteVerificationApi get _$service => this;
   WebResourceResource _webResource;
-  WebResourceResource get webResource() => _webResource;
+  WebResourceResource get webResource => _webResource;
   
   /** Returns response with indentations and line breaks. */
   core.bool prettyPrint;
@@ -67,14 +67,14 @@ class SiteVerificationApi extends core.Object {
   SiteVerificationApiAlt alt;
 
 
-  SiteVerificationApi([this.baseUrl = "https://www.googleapis.com/siteVerification/v1/", applicationName, this.authenticator]) :
+  SiteVerificationApi({this.baseUrl:"https://www.googleapis.com/siteVerification/v1/", applicationName, this.authenticator}) :
       this.applicationName = (applicationName == null) ? null : applicationName
-          .replaceAll(const core.RegExp(@'\s+'), '_')
-          .replaceAll(const core.RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+          .replaceAll(const core.RegExp(r'\s+'), '_')
+          .replaceAll(const core.RegExp(r'[^-_.,0-9a-zA-Z]'), '')
   { 
     _webResource = new WebResourceResource._internal(this);
   }
-  core.String get userAgent() {
+  core.String get userAgent {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}siteVerification/v1/20120806 google-api-dart-client/${clientVersion}";
   }
@@ -104,7 +104,7 @@ class WebResourceResource extends core.Object {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    if (UNSPECIFIED != verificationMethod) $queryParams["verificationMethod"] = verificationMethod;
+    if (?verificationMethod) $queryParams["verificationMethod"] = verificationMethod;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -117,7 +117,7 @@ class WebResourceResource extends core.Object {
     final $body = JSON.stringify(SiteVerificationWebResourceResource.serialize(content));
     final $path = "webResource";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -147,7 +147,7 @@ class WebResourceResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "webResource/{id}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -175,7 +175,7 @@ class WebResourceResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "webResource";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -208,7 +208,7 @@ class WebResourceResource extends core.Object {
     final $body = JSON.stringify(SiteVerificationWebResourceResource.serialize(content));
     final $path = "webResource/{id}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PUT", $headers);
+    final $http = new http.Request($url, "PUT", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -241,7 +241,7 @@ class WebResourceResource extends core.Object {
     final $body = JSON.stringify(SiteVerificationWebResourceResource.serialize(content));
     final $path = "webResource/{id}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PATCH", $headers);
+    final $http = new http.Request($url, "PATCH", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -272,7 +272,7 @@ class WebResourceResource extends core.Object {
     final $body = JSON.stringify(SiteVerificationWebResourceGettokenRequest.serialize(content));
     final $path = "token";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -302,7 +302,7 @@ class WebResourceResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "webResource/{id}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "DELETE", $headers);
+    final $http = new http.Request($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -497,15 +497,15 @@ class SiteVerificationWebResourceResourceSite extends IdentityHash {
 // Enum SiteVerificationApi.Alt
 class SiteVerificationApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/json */
-  static final SiteVerificationApiAlt JSON = const SiteVerificationApiAlt._internal("json", 0);
+  const SiteVerificationApiAlt JSON = const SiteVerificationApiAlt._internal("json", 0);
 
   /** All values of this enumeration */
-  static final core.List<SiteVerificationApiAlt> values = const <SiteVerificationApiAlt>[
+  const core.List<SiteVerificationApiAlt> values = const <SiteVerificationApiAlt>[
     JSON,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <SiteVerificationApiAlt>{ 
+  const _valuesMap = const <SiteVerificationApiAlt>{ 
     "json": JSON,
   };
 

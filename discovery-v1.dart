@@ -17,7 +17,7 @@
 #import('dart:json');
 
 #import('utils.dart');
-#import('http.dart');
+#import('http.dart', prefix:'http');
 
 // API DiscoveryApi
 /**
@@ -28,14 +28,14 @@ class DiscoveryApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
   final core.String baseUrl;
   /** How we should identify ourselves to the service. */
-  Authenticator authenticator;
+  http.Authenticator authenticator;
   /** The client library version */
   final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
   final core.String applicationName;
-  DiscoveryApi get _$service() => this;
+  DiscoveryApi get _$service => this;
   ApisResource _apis;
-  ApisResource get apis() => _apis;
+  ApisResource get apis => _apis;
   
   /** Returns response with indentations and line breaks. */
   core.bool prettyPrint;
@@ -68,14 +68,14 @@ class DiscoveryApi extends core.Object {
   DiscoveryApiAlt alt;
 
 
-  DiscoveryApi([this.baseUrl = "https://www.googleapis.com/discovery/v1/", applicationName, this.authenticator]) :
+  DiscoveryApi({this.baseUrl:"https://www.googleapis.com/discovery/v1/", applicationName, this.authenticator}) :
       this.applicationName = (applicationName == null) ? null : applicationName
-          .replaceAll(const core.RegExp(@'\s+'), '_')
-          .replaceAll(const core.RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+          .replaceAll(const core.RegExp(r'\s+'), '_')
+          .replaceAll(const core.RegExp(r'[^-_.,0-9a-zA-Z]'), '')
   { 
     _apis = new ApisResource._internal(this);
   }
-  core.String get userAgent() {
+  core.String get userAgent {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}discovery/v1/snapshot google-api-dart-client/${clientVersion}";
   }
@@ -111,7 +111,7 @@ class ApisResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "apis/{api}/{version}/rest";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -129,13 +129,13 @@ class ApisResource extends core.Object {
   Default: false.
    *    * [label] Only include APIs with a matching label, such as 'graduated' or 'labs'.
    */
-  core.Future<DirectoryList> list([core.String name = UNSPECIFIED, core.bool preferred = UNSPECIFIED, ApisResourceListLabel label = UNSPECIFIED]) {
+  core.Future<DirectoryList> list({core.String name, core.bool preferred, ApisResourceListLabel label}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    if (UNSPECIFIED != name) $queryParams["name"] = name;
-    if (UNSPECIFIED != preferred) $queryParams["preferred"] = preferred;
-    if (UNSPECIFIED != label) $queryParams["label"] = label;
+    if (?name) $queryParams["name"] = name;
+    if (?preferred) $queryParams["preferred"] = preferred;
+    if (?label) $queryParams["label"] = label;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -146,7 +146,7 @@ class ApisResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "apis";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -159,21 +159,21 @@ class ApisResource extends core.Object {
 // Enum ApisResource.List.Label
 class ApisResourceListLabel extends core.Object implements core.Hashable {
   /** APIs that have been deprecated. */
-  static final ApisResourceListLabel DEPRECATED = const ApisResourceListLabel._internal("deprecated", 0);
+  const ApisResourceListLabel DEPRECATED = const ApisResourceListLabel._internal("deprecated", 0);
   /** Supported APIs that have graduated from labs. */
-  static final ApisResourceListLabel GRADUATED = const ApisResourceListLabel._internal("graduated", 1);
+  const ApisResourceListLabel GRADUATED = const ApisResourceListLabel._internal("graduated", 1);
   /** APIs that are experimental */
-  static final ApisResourceListLabel LABS = const ApisResourceListLabel._internal("labs", 2);
+  const ApisResourceListLabel LABS = const ApisResourceListLabel._internal("labs", 2);
 
   /** All values of this enumeration */
-  static final core.List<ApisResourceListLabel> values = const <ApisResourceListLabel>[
+  const core.List<ApisResourceListLabel> values = const <ApisResourceListLabel>[
     DEPRECATED,
     GRADUATED,
     LABS,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <ApisResourceListLabel>{ 
+  const _valuesMap = const <ApisResourceListLabel>{ 
     "deprecated": DEPRECATED,
     "graduated": GRADUATED,
     "labs": LABS,
@@ -377,7 +377,10 @@ class JsonSchema extends IdentityHash {
   /** Whether this parameter goes in the query or the path for REST requests. */
   core.String location;
 
-  /** The regular expression this parameter must conform to. */
+  /**
+ * The regular expression this parameter must conform to. Uses Java 6 regex format:
+ * http://docs.oracle.com/javase/6/docs/api/java/util/regex/Pattern.html
+ */
   core.String pattern;
 
   /**
@@ -518,6 +521,12 @@ class RestDescription extends IdentityHash {
   /** The description of this API. */
   core.String description;
 
+  /**
+ * Indicates how the API name should be capitalized and split into various parts. Useful for
+ * generating pretty class names.
+ */
+  core.String canonicalName;
+
   /** Authentication information. */
   RestDescriptionAuth auth;
 
@@ -559,6 +568,7 @@ class RestDescription extends IdentityHash {
     result.resources = mapValues(RestResource.parse)(json["resources"]);
     result.revision = identity(json["revision"]);
     result.description = identity(json["description"]);
+    result.canonicalName = identity(json["canonicalName"]);
     result.auth = RestDescriptionAuth.parse(json["auth"]);
     result.kind = identity(json["kind"]);
     result.name = identity(json["name"]);
@@ -588,6 +598,7 @@ class RestDescription extends IdentityHash {
     result["resources"] = mapValues(RestResource.serialize)(value.resources);
     result["revision"] = identity(value.revision);
     result["description"] = identity(value.description);
+    result["canonicalName"] = identity(value.canonicalName);
     result["auth"] = RestDescriptionAuth.serialize(value.auth);
     result["kind"] = identity(value.kind);
     result["name"] = identity(value.name);
@@ -696,7 +707,7 @@ class RestDescriptionIcons extends IdentityHash {
 // Schema .RestMethod
 class RestMethod extends IdentityHash {
   /** OAuth 2.0 scopes applicable to this method. */
-  core.List<core.Object> scopes;
+  core.List<core.String> scopes;
 
   /** Description of this method. */
   core.String description;
@@ -977,15 +988,15 @@ class RestResource extends IdentityHash {
 // Enum DiscoveryApi.Alt
 class DiscoveryApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/json */
-  static final DiscoveryApiAlt JSON = const DiscoveryApiAlt._internal("json", 0);
+  const DiscoveryApiAlt JSON = const DiscoveryApiAlt._internal("json", 0);
 
   /** All values of this enumeration */
-  static final core.List<DiscoveryApiAlt> values = const <DiscoveryApiAlt>[
+  const core.List<DiscoveryApiAlt> values = const <DiscoveryApiAlt>[
     JSON,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <DiscoveryApiAlt>{ 
+  const _valuesMap = const <DiscoveryApiAlt>{ 
     "json": JSON,
   };
 

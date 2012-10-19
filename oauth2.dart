@@ -15,13 +15,14 @@
 #library('oauth2');
 
 #import('dart:json');
-#import('dart:html');
+#import('dart:html', prefix:'html');
+#import('dart:math');
 #import('dart:uri');
 #import('utils.dart');
-#import('http.dart');
+#import('http.dart', prefix:'http');
 
 /// An OAuth2 authentication context.
-class OAuth2 implements Authenticator {
+class OAuth2 implements http.Authenticator {
   String _clientId;
   List<String> _scopes;
   String _provider;
@@ -42,8 +43,8 @@ class OAuth2 implements Authenticator {
   /// If [tokenLoaded] is provided, it will be called with a [Token] when one
   /// is available. This can be used e.g. to set up a 'logged in' view.
   OAuth2(String clientId, List<String> scopes,
-      [String provider = "https://accounts.google.com/o/oauth2/",
-      tokenLoaded(Token token)])
+      {String provider:"https://accounts.google.com/o/oauth2/",
+      tokenLoaded(Token token)})
       : _clientId = clientId,
       _scopes = scopes,
       _provider = provider,
@@ -69,7 +70,7 @@ class OAuth2 implements Authenticator {
           try {
             Token token = Token._parse(args[0]);
             _tokenCompleter.complete(token);
-          } catch (Exception exception) {
+          } catch (exception) {
             _tokenCompleter.completeException(exception);
           }
           break;
@@ -83,7 +84,7 @@ class OAuth2 implements Authenticator {
     Map<String, String> queryParams = {
       "response_type": "token",
       "client_id": _clientId,
-      "origin": window.location.origin,
+      "origin": html.window.location.origin,
       "redirect_uri": "postmessage", // Response will post to the proxy iframe
       "scope": Strings.join(_scopes, " "),
       "immediate": immediate,
@@ -145,10 +146,10 @@ class OAuth2 implements Authenticator {
           }
           String uri = _getAuthorizeUri(immediate);
           if (immediate) {
-            IFrameElement iframe = _iframe(uri);
+            html.IFrameElement iframe = _iframe(uri);
             _tokenCompleter.future.onComplete((f) => iframe.remove());
           } else {
-            Window popup = _popup(uri);
+            html.Window popup = _popup(uri);
             new _WindowPoller(_tokenCompleter, popup).poll();
           }
         });
@@ -170,32 +171,33 @@ class OAuth2 implements Authenticator {
     return _tokenFuture;
   }
 
-  Future<HttpRequest> authenticate(HttpRequest request) => login().transform((token) {
+  Future<http.Request> authenticate(http.Request request) =>
+      login().transform((token) {
     request.headers["Authorization"] = "${token.type} ${token.data}";
     return request;
   });
 
   /// Returns the OAuth2 token, if one is currently available.
-  Token get token() => __token;
+  Token get token => __token;
 
   set _token(Token value) {
     final invokeCallbacks = (__token == null) && (value != null);
     try {
       _storedToken = value;
-    } catch (final e) {
+    } catch (e) {
       print("Failed to cache OAuth2 token: $e");
     }
     __token = value;
-    if (invokeCallbacks && (_tokenLoaded != null)) window.setTimeout(() {
+    if (invokeCallbacks && (_tokenLoaded != null)) html.window.setTimeout(() {
       try {
         _tokenLoaded(value);
-      } catch (final e) {
+      } catch (e) {
         print("Failed to invoke tokenLoaded callback: $e");
       }
     }, 0);
   }
 
-  Token get _storedToken() => window.localStorage.containsKey(_storageKey)
+  Token get _storedToken => window.localStorage.containsKey(_storageKey)
       ? new Token.fromJson(window.localStorage[_storageKey])
       : null;
 
@@ -204,7 +206,7 @@ class OAuth2 implements Authenticator {
       : window.localStorage[_storageKey] = value.toJson();
 
   /// Returns a unique identifier for this context for use in localStorage.
-  String get _storageKey() => JSON.stringify({
+  String get _storageKey => JSON.stringify({
     "clientId": _clientId,
     "scopes": _scopes,
     "provider": _provider,
@@ -239,8 +241,8 @@ class OAuth2 implements Authenticator {
 /// the future with an exception.
 class _WindowPoller {
   Completer<Token> _completer;
-  Window _window;
-  _WindowPoller(Completer<Token> this._completer, Window this._window);
+  html.Window _window;
+  _WindowPoller(Completer<Token> this._completer, html.Window this._window);
 
   void poll() {
     if (_completer.future.isComplete) {
@@ -249,7 +251,7 @@ class _WindowPoller {
     if (_window.closed) {
       _completer.completeException(new Exception("User closed the window"));
     } else {
-      window.setTimeout(poll, 500);
+      html.window.setTimeout(poll, 500);
     }
   }
 }
@@ -267,27 +269,27 @@ class _ProxyChannel {
   String _nonce;
   String _provider;
   String _expectedOrigin;
-  IFrameElement _element;
+  html.IFrameElement _element;
   _ProxyCallback _callback;
 
   _ProxyChannel(String this._provider, _ProxyCallback this._callback) {
     _nonce = (0x7FFFFFFF & random()).toString();
     _expectedOrigin = _origin(_provider);
     _element = _iframe(_getProxyUrl());
-    window.on.message.add(_onMessage);
+    html.window.on.message.add(_onMessage);
   }
 
   void close() {
     _element.remove();
-    window.on.message.remove(_onMessage);
+    html.window.on.message.remove(_onMessage);
   }
 
-  void _onMessage(MessageEvent event) {
+  void _onMessage(html.MessageEvent event) {
     if (event.origin != _expectedOrigin) return;
     var data;
     try {
       data = JSON.parse(event.data);
-    } catch (final e) {
+    } catch (e) {
       print("Invalid JSON received via postMessage: ${event.data}");
       return;
     }
@@ -309,7 +311,7 @@ class _ProxyChannel {
   }
 
   String _getProxyUrl() {
-    Map<String, String> proxyParams = {"parent": window.location.origin};
+    Map<String, String> proxyParams = {"parent": html.window.location.origin};
     String proxyUrl = new UrlPattern("${_provider}postmessageRelay")
         .generate({}, proxyParams);
     return new Uri.fromString(proxyUrl)
@@ -327,10 +329,10 @@ class Token {
   final Date expiry;
   /// The email address of the user, only set if the scopes include
   /// https://www.googleapis.com/auth/userinfo.email
-  String get email() => _email;
+  String get email => _email;
   /// A unique identifier of the user, only set if the scopes include
   /// https://www.googleapis.com/auth/userinfo.profile
-  String get userId() => _userId;
+  String get userId => _userId;
   String _email;
   String _userId;
 
@@ -345,7 +347,7 @@ class Token {
     return token;
   }
 
-  bool get expired() => new Date.now().compareTo(expiry) > 0;
+  bool get expired => new Date.now().compareTo(expiry) > 0;
 
   String toString() => "[Token type=$type, data=$data, expired=$expired, "
       "expiry=$expiry, email=$email, userId=$userId]";
@@ -354,7 +356,7 @@ class Token {
   Future<bool> validate(String clientId,
       [String service="https://www.googleapis.com/oauth2/v1/tokeninfo"]) {
     String url = new UrlPattern(service).generate({}, {"access_token": data});
-    return new HttpRequest(url, 'GET').request().transform((json) {
+    return new http.Request(url, 'GET').request().transform((json) {
       final data = JSON.parse(json);
       final valid = clientId == data['audience'];
       if (valid) {
@@ -404,7 +406,7 @@ class Token {
 
     // Mark tokens as 'expired' 20 seconds early so it's still valid when used.
     Duration duration =
-        new Duration(seconds: Math.parseInt(params['expires_in']) - 20);
+        new Duration(seconds: int.parse(params['expires_in']) - 20);
     return new Token(params['token_type'], params['access_token'],
         new Date.now().add(duration));
   }
@@ -434,22 +436,22 @@ class AuthException implements Exception {
 /// Opens a popup centered on the screen displaying the provided URL.
 Window _popup(String url) {
   // Popup is desigend for 650x600, but don't make one bigger than the screen!
-  int width = Math.min(650, window.screen.width - 20);
-  int height = Math.min(600, window.screen.height - 30);
-  int left = (window.screen.width - width) ~/ 2;
-  int top = (window.screen.height - height) ~/ 2;
-  return window.open(url, "_blank", "toolbar=no,location=no,directories=no,"
-    "status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,"
+  int width = min(650, html.window.screen.width - 20);
+  int height = min(600, html.window.screen.height - 30);
+  int left = (html.window.screen.width - width) ~/ 2;
+  int top = (html.window.screen.height - height) ~/ 2;
+  return html.window.open(url, "_blank", "toolbar=no,location=no,directories="
+    "no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,"
     "width=$width,height=$height,top=$top,left=$left");
 }
 
 /// Creates a hidden iframe displaying the provided URL.
-IFrameElement _iframe(String url) {
-  IFrameElement iframe = new Element.tag("iframe");
+html.IFrameElement _iframe(String url) {
+  html.IFrameElement iframe = new html.Element.tag("iframe");
   iframe.src = url;
   iframe.style.position = "absolute";
   iframe.width = iframe.height = "1";
   iframe.style.top = iframe.style.left = "-100px";
-  document.body.elements.add(iframe);
+  html.document.body.elements.add(iframe);
   return iframe;
 }

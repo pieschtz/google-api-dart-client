@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#library('youtubeAnalytics-v1beta1');
+#library('youtubeAnalytics-v1');
 #import('dart:core', prefix: 'core');
 #import('dart:json');
 
 #import('utils.dart');
-#import('http.dart');
+#import('http.dart', prefix:'http');
 
 // API YoutubeAnalyticsApi
 /**
@@ -27,14 +27,14 @@ class YoutubeAnalyticsApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
   final core.String baseUrl;
   /** How we should identify ourselves to the service. */
-  Authenticator authenticator;
+  http.Authenticator authenticator;
   /** The client library version */
   final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
   final core.String applicationName;
-  YoutubeAnalyticsApi get _$service() => this;
+  YoutubeAnalyticsApi get _$service => this;
   ReportsResource _reports;
-  ReportsResource get reports() => _reports;
+  ReportsResource get reports => _reports;
   
   /** Returns response with indentations and line breaks. */
   core.bool prettyPrint;
@@ -67,16 +67,16 @@ class YoutubeAnalyticsApi extends core.Object {
   YoutubeAnalyticsApiAlt alt;
 
 
-  YoutubeAnalyticsApi([this.baseUrl = "https://www.googleapis.com/youtube/analytics/v1beta1/", applicationName, this.authenticator]) :
+  YoutubeAnalyticsApi({this.baseUrl:"https://www.googleapis.com/youtube/analytics/v1/", applicationName, this.authenticator}) :
       this.applicationName = (applicationName == null) ? null : applicationName
-          .replaceAll(const core.RegExp(@'\s+'), '_')
-          .replaceAll(const core.RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+          .replaceAll(const core.RegExp(r'\s+'), '_')
+          .replaceAll(const core.RegExp(r'[^-_.,0-9a-zA-Z]'), '')
   { 
     _reports = new ReportsResource._internal(this);
   }
-  core.String get userAgent() {
+  core.String get userAgent {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}youtubeAnalytics/v1beta1/20120816 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}youtubeAnalytics/v1/20120816 google-api-dart-client/${clientVersion}";
   }
 
 
@@ -116,19 +116,19 @@ class ReportsResource extends core.Object {
    *        E.g., video==dMH0bHeiRNg;country==IT will restrict the returned stats to the given video
    *        and the country Italy.
    */
-  core.Future<ResultTable> query(core.String ids, core.String startDate, core.String endDate, core.String metrics, [core.int maxResults = UNSPECIFIED, core.String sort = UNSPECIFIED, core.String dimensions = UNSPECIFIED, core.int startIndex = UNSPECIFIED, core.String filters = UNSPECIFIED]) {
+  core.Future<ResultTable> query(core.String ids, core.String startDate, core.String endDate, core.String metrics, {core.int maxResults, core.String sort, core.String dimensions, core.int startIndex, core.String filters}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    if (UNSPECIFIED != ids) $queryParams["ids"] = ids;
-    if (UNSPECIFIED != startDate) $queryParams["start-date"] = startDate;
-    if (UNSPECIFIED != endDate) $queryParams["end-date"] = endDate;
-    if (UNSPECIFIED != metrics) $queryParams["metrics"] = metrics;
-    if (UNSPECIFIED != maxResults) $queryParams["max-results"] = maxResults;
-    if (UNSPECIFIED != sort) $queryParams["sort"] = sort;
-    if (UNSPECIFIED != dimensions) $queryParams["dimensions"] = dimensions;
-    if (UNSPECIFIED != startIndex) $queryParams["start-index"] = startIndex;
-    if (UNSPECIFIED != filters) $queryParams["filters"] = filters;
+    if (?ids) $queryParams["ids"] = ids;
+    if (?startDate) $queryParams["start-date"] = startDate;
+    if (?endDate) $queryParams["end-date"] = endDate;
+    if (?metrics) $queryParams["metrics"] = metrics;
+    if (?maxResults) $queryParams["max-results"] = maxResults;
+    if (?sort) $queryParams["sort"] = sort;
+    if (?dimensions) $queryParams["dimensions"] = dimensions;
+    if (?startIndex) $queryParams["start-index"] = startIndex;
+    if (?filters) $queryParams["filters"] = filters;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -139,7 +139,7 @@ class ReportsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "reports";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -225,18 +225,18 @@ class ResultTableColumnHeaders extends IdentityHash {
 // Enum YoutubeAnalyticsApi.Alt
 class YoutubeAnalyticsApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of text/csv */
-  static final YoutubeAnalyticsApiAlt CSV = const YoutubeAnalyticsApiAlt._internal("csv", 0);
+  const YoutubeAnalyticsApiAlt CSV = const YoutubeAnalyticsApiAlt._internal("csv", 0);
   /** Responses with Content-Type of application/json */
-  static final YoutubeAnalyticsApiAlt JSON = const YoutubeAnalyticsApiAlt._internal("json", 1);
+  const YoutubeAnalyticsApiAlt JSON = const YoutubeAnalyticsApiAlt._internal("json", 1);
 
   /** All values of this enumeration */
-  static final core.List<YoutubeAnalyticsApiAlt> values = const <YoutubeAnalyticsApiAlt>[
+  const core.List<YoutubeAnalyticsApiAlt> values = const <YoutubeAnalyticsApiAlt>[
     CSV,
     JSON,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <YoutubeAnalyticsApiAlt>{ 
+  const _valuesMap = const <YoutubeAnalyticsApiAlt>{ 
     "csv": CSV,
     "json": JSON,
   };

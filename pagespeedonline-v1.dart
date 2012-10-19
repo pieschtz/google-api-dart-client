@@ -17,7 +17,7 @@
 #import('dart:json');
 
 #import('utils.dart');
-#import('http.dart');
+#import('http.dart', prefix:'http');
 
 // API PagespeedonlineApi
 /**
@@ -28,14 +28,14 @@ class PagespeedonlineApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
   final core.String baseUrl;
   /** How we should identify ourselves to the service. */
-  Authenticator authenticator;
+  http.Authenticator authenticator;
   /** The client library version */
   final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
   final core.String applicationName;
-  PagespeedonlineApi get _$service() => this;
+  PagespeedonlineApi get _$service => this;
   PagespeedapiResource _pagespeedapi;
-  PagespeedapiResource get pagespeedapi() => _pagespeedapi;
+  PagespeedapiResource get pagespeedapi => _pagespeedapi;
   
   /** Returns response with indentations and line breaks. */
   core.bool prettyPrint;
@@ -68,16 +68,16 @@ class PagespeedonlineApi extends core.Object {
   PagespeedonlineApiAlt alt;
 
 
-  PagespeedonlineApi([this.baseUrl = "https://www.googleapis.com/pagespeedonline/v1/", applicationName, this.authenticator]) :
+  PagespeedonlineApi({this.baseUrl:"https://www.googleapis.com/pagespeedonline/v1/", applicationName, this.authenticator}) :
       this.applicationName = (applicationName == null) ? null : applicationName
-          .replaceAll(const core.RegExp(@'\s+'), '_')
-          .replaceAll(const core.RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+          .replaceAll(const core.RegExp(r'\s+'), '_')
+          .replaceAll(const core.RegExp(r'[^-_.,0-9a-zA-Z]'), '')
   { 
     _pagespeedapi = new PagespeedapiResource._internal(this);
   }
-  core.String get userAgent() {
+  core.String get userAgent {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}pagespeedonline/v1/20120813 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}pagespeedonline/v1/20120827 google-api-dart-client/${clientVersion}";
   }
 
 }
@@ -98,14 +98,14 @@ class PagespeedapiResource extends core.Object {
    *    * [rule] A Page Speed rule to run; if none are given, all rules are run
    *    * [strategy] The analysis strategy to use
    */
-  core.Future<Result> runpagespeed(core.String url, [core.String locale = UNSPECIFIED, core.List<core.String> rule = UNSPECIFIED, PagespeedapiResourceRunpagespeedStrategy strategy = UNSPECIFIED]) {
+  core.Future<Result> runpagespeed(core.String url, {core.String locale, core.List<core.String> rule, PagespeedapiResourceRunpagespeedStrategy strategy}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    if (UNSPECIFIED != url) $queryParams["url"] = url;
-    if (UNSPECIFIED != locale) $queryParams["locale"] = locale;
-    if (UNSPECIFIED != rule) $queryParams["rule"] = rule;
-    if (UNSPECIFIED != strategy) $queryParams["strategy"] = strategy;
+    if (?url) $queryParams["url"] = url;
+    if (?locale) $queryParams["locale"] = locale;
+    if (?rule) $queryParams["rule"] = rule;
+    if (?strategy) $queryParams["strategy"] = strategy;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -116,7 +116,7 @@ class PagespeedapiResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "runPagespeed";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -129,18 +129,18 @@ class PagespeedapiResource extends core.Object {
 // Enum PagespeedapiResource.Runpagespeed.Strategy
 class PagespeedapiResourceRunpagespeedStrategy extends core.Object implements core.Hashable {
   /** Fetch and analyze the URL for desktop browsers */
-  static final PagespeedapiResourceRunpagespeedStrategy DESKTOP = const PagespeedapiResourceRunpagespeedStrategy._internal("desktop", 0);
+  const PagespeedapiResourceRunpagespeedStrategy DESKTOP = const PagespeedapiResourceRunpagespeedStrategy._internal("desktop", 0);
   /** Fetch and analyze the URL for mobile devices */
-  static final PagespeedapiResourceRunpagespeedStrategy MOBILE = const PagespeedapiResourceRunpagespeedStrategy._internal("mobile", 1);
+  const PagespeedapiResourceRunpagespeedStrategy MOBILE = const PagespeedapiResourceRunpagespeedStrategy._internal("mobile", 1);
 
   /** All values of this enumeration */
-  static final core.List<PagespeedapiResourceRunpagespeedStrategy> values = const <PagespeedapiResourceRunpagespeedStrategy>[
+  const core.List<PagespeedapiResourceRunpagespeedStrategy> values = const <PagespeedapiResourceRunpagespeedStrategy>[
     DESKTOP,
     MOBILE,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <PagespeedapiResourceRunpagespeedStrategy>{ 
+  const _valuesMap = const <PagespeedapiResourceRunpagespeedStrategy>{ 
     "desktop": DESKTOP,
     "mobile": MOBILE,
   };
@@ -659,15 +659,15 @@ class ResultVersion extends IdentityHash {
 // Enum PagespeedonlineApi.Alt
 class PagespeedonlineApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/json */
-  static final PagespeedonlineApiAlt JSON = const PagespeedonlineApiAlt._internal("json", 0);
+  const PagespeedonlineApiAlt JSON = const PagespeedonlineApiAlt._internal("json", 0);
 
   /** All values of this enumeration */
-  static final core.List<PagespeedonlineApiAlt> values = const <PagespeedonlineApiAlt>[
+  const core.List<PagespeedonlineApiAlt> values = const <PagespeedonlineApiAlt>[
     JSON,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <PagespeedonlineApiAlt>{ 
+  const _valuesMap = const <PagespeedonlineApiAlt>{ 
     "json": JSON,
   };
 

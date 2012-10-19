@@ -17,7 +17,7 @@
 #import('dart:json');
 
 #import('utils.dart');
-#import('http.dart');
+#import('http.dart', prefix:'http');
 
 // API CoordinateApi
 /**
@@ -27,14 +27,16 @@ class CoordinateApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
   final core.String baseUrl;
   /** How we should identify ourselves to the service. */
-  Authenticator authenticator;
+  http.Authenticator authenticator;
   /** The client library version */
   final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
   final core.String applicationName;
-  CoordinateApi get _$service() => this;
+  CoordinateApi get _$service => this;
+  CustomFieldDefResource _customFieldDef;
+  CustomFieldDefResource get customFieldDef => _customFieldDef;
   JobsResource _jobs;
-  JobsResource get jobs() => _jobs;
+  JobsResource get jobs => _jobs;
   
   /** Returns response with indentations and line breaks. */
   core.bool prettyPrint;
@@ -67,16 +69,17 @@ class CoordinateApi extends core.Object {
   CoordinateApiAlt alt;
 
 
-  CoordinateApi([this.baseUrl = "https://www.googleapis.com/coordinate/v1/teams/", applicationName, this.authenticator]) :
+  CoordinateApi({this.baseUrl:"https://www.googleapis.com/coordinate/v1/teams/", applicationName, this.authenticator}) :
       this.applicationName = (applicationName == null) ? null : applicationName
-          .replaceAll(const core.RegExp(@'\s+'), '_')
-          .replaceAll(const core.RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+          .replaceAll(const core.RegExp(r'\s+'), '_')
+          .replaceAll(const core.RegExp(r'[^-_.,0-9a-zA-Z]'), '')
   { 
+    _customFieldDef = new CustomFieldDefResource._internal(this);
     _jobs = new JobsResource._internal(this);
   }
-  core.String get userAgent() {
+  core.String get userAgent {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}coordinate/v1/20120622 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}coordinate/v1/20121016 google-api-dart-client/${clientVersion}";
   }
 
 
@@ -85,6 +88,43 @@ class CoordinateApi extends core.Object {
 
   /** OAuth2 scope: View your Google Coordinate jobs */
   static final core.String COORDINATE_READONLY_SCOPE = "https://www.googleapis.com/auth/coordinate.readonly";
+}
+
+// Resource .CustomFieldDefResource
+class CustomFieldDefResource extends core.Object {
+  final CoordinateApi _$service;
+  
+  CustomFieldDefResource._internal(CoordinateApi $service) : _$service = $service;
+
+  // Method CustomFieldDefResource.List
+  /**
+   * Retrieves a list of custom field definitions for a team.
+   *
+   *    * [teamId] Team ID
+   */
+  core.Future<CustomFieldDefListResponse> list(core.String teamId) {
+    final $queryParams = {};
+    final $headers = {};
+    final $pathParams = {};
+    $pathParams["teamId"] = teamId;
+    if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
+    if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
+    if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
+    if (_$service.oauthToken != null) $headers["Authorization"] = "Bearer ${_$service.oauthToken}";
+    if (_$service.key != null) $queryParams["key"] = _$service.key;
+    if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
+    if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
+    $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
+    final $path = "{teamId}/custom_fields";
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
+    final $http = new http.Request($url, "GET", $headers);
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new core.Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => CustomFieldDefListResponse.parse(JSON.parse($text)));
+  }
 }
 
 // Resource .JobsResource
@@ -105,22 +145,24 @@ class JobsResource extends core.Object {
    *    * [title] Job title
    *    * [customerName] Customer name
    *    * [note] Job note as newline (Unix) separated string
-   *    * [assignee] Assignee email address
+   *    * [assignee] Assignee email address, or empty string to unassign.
    *    * [customerPhoneNumber] Customer phone number
+   *    * [customField] Map from custom field id (from /team//custom_fields) to the field value. For example '123=Alice'
    */
-  core.Future<Job> insert(core.String teamId, core.String address, core.double lat, core.double lng, core.String title, Job content, [core.String customerName = UNSPECIFIED, core.String note = UNSPECIFIED, core.String assignee = UNSPECIFIED, core.String customerPhoneNumber = UNSPECIFIED]) {
+  core.Future<Job> insert(core.String teamId, core.String address, core.double lat, core.double lng, core.String title, Job content, {core.String customerName, core.String note, core.String assignee, core.String customerPhoneNumber, core.List<core.String> customField}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["teamId"] = teamId;
-    if (UNSPECIFIED != address) $queryParams["address"] = address;
-    if (UNSPECIFIED != lat) $queryParams["lat"] = lat;
-    if (UNSPECIFIED != lng) $queryParams["lng"] = lng;
-    if (UNSPECIFIED != title) $queryParams["title"] = title;
-    if (UNSPECIFIED != customerName) $queryParams["customerName"] = customerName;
-    if (UNSPECIFIED != note) $queryParams["note"] = note;
-    if (UNSPECIFIED != assignee) $queryParams["assignee"] = assignee;
-    if (UNSPECIFIED != customerPhoneNumber) $queryParams["customerPhoneNumber"] = customerPhoneNumber;
+    if (?address) $queryParams["address"] = address;
+    if (?lat) $queryParams["lat"] = lat;
+    if (?lng) $queryParams["lng"] = lng;
+    if (?title) $queryParams["title"] = title;
+    if (?customerName) $queryParams["customerName"] = customerName;
+    if (?note) $queryParams["note"] = note;
+    if (?assignee) $queryParams["assignee"] = assignee;
+    if (?customerPhoneNumber) $queryParams["customerPhoneNumber"] = customerPhoneNumber;
+    if (?customField) $queryParams["customField"] = customField;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -133,7 +175,7 @@ class JobsResource extends core.Object {
     final $body = JSON.stringify(Job.serialize(content));
     final $path = "{teamId}/jobs";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -153,28 +195,30 @@ class JobsResource extends core.Object {
    *    * [customerName] Customer name
    *    * [title] Job title
    *    * [note] Job note as newline (Unix) separated string
-   *    * [assignee] Assignee email address
+   *    * [assignee] Assignee email address, or empty string to unassign.
    *    * [customerPhoneNumber] Customer phone number
    *    * [address] Job address as newline (Unix) separated string
    *    * [lat] The latitude coordinate of this job's location.
    *    * [progress] Job progress
    *    * [lng] The longitude coordinate of this job's location.
+   *    * [customField] Map from custom field id (from /team//custom_fields) to the field value. For example '123=Alice'
    */
-  core.Future<Job> patch(core.String teamId, core.String jobId, Job content, [core.String customerName = UNSPECIFIED, core.String title = UNSPECIFIED, core.String note = UNSPECIFIED, core.String assignee = UNSPECIFIED, core.String customerPhoneNumber = UNSPECIFIED, core.String address = UNSPECIFIED, core.double lat = UNSPECIFIED, JobsResourcePatchProgress progress = UNSPECIFIED, core.double lng = UNSPECIFIED]) {
+  core.Future<Job> patch(core.String teamId, core.String jobId, Job content, {core.String customerName, core.String title, core.String note, core.String assignee, core.String customerPhoneNumber, core.String address, core.double lat, JobsResourcePatchProgress progress, core.double lng, core.List<core.String> customField}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["teamId"] = teamId;
     $pathParams["jobId"] = jobId;
-    if (UNSPECIFIED != customerName) $queryParams["customerName"] = customerName;
-    if (UNSPECIFIED != title) $queryParams["title"] = title;
-    if (UNSPECIFIED != note) $queryParams["note"] = note;
-    if (UNSPECIFIED != assignee) $queryParams["assignee"] = assignee;
-    if (UNSPECIFIED != customerPhoneNumber) $queryParams["customerPhoneNumber"] = customerPhoneNumber;
-    if (UNSPECIFIED != address) $queryParams["address"] = address;
-    if (UNSPECIFIED != lat) $queryParams["lat"] = lat;
-    if (UNSPECIFIED != progress) $queryParams["progress"] = progress;
-    if (UNSPECIFIED != lng) $queryParams["lng"] = lng;
+    if (?customerName) $queryParams["customerName"] = customerName;
+    if (?title) $queryParams["title"] = title;
+    if (?note) $queryParams["note"] = note;
+    if (?assignee) $queryParams["assignee"] = assignee;
+    if (?customerPhoneNumber) $queryParams["customerPhoneNumber"] = customerPhoneNumber;
+    if (?address) $queryParams["address"] = address;
+    if (?lat) $queryParams["lat"] = lat;
+    if (?progress) $queryParams["progress"] = progress;
+    if (?lng) $queryParams["lng"] = lng;
+    if (?customField) $queryParams["customField"] = customField;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -187,7 +231,7 @@ class JobsResource extends core.Object {
     final $body = JSON.stringify(Job.serialize(content));
     final $path = "{teamId}/jobs/{jobId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PATCH", $headers);
+    final $http = new http.Request($url, "PATCH", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -205,14 +249,14 @@ class JobsResource extends core.Object {
    *    * [maxResults] Maximum number of results to return in one page.
    *    * [pageToken] Continuation token
    */
-  core.Future<JobListResponse> list(core.String teamId, [core.String minModifiedTimestampMs = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String pageToken = UNSPECIFIED]) {
+  core.Future<JobListResponse> list(core.String teamId, {core.String minModifiedTimestampMs, core.int maxResults, core.String pageToken}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["teamId"] = teamId;
-    if (UNSPECIFIED != minModifiedTimestampMs) $queryParams["minModifiedTimestampMs"] = minModifiedTimestampMs;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
+    if (?minModifiedTimestampMs) $queryParams["minModifiedTimestampMs"] = minModifiedTimestampMs;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -223,7 +267,7 @@ class JobsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{teamId}/jobs";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -242,28 +286,30 @@ class JobsResource extends core.Object {
    *    * [customerName] Customer name
    *    * [title] Job title
    *    * [note] Job note as newline (Unix) separated string
-   *    * [assignee] Assignee email address
+   *    * [assignee] Assignee email address, or empty string to unassign.
    *    * [customerPhoneNumber] Customer phone number
    *    * [address] Job address as newline (Unix) separated string
    *    * [lat] The latitude coordinate of this job's location.
    *    * [progress] Job progress
    *    * [lng] The longitude coordinate of this job's location.
+   *    * [customField] Map from custom field id (from /team//custom_fields) to the field value. For example '123=Alice'
    */
-  core.Future<Job> update(core.String teamId, core.String jobId, Job content, [core.String customerName = UNSPECIFIED, core.String title = UNSPECIFIED, core.String note = UNSPECIFIED, core.String assignee = UNSPECIFIED, core.String customerPhoneNumber = UNSPECIFIED, core.String address = UNSPECIFIED, core.double lat = UNSPECIFIED, JobsResourceUpdateProgress progress = UNSPECIFIED, core.double lng = UNSPECIFIED]) {
+  core.Future<Job> update(core.String teamId, core.String jobId, Job content, {core.String customerName, core.String title, core.String note, core.String assignee, core.String customerPhoneNumber, core.String address, core.double lat, JobsResourceUpdateProgress progress, core.double lng, core.List<core.String> customField}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["teamId"] = teamId;
     $pathParams["jobId"] = jobId;
-    if (UNSPECIFIED != customerName) $queryParams["customerName"] = customerName;
-    if (UNSPECIFIED != title) $queryParams["title"] = title;
-    if (UNSPECIFIED != note) $queryParams["note"] = note;
-    if (UNSPECIFIED != assignee) $queryParams["assignee"] = assignee;
-    if (UNSPECIFIED != customerPhoneNumber) $queryParams["customerPhoneNumber"] = customerPhoneNumber;
-    if (UNSPECIFIED != address) $queryParams["address"] = address;
-    if (UNSPECIFIED != lat) $queryParams["lat"] = lat;
-    if (UNSPECIFIED != progress) $queryParams["progress"] = progress;
-    if (UNSPECIFIED != lng) $queryParams["lng"] = lng;
+    if (?customerName) $queryParams["customerName"] = customerName;
+    if (?title) $queryParams["title"] = title;
+    if (?note) $queryParams["note"] = note;
+    if (?assignee) $queryParams["assignee"] = assignee;
+    if (?customerPhoneNumber) $queryParams["customerPhoneNumber"] = customerPhoneNumber;
+    if (?address) $queryParams["address"] = address;
+    if (?lat) $queryParams["lat"] = lat;
+    if (?progress) $queryParams["progress"] = progress;
+    if (?lng) $queryParams["lng"] = lng;
+    if (?customField) $queryParams["customField"] = customField;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -276,7 +322,7 @@ class JobsResource extends core.Object {
     final $body = JSON.stringify(Job.serialize(content));
     final $path = "{teamId}/jobs/{jobId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PUT", $headers);
+    final $http = new http.Request($url, "PUT", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -308,7 +354,7 @@ class JobsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{teamId}/jobs/{jobId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -321,18 +367,18 @@ class JobsResource extends core.Object {
 // Enum JobsResource.Patch.Progress
 class JobsResourcePatchProgress extends core.Object implements core.Hashable {
   /** Completed */
-  static final JobsResourcePatchProgress COMPLETED = const JobsResourcePatchProgress._internal("COMPLETED", 0);
+  const JobsResourcePatchProgress COMPLETED = const JobsResourcePatchProgress._internal("COMPLETED", 0);
   /** In progress */
-  static final JobsResourcePatchProgress IN_PROGRESS = const JobsResourcePatchProgress._internal("IN_PROGRESS", 1);
+  const JobsResourcePatchProgress IN_PROGRESS = const JobsResourcePatchProgress._internal("IN_PROGRESS", 1);
   /** Not accepted */
-  static final JobsResourcePatchProgress NOT_ACCEPTED = const JobsResourcePatchProgress._internal("NOT_ACCEPTED", 2);
+  const JobsResourcePatchProgress NOT_ACCEPTED = const JobsResourcePatchProgress._internal("NOT_ACCEPTED", 2);
   /** Not started */
-  static final JobsResourcePatchProgress NOT_STARTED = const JobsResourcePatchProgress._internal("NOT_STARTED", 3);
+  const JobsResourcePatchProgress NOT_STARTED = const JobsResourcePatchProgress._internal("NOT_STARTED", 3);
   /** Obsolete */
-  static final JobsResourcePatchProgress OBSOLETE = const JobsResourcePatchProgress._internal("OBSOLETE", 4);
+  const JobsResourcePatchProgress OBSOLETE = const JobsResourcePatchProgress._internal("OBSOLETE", 4);
 
   /** All values of this enumeration */
-  static final core.List<JobsResourcePatchProgress> values = const <JobsResourcePatchProgress>[
+  const core.List<JobsResourcePatchProgress> values = const <JobsResourcePatchProgress>[
     COMPLETED,
     IN_PROGRESS,
     NOT_ACCEPTED,
@@ -341,7 +387,7 @@ class JobsResourcePatchProgress extends core.Object implements core.Hashable {
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <JobsResourcePatchProgress>{ 
+  const _valuesMap = const <JobsResourcePatchProgress>{ 
     "COMPLETED": COMPLETED,
     "IN_PROGRESS": IN_PROGRESS,
     "NOT_ACCEPTED": NOT_ACCEPTED,
@@ -364,18 +410,18 @@ class JobsResourcePatchProgress extends core.Object implements core.Hashable {
 // Enum JobsResource.Update.Progress
 class JobsResourceUpdateProgress extends core.Object implements core.Hashable {
   /** Completed */
-  static final JobsResourceUpdateProgress COMPLETED = const JobsResourceUpdateProgress._internal("COMPLETED", 0);
+  const JobsResourceUpdateProgress COMPLETED = const JobsResourceUpdateProgress._internal("COMPLETED", 0);
   /** In progress */
-  static final JobsResourceUpdateProgress IN_PROGRESS = const JobsResourceUpdateProgress._internal("IN_PROGRESS", 1);
+  const JobsResourceUpdateProgress IN_PROGRESS = const JobsResourceUpdateProgress._internal("IN_PROGRESS", 1);
   /** Not accepted */
-  static final JobsResourceUpdateProgress NOT_ACCEPTED = const JobsResourceUpdateProgress._internal("NOT_ACCEPTED", 2);
+  const JobsResourceUpdateProgress NOT_ACCEPTED = const JobsResourceUpdateProgress._internal("NOT_ACCEPTED", 2);
   /** Not started */
-  static final JobsResourceUpdateProgress NOT_STARTED = const JobsResourceUpdateProgress._internal("NOT_STARTED", 3);
+  const JobsResourceUpdateProgress NOT_STARTED = const JobsResourceUpdateProgress._internal("NOT_STARTED", 3);
   /** Obsolete */
-  static final JobsResourceUpdateProgress OBSOLETE = const JobsResourceUpdateProgress._internal("OBSOLETE", 4);
+  const JobsResourceUpdateProgress OBSOLETE = const JobsResourceUpdateProgress._internal("OBSOLETE", 4);
 
   /** All values of this enumeration */
-  static final core.List<JobsResourceUpdateProgress> values = const <JobsResourceUpdateProgress>[
+  const core.List<JobsResourceUpdateProgress> values = const <JobsResourceUpdateProgress>[
     COMPLETED,
     IN_PROGRESS,
     NOT_ACCEPTED,
@@ -384,7 +430,7 @@ class JobsResourceUpdateProgress extends core.Object implements core.Hashable {
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <JobsResourceUpdateProgress>{ 
+  const _valuesMap = const <JobsResourceUpdateProgress>{ 
     "COMPLETED": COMPLETED,
     "IN_PROGRESS": IN_PROGRESS,
     "NOT_ACCEPTED": NOT_ACCEPTED,
@@ -402,6 +448,139 @@ class JobsResourceUpdateProgress extends core.Object implements core.Hashable {
   /** Get the string representation of an enumeration value */
   toString() => _value;
   hashCode() => _ordinal ^ "Progress".hashCode();
+}
+
+// Schema .CustomField
+class CustomField extends IdentityHash {
+  /** Identifies this object as a custom field. */
+  core.String kind;
+
+  /** Custom field id. */
+  core.String customFieldId;
+
+  /** Custom field value. */
+  core.String value;
+
+  /** Parses an instance from its JSON representation. */
+  static CustomField parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new CustomField();
+    result.kind = identity(json["kind"]);
+    result.customFieldId = identity(json["customFieldId"]);
+    result.value = identity(json["value"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(CustomField value) {
+    if (value == null) return null;
+    final result = {};
+    result["kind"] = identity(value.kind);
+    result["customFieldId"] = identity(value.customFieldId);
+    result["value"] = identity(value.value);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema .CustomFieldDef
+class CustomFieldDef extends IdentityHash {
+  /** Identifies this object as a custom field definition. */
+  core.String kind;
+
+  /** Custom field name. */
+  core.String name;
+
+  /** Whether the field is enabled. */
+  core.bool enabled;
+
+  /** Whether the field is required for checkout. */
+  core.bool requiredForCheckout;
+
+  /** Custom field type. */
+  core.String type;
+
+  /** Custom field id. */
+  core.String id;
+
+  /** Parses an instance from its JSON representation. */
+  static CustomFieldDef parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new CustomFieldDef();
+    result.kind = identity(json["kind"]);
+    result.name = identity(json["name"]);
+    result.enabled = identity(json["enabled"]);
+    result.requiredForCheckout = identity(json["requiredForCheckout"]);
+    result.type = identity(json["type"]);
+    result.id = identity(json["id"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(CustomFieldDef value) {
+    if (value == null) return null;
+    final result = {};
+    result["kind"] = identity(value.kind);
+    result["name"] = identity(value.name);
+    result["enabled"] = identity(value.enabled);
+    result["requiredForCheckout"] = identity(value.requiredForCheckout);
+    result["type"] = identity(value.type);
+    result["id"] = identity(value.id);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema .CustomFieldDefListResponse
+class CustomFieldDefListResponse extends IdentityHash {
+  /** Collection of custom field definitions in a team. */
+  core.List<CustomFieldDef> items;
+
+  /** Identifies this object as a collection of custom field definitions in a team. */
+  core.String kind;
+
+  /** Parses an instance from its JSON representation. */
+  static CustomFieldDefListResponse parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new CustomFieldDefListResponse();
+    result.items = map(CustomFieldDef.parse)(json["items"]);
+    result.kind = identity(json["kind"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(CustomFieldDefListResponse value) {
+    if (value == null) return null;
+    final result = {};
+    result["items"] = map(CustomFieldDef.serialize)(value.items);
+    result["kind"] = identity(value.kind);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema .CustomFields
+class CustomFields extends IdentityHash {
+  /** Identifies this object as a collection of custom fields. */
+  core.String kind;
+
+  /** Collection of custom fields. */
+  core.List<CustomField> customField;
+
+  /** Parses an instance from its JSON representation. */
+  static CustomFields parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new CustomFields();
+    result.kind = identity(json["kind"]);
+    result.customField = map(CustomField.parse)(json["customField"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(CustomFields value) {
+    if (value == null) return null;
+    final result = {};
+    result["kind"] = identity(value.kind);
+    result["customField"] = map(CustomField.serialize)(value.customField);
+    return result;
+  }
+  toString() => serialize(this).toString();
 }
 
 // Schema .Job
@@ -534,6 +713,9 @@ class JobState extends IdentityHash {
   /** Job progress. */
   core.String progress;
 
+  /** Custom fields. */
+  CustomFields customFields;
+
   /** Parses an instance from its JSON representation. */
   static JobState parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
@@ -546,6 +728,7 @@ class JobState extends IdentityHash {
     result.customerPhoneNumber = identity(json["customerPhoneNumber"]);
     result.location = Location.parse(json["location"]);
     result.progress = identity(json["progress"]);
+    result.customFields = CustomFields.parse(json["customFields"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
@@ -560,6 +743,7 @@ class JobState extends IdentityHash {
     result["customerPhoneNumber"] = identity(value.customerPhoneNumber);
     result["location"] = Location.serialize(value.location);
     result["progress"] = identity(value.progress);
+    result["customFields"] = CustomFields.serialize(value.customFields);
     return result;
   }
   toString() => serialize(this).toString();
@@ -605,15 +789,15 @@ class Location extends IdentityHash {
 // Enum CoordinateApi.Alt
 class CoordinateApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/json */
-  static final CoordinateApiAlt JSON = const CoordinateApiAlt._internal("json", 0);
+  const CoordinateApiAlt JSON = const CoordinateApiAlt._internal("json", 0);
 
   /** All values of this enumeration */
-  static final core.List<CoordinateApiAlt> values = const <CoordinateApiAlt>[
+  const core.List<CoordinateApiAlt> values = const <CoordinateApiAlt>[
     JSON,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <CoordinateApiAlt>{ 
+  const _valuesMap = const <CoordinateApiAlt>{ 
     "json": JSON,
   };
 

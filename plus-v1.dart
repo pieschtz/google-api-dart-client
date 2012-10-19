@@ -17,7 +17,7 @@
 #import('dart:json');
 
 #import('utils.dart');
-#import('http.dart');
+#import('http.dart', prefix:'http');
 
 // API PlusApi
 /**
@@ -27,18 +27,18 @@ class PlusApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
   final core.String baseUrl;
   /** How we should identify ourselves to the service. */
-  Authenticator authenticator;
+  http.Authenticator authenticator;
   /** The client library version */
   final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
   final core.String applicationName;
-  PlusApi get _$service() => this;
+  PlusApi get _$service => this;
   ActivitiesResource _activities;
-  ActivitiesResource get activities() => _activities;
+  ActivitiesResource get activities => _activities;
   CommentsResource _comments;
-  CommentsResource get comments() => _comments;
+  CommentsResource get comments => _comments;
   PeopleResource _people;
-  PeopleResource get people() => _people;
+  PeopleResource get people => _people;
   
   /** Returns response with indentations and line breaks. */
   core.bool prettyPrint;
@@ -71,26 +71,23 @@ class PlusApi extends core.Object {
   PlusApiAlt alt;
 
 
-  PlusApi([this.baseUrl = "https://www.googleapis.com/plus/v1/", applicationName, this.authenticator]) :
+  PlusApi({this.baseUrl:"https://www.googleapis.com/plus/v1/", applicationName, this.authenticator}) :
       this.applicationName = (applicationName == null) ? null : applicationName
-          .replaceAll(const core.RegExp(@'\s+'), '_')
-          .replaceAll(const core.RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+          .replaceAll(const core.RegExp(r'\s+'), '_')
+          .replaceAll(const core.RegExp(r'[^-_.,0-9a-zA-Z]'), '')
   { 
     _activities = new ActivitiesResource._internal(this);
     _comments = new CommentsResource._internal(this);
     _people = new PeopleResource._internal(this);
   }
-  core.String get userAgent() {
+  core.String get userAgent {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}plus/v1/20120806 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}plus/v1/20121013 google-api-dart-client/${clientVersion}";
   }
 
 
   /** OAuth2 scope: Know who you are on Google */
   static final core.String PLUS_ME_SCOPE = "https://www.googleapis.com/auth/plus.me";
-
-  /** OAuth2 scope: View your email address */
-  static final core.String USERINFO_EMAIL_SCOPE = "https://www.googleapis.com/auth/userinfo.email";
 }
 
 // Resource .ActivitiesResource
@@ -106,25 +103,26 @@ class ActivitiesResource extends core.Object {
    *    * [query] Full-text search query string.
    *    * [orderBy] Specifies how to order search results.
   Default: recent.
-   *    * [pageToken] The continuation token, used to page through large result sets. To get the next page of results, set
-   *        this parameter to the value of "nextPageToken" from the previous response. This token may
-   *        be of any length.
-   *    * [maxResults] The maximum number of activities to include in the response, used for paging. For any response, the
-   *        actual number returned may be less than the specified maxResults.
-  Default: 10.
+   *    * [pageToken] The continuation token, which is used to page through large result sets. To get the next page of
+   *        results, set this parameter to the value of "nextPageToken" from the previous response.
+   *        This token can be of any length.
+   *    * [maxResults] The maximum number of activities to include in the response, which is used for paging. For any
+   *        response, the actual number returned might be less than the specified maxResults.
+  Default:
+   *        10.
   Minimum: 1.
-   *        Maximum: 20.
+  Maximum: 20.
    *    * [language] Specify the preferred language to search with. See search language codes for available values.
    */
-  core.Future<ActivityFeed> search(core.String query, [ActivitiesResourceSearchOrderBy orderBy = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String language = UNSPECIFIED]) {
+  core.Future<ActivityFeed> search(core.String query, {ActivitiesResourceSearchOrderBy orderBy, core.String pageToken, core.int maxResults, core.String language}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    if (UNSPECIFIED != query) $queryParams["query"] = query;
-    if (UNSPECIFIED != orderBy) $queryParams["orderBy"] = orderBy;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
-    if (UNSPECIFIED != language) $queryParams["language"] = language;
+    if (?query) $queryParams["query"] = query;
+    if (?orderBy) $queryParams["orderBy"] = orderBy;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
+    if (?language) $queryParams["language"] = language;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -135,7 +133,7 @@ class ActivitiesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "activities";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -151,22 +149,23 @@ class ActivitiesResource extends core.Object {
    *    * [userId] The ID of the user to get activities for. The special value "me" can be used to indicate the
    *        authenticated user.
    *    * [collection] The collection of activities to list.
-   *    * [pageToken] The continuation token, used to page through large result sets. To get the next page of results, set
-   *        this parameter to the value of "nextPageToken" from the previous response.
-   *    * [maxResults] The maximum number of activities to include in the response, used for paging. For any response, the
-   *        actual number returned may be less than the specified maxResults.
-  Default: 20.
+   *    * [pageToken] The continuation token, which is used to page through large result sets. To get the next page of
+   *        results, set this parameter to the value of "nextPageToken" from the previous response.
+   *    * [maxResults] The maximum number of activities to include in the response, which is used for paging. For any
+   *        response, the actual number returned might be less than the specified maxResults.
+  Default:
+   *        20.
   Minimum: 1.
-   *        Maximum: 100.
+  Maximum: 100.
    */
-  core.Future<ActivityFeed> list(core.String userId, ActivitiesResourceListCollection collection, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
+  core.Future<ActivityFeed> list(core.String userId, ActivitiesResourceListCollection collection, {core.String pageToken, core.int maxResults}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["userId"] = userId;
     $pathParams["collection"] = collection;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -177,7 +176,7 @@ class ActivitiesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "people/{userId}/activities/{collection}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -207,7 +206,7 @@ class ActivitiesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "activities/{activityId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -220,18 +219,18 @@ class ActivitiesResource extends core.Object {
 // Enum ActivitiesResource.Search.OrderBy
 class ActivitiesResourceSearchOrderBy extends core.Object implements core.Hashable {
   /** Sort activities by relevance to the user, most relevant first. */
-  static final ActivitiesResourceSearchOrderBy BEST = const ActivitiesResourceSearchOrderBy._internal("best", 0);
+  const ActivitiesResourceSearchOrderBy BEST = const ActivitiesResourceSearchOrderBy._internal("best", 0);
   /** Sort activities by published date, most recent first. */
-  static final ActivitiesResourceSearchOrderBy RECENT = const ActivitiesResourceSearchOrderBy._internal("recent", 1);
+  const ActivitiesResourceSearchOrderBy RECENT = const ActivitiesResourceSearchOrderBy._internal("recent", 1);
 
   /** All values of this enumeration */
-  static final core.List<ActivitiesResourceSearchOrderBy> values = const <ActivitiesResourceSearchOrderBy>[
+  const core.List<ActivitiesResourceSearchOrderBy> values = const <ActivitiesResourceSearchOrderBy>[
     BEST,
     RECENT,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <ActivitiesResourceSearchOrderBy>{ 
+  const _valuesMap = const <ActivitiesResourceSearchOrderBy>{ 
     "best": BEST,
     "recent": RECENT,
   };
@@ -251,15 +250,15 @@ class ActivitiesResourceSearchOrderBy extends core.Object implements core.Hashab
 // Enum ActivitiesResource.List.Collection
 class ActivitiesResourceListCollection extends core.Object implements core.Hashable {
   /** All public activities created by the specified user. */
-  static final ActivitiesResourceListCollection PUBLIC = const ActivitiesResourceListCollection._internal("public", 0);
+  const ActivitiesResourceListCollection PUBLIC = const ActivitiesResourceListCollection._internal("public", 0);
 
   /** All values of this enumeration */
-  static final core.List<ActivitiesResourceListCollection> values = const <ActivitiesResourceListCollection>[
+  const core.List<ActivitiesResourceListCollection> values = const <ActivitiesResourceListCollection>[
     PUBLIC,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <ActivitiesResourceListCollection>{ 
+  const _valuesMap = const <ActivitiesResourceListCollection>{ 
     "public": PUBLIC,
   };
 
@@ -286,24 +285,25 @@ class CommentsResource extends core.Object {
    * List all of the comments for an activity.
    *
    *    * [activityId] The ID of the activity to get comments for.
-   *    * [pageToken] The continuation token, used to page through large result sets. To get the next page of results, set
-   *        this parameter to the value of "nextPageToken" from the previous response.
-   *    * [maxResults] The maximum number of comments to include in the response, used for paging. For any response, the
-   *        actual number returned may be less than the specified maxResults.
-  Default: 20.
-  Minimum: 0.
-   *        Maximum: 100.
+   *    * [pageToken] The continuation token, which is used to page through large result sets. To get the next page of
+   *        results, set this parameter to the value of "nextPageToken" from the previous response.
    *    * [sortOrder] The order in which to sort the list of comments.
   Default: ascending.
+   *    * [maxResults] The maximum number of comments to include in the response, which is used for paging. For any
+   *        response, the actual number returned might be less than the specified maxResults.
+  Default:
+   *        20.
+  Minimum: 0.
+  Maximum: 100.
    */
-  core.Future<CommentFeed> list(core.String activityId, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED, CommentsResourceListSortOrder sortOrder = UNSPECIFIED]) {
+  core.Future<CommentFeed> list(core.String activityId, {core.String pageToken, CommentsResourceListSortOrder sortOrder, core.int maxResults}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["activityId"] = activityId;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
-    if (UNSPECIFIED != sortOrder) $queryParams["sortOrder"] = sortOrder;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?sortOrder) $queryParams["sortOrder"] = sortOrder;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -314,7 +314,7 @@ class CommentsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "activities/{activityId}/comments";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -344,7 +344,7 @@ class CommentsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "comments/{commentId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -357,18 +357,18 @@ class CommentsResource extends core.Object {
 // Enum CommentsResource.List.SortOrder
 class CommentsResourceListSortOrder extends core.Object implements core.Hashable {
   /** Sort oldest comments first. */
-  static final CommentsResourceListSortOrder ASCENDING = const CommentsResourceListSortOrder._internal("ascending", 0);
+  const CommentsResourceListSortOrder ASCENDING = const CommentsResourceListSortOrder._internal("ascending", 0);
   /** Sort newest comments first. */
-  static final CommentsResourceListSortOrder DESCENDING = const CommentsResourceListSortOrder._internal("descending", 1);
+  const CommentsResourceListSortOrder DESCENDING = const CommentsResourceListSortOrder._internal("descending", 1);
 
   /** All values of this enumeration */
-  static final core.List<CommentsResourceListSortOrder> values = const <CommentsResourceListSortOrder>[
+  const core.List<CommentsResourceListSortOrder> values = const <CommentsResourceListSortOrder>[
     ASCENDING,
     DESCENDING,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <CommentsResourceListSortOrder>{ 
+  const _valuesMap = const <CommentsResourceListSortOrder>{ 
     "ascending": ASCENDING,
     "descending": DESCENDING,
   };
@@ -397,22 +397,22 @@ class PeopleResource extends core.Object {
    *
    *    * [activityId] The ID of the activity to get the list of people for.
    *    * [collection] The collection of people to list.
-   *    * [pageToken] The continuation token, used to page through large result sets. To get the next page of results, set
-   *        this parameter to the value of "nextPageToken" from the previous response.
-   *    * [maxResults] The maximum number of people to include in the response, used for paging. For any response, the
-   *        actual number returned may be less than the specified maxResults.
+   *    * [pageToken] The continuation token, which is used to page through large result sets. To get the next page of
+   *        results, set this parameter to the value of "nextPageToken" from the previous response.
+   *    * [maxResults] The maximum number of people to include in the response, which is used for paging. For any response,
+   *        the actual number returned might be less than the specified maxResults.
   Default: 20.
-  Minimum: 1.
-   *        Maximum: 100.
+   *        Minimum: 1.
+  Maximum: 100.
    */
-  core.Future<PeopleFeed> listByActivity(core.String activityId, PeopleResourceListByActivityCollection collection, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
+  core.Future<PeopleFeed> listByActivity(core.String activityId, PeopleResourceListByActivityCollection collection, {core.String pageToken, core.int maxResults}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["activityId"] = activityId;
     $pathParams["collection"] = collection;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -423,7 +423,7 @@ class PeopleResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "activities/{activityId}/people/{collection}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -437,24 +437,24 @@ class PeopleResource extends core.Object {
    * Search all public profiles.
    *
    *    * [query] Specify a query string for full text search of public text in all profiles.
-   *    * [pageToken] The continuation token, used to page through large result sets. To get the next page of results, set
-   *        this parameter to the value of "nextPageToken" from the previous response. This token may
-   *        be of any length.
-   *    * [maxResults] The maximum number of people to include in the response, used for paging. For any response, the
-   *        actual number returned may be less than the specified maxResults.
+   *    * [pageToken] The continuation token, which is used to page through large result sets. To get the next page of
+   *        results, set this parameter to the value of "nextPageToken" from the previous response.
+   *        This token can be of any length.
+   *    * [maxResults] The maximum number of people to include in the response, which is used for paging. For any response,
+   *        the actual number returned might be less than the specified maxResults.
   Default: 10.
-  Minimum: 1.
-   *        Maximum: 20.
+   *        Minimum: 1.
+  Maximum: 20.
    *    * [language] Specify the preferred language to search with. See search language codes for available values.
    */
-  core.Future<PeopleFeed> search(core.String query, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String language = UNSPECIFIED]) {
+  core.Future<PeopleFeed> search(core.String query, {core.String pageToken, core.int maxResults, core.String language}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    if (UNSPECIFIED != query) $queryParams["query"] = query;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
-    if (UNSPECIFIED != language) $queryParams["language"] = language;
+    if (?query) $queryParams["query"] = query;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
+    if (?language) $queryParams["language"] = language;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -465,7 +465,7 @@ class PeopleResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "people";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -496,7 +496,7 @@ class PeopleResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "people/{userId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -509,18 +509,18 @@ class PeopleResource extends core.Object {
 // Enum PeopleResource.ListByActivity.Collection
 class PeopleResourceListByActivityCollection extends core.Object implements core.Hashable {
   /** List all people who have +1'd this activity. */
-  static final PeopleResourceListByActivityCollection PLUSONERS = const PeopleResourceListByActivityCollection._internal("plusoners", 0);
+  const PeopleResourceListByActivityCollection PLUSONERS = const PeopleResourceListByActivityCollection._internal("plusoners", 0);
   /** List all people who have reshared this activity. */
-  static final PeopleResourceListByActivityCollection RESHARERS = const PeopleResourceListByActivityCollection._internal("resharers", 1);
+  const PeopleResourceListByActivityCollection RESHARERS = const PeopleResourceListByActivityCollection._internal("resharers", 1);
 
   /** All values of this enumeration */
-  static final core.List<PeopleResourceListByActivityCollection> values = const <PeopleResourceListByActivityCollection>[
+  const core.List<PeopleResourceListByActivityCollection> values = const <PeopleResourceListByActivityCollection>[
     PLUSONERS,
     RESHARERS,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <PeopleResourceListByActivityCollection>{ 
+  const _valuesMap = const <PeopleResourceListByActivityCollection>{ 
     "plusoners": PLUSONERS,
     "resharers": RESHARERS,
   };
@@ -794,7 +794,7 @@ class ActivityActorName extends IdentityHash {
 // Schema .ActivityFeed
 class ActivityFeed extends IdentityHash {
   /**
- * The continuation token, used to page through large result sets. Provide this value in a
+ * The continuation token, which is used to page through large result sets. Provide this value in a
  * subsequent request to return the next page of results.
  */
   core.String nextPageToken;
@@ -870,7 +870,8 @@ class ActivityObject extends IdentityHash {
   /**
  * The content (text) as provided by the author, stored without any HTML formatting. When updating
  * an activity's content, use the value of originalContent as the starting point from which to make
- * edits.
+ * edits. The formatting uses inline formatting in the style of *bold*, _italic_ and
+ * -strikethrough-.
  */
   core.String originalContent;
 
@@ -885,7 +886,7 @@ class ActivityObject extends IdentityHash {
 
   /**
  * The HTML-formatted content, suitable for display. When creating or updating an activity, this
- * value must be supplied as plain text in the request. If successful, the response will contain the
+ * value must be supplied as plain text in the request. If successful, the response contains the
  * HTML-formatted content. When updating an activity, use originalContent as the starting value,
  * then assign the updated text to this property.
  */
@@ -1007,7 +1008,7 @@ class ActivityObjectAttachments extends IdentityHash {
   /** The title of the attachment (such as a photo caption or an article title). */
   core.String displayName;
 
-  /** The full image url for photo attachments. */
+  /** The full image URL for photo attachments. */
   ActivityObjectAttachmentsFullImage fullImage;
 
   /** The link to the attachment, should be of type text/html. */
@@ -1401,7 +1402,7 @@ class CommentActorImage extends IdentityHash {
 // Schema .CommentFeed
 class CommentFeed extends IdentityHash {
   /**
- * The continuation token, used to page through large result sets. Provide this value in a
+ * The continuation token, which is used to page through large result sets. Provide this value in a
  * subsequent request to return the next page of results.
  */
   core.String nextPageToken;
@@ -1463,10 +1464,10 @@ class CommentFeed extends IdentityHash {
 
 // Schema Comment.CommentInReplyTo
 class CommentInReplyTo extends IdentityHash {
-  /** The url of the activity. */
+  /** The URL of the activity. */
   core.String url;
 
-  /** The id of the activity. */
+  /** The ID of the activity. */
   core.String id;
 
   /** Parses an instance from its JSON representation. */
@@ -1521,7 +1522,7 @@ class CommentObject extends IdentityHash {
 // Schema .PeopleFeed
 class PeopleFeed extends IdentityHash {
   /**
- * The continuation token, used to page through large result sets. Provide this value in a
+ * The continuation token, which is used to page through large result sets. Provide this value in a
  * subsequent request to return the next page of results.
  */
   core.String nextPageToken;
@@ -1533,8 +1534,8 @@ class PeopleFeed extends IdentityHash {
   core.String title;
 
   /**
- * The people in this page of results. Each item will include the id, displayName, image, and url
- * for the person. To retrieve additional profile data, see the people.get method.
+ * The people in this page of results. Each item includes the id, displayName, image, and url for
+ * the person. To retrieve additional profile data, see the people.get method.
  */
   core.List<Person> items;
 
@@ -1984,15 +1985,15 @@ class PlusAclentryResource extends IdentityHash {
 // Enum PlusApi.Alt
 class PlusApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/json */
-  static final PlusApiAlt JSON = const PlusApiAlt._internal("json", 0);
+  const PlusApiAlt JSON = const PlusApiAlt._internal("json", 0);
 
   /** All values of this enumeration */
-  static final core.List<PlusApiAlt> values = const <PlusApiAlt>[
+  const core.List<PlusApiAlt> values = const <PlusApiAlt>[
     JSON,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <PlusApiAlt>{ 
+  const _valuesMap = const <PlusApiAlt>{ 
     "json": JSON,
   };
 

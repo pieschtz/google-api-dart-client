@@ -17,7 +17,7 @@
 #import('dart:json');
 
 #import('utils.dart');
-#import('http.dart');
+#import('http.dart', prefix:'http');
 
 // API DriveApi
 /**
@@ -27,28 +27,32 @@ class DriveApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
   final core.String baseUrl;
   /** How we should identify ourselves to the service. */
-  Authenticator authenticator;
+  http.Authenticator authenticator;
   /** The client library version */
   final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
   final core.String applicationName;
-  DriveApi get _$service() => this;
+  DriveApi get _$service => this;
   FilesResource _files;
-  FilesResource get files() => _files;
+  FilesResource get files => _files;
   AboutResource _about;
-  AboutResource get about() => _about;
+  AboutResource get about => _about;
   AppsResource _apps;
-  AppsResource get apps() => _apps;
+  AppsResource get apps => _apps;
+  CommentsResource _comments;
+  CommentsResource get comments => _comments;
   ParentsResource _parents;
-  ParentsResource get parents() => _parents;
+  ParentsResource get parents => _parents;
+  RepliesResource _replies;
+  RepliesResource get replies => _replies;
   RevisionsResource _revisions;
-  RevisionsResource get revisions() => _revisions;
+  RevisionsResource get revisions => _revisions;
   ChangesResource _changes;
-  ChangesResource get changes() => _changes;
+  ChangesResource get changes => _changes;
   ChildrenResource _children;
-  ChildrenResource get children() => _children;
+  ChildrenResource get children => _children;
   PermissionsResource _permissions;
-  PermissionsResource get permissions() => _permissions;
+  PermissionsResource get permissions => _permissions;
   
   /** Returns response with indentations and line breaks. */
   core.bool prettyPrint;
@@ -81,23 +85,25 @@ class DriveApi extends core.Object {
   DriveApiAlt alt;
 
 
-  DriveApi([this.baseUrl = "https://www.googleapis.com/drive/v2/", applicationName, this.authenticator]) :
+  DriveApi({this.baseUrl:"https://www.googleapis.com/drive/v2/", applicationName, this.authenticator}) :
       this.applicationName = (applicationName == null) ? null : applicationName
-          .replaceAll(const core.RegExp(@'\s+'), '_')
-          .replaceAll(const core.RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+          .replaceAll(const core.RegExp(r'\s+'), '_')
+          .replaceAll(const core.RegExp(r'[^-_.,0-9a-zA-Z]'), '')
   { 
     _files = new FilesResource._internal(this);
     _about = new AboutResource._internal(this);
     _apps = new AppsResource._internal(this);
+    _comments = new CommentsResource._internal(this);
     _parents = new ParentsResource._internal(this);
+    _replies = new RepliesResource._internal(this);
     _revisions = new RevisionsResource._internal(this);
     _changes = new ChangesResource._internal(this);
     _children = new ChildrenResource._internal(this);
     _permissions = new PermissionsResource._internal(this);
   }
-  core.String get userAgent() {
+  core.String get userAgent {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}drive/v2/20120816 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}drive/v2/20121016 google-api-dart-client/${clientVersion}";
   }
 
 
@@ -136,23 +142,23 @@ class FilesResource extends core.Object {
    *    * [ocrLanguage] If ocr is true, hints at the language to use. Valid values are ISO 639-1 codes.
    *    * [pinned] Whether to pin the head revision of the uploaded file.
   Default: false.
-   *    * [ocr] Whether to attempt OCR on .jpg, .png, or .gif uploads.
+   *    * [ocr] Whether to attempt OCR on .jpg, .png, .gif, or .pdf uploads.
   Default: false.
    *    * [timedTextTrackName] The timed text track name.
    *    * [timedTextLanguage] The language of the timed text.
    */
-  core.Future<File> insert(File content, [core.bool convert = UNSPECIFIED, core.String targetLanguage = UNSPECIFIED, core.String sourceLanguage = UNSPECIFIED, core.String ocrLanguage = UNSPECIFIED, core.bool pinned = UNSPECIFIED, core.bool ocr = UNSPECIFIED, core.String timedTextTrackName = UNSPECIFIED, core.String timedTextLanguage = UNSPECIFIED]) {
+  core.Future<File> insert(File content, {core.bool convert, core.String targetLanguage, core.String sourceLanguage, core.String ocrLanguage, core.bool pinned, core.bool ocr, core.String timedTextTrackName, core.String timedTextLanguage}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    if (UNSPECIFIED != convert) $queryParams["convert"] = convert;
-    if (UNSPECIFIED != targetLanguage) $queryParams["targetLanguage"] = targetLanguage;
-    if (UNSPECIFIED != sourceLanguage) $queryParams["sourceLanguage"] = sourceLanguage;
-    if (UNSPECIFIED != ocrLanguage) $queryParams["ocrLanguage"] = ocrLanguage;
-    if (UNSPECIFIED != pinned) $queryParams["pinned"] = pinned;
-    if (UNSPECIFIED != ocr) $queryParams["ocr"] = ocr;
-    if (UNSPECIFIED != timedTextTrackName) $queryParams["timedTextTrackName"] = timedTextTrackName;
-    if (UNSPECIFIED != timedTextLanguage) $queryParams["timedTextLanguage"] = timedTextLanguage;
+    if (?convert) $queryParams["convert"] = convert;
+    if (?targetLanguage) $queryParams["targetLanguage"] = targetLanguage;
+    if (?sourceLanguage) $queryParams["sourceLanguage"] = sourceLanguage;
+    if (?ocrLanguage) $queryParams["ocrLanguage"] = ocrLanguage;
+    if (?pinned) $queryParams["pinned"] = pinned;
+    if (?ocr) $queryParams["ocr"] = ocr;
+    if (?timedTextTrackName) $queryParams["timedTextTrackName"] = timedTextTrackName;
+    if (?timedTextLanguage) $queryParams["timedTextLanguage"] = timedTextLanguage;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -165,7 +171,7 @@ class FilesResource extends core.Object {
     final $body = JSON.stringify(File.serialize(content));
     final $path = "files";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -195,7 +201,7 @@ class FilesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "files/{fileId}/untrash";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -225,7 +231,7 @@ class FilesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "files/{fileId}/trash";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -243,13 +249,13 @@ class FilesResource extends core.Object {
   Default: false.
    *    * [projection] This parameter is deprecated and has no function.
    */
-  core.Future<File> get(core.String fileId, [core.bool updateViewedDate = UNSPECIFIED, FilesResourceGetProjection projection = UNSPECIFIED]) {
+  core.Future<File> get(core.String fileId, {core.bool updateViewedDate, FilesResourceGetProjection projection}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["fileId"] = fileId;
-    if (UNSPECIFIED != updateViewedDate) $queryParams["updateViewedDate"] = updateViewedDate;
-    if (UNSPECIFIED != projection) $queryParams["projection"] = projection;
+    if (?updateViewedDate) $queryParams["updateViewedDate"] = updateViewedDate;
+    if (?projection) $queryParams["projection"] = projection;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -260,7 +266,7 @@ class FilesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "files/{fileId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -280,14 +286,14 @@ class FilesResource extends core.Object {
   Default: 100.
   Minimum: 0.
    */
-  core.Future<FileList> list([core.String q = UNSPECIFIED, core.String pageToken = UNSPECIFIED, FilesResourceListProjection projection = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
+  core.Future<FileList> list({core.String q, core.String pageToken, FilesResourceListProjection projection, core.int maxResults}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    if (UNSPECIFIED != q) $queryParams["q"] = q;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != projection) $queryParams["projection"] = projection;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
+    if (?q) $queryParams["q"] = q;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?projection) $queryParams["projection"] = projection;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -298,7 +304,7 @@ class FilesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "files";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -328,27 +334,27 @@ class FilesResource extends core.Object {
    *    * [newRevision] Whether a blob upload should create a new revision. If false, the blob data in the current head
    *        revision will be replaced.
   Default: true.
-   *    * [ocr] Whether to attempt OCR on .jpg, .png, or .gif uploads.
+   *    * [ocr] Whether to attempt OCR on .jpg, .png, .gif, or .pdf uploads.
   Default: false.
    *    * [timedTextLanguage] The language of the timed text.
    *    * [timedTextTrackName] The timed text track name.
    */
-  core.Future<File> update(core.String fileId, File content, [core.bool convert = UNSPECIFIED, core.String targetLanguage = UNSPECIFIED, core.bool setModifiedDate = UNSPECIFIED, core.bool updateViewedDate = UNSPECIFIED, core.String sourceLanguage = UNSPECIFIED, core.String ocrLanguage = UNSPECIFIED, core.bool pinned = UNSPECIFIED, core.bool newRevision = UNSPECIFIED, core.bool ocr = UNSPECIFIED, core.String timedTextLanguage = UNSPECIFIED, core.String timedTextTrackName = UNSPECIFIED]) {
+  core.Future<File> update(core.String fileId, File content, {core.bool convert, core.String targetLanguage, core.bool setModifiedDate, core.bool updateViewedDate, core.String sourceLanguage, core.String ocrLanguage, core.bool pinned, core.bool newRevision, core.bool ocr, core.String timedTextLanguage, core.String timedTextTrackName}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["fileId"] = fileId;
-    if (UNSPECIFIED != convert) $queryParams["convert"] = convert;
-    if (UNSPECIFIED != targetLanguage) $queryParams["targetLanguage"] = targetLanguage;
-    if (UNSPECIFIED != setModifiedDate) $queryParams["setModifiedDate"] = setModifiedDate;
-    if (UNSPECIFIED != updateViewedDate) $queryParams["updateViewedDate"] = updateViewedDate;
-    if (UNSPECIFIED != sourceLanguage) $queryParams["sourceLanguage"] = sourceLanguage;
-    if (UNSPECIFIED != ocrLanguage) $queryParams["ocrLanguage"] = ocrLanguage;
-    if (UNSPECIFIED != pinned) $queryParams["pinned"] = pinned;
-    if (UNSPECIFIED != newRevision) $queryParams["newRevision"] = newRevision;
-    if (UNSPECIFIED != ocr) $queryParams["ocr"] = ocr;
-    if (UNSPECIFIED != timedTextLanguage) $queryParams["timedTextLanguage"] = timedTextLanguage;
-    if (UNSPECIFIED != timedTextTrackName) $queryParams["timedTextTrackName"] = timedTextTrackName;
+    if (?convert) $queryParams["convert"] = convert;
+    if (?targetLanguage) $queryParams["targetLanguage"] = targetLanguage;
+    if (?setModifiedDate) $queryParams["setModifiedDate"] = setModifiedDate;
+    if (?updateViewedDate) $queryParams["updateViewedDate"] = updateViewedDate;
+    if (?sourceLanguage) $queryParams["sourceLanguage"] = sourceLanguage;
+    if (?ocrLanguage) $queryParams["ocrLanguage"] = ocrLanguage;
+    if (?pinned) $queryParams["pinned"] = pinned;
+    if (?newRevision) $queryParams["newRevision"] = newRevision;
+    if (?ocr) $queryParams["ocr"] = ocr;
+    if (?timedTextLanguage) $queryParams["timedTextLanguage"] = timedTextLanguage;
+    if (?timedTextTrackName) $queryParams["timedTextTrackName"] = timedTextTrackName;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -361,7 +367,7 @@ class FilesResource extends core.Object {
     final $body = JSON.stringify(File.serialize(content));
     final $path = "files/{fileId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PUT", $headers);
+    final $http = new http.Request($url, "PUT", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -391,27 +397,27 @@ class FilesResource extends core.Object {
    *    * [newRevision] Whether a blob upload should create a new revision. If false, the blob data in the current head
    *        revision will be replaced.
   Default: true.
-   *    * [ocr] Whether to attempt OCR on .jpg, .png, or .gif uploads.
+   *    * [ocr] Whether to attempt OCR on .jpg, .png, .gif, or .pdf uploads.
   Default: false.
    *    * [timedTextLanguage] The language of the timed text.
    *    * [timedTextTrackName] The timed text track name.
    */
-  core.Future<File> patch(core.String fileId, File content, [core.bool convert = UNSPECIFIED, core.String targetLanguage = UNSPECIFIED, core.bool setModifiedDate = UNSPECIFIED, core.bool updateViewedDate = UNSPECIFIED, core.String sourceLanguage = UNSPECIFIED, core.String ocrLanguage = UNSPECIFIED, core.bool pinned = UNSPECIFIED, core.bool newRevision = UNSPECIFIED, core.bool ocr = UNSPECIFIED, core.String timedTextLanguage = UNSPECIFIED, core.String timedTextTrackName = UNSPECIFIED]) {
+  core.Future<File> patch(core.String fileId, File content, {core.bool convert, core.String targetLanguage, core.bool setModifiedDate, core.bool updateViewedDate, core.String sourceLanguage, core.String ocrLanguage, core.bool pinned, core.bool newRevision, core.bool ocr, core.String timedTextLanguage, core.String timedTextTrackName}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["fileId"] = fileId;
-    if (UNSPECIFIED != convert) $queryParams["convert"] = convert;
-    if (UNSPECIFIED != targetLanguage) $queryParams["targetLanguage"] = targetLanguage;
-    if (UNSPECIFIED != setModifiedDate) $queryParams["setModifiedDate"] = setModifiedDate;
-    if (UNSPECIFIED != updateViewedDate) $queryParams["updateViewedDate"] = updateViewedDate;
-    if (UNSPECIFIED != sourceLanguage) $queryParams["sourceLanguage"] = sourceLanguage;
-    if (UNSPECIFIED != ocrLanguage) $queryParams["ocrLanguage"] = ocrLanguage;
-    if (UNSPECIFIED != pinned) $queryParams["pinned"] = pinned;
-    if (UNSPECIFIED != newRevision) $queryParams["newRevision"] = newRevision;
-    if (UNSPECIFIED != ocr) $queryParams["ocr"] = ocr;
-    if (UNSPECIFIED != timedTextLanguage) $queryParams["timedTextLanguage"] = timedTextLanguage;
-    if (UNSPECIFIED != timedTextTrackName) $queryParams["timedTextTrackName"] = timedTextTrackName;
+    if (?convert) $queryParams["convert"] = convert;
+    if (?targetLanguage) $queryParams["targetLanguage"] = targetLanguage;
+    if (?setModifiedDate) $queryParams["setModifiedDate"] = setModifiedDate;
+    if (?updateViewedDate) $queryParams["updateViewedDate"] = updateViewedDate;
+    if (?sourceLanguage) $queryParams["sourceLanguage"] = sourceLanguage;
+    if (?ocrLanguage) $queryParams["ocrLanguage"] = ocrLanguage;
+    if (?pinned) $queryParams["pinned"] = pinned;
+    if (?newRevision) $queryParams["newRevision"] = newRevision;
+    if (?ocr) $queryParams["ocr"] = ocr;
+    if (?timedTextLanguage) $queryParams["timedTextLanguage"] = timedTextLanguage;
+    if (?timedTextTrackName) $queryParams["timedTextTrackName"] = timedTextTrackName;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -424,7 +430,7 @@ class FilesResource extends core.Object {
     final $body = JSON.stringify(File.serialize(content));
     final $path = "files/{fileId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PATCH", $headers);
+    final $http = new http.Request($url, "PATCH", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -454,7 +460,7 @@ class FilesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "files/{fileId}/touch";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -477,24 +483,24 @@ class FilesResource extends core.Object {
    *    * [ocrLanguage] If ocr is true, hints at the language to use. Valid values are ISO 639-1 codes.
    *    * [pinned] Whether to pin the head revision of the new copy.
   Default: false.
-   *    * [ocr] Whether to attempt OCR on .jpg, .png, or .gif uploads.
+   *    * [ocr] Whether to attempt OCR on .jpg, .png, .gif, or .pdf uploads.
   Default: false.
    *    * [timedTextLanguage] The language of the timed text.
    *    * [timedTextTrackName] The timed text track name.
    */
-  core.Future<File> copy(core.String fileId, File content, [core.bool convert = UNSPECIFIED, core.String targetLanguage = UNSPECIFIED, core.String sourceLanguage = UNSPECIFIED, core.String ocrLanguage = UNSPECIFIED, core.bool pinned = UNSPECIFIED, core.bool ocr = UNSPECIFIED, core.String timedTextLanguage = UNSPECIFIED, core.String timedTextTrackName = UNSPECIFIED]) {
+  core.Future<File> copy(core.String fileId, File content, {core.bool convert, core.String targetLanguage, core.String sourceLanguage, core.String ocrLanguage, core.bool pinned, core.bool ocr, core.String timedTextLanguage, core.String timedTextTrackName}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["fileId"] = fileId;
-    if (UNSPECIFIED != convert) $queryParams["convert"] = convert;
-    if (UNSPECIFIED != targetLanguage) $queryParams["targetLanguage"] = targetLanguage;
-    if (UNSPECIFIED != sourceLanguage) $queryParams["sourceLanguage"] = sourceLanguage;
-    if (UNSPECIFIED != ocrLanguage) $queryParams["ocrLanguage"] = ocrLanguage;
-    if (UNSPECIFIED != pinned) $queryParams["pinned"] = pinned;
-    if (UNSPECIFIED != ocr) $queryParams["ocr"] = ocr;
-    if (UNSPECIFIED != timedTextLanguage) $queryParams["timedTextLanguage"] = timedTextLanguage;
-    if (UNSPECIFIED != timedTextTrackName) $queryParams["timedTextTrackName"] = timedTextTrackName;
+    if (?convert) $queryParams["convert"] = convert;
+    if (?targetLanguage) $queryParams["targetLanguage"] = targetLanguage;
+    if (?sourceLanguage) $queryParams["sourceLanguage"] = sourceLanguage;
+    if (?ocrLanguage) $queryParams["ocrLanguage"] = ocrLanguage;
+    if (?pinned) $queryParams["pinned"] = pinned;
+    if (?ocr) $queryParams["ocr"] = ocr;
+    if (?timedTextLanguage) $queryParams["timedTextLanguage"] = timedTextLanguage;
+    if (?timedTextTrackName) $queryParams["timedTextTrackName"] = timedTextTrackName;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -507,7 +513,7 @@ class FilesResource extends core.Object {
     final $body = JSON.stringify(File.serialize(content));
     final $path = "files/{fileId}/copy";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -537,7 +543,7 @@ class FilesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "files/{fileId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "DELETE", $headers);
+    final $http = new http.Request($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -550,18 +556,18 @@ class FilesResource extends core.Object {
 // Enum FilesResource.Get.Projection
 class FilesResourceGetProjection extends core.Object implements core.Hashable {
   /** Deprecated */
-  static final FilesResourceGetProjection BASIC = const FilesResourceGetProjection._internal("BASIC", 0);
+  const FilesResourceGetProjection BASIC = const FilesResourceGetProjection._internal("BASIC", 0);
   /** Deprecated */
-  static final FilesResourceGetProjection FULL = const FilesResourceGetProjection._internal("FULL", 1);
+  const FilesResourceGetProjection FULL = const FilesResourceGetProjection._internal("FULL", 1);
 
   /** All values of this enumeration */
-  static final core.List<FilesResourceGetProjection> values = const <FilesResourceGetProjection>[
+  const core.List<FilesResourceGetProjection> values = const <FilesResourceGetProjection>[
     BASIC,
     FULL,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <FilesResourceGetProjection>{ 
+  const _valuesMap = const <FilesResourceGetProjection>{ 
     "BASIC": BASIC,
     "FULL": FULL,
   };
@@ -581,18 +587,18 @@ class FilesResourceGetProjection extends core.Object implements core.Hashable {
 // Enum FilesResource.List.Projection
 class FilesResourceListProjection extends core.Object implements core.Hashable {
   /** Deprecated */
-  static final FilesResourceListProjection BASIC = const FilesResourceListProjection._internal("BASIC", 0);
+  const FilesResourceListProjection BASIC = const FilesResourceListProjection._internal("BASIC", 0);
   /** Deprecated */
-  static final FilesResourceListProjection FULL = const FilesResourceListProjection._internal("FULL", 1);
+  const FilesResourceListProjection FULL = const FilesResourceListProjection._internal("FULL", 1);
 
   /** All values of this enumeration */
-  static final core.List<FilesResourceListProjection> values = const <FilesResourceListProjection>[
+  const core.List<FilesResourceListProjection> values = const <FilesResourceListProjection>[
     BASIC,
     FULL,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <FilesResourceListProjection>{ 
+  const _valuesMap = const <FilesResourceListProjection>{ 
     "BASIC": BASIC,
     "FULL": FULL,
   };
@@ -626,13 +632,13 @@ class AboutResource extends core.Object {
   Default: 1.
    *    * [startChangeId] Change ID to start counting from when calculating number of remaining change IDs
    */
-  core.Future<About> get([core.bool includeSubscribed = UNSPECIFIED, core.String maxChangeIdCount = UNSPECIFIED, core.String startChangeId = UNSPECIFIED]) {
+  core.Future<About> get({core.bool includeSubscribed, core.String maxChangeIdCount, core.String startChangeId}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    if (UNSPECIFIED != includeSubscribed) $queryParams["includeSubscribed"] = includeSubscribed;
-    if (UNSPECIFIED != maxChangeIdCount) $queryParams["maxChangeIdCount"] = maxChangeIdCount;
-    if (UNSPECIFIED != startChangeId) $queryParams["startChangeId"] = startChangeId;
+    if (?includeSubscribed) $queryParams["includeSubscribed"] = includeSubscribed;
+    if (?maxChangeIdCount) $queryParams["maxChangeIdCount"] = maxChangeIdCount;
+    if (?startChangeId) $queryParams["startChangeId"] = startChangeId;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -643,7 +649,7 @@ class AboutResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "about";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -678,7 +684,7 @@ class AppsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "apps";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -708,13 +714,233 @@ class AppsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "apps/{appId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
     return $authenticatedHttp
         .chain((final $req) => $req.request())
         .transform((final $text) => App.parse(JSON.parse($text)));
+  }
+}
+
+// Resource .CommentsResource
+class CommentsResource extends core.Object {
+  final DriveApi _$service;
+  
+  CommentsResource._internal(DriveApi $service) : _$service = $service;
+
+  // Method CommentsResource.Insert
+  /**
+   * Creates a new comment on the given file.
+   *
+   *    * [content] the Comment
+   *    * [fileId] The ID of the file.
+   */
+  core.Future<Comment> insert(core.String fileId, Comment content) {
+    final $queryParams = {};
+    final $headers = {};
+    final $pathParams = {};
+    $pathParams["fileId"] = fileId;
+    if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
+    if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
+    if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
+    if (_$service.oauthToken != null) $headers["Authorization"] = "Bearer ${_$service.oauthToken}";
+    if (_$service.key != null) $queryParams["key"] = _$service.key;
+    if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
+    if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
+    $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
+    $headers["Content-Type"] = "application/json";
+    final $body = JSON.stringify(Comment.serialize(content));
+    final $path = "files/{fileId}/comments";
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
+    final $http = new http.Request($url, "POST", $headers);
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new core.Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Comment.parse(JSON.parse($text)));
+  }
+
+  // Method CommentsResource.Get
+  /**
+   * Gets a comment by ID.
+   *
+   *    * [fileId] The ID of the file.
+   *    * [commentId] The ID of the comment.
+   */
+  core.Future<Comment> get(core.String fileId, core.String commentId) {
+    final $queryParams = {};
+    final $headers = {};
+    final $pathParams = {};
+    $pathParams["fileId"] = fileId;
+    $pathParams["commentId"] = commentId;
+    if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
+    if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
+    if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
+    if (_$service.oauthToken != null) $headers["Authorization"] = "Bearer ${_$service.oauthToken}";
+    if (_$service.key != null) $queryParams["key"] = _$service.key;
+    if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
+    if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
+    $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
+    final $path = "files/{fileId}/comments/{commentId}";
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
+    final $http = new http.Request($url, "GET", $headers);
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new core.Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => Comment.parse(JSON.parse($text)));
+  }
+
+  // Method CommentsResource.List
+  /**
+   * Lists a file's comments.
+   *
+   *    * [fileId] The ID of the file.
+   *    * [pageToken] The continuation token, used to page through large result sets. To get the next page of results, set
+   *        this parameter to the value of "nextPageToken" from the previous response.
+   *    * [updatedMin] Only discussions that were updated after this timestamp will be returned. Formatted as an RFC 3339
+   *        timestamp.
+   *    * [includeDeleted] If set, all comments, including deleted comments (with content stripped) will be returned.
+  Default:
+   *        false.
+   *    * [maxResults] The maximum number of discussions to include in the response, used for paging.
+  Default: 20.
+  Minimum:
+   *        0.
+  Maximum: 100.
+   */
+  core.Future<CommentList> list(core.String fileId, {core.String pageToken, core.String updatedMin, core.bool includeDeleted, core.int maxResults}) {
+    final $queryParams = {};
+    final $headers = {};
+    final $pathParams = {};
+    $pathParams["fileId"] = fileId;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?updatedMin) $queryParams["updatedMin"] = updatedMin;
+    if (?includeDeleted) $queryParams["includeDeleted"] = includeDeleted;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
+    if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
+    if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
+    if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
+    if (_$service.oauthToken != null) $headers["Authorization"] = "Bearer ${_$service.oauthToken}";
+    if (_$service.key != null) $queryParams["key"] = _$service.key;
+    if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
+    if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
+    $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
+    final $path = "files/{fileId}/comments";
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
+    final $http = new http.Request($url, "GET", $headers);
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new core.Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => CommentList.parse(JSON.parse($text)));
+  }
+
+  // Method CommentsResource.Update
+  /**
+   * Updates an existing comment.
+   *
+   *    * [content] the Comment
+   *    * [fileId] The ID of the file.
+   *    * [commentId] The ID of the comment.
+   */
+  core.Future<Comment> update(core.String fileId, core.String commentId, Comment content) {
+    final $queryParams = {};
+    final $headers = {};
+    final $pathParams = {};
+    $pathParams["fileId"] = fileId;
+    $pathParams["commentId"] = commentId;
+    if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
+    if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
+    if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
+    if (_$service.oauthToken != null) $headers["Authorization"] = "Bearer ${_$service.oauthToken}";
+    if (_$service.key != null) $queryParams["key"] = _$service.key;
+    if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
+    if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
+    $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
+    $headers["Content-Type"] = "application/json";
+    final $body = JSON.stringify(Comment.serialize(content));
+    final $path = "files/{fileId}/comments/{commentId}";
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
+    final $http = new http.Request($url, "PUT", $headers);
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new core.Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Comment.parse(JSON.parse($text)));
+  }
+
+  // Method CommentsResource.Patch
+  /**
+   * Updates an existing comment. This method supports patch semantics.
+   *
+   *    * [content] the Comment
+   *    * [fileId] The ID of the file.
+   *    * [commentId] The ID of the comment.
+   */
+  core.Future<Comment> patch(core.String fileId, core.String commentId, Comment content) {
+    final $queryParams = {};
+    final $headers = {};
+    final $pathParams = {};
+    $pathParams["fileId"] = fileId;
+    $pathParams["commentId"] = commentId;
+    if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
+    if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
+    if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
+    if (_$service.oauthToken != null) $headers["Authorization"] = "Bearer ${_$service.oauthToken}";
+    if (_$service.key != null) $queryParams["key"] = _$service.key;
+    if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
+    if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
+    $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
+    $headers["Content-Type"] = "application/json";
+    final $body = JSON.stringify(Comment.serialize(content));
+    final $path = "files/{fileId}/comments/{commentId}";
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
+    final $http = new http.Request($url, "PATCH", $headers);
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new core.Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => Comment.parse(JSON.parse($text)));
+  }
+
+  // Method CommentsResource.Delete
+  /**
+   * Deletes a comment.
+   *
+   *    * [fileId] The ID of the file.
+   *    * [commentId] The ID of the comment.
+   */
+  core.Future delete(core.String fileId, core.String commentId) {
+    final $queryParams = {};
+    final $headers = {};
+    final $pathParams = {};
+    $pathParams["fileId"] = fileId;
+    $pathParams["commentId"] = commentId;
+    if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
+    if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
+    if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
+    if (_$service.oauthToken != null) $headers["Authorization"] = "Bearer ${_$service.oauthToken}";
+    if (_$service.key != null) $queryParams["key"] = _$service.key;
+    if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
+    if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
+    $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
+    final $path = "files/{fileId}/comments/{commentId}";
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
+    final $http = new http.Request($url, "DELETE", $headers);
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new core.Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => identity(JSON.parse($text)));
   }
 }
 
@@ -748,7 +974,7 @@ class ParentsResource extends core.Object {
     final $body = JSON.stringify(ParentReference.serialize(content));
     final $path = "files/{fileId}/parents";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -780,7 +1006,7 @@ class ParentsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "files/{fileId}/parents/{parentId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -810,7 +1036,7 @@ class ParentsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "files/{fileId}/parents";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -842,7 +1068,231 @@ class ParentsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "files/{fileId}/parents/{parentId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "DELETE", $headers);
+    final $http = new http.Request($url, "DELETE", $headers);
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new core.Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => identity(JSON.parse($text)));
+  }
+}
+
+// Resource .RepliesResource
+class RepliesResource extends core.Object {
+  final DriveApi _$service;
+  
+  RepliesResource._internal(DriveApi $service) : _$service = $service;
+
+  // Method RepliesResource.Insert
+  /**
+   * Creates a new reply to the given comment.
+   *
+   *    * [content] the CommentReply
+   *    * [fileId] The ID of the file.
+   *    * [commentId] The ID of the comment.
+   */
+  core.Future<CommentReply> insert(core.String fileId, core.String commentId, CommentReply content) {
+    final $queryParams = {};
+    final $headers = {};
+    final $pathParams = {};
+    $pathParams["fileId"] = fileId;
+    $pathParams["commentId"] = commentId;
+    if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
+    if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
+    if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
+    if (_$service.oauthToken != null) $headers["Authorization"] = "Bearer ${_$service.oauthToken}";
+    if (_$service.key != null) $queryParams["key"] = _$service.key;
+    if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
+    if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
+    $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
+    $headers["Content-Type"] = "application/json";
+    final $body = JSON.stringify(CommentReply.serialize(content));
+    final $path = "files/{fileId}/comments/{commentId}/replies";
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
+    final $http = new http.Request($url, "POST", $headers);
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new core.Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => CommentReply.parse(JSON.parse($text)));
+  }
+
+  // Method RepliesResource.Get
+  /**
+   * Gets a reply.
+   *
+   *    * [fileId] The ID of the file.
+   *    * [commentId] The ID of the comment.
+   *    * [replyId] The ID of the reply.
+   */
+  core.Future<CommentReply> get(core.String fileId, core.String commentId, core.String replyId) {
+    final $queryParams = {};
+    final $headers = {};
+    final $pathParams = {};
+    $pathParams["fileId"] = fileId;
+    $pathParams["commentId"] = commentId;
+    $pathParams["replyId"] = replyId;
+    if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
+    if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
+    if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
+    if (_$service.oauthToken != null) $headers["Authorization"] = "Bearer ${_$service.oauthToken}";
+    if (_$service.key != null) $queryParams["key"] = _$service.key;
+    if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
+    if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
+    $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
+    final $path = "files/{fileId}/comments/{commentId}/replies/{replyId}";
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
+    final $http = new http.Request($url, "GET", $headers);
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new core.Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => CommentReply.parse(JSON.parse($text)));
+  }
+
+  // Method RepliesResource.List
+  /**
+   * Lists all of the replies to a comment.
+   *
+   *    * [fileId] The ID of the file.
+   *    * [commentId] The ID of the comment.
+   *    * [pageToken] The continuation token, used to page through large result sets. To get the next page of results, set
+   *        this parameter to the value of "nextPageToken" from the previous response.
+   *    * [maxResults] The maximum number of replies to include in the response, used for paging.
+  Default: 20.
+  Minimum: 0.
+   *        Maximum: 100.
+   */
+  core.Future<CommentReplyList> list(core.String fileId, core.String commentId, {core.String pageToken, core.int maxResults}) {
+    final $queryParams = {};
+    final $headers = {};
+    final $pathParams = {};
+    $pathParams["fileId"] = fileId;
+    $pathParams["commentId"] = commentId;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
+    if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
+    if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
+    if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
+    if (_$service.oauthToken != null) $headers["Authorization"] = "Bearer ${_$service.oauthToken}";
+    if (_$service.key != null) $queryParams["key"] = _$service.key;
+    if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
+    if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
+    $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
+    final $path = "files/{fileId}/comments/{commentId}/replies";
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
+    final $http = new http.Request($url, "GET", $headers);
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new core.Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request())
+        .transform((final $text) => CommentReplyList.parse(JSON.parse($text)));
+  }
+
+  // Method RepliesResource.Update
+  /**
+   * Updates an existing reply.
+   *
+   *    * [content] the CommentReply
+   *    * [fileId] The ID of the file.
+   *    * [commentId] The ID of the comment.
+   *    * [replyId] The ID of the reply.
+   */
+  core.Future<CommentReply> update(core.String fileId, core.String commentId, core.String replyId, CommentReply content) {
+    final $queryParams = {};
+    final $headers = {};
+    final $pathParams = {};
+    $pathParams["fileId"] = fileId;
+    $pathParams["commentId"] = commentId;
+    $pathParams["replyId"] = replyId;
+    if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
+    if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
+    if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
+    if (_$service.oauthToken != null) $headers["Authorization"] = "Bearer ${_$service.oauthToken}";
+    if (_$service.key != null) $queryParams["key"] = _$service.key;
+    if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
+    if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
+    $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
+    $headers["Content-Type"] = "application/json";
+    final $body = JSON.stringify(CommentReply.serialize(content));
+    final $path = "files/{fileId}/comments/{commentId}/replies/{replyId}";
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
+    final $http = new http.Request($url, "PUT", $headers);
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new core.Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => CommentReply.parse(JSON.parse($text)));
+  }
+
+  // Method RepliesResource.Patch
+  /**
+   * Updates an existing reply. This method supports patch semantics.
+   *
+   *    * [content] the CommentReply
+   *    * [fileId] The ID of the file.
+   *    * [commentId] The ID of the comment.
+   *    * [replyId] The ID of the reply.
+   */
+  core.Future<CommentReply> patch(core.String fileId, core.String commentId, core.String replyId, CommentReply content) {
+    final $queryParams = {};
+    final $headers = {};
+    final $pathParams = {};
+    $pathParams["fileId"] = fileId;
+    $pathParams["commentId"] = commentId;
+    $pathParams["replyId"] = replyId;
+    if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
+    if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
+    if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
+    if (_$service.oauthToken != null) $headers["Authorization"] = "Bearer ${_$service.oauthToken}";
+    if (_$service.key != null) $queryParams["key"] = _$service.key;
+    if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
+    if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
+    $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
+    $headers["Content-Type"] = "application/json";
+    final $body = JSON.stringify(CommentReply.serialize(content));
+    final $path = "files/{fileId}/comments/{commentId}/replies/{replyId}";
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
+    final $http = new http.Request($url, "PATCH", $headers);
+    final $authenticatedHttp = (_$service.authenticator == null)
+        ? new core.Future.immediate($http)
+        : _$service.authenticator.authenticate($http);
+    return $authenticatedHttp
+        .chain((final $req) => $req.request($body))
+        .transform((final $text) => CommentReply.parse(JSON.parse($text)));
+  }
+
+  // Method RepliesResource.Delete
+  /**
+   * Deletes a reply.
+   *
+   *    * [fileId] The ID of the file.
+   *    * [commentId] The ID of the comment.
+   *    * [replyId] The ID of the reply.
+   */
+  core.Future delete(core.String fileId, core.String commentId, core.String replyId) {
+    final $queryParams = {};
+    final $headers = {};
+    final $pathParams = {};
+    $pathParams["fileId"] = fileId;
+    $pathParams["commentId"] = commentId;
+    $pathParams["replyId"] = replyId;
+    if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
+    if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
+    if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
+    if (_$service.oauthToken != null) $headers["Authorization"] = "Bearer ${_$service.oauthToken}";
+    if (_$service.key != null) $queryParams["key"] = _$service.key;
+    if (_$service.userIp != null) $queryParams["userIp"] = _$service.userIp;
+    if (_$service.alt != null) $queryParams["alt"] = _$service.alt;
+    $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
+    final $path = "files/{fileId}/comments/{commentId}/replies/{replyId}";
+    final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
+    final $http = new http.Request($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -884,7 +1334,7 @@ class RevisionsResource extends core.Object {
     final $body = JSON.stringify(Revision.serialize(content));
     final $path = "files/{fileId}/revisions/{revisionId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PATCH", $headers);
+    final $http = new http.Request($url, "PATCH", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -916,7 +1366,7 @@ class RevisionsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "files/{fileId}/revisions/{revisionId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -946,7 +1396,7 @@ class RevisionsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "files/{fileId}/revisions";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -981,7 +1431,7 @@ class RevisionsResource extends core.Object {
     final $body = JSON.stringify(Revision.serialize(content));
     final $path = "files/{fileId}/revisions/{revisionId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PUT", $headers);
+    final $http = new http.Request($url, "PUT", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1013,7 +1463,7 @@ class RevisionsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "files/{fileId}/revisions/{revisionId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "DELETE", $headers);
+    final $http = new http.Request($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1043,15 +1493,15 @@ class ChangesResource extends core.Object {
   Minimum: 0.
    *    * [pageToken] Page token for changes.
    */
-  core.Future<ChangeList> list([core.bool includeSubscribed = UNSPECIFIED, core.String startChangeId = UNSPECIFIED, core.bool includeDeleted = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String pageToken = UNSPECIFIED]) {
+  core.Future<ChangeList> list({core.bool includeSubscribed, core.String startChangeId, core.bool includeDeleted, core.int maxResults, core.String pageToken}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    if (UNSPECIFIED != includeSubscribed) $queryParams["includeSubscribed"] = includeSubscribed;
-    if (UNSPECIFIED != startChangeId) $queryParams["startChangeId"] = startChangeId;
-    if (UNSPECIFIED != includeDeleted) $queryParams["includeDeleted"] = includeDeleted;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
+    if (?includeSubscribed) $queryParams["includeSubscribed"] = includeSubscribed;
+    if (?startChangeId) $queryParams["startChangeId"] = startChangeId;
+    if (?includeDeleted) $queryParams["includeDeleted"] = includeDeleted;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -1062,7 +1512,7 @@ class ChangesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "changes";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1092,7 +1542,7 @@ class ChangesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "changes/{changeId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1132,7 +1582,7 @@ class ChildrenResource extends core.Object {
     final $body = JSON.stringify(ChildReference.serialize(content));
     final $path = "files/{folderId}/children";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1164,7 +1614,7 @@ class ChildrenResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "files/{folderId}/children/{childId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1184,14 +1634,14 @@ class ChildrenResource extends core.Object {
   Default: 100.
   Minimum: 0.
    */
-  core.Future<ChildList> list(core.String folderId, [core.String q = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
+  core.Future<ChildList> list(core.String folderId, {core.String q, core.String pageToken, core.int maxResults}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["folderId"] = folderId;
-    if (UNSPECIFIED != q) $queryParams["q"] = q;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
+    if (?q) $queryParams["q"] = q;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -1202,7 +1652,7 @@ class ChildrenResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "files/{folderId}/children";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1234,7 +1684,7 @@ class ChildrenResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "files/{folderId}/children/{childId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "DELETE", $headers);
+    final $http = new http.Request($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1259,12 +1709,12 @@ class PermissionsResource extends core.Object {
    *    * [sendNotificationEmails] Whether to send notification emails.
   Default: true.
    */
-  core.Future<Permission> insert(core.String fileId, Permission content, [core.bool sendNotificationEmails = UNSPECIFIED]) {
+  core.Future<Permission> insert(core.String fileId, Permission content, {core.bool sendNotificationEmails}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["fileId"] = fileId;
-    if (UNSPECIFIED != sendNotificationEmails) $queryParams["sendNotificationEmails"] = sendNotificationEmails;
+    if (?sendNotificationEmails) $queryParams["sendNotificationEmails"] = sendNotificationEmails;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -1277,7 +1727,7 @@ class PermissionsResource extends core.Object {
     final $body = JSON.stringify(Permission.serialize(content));
     final $path = "files/{fileId}/permissions";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1309,7 +1759,7 @@ class PermissionsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "files/{fileId}/permissions/{permissionId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1339,7 +1789,7 @@ class PermissionsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "files/{fileId}/permissions";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1374,7 +1824,7 @@ class PermissionsResource extends core.Object {
     final $body = JSON.stringify(Permission.serialize(content));
     final $path = "files/{fileId}/permissions/{permissionId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PUT", $headers);
+    final $http = new http.Request($url, "PUT", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1409,7 +1859,7 @@ class PermissionsResource extends core.Object {
     final $body = JSON.stringify(Permission.serialize(content));
     final $path = "files/{fileId}/permissions/{permissionId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PATCH", $headers);
+    final $http = new http.Request($url, "PATCH", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1441,7 +1891,7 @@ class PermissionsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "files/{fileId}/permissions/{permissionId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "DELETE", $headers);
+    final $http = new http.Request($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1461,6 +1911,9 @@ class About extends IdentityHash {
 
   /** The number of quota bytes used. */
   core.String quotaBytesUsed;
+
+  /** The authenticated user. */
+  User user;
 
   /** The current user's ID as visible in the permissions collection. */
   core.String permissionId;
@@ -1501,6 +1954,9 @@ class About extends IdentityHash {
   /** The allowable export formats. */
   core.List<AboutExportFormats> exportFormats;
 
+  /** The number of quota bytes used by all Google apps (Drive, Picasa, etc.). */
+  core.String quotaBytesUsedAggregate;
+
   /** The domain sharing policy for the current user. */
   core.String domainSharingPolicy;
 
@@ -1517,6 +1973,7 @@ class About extends IdentityHash {
     result.kind = identity(json["kind"]);
     result.features = map(AboutFeatures.parse)(json["features"]);
     result.quotaBytesUsed = identity(json["quotaBytesUsed"]);
+    result.user = User.parse(json["user"]);
     result.permissionId = identity(json["permissionId"]);
     result.maxUploadSizes = map(AboutMaxUploadSizes.parse)(json["maxUploadSizes"]);
     result.name = identity(json["name"]);
@@ -1529,6 +1986,7 @@ class About extends IdentityHash {
     result.largestChangeId = identity(json["largestChangeId"]);
     result.quotaBytesUsedInTrash = identity(json["quotaBytesUsedInTrash"]);
     result.exportFormats = map(AboutExportFormats.parse)(json["exportFormats"]);
+    result.quotaBytesUsedAggregate = identity(json["quotaBytesUsedAggregate"]);
     result.domainSharingPolicy = identity(json["domainSharingPolicy"]);
     result.selfLink = identity(json["selfLink"]);
     result.isCurrentAppInstalled = identity(json["isCurrentAppInstalled"]);
@@ -1541,6 +1999,7 @@ class About extends IdentityHash {
     result["kind"] = identity(value.kind);
     result["features"] = map(AboutFeatures.serialize)(value.features);
     result["quotaBytesUsed"] = identity(value.quotaBytesUsed);
+    result["user"] = User.serialize(value.user);
     result["permissionId"] = identity(value.permissionId);
     result["maxUploadSizes"] = map(AboutMaxUploadSizes.serialize)(value.maxUploadSizes);
     result["name"] = identity(value.name);
@@ -1553,6 +2012,7 @@ class About extends IdentityHash {
     result["largestChangeId"] = identity(value.largestChangeId);
     result["quotaBytesUsedInTrash"] = identity(value.quotaBytesUsedInTrash);
     result["exportFormats"] = map(AboutExportFormats.serialize)(value.exportFormats);
+    result["quotaBytesUsedAggregate"] = identity(value.quotaBytesUsedAggregate);
     result["domainSharingPolicy"] = identity(value.domainSharingPolicy);
     result["selfLink"] = identity(value.selfLink);
     result["isCurrentAppInstalled"] = identity(value.isCurrentAppInstalled);
@@ -2073,6 +2533,278 @@ class ChildReference extends IdentityHash {
   toString() => serialize(this).toString();
 }
 
+// Schema .Comment
+class Comment extends IdentityHash {
+  /**
+ * The status of this comment. Status can be changed by posting a reply to a comment with the
+ * desired status. - "open" - The comment is still open. - "resolved" - The comment has been
+ * resolved by one of its replies.
+ */
+  core.String status;
+
+  /** A link back to this comment. */
+  core.String selfLink;
+
+  /** This is always drive#comment. */
+  core.String kind;
+
+  /** The user who wrote this comment. */
+  User author;
+
+  /**
+ * Whether this comment has been deleted. If a comment has been deleted the content will be cleared
+ * and this will only represent a comment that once existed.
+ */
+  core.bool deleted;
+
+  /** Replies to this post. */
+  core.List<CommentReply> replies;
+
+  /** HTML formatted content for this comment. */
+  core.String htmlContent;
+
+  /**
+ * The plain text content used to create this comment. This is not HTML safe and should only be used
+ * as a starting point to make edits to a comment's content.
+ */
+  core.String content;
+
+  /** The date when this comment or any of its replies were last modified. */
+  core.String modifiedDate;
+
+  /** The context of the file which is being commented on. */
+  CommentContext context;
+
+  /** The date when this comment was first created. */
+  core.String createdDate;
+
+  /** The ID of the comment. */
+  core.String commentId;
+
+  /**
+ * A region of the document represented as a JSON string. See anchor documentation for details on
+ * how to define and interpret anchor properties.
+ */
+  core.String anchor;
+
+  /** The title of the file which this comment is addressing. */
+  core.String fileTitle;
+
+  /** The file which this comment is addressing. */
+  core.String fileId;
+
+  /** Parses an instance from its JSON representation. */
+  static Comment parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new Comment();
+    result.status = identity(json["status"]);
+    result.selfLink = identity(json["selfLink"]);
+    result.kind = identity(json["kind"]);
+    result.author = User.parse(json["author"]);
+    result.deleted = identity(json["deleted"]);
+    result.replies = map(CommentReply.parse)(json["replies"]);
+    result.htmlContent = identity(json["htmlContent"]);
+    result.content = identity(json["content"]);
+    result.modifiedDate = identity(json["modifiedDate"]);
+    result.context = CommentContext.parse(json["context"]);
+    result.createdDate = identity(json["createdDate"]);
+    result.commentId = identity(json["commentId"]);
+    result.anchor = identity(json["anchor"]);
+    result.fileTitle = identity(json["fileTitle"]);
+    result.fileId = identity(json["fileId"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(Comment value) {
+    if (value == null) return null;
+    final result = {};
+    result["status"] = identity(value.status);
+    result["selfLink"] = identity(value.selfLink);
+    result["kind"] = identity(value.kind);
+    result["author"] = User.serialize(value.author);
+    result["deleted"] = identity(value.deleted);
+    result["replies"] = map(CommentReply.serialize)(value.replies);
+    result["htmlContent"] = identity(value.htmlContent);
+    result["content"] = identity(value.content);
+    result["modifiedDate"] = identity(value.modifiedDate);
+    result["context"] = CommentContext.serialize(value.context);
+    result["createdDate"] = identity(value.createdDate);
+    result["commentId"] = identity(value.commentId);
+    result["anchor"] = identity(value.anchor);
+    result["fileTitle"] = identity(value.fileTitle);
+    result["fileId"] = identity(value.fileId);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema Comment.CommentContext
+class CommentContext extends IdentityHash {
+  /** The MIME type of the context snippet. */
+  core.String type;
+
+  /**
+ * Data representation of the segment of the file being commented on. In the case of a text file for
+ * example, this would be the actual text that the comment is about.
+ */
+  core.String value;
+
+  /** Parses an instance from its JSON representation. */
+  static CommentContext parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new CommentContext();
+    result.type = identity(json["type"]);
+    result.value = identity(json["value"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(CommentContext value) {
+    if (value == null) return null;
+    final result = {};
+    result["type"] = identity(value.type);
+    result["value"] = identity(value.value);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema .CommentList
+class CommentList extends IdentityHash {
+  /** The token to use to request the next page of results. */
+  core.String nextPageToken;
+
+  /** List of comments. */
+  core.List<Comment> items;
+
+  /** This is always drive#commentList. */
+  core.String kind;
+
+  /** Parses an instance from its JSON representation. */
+  static CommentList parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new CommentList();
+    result.nextPageToken = identity(json["nextPageToken"]);
+    result.items = map(Comment.parse)(json["items"]);
+    result.kind = identity(json["kind"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(CommentList value) {
+    if (value == null) return null;
+    final result = {};
+    result["nextPageToken"] = identity(value.nextPageToken);
+    result["items"] = map(Comment.serialize)(value.items);
+    result["kind"] = identity(value.kind);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema .CommentReply
+class CommentReply extends IdentityHash {
+  /** This is always drive#commentReply. */
+  core.String kind;
+
+  /** The user who wrote this reply. */
+  User author;
+
+  /**
+ * Whether this reply has been deleted. If a reply has been deleted the content will be cleared and
+ * this will only represent a reply that once existed.
+ */
+  core.bool deleted;
+
+  /** HTML formatted content for this reply. */
+  core.String htmlContent;
+
+  /**
+ * The plain text content used to create this reply. This is not HTML safe and should only be used
+ * as a starting point to make edits to a reply's content. This field is required on inserts if no
+ * verb is specified (resolve/reopen).
+ */
+  core.String content;
+
+  /**
+ * The action this reply performed to the parent comment. When creating a new reply this is the
+ * action to be perform to the parent comment. Possible values are: - "resolve" - To resolve a
+ * comment. - "reopen" - To reopen (un-resolve) a comment.
+ */
+  core.String verb;
+
+  /** The ID of the reply. */
+  core.String replyId;
+
+  /** The date when this reply was last modified. */
+  core.String modifiedDate;
+
+  /** The date when this reply was first created. */
+  core.String createdDate;
+
+  /** Parses an instance from its JSON representation. */
+  static CommentReply parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new CommentReply();
+    result.kind = identity(json["kind"]);
+    result.author = User.parse(json["author"]);
+    result.deleted = identity(json["deleted"]);
+    result.htmlContent = identity(json["htmlContent"]);
+    result.content = identity(json["content"]);
+    result.verb = identity(json["verb"]);
+    result.replyId = identity(json["replyId"]);
+    result.modifiedDate = identity(json["modifiedDate"]);
+    result.createdDate = identity(json["createdDate"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(CommentReply value) {
+    if (value == null) return null;
+    final result = {};
+    result["kind"] = identity(value.kind);
+    result["author"] = User.serialize(value.author);
+    result["deleted"] = identity(value.deleted);
+    result["htmlContent"] = identity(value.htmlContent);
+    result["content"] = identity(value.content);
+    result["verb"] = identity(value.verb);
+    result["replyId"] = identity(value.replyId);
+    result["modifiedDate"] = identity(value.modifiedDate);
+    result["createdDate"] = identity(value.createdDate);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema .CommentReplyList
+class CommentReplyList extends IdentityHash {
+  /** The token to use to request the next page of results. */
+  core.String nextPageToken;
+
+  /** List of reply. */
+  core.List<CommentReply> items;
+
+  /** This is always drive#commentReplyList. */
+  core.String kind;
+
+  /** Parses an instance from its JSON representation. */
+  static CommentReplyList parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new CommentReplyList();
+    result.nextPageToken = identity(json["nextPageToken"]);
+    result.items = map(CommentReply.parse)(json["items"]);
+    result.kind = identity(json["kind"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(CommentReplyList value) {
+    if (value == null) return null;
+    final result = {};
+    result["nextPageToken"] = identity(value.nextPageToken);
+    result["items"] = map(CommentReply.serialize)(value.items);
+    result["kind"] = identity(value.kind);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
 // Schema .File
 class File extends IdentityHash {
   /**
@@ -2132,6 +2864,12 @@ class File extends IdentityHash {
 
   /** Links for exporting Google Docs to specific formats. */
   core.Map<core.String, core.String> exportLinks;
+
+  /**
+ * Thumbnail for the file. Only accepted on upload and for files that are not already thumbnailed by
+ * Google.
+ */
+  FileThumbnail thumbnail;
 
   /**
  * The original filename if the file was uploaded manually, or the original title if the file was
@@ -2235,6 +2973,7 @@ class File extends IdentityHash {
     result.lastViewedByMeDate = identity(json["lastViewedByMeDate"]);
     result.parents = map(ParentReference.parse)(json["parents"]);
     result.exportLinks = mapValues(identity)(json["exportLinks"]);
+    result.thumbnail = FileThumbnail.parse(json["thumbnail"]);
     result.originalFilename = identity(json["originalFilename"]);
     result.description = identity(json["description"]);
     result.webContentLink = identity(json["webContentLink"]);
@@ -2274,6 +3013,7 @@ class File extends IdentityHash {
     result["lastViewedByMeDate"] = identity(value.lastViewedByMeDate);
     result["parents"] = map(ParentReference.serialize)(value.parents);
     result["exportLinks"] = mapValues(identity)(value.exportLinks);
+    result["thumbnail"] = FileThumbnail.serialize(value.thumbnail);
     result["originalFilename"] = identity(value.originalFilename);
     result["description"] = identity(value.description);
     result["webContentLink"] = identity(value.webContentLink);
@@ -2299,36 +3039,76 @@ class File extends IdentityHash {
 
 // Schema File.FileImageMediaMetadata
 class FileImageMediaMetadata extends IdentityHash {
-  /** The width of the image in pixels. */
-  core.int width;
+  /** Whether a flash was used to create the photo. */
+  core.bool flashUsed;
 
-  /** The rotation in clockwise degrees from the image's original orientation. */
-  core.int rotation;
+  /** The length of the exposure, in seconds. */
+  core.double exposureTime;
+
+  /** The make of the camera used to create the photo. */
+  core.String cameraMake;
+
+  /** The ISO speed used to create the photo. */
+  core.int isoSpeed;
+
+  /** The focal length used to create the photo, in millimeters. */
+  core.double focalLength;
+
+  /** The height of the image in pixels. */
+  core.int height;
+
+  /** The date and time the photo was taken (EXIF format timestamp). */
+  core.String date;
 
   /** Geographic location information stored in the image. */
   FileImageMediaMetadataLocation location;
 
-  /** The height of the image in pixels. */
-  core.int height;
+  /** The aperture used to create the photo (f-number). */
+  core.double aperture;
+
+  /** The rotation in clockwise degrees from the image's original orientation. */
+  core.int rotation;
+
+  /** The width of the image in pixels. */
+  core.int width;
+
+  /** The model of the camera used to create the photo. */
+  core.String cameraModel;
 
   /** Parses an instance from its JSON representation. */
   static FileImageMediaMetadata parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new FileImageMediaMetadata();
-    result.width = identity(json["width"]);
-    result.rotation = identity(json["rotation"]);
-    result.location = FileImageMediaMetadataLocation.parse(json["location"]);
+    result.flashUsed = identity(json["flashUsed"]);
+    result.exposureTime = identity(json["exposureTime"]);
+    result.cameraMake = identity(json["cameraMake"]);
+    result.isoSpeed = identity(json["isoSpeed"]);
+    result.focalLength = identity(json["focalLength"]);
     result.height = identity(json["height"]);
+    result.date = identity(json["date"]);
+    result.location = FileImageMediaMetadataLocation.parse(json["location"]);
+    result.aperture = identity(json["aperture"]);
+    result.rotation = identity(json["rotation"]);
+    result.width = identity(json["width"]);
+    result.cameraModel = identity(json["cameraModel"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
   static core.Object serialize(FileImageMediaMetadata value) {
     if (value == null) return null;
     final result = {};
-    result["width"] = identity(value.width);
-    result["rotation"] = identity(value.rotation);
-    result["location"] = FileImageMediaMetadataLocation.serialize(value.location);
+    result["flashUsed"] = identity(value.flashUsed);
+    result["exposureTime"] = identity(value.exposureTime);
+    result["cameraMake"] = identity(value.cameraMake);
+    result["isoSpeed"] = identity(value.isoSpeed);
+    result["focalLength"] = identity(value.focalLength);
     result["height"] = identity(value.height);
+    result["date"] = identity(value.date);
+    result["location"] = FileImageMediaMetadataLocation.serialize(value.location);
+    result["aperture"] = identity(value.aperture);
+    result["rotation"] = identity(value.rotation);
+    result["width"] = identity(value.width);
+    result["cameraModel"] = identity(value.cameraModel);
     return result;
   }
   toString() => serialize(this).toString();
@@ -2472,6 +3252,33 @@ class FileList extends IdentityHash {
     result["nextLink"] = identity(value.nextLink);
     result["etag"] = identity(value.etag);
     result["selfLink"] = identity(value.selfLink);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema File.FileThumbnail
+class FileThumbnail extends IdentityHash {
+  /** The MIME type of the thumbnail. */
+  core.String mimeType;
+
+  /** The URL-safe Base64 encoded bytes of the thumbnail image. */
+  core.String image;
+
+  /** Parses an instance from its JSON representation. */
+  static FileThumbnail parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new FileThumbnail();
+    result.mimeType = identity(json["mimeType"]);
+    result.image = identity(json["image"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(FileThumbnail value) {
+    if (value == null) return null;
+    final result = {};
+    result["mimeType"] = identity(value.mimeType);
+    result["image"] = identity(value.image);
     return result;
   }
   toString() => serialize(this).toString();
@@ -2842,18 +3649,79 @@ class RevisionList extends IdentityHash {
   toString() => serialize(this).toString();
 }
 
+// Schema .User
+class User extends IdentityHash {
+  /** The user's profile picture. */
+  UserPicture picture;
+
+  /** This is always drive#user. */
+  core.String kind;
+
+  /**
+ * Whether this user is the same as the authenticated user of which the request was made on behalf.
+ */
+  core.bool isAuthenticatedUser;
+
+  /** A plain text displayable name for this user. */
+  core.String displayName;
+
+  /** Parses an instance from its JSON representation. */
+  static User parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new User();
+    result.picture = UserPicture.parse(json["picture"]);
+    result.kind = identity(json["kind"]);
+    result.isAuthenticatedUser = identity(json["isAuthenticatedUser"]);
+    result.displayName = identity(json["displayName"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(User value) {
+    if (value == null) return null;
+    final result = {};
+    result["picture"] = UserPicture.serialize(value.picture);
+    result["kind"] = identity(value.kind);
+    result["isAuthenticatedUser"] = identity(value.isAuthenticatedUser);
+    result["displayName"] = identity(value.displayName);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema User.UserPicture
+class UserPicture extends IdentityHash {
+  /** A URL that points to a profile picture of this user. */
+  core.String url;
+
+  /** Parses an instance from its JSON representation. */
+  static UserPicture parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new UserPicture();
+    result.url = identity(json["url"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(UserPicture value) {
+    if (value == null) return null;
+    final result = {};
+    result["url"] = identity(value.url);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
 // Enum DriveApi.Alt
 class DriveApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/json */
-  static final DriveApiAlt JSON = const DriveApiAlt._internal("json", 0);
+  const DriveApiAlt JSON = const DriveApiAlt._internal("json", 0);
 
   /** All values of this enumeration */
-  static final core.List<DriveApiAlt> values = const <DriveApiAlt>[
+  const core.List<DriveApiAlt> values = const <DriveApiAlt>[
     JSON,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <DriveApiAlt>{ 
+  const _valuesMap = const <DriveApiAlt>{ 
     "json": JSON,
   };
 

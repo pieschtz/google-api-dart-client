@@ -17,7 +17,7 @@
 #import('dart:json');
 
 #import('utils.dart');
-#import('http.dart');
+#import('http.dart', prefix:'http');
 
 // API BigqueryApi
 /**
@@ -27,22 +27,22 @@ class BigqueryApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
   final core.String baseUrl;
   /** How we should identify ourselves to the service. */
-  Authenticator authenticator;
+  http.Authenticator authenticator;
   /** The client library version */
   final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
   final core.String applicationName;
-  BigqueryApi get _$service() => this;
+  BigqueryApi get _$service => this;
   TablesResource _tables;
-  TablesResource get tables() => _tables;
+  TablesResource get tables => _tables;
   DatasetsResource _datasets;
-  DatasetsResource get datasets() => _datasets;
+  DatasetsResource get datasets => _datasets;
   JobsResource _jobs;
-  JobsResource get jobs() => _jobs;
+  JobsResource get jobs => _jobs;
   TabledataResource _tabledata;
-  TabledataResource get tabledata() => _tabledata;
+  TabledataResource get tabledata => _tabledata;
   ProjectsResource _projects;
-  ProjectsResource get projects() => _projects;
+  ProjectsResource get projects => _projects;
   
   /** Returns response with indentations and line breaks. */
   core.bool prettyPrint;
@@ -75,10 +75,10 @@ class BigqueryApi extends core.Object {
   BigqueryApiAlt alt;
 
 
-  BigqueryApi([this.baseUrl = "https://www.googleapis.com/bigquery/v2/", applicationName, this.authenticator]) :
+  BigqueryApi({this.baseUrl:"https://www.googleapis.com/bigquery/v2/", applicationName, this.authenticator}) :
       this.applicationName = (applicationName == null) ? null : applicationName
-          .replaceAll(const core.RegExp(@'\s+'), '_')
-          .replaceAll(const core.RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+          .replaceAll(const core.RegExp(r'\s+'), '_')
+          .replaceAll(const core.RegExp(r'[^-_.,0-9a-zA-Z]'), '')
   { 
     _tables = new TablesResource._internal(this);
     _datasets = new DatasetsResource._internal(this);
@@ -86,14 +86,23 @@ class BigqueryApi extends core.Object {
     _tabledata = new TabledataResource._internal(this);
     _projects = new ProjectsResource._internal(this);
   }
-  core.String get userAgent() {
+  core.String get userAgent {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}bigquery/v2/20120807 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}bigquery/v2/20121014 google-api-dart-client/${clientVersion}";
   }
 
 
   /** OAuth2 scope: View and manage your data in Google BigQuery */
   static final core.String BIGQUERY_SCOPE = "https://www.googleapis.com/auth/bigquery";
+
+  /** OAuth2 scope: Manage your data and permissions in Google Cloud Storage */
+  static final core.String DEVSTORAGE_FULL_CONTROL_SCOPE = "https://www.googleapis.com/auth/devstorage.full_control";
+
+  /** OAuth2 scope: View your data in Google Cloud Storage */
+  static final core.String DEVSTORAGE_READ_ONLY_SCOPE = "https://www.googleapis.com/auth/devstorage.read_only";
+
+  /** OAuth2 scope: Manage your data in Google Cloud Storage */
+  static final core.String DEVSTORAGE_READ_WRITE_SCOPE = "https://www.googleapis.com/auth/devstorage.read_write";
 }
 
 // Resource .TablesResource
@@ -128,7 +137,7 @@ class TablesResource extends core.Object {
     final $body = JSON.stringify(Table.serialize(content));
     final $path = "projects/{projectId}/datasets/{datasetId}/tables";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -163,7 +172,7 @@ class TablesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "projects/{projectId}/datasets/{datasetId}/tables/{tableId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -181,14 +190,14 @@ class TablesResource extends core.Object {
    *    * [pageToken] Page token, returned by a previous call, to request the next page of results
    *    * [maxResults] Maximum number of results to return
    */
-  core.Future<TableList> list(core.String projectId, core.String datasetId, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
+  core.Future<TableList> list(core.String projectId, core.String datasetId, {core.String pageToken, core.int maxResults}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["projectId"] = projectId;
     $pathParams["datasetId"] = datasetId;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -199,7 +208,7 @@ class TablesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "projects/{projectId}/datasets/{datasetId}/tables";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -236,7 +245,7 @@ class TablesResource extends core.Object {
     final $body = JSON.stringify(Table.serialize(content));
     final $path = "projects/{projectId}/datasets/{datasetId}/tables/{tableId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PUT", $headers);
+    final $http = new http.Request($url, "PUT", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -274,7 +283,7 @@ class TablesResource extends core.Object {
     final $body = JSON.stringify(Table.serialize(content));
     final $path = "projects/{projectId}/datasets/{datasetId}/tables/{tableId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PATCH", $headers);
+    final $http = new http.Request($url, "PATCH", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -309,7 +318,7 @@ class TablesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "projects/{projectId}/datasets/{datasetId}/tables/{tableId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "DELETE", $headers);
+    final $http = new http.Request($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -349,7 +358,7 @@ class DatasetsResource extends core.Object {
     final $body = JSON.stringify(Dataset.serialize(content));
     final $path = "projects/{projectId}/datasets";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -381,7 +390,7 @@ class DatasetsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "projects/{projectId}/datasets/{datasetId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -399,13 +408,13 @@ class DatasetsResource extends core.Object {
    *    * [pageToken] Page token, returned by a previous call, to request the next page of results
    *    * [maxResults] The maximum number of results to return
    */
-  core.Future<DatasetList> list(core.String projectId, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
+  core.Future<DatasetList> list(core.String projectId, {core.String pageToken, core.int maxResults}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["projectId"] = projectId;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -416,7 +425,7 @@ class DatasetsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "projects/{projectId}/datasets";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -453,7 +462,7 @@ class DatasetsResource extends core.Object {
     final $body = JSON.stringify(Dataset.serialize(content));
     final $path = "projects/{projectId}/datasets/{datasetId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PUT", $headers);
+    final $http = new http.Request($url, "PUT", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -491,7 +500,7 @@ class DatasetsResource extends core.Object {
     final $body = JSON.stringify(Dataset.serialize(content));
     final $path = "projects/{projectId}/datasets/{datasetId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PATCH", $headers);
+    final $http = new http.Request($url, "PATCH", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -511,13 +520,13 @@ class DatasetsResource extends core.Object {
    *    * [deleteContents] If True, delete all the tables in the dataset. If False and the dataset contains tables, the request
    *        will fail. Default is False
    */
-  core.Future delete(core.String projectId, core.String datasetId, [core.bool deleteContents = UNSPECIFIED]) {
+  core.Future delete(core.String projectId, core.String datasetId, {core.bool deleteContents}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["projectId"] = projectId;
     $pathParams["datasetId"] = datasetId;
-    if (UNSPECIFIED != deleteContents) $queryParams["deleteContents"] = deleteContents;
+    if (?deleteContents) $queryParams["deleteContents"] = deleteContents;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -528,7 +537,7 @@ class DatasetsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "projects/{projectId}/datasets/{datasetId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "DELETE", $headers);
+    final $http = new http.Request($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -568,7 +577,7 @@ class JobsResource extends core.Object {
     final $body = JSON.stringify(Job.serialize(content));
     final $path = "projects/{projectId}/jobs";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -602,7 +611,7 @@ class JobsResource extends core.Object {
     final $body = JSON.stringify(QueryRequest.serialize(content));
     final $path = "projects/{projectId}/queries";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -622,16 +631,16 @@ class JobsResource extends core.Object {
    *    * [maxResults] Maximum number of results to return
    *    * [pageToken] Page token, returned by a previous call, to request the next page of results
    */
-  core.Future<JobList> list(core.String projectId, [JobsResourceListProjection projection = UNSPECIFIED, JobsResourceListStateFilter stateFilter = UNSPECIFIED, core.bool allUsers = UNSPECIFIED, core.int maxResults = UNSPECIFIED, core.String pageToken = UNSPECIFIED]) {
+  core.Future<JobList> list(core.String projectId, {JobsResourceListProjection projection, JobsResourceListStateFilter stateFilter, core.bool allUsers, core.int maxResults, core.String pageToken}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["projectId"] = projectId;
-    if (UNSPECIFIED != projection) $queryParams["projection"] = projection;
-    if (UNSPECIFIED != stateFilter) $queryParams["stateFilter"] = stateFilter;
-    if (UNSPECIFIED != allUsers) $queryParams["allUsers"] = allUsers;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
+    if (?projection) $queryParams["projection"] = projection;
+    if (?stateFilter) $queryParams["stateFilter"] = stateFilter;
+    if (?allUsers) $queryParams["allUsers"] = allUsers;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -642,7 +651,7 @@ class JobsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "projects/{projectId}/jobs";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -663,15 +672,15 @@ class JobsResource extends core.Object {
    *    * [startIndex] Zero-based index of the starting row
    *    * [maxResults] Maximum number of results to read
    */
-  core.Future<GetQueryResultsResponse> getQueryResults(core.String projectId, core.String jobId, [core.int timeoutMs = UNSPECIFIED, core.String startIndex = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
+  core.Future<GetQueryResultsResponse> getQueryResults(core.String projectId, core.String jobId, {core.int timeoutMs, core.String startIndex, core.int maxResults}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["projectId"] = projectId;
     $pathParams["jobId"] = jobId;
-    if (UNSPECIFIED != timeoutMs) $queryParams["timeoutMs"] = timeoutMs;
-    if (UNSPECIFIED != startIndex) $queryParams["startIndex"] = startIndex;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
+    if (?timeoutMs) $queryParams["timeoutMs"] = timeoutMs;
+    if (?startIndex) $queryParams["startIndex"] = startIndex;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -682,7 +691,7 @@ class JobsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "projects/{projectId}/queries/{jobId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -714,7 +723,7 @@ class JobsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "projects/{projectId}/jobs/{jobId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -727,18 +736,18 @@ class JobsResource extends core.Object {
 // Enum JobsResource.List.Projection
 class JobsResourceListProjection extends core.Object implements core.Hashable {
   /** Includes all job data */
-  static final JobsResourceListProjection FULL = const JobsResourceListProjection._internal("full", 0);
+  const JobsResourceListProjection FULL = const JobsResourceListProjection._internal("full", 0);
   /** Does not include the job configuration */
-  static final JobsResourceListProjection MINIMAL = const JobsResourceListProjection._internal("minimal", 1);
+  const JobsResourceListProjection MINIMAL = const JobsResourceListProjection._internal("minimal", 1);
 
   /** All values of this enumeration */
-  static final core.List<JobsResourceListProjection> values = const <JobsResourceListProjection>[
+  const core.List<JobsResourceListProjection> values = const <JobsResourceListProjection>[
     FULL,
     MINIMAL,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <JobsResourceListProjection>{ 
+  const _valuesMap = const <JobsResourceListProjection>{ 
     "full": FULL,
     "minimal": MINIMAL,
   };
@@ -758,21 +767,21 @@ class JobsResourceListProjection extends core.Object implements core.Hashable {
 // Enum JobsResource.List.StateFilter
 class JobsResourceListStateFilter extends core.Object implements core.Hashable {
   /** Finished jobs */
-  static final JobsResourceListStateFilter DONE = const JobsResourceListStateFilter._internal("done", 0);
+  const JobsResourceListStateFilter DONE = const JobsResourceListStateFilter._internal("done", 0);
   /** Pending jobs */
-  static final JobsResourceListStateFilter PENDING = const JobsResourceListStateFilter._internal("pending", 1);
+  const JobsResourceListStateFilter PENDING = const JobsResourceListStateFilter._internal("pending", 1);
   /** Running jobs */
-  static final JobsResourceListStateFilter RUNNING = const JobsResourceListStateFilter._internal("running", 2);
+  const JobsResourceListStateFilter RUNNING = const JobsResourceListStateFilter._internal("running", 2);
 
   /** All values of this enumeration */
-  static final core.List<JobsResourceListStateFilter> values = const <JobsResourceListStateFilter>[
+  const core.List<JobsResourceListStateFilter> values = const <JobsResourceListStateFilter>[
     DONE,
     PENDING,
     RUNNING,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <JobsResourceListStateFilter>{ 
+  const _valuesMap = const <JobsResourceListStateFilter>{ 
     "done": DONE,
     "pending": PENDING,
     "running": RUNNING,
@@ -807,16 +816,16 @@ class TabledataResource extends core.Object {
    *    * [pageToken] Page token, returned by a previous call, identifying the result set
    *    * [startIndex] Zero-based index of the starting row to read
    */
-  core.Future<TableDataList> list(core.String projectId, core.String datasetId, core.String tableId, [core.int maxResults = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.String startIndex = UNSPECIFIED]) {
+  core.Future<TableDataList> list(core.String projectId, core.String datasetId, core.String tableId, {core.int maxResults, core.String pageToken, core.String startIndex}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["projectId"] = projectId;
     $pathParams["datasetId"] = datasetId;
     $pathParams["tableId"] = tableId;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != startIndex) $queryParams["startIndex"] = startIndex;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?startIndex) $queryParams["startIndex"] = startIndex;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -827,7 +836,7 @@ class TabledataResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "projects/{projectId}/datasets/{datasetId}/tables/{tableId}/data";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -850,12 +859,12 @@ class ProjectsResource extends core.Object {
    *    * [pageToken] Page token, returned by a previous call, to request the next page of results
    *    * [maxResults] Maximum number of results to return
    */
-  core.Future<ProjectList> list([core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
+  core.Future<ProjectList> list({core.String pageToken, core.int maxResults}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -866,7 +875,7 @@ class ProjectsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "projects";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1358,38 +1367,47 @@ class JobConfiguration extends IdentityHash {
 // Schema .JobConfigurationExtract
 class JobConfigurationExtract extends IdentityHash {
   /**
+ * [Experimental] Optional and defaults to CSV. Format with which files should be exported. To
+ * export to CSV, specify "CSV". Tables with nested or repeated fields cannot be exported as CSV. To
+ * export to newline-delimited JSON, specify "NEWLINE_DELIMITED_JSON".
+ */
+  core.String destinationFormat;
+
+  /**
  * [Required] The fully-qualified Google Cloud Storage URI where the extracted table should be
  * written.
  */
   core.String destinationUri;
 
-  /** [Optional] Delimiter to use between fields in the exported data. Default is ',' */
-  core.String fieldDelimiter;
+  /** [Optional] Whether to print out a heder row in the results. Default is true. */
+  core.bool printHeader;
 
   /** [Required] A reference to the table being exported. */
   TableReference sourceTable;
 
-  /** [Optional] Whether to print out a heder row in the results. Default is true. */
-  core.bool printHeader;
+  /** [Optional] Delimiter to use between fields in the exported data. Default is ',' */
+  core.String fieldDelimiter;
 
   /** Parses an instance from its JSON representation. */
   static JobConfigurationExtract parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new JobConfigurationExtract();
+    result.destinationFormat = identity(json["destinationFormat"]);
     result.destinationUri = identity(json["destinationUri"]);
-    result.fieldDelimiter = identity(json["fieldDelimiter"]);
-    result.sourceTable = TableReference.parse(json["sourceTable"]);
     result.printHeader = identity(json["printHeader"]);
+    result.sourceTable = TableReference.parse(json["sourceTable"]);
+    result.fieldDelimiter = identity(json["fieldDelimiter"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
   static core.Object serialize(JobConfigurationExtract value) {
     if (value == null) return null;
     final result = {};
+    result["destinationFormat"] = identity(value.destinationFormat);
     result["destinationUri"] = identity(value.destinationUri);
-    result["fieldDelimiter"] = identity(value.fieldDelimiter);
-    result["sourceTable"] = TableReference.serialize(value.sourceTable);
     result["printHeader"] = identity(value.printHeader);
+    result["sourceTable"] = TableReference.serialize(value.sourceTable);
+    result["fieldDelimiter"] = identity(value.fieldDelimiter);
     return result;
   }
   toString() => serialize(this).toString();
@@ -1448,6 +1466,13 @@ class JobConfigurationLoad extends IdentityHash {
  */
   core.String fieldDelimiter;
 
+  /**
+ * [Experimental] Optional and defaults to CSV. Format of source files. For CSV uploads, specify
+ * "CSV". For imports of datastore backups, specify "DATASTORE_BACKUP". For imports of newline-
+ * delimited JSON, specify "NEWLINE_DELIMITED_JSON".
+ */
+  core.String sourceFormat;
+
   /** [Required] Table being written to. */
   TableReference destinationTable;
 
@@ -1471,7 +1496,7 @@ class JobConfigurationLoad extends IdentityHash {
 
   /**
  * [Optional] Quote character to use. Default is '"'. Note that quoting is done on the raw, binary
- * data before the encoding is applied.
+ * data before the encoding is applied. If no quoting is done, use am empty string.
  */
   core.String quote;
 
@@ -1490,6 +1515,9 @@ class JobConfigurationLoad extends IdentityHash {
  */
   core.String schemaInline;
 
+  /** [Experimental] Whether to allow quoted newlines in the source CSV data. */
+  core.bool allowQuotedNewlines;
+
   /** [Optional] Schema of the table being written to. */
   TableSchema schema;
 
@@ -1499,6 +1527,7 @@ class JobConfigurationLoad extends IdentityHash {
     final result = new JobConfigurationLoad();
     result.encoding = identity(json["encoding"]);
     result.fieldDelimiter = identity(json["fieldDelimiter"]);
+    result.sourceFormat = identity(json["sourceFormat"]);
     result.destinationTable = TableReference.parse(json["destinationTable"]);
     result.writeDisposition = identity(json["writeDisposition"]);
     result.maxBadRecords = identity(json["maxBadRecords"]);
@@ -1508,6 +1537,7 @@ class JobConfigurationLoad extends IdentityHash {
     result.createDisposition = identity(json["createDisposition"]);
     result.schemaInlineFormat = identity(json["schemaInlineFormat"]);
     result.schemaInline = identity(json["schemaInline"]);
+    result.allowQuotedNewlines = identity(json["allowQuotedNewlines"]);
     result.schema = TableSchema.parse(json["schema"]);
     return result;
   }
@@ -1517,6 +1547,7 @@ class JobConfigurationLoad extends IdentityHash {
     final result = {};
     result["encoding"] = identity(value.encoding);
     result["fieldDelimiter"] = identity(value.fieldDelimiter);
+    result["sourceFormat"] = identity(value.sourceFormat);
     result["destinationTable"] = TableReference.serialize(value.destinationTable);
     result["writeDisposition"] = identity(value.writeDisposition);
     result["maxBadRecords"] = identity(value.maxBadRecords);
@@ -1526,6 +1557,7 @@ class JobConfigurationLoad extends IdentityHash {
     result["createDisposition"] = identity(value.createDisposition);
     result["schemaInlineFormat"] = identity(value.schemaInlineFormat);
     result["schemaInline"] = identity(value.schemaInline);
+    result["allowQuotedNewlines"] = identity(value.allowQuotedNewlines);
     result["schema"] = TableSchema.serialize(value.schema);
     return result;
   }
@@ -1543,10 +1575,7 @@ class JobConfigurationQuery extends IdentityHash {
  */
   TableReference destinationTable;
 
-  /**
- * [Experimental] Specifies a priority for the query. Default is INTERACTIVE. Alternative is BATCH,
- * which may be subject to looser quota restrictions.
- */
+  /** [Optional] Specifies a priority for the query. Default is INTERACTIVE. Alternative is BATCH. */
   core.String priority;
 
   /**
@@ -1759,10 +1788,16 @@ class JobReference extends IdentityHash {
 
 // Schema .JobStatistics
 class JobStatistics extends IdentityHash {
+  /** [Output-only] Statistics for a load job. */
+  JobStatistics3 load;
+
+  /** [Output-only] Statistics for a query job. */
+  JobStatistics2 query;
+
   /** [Output-only] End time of this job, in milliseconds since the epoch. */
   core.String endTime;
 
-  /** [Output-only] Total bytes processed for this job. */
+  /** [Output-only] [Deprecated] Use the bytes processed in the query statistics instead. */
   core.String totalBytesProcessed;
 
   /** [Output-only] Start time of this job, in milliseconds since the epoch. */
@@ -1772,6 +1807,8 @@ class JobStatistics extends IdentityHash {
   static JobStatistics parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new JobStatistics();
+    result.load = JobStatistics3.parse(json["load"]);
+    result.query = JobStatistics2.parse(json["query"]);
     result.endTime = identity(json["endTime"]);
     result.totalBytesProcessed = identity(json["totalBytesProcessed"]);
     result.startTime = identity(json["startTime"]);
@@ -1781,9 +1818,76 @@ class JobStatistics extends IdentityHash {
   static core.Object serialize(JobStatistics value) {
     if (value == null) return null;
     final result = {};
+    result["load"] = JobStatistics3.serialize(value.load);
+    result["query"] = JobStatistics2.serialize(value.query);
     result["endTime"] = identity(value.endTime);
     result["totalBytesProcessed"] = identity(value.totalBytesProcessed);
     result["startTime"] = identity(value.startTime);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema .JobStatistics2
+class JobStatistics2 extends IdentityHash {
+  /** [Output-only] Total bytes processed for this job. */
+  core.String totalBytesProcessed;
+
+  /** Parses an instance from its JSON representation. */
+  static JobStatistics2 parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new JobStatistics2();
+    result.totalBytesProcessed = identity(json["totalBytesProcessed"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(JobStatistics2 value) {
+    if (value == null) return null;
+    final result = {};
+    result["totalBytesProcessed"] = identity(value.totalBytesProcessed);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
+// Schema .JobStatistics3
+class JobStatistics3 extends IdentityHash {
+  /**
+ * [Output-only] Number of rows imported in a load job. Note that while an import job is in the
+ * running state, this value may change.
+ */
+  core.String outputRows;
+
+  /** [Output-only] Number of source files in a load job. */
+  core.String inputFiles;
+
+  /** [Output-only] Number of bytes of source data in a joad job. */
+  core.String inputFileBytes;
+
+  /**
+ * [Output-only] Size of the loaded data in bytes. Note that while an import job is in the running
+ * state, this value may change.
+ */
+  core.String outputBytes;
+
+  /** Parses an instance from its JSON representation. */
+  static JobStatistics3 parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new JobStatistics3();
+    result.outputRows = identity(json["outputRows"]);
+    result.inputFiles = identity(json["inputFiles"]);
+    result.inputFileBytes = identity(json["inputFileBytes"]);
+    result.outputBytes = identity(json["outputBytes"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(JobStatistics3 value) {
+    if (value == null) return null;
+    final result = {};
+    result["outputRows"] = identity(value.outputRows);
+    result["inputFiles"] = identity(value.inputFiles);
+    result["inputFileBytes"] = identity(value.inputFileBytes);
+    result["outputBytes"] = identity(value.outputBytes);
     return result;
   }
   toString() => serialize(this).toString();
@@ -2144,6 +2248,28 @@ class Table extends IdentityHash {
   toString() => serialize(this).toString();
 }
 
+// Schema .TableCell
+class TableCell extends IdentityHash {
+  
+  core.Object v;
+
+  /** Parses an instance from its JSON representation. */
+  static TableCell parse(core.Map<core.String, core.Object> json) {
+    if (json == null) return null;
+    final result = new TableCell();
+    result.v = identity(json["v"]);
+    return result;
+  }
+  /** Converts an instance to its JSON representation. */
+  static core.Object serialize(TableCell value) {
+    if (value == null) return null;
+    final result = {};
+    result["v"] = identity(value.v);
+    return result;
+  }
+  toString() => serialize(this).toString();
+}
+
 // Schema .TableDataList
 class TableDataList extends IdentityHash {
   /**
@@ -2339,43 +2465,21 @@ class TableReference extends IdentityHash {
 
 // Schema .TableRow
 class TableRow extends IdentityHash {
-  /** Represents a single row in the result set, consisting of one or more fields. */
-  core.List<TableRowF> f;
+  
+  core.List<TableCell> f;
 
   /** Parses an instance from its JSON representation. */
   static TableRow parse(core.Map<core.String, core.Object> json) {
     if (json == null) return null;
     final result = new TableRow();
-    result.f = map(TableRowF.parse)(json["f"]);
+    result.f = map(TableCell.parse)(json["f"]);
     return result;
   }
   /** Converts an instance to its JSON representation. */
   static core.Object serialize(TableRow value) {
     if (value == null) return null;
     final result = {};
-    result["f"] = map(TableRowF.serialize)(value.f);
-    return result;
-  }
-  toString() => serialize(this).toString();
-}
-
-// Schema TableRow.TableRowF
-class TableRowF extends IdentityHash {
-  /** Contains the field value in this row, as a string. */
-  core.String v;
-
-  /** Parses an instance from its JSON representation. */
-  static TableRowF parse(core.Map<core.String, core.Object> json) {
-    if (json == null) return null;
-    final result = new TableRowF();
-    result.v = identity(json["v"]);
-    return result;
-  }
-  /** Converts an instance to its JSON representation. */
-  static core.Object serialize(TableRowF value) {
-    if (value == null) return null;
-    final result = {};
-    result["v"] = identity(value.v);
+    result["f"] = map(TableCell.serialize)(value.f);
     return result;
   }
   toString() => serialize(this).toString();
@@ -2406,18 +2510,18 @@ class TableSchema extends IdentityHash {
 // Enum BigqueryApi.Alt
 class BigqueryApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of text/csv */
-  static final BigqueryApiAlt CSV = const BigqueryApiAlt._internal("csv", 0);
+  const BigqueryApiAlt CSV = const BigqueryApiAlt._internal("csv", 0);
   /** Responses with Content-Type of application/json */
-  static final BigqueryApiAlt JSON = const BigqueryApiAlt._internal("json", 1);
+  const BigqueryApiAlt JSON = const BigqueryApiAlt._internal("json", 1);
 
   /** All values of this enumeration */
-  static final core.List<BigqueryApiAlt> values = const <BigqueryApiAlt>[
+  const core.List<BigqueryApiAlt> values = const <BigqueryApiAlt>[
     CSV,
     JSON,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <BigqueryApiAlt>{ 
+  const _valuesMap = const <BigqueryApiAlt>{ 
     "csv": CSV,
     "json": JSON,
   };

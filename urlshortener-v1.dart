@@ -17,7 +17,7 @@
 #import('dart:json');
 
 #import('utils.dart');
-#import('http.dart');
+#import('http.dart', prefix:'http');
 
 // API UrlshortenerApi
 /**
@@ -27,14 +27,14 @@ class UrlshortenerApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
   final core.String baseUrl;
   /** How we should identify ourselves to the service. */
-  Authenticator authenticator;
+  http.Authenticator authenticator;
   /** The client library version */
   final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
   final core.String applicationName;
-  UrlshortenerApi get _$service() => this;
+  UrlshortenerApi get _$service => this;
   UrlResource _url;
-  UrlResource get url() => _url;
+  UrlResource get url => _url;
   
   /** Returns response with indentations and line breaks. */
   core.bool prettyPrint;
@@ -67,14 +67,14 @@ class UrlshortenerApi extends core.Object {
   UrlshortenerApiAlt alt;
 
 
-  UrlshortenerApi([this.baseUrl = "https://www.googleapis.com/urlshortener/v1/", applicationName, this.authenticator]) :
+  UrlshortenerApi({this.baseUrl:"https://www.googleapis.com/urlshortener/v1/", applicationName, this.authenticator}) :
       this.applicationName = (applicationName == null) ? null : applicationName
-          .replaceAll(const core.RegExp(@'\s+'), '_')
-          .replaceAll(const core.RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+          .replaceAll(const core.RegExp(r'\s+'), '_')
+          .replaceAll(const core.RegExp(r'[^-_.,0-9a-zA-Z]'), '')
   { 
     _url = new UrlResource._internal(this);
   }
-  core.String get userAgent() {
+  core.String get userAgent {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}urlshortener/v1/snapshot google-api-dart-client/${clientVersion}";
   }
@@ -112,7 +112,7 @@ class UrlResource extends core.Object {
     final $body = JSON.stringify(Url.serialize(content));
     final $path = "url";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -128,12 +128,12 @@ class UrlResource extends core.Object {
    *    * [startToken] Token for requesting successive pages of results.
    *    * [projection] Additional information to return.
    */
-  core.Future<UrlHistory> list([core.String startToken = UNSPECIFIED, UrlResourceListProjection projection = UNSPECIFIED]) {
+  core.Future<UrlHistory> list({core.String startToken, UrlResourceListProjection projection}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    if (UNSPECIFIED != startToken) $queryParams["start-token"] = startToken;
-    if (UNSPECIFIED != projection) $queryParams["projection"] = projection;
+    if (?startToken) $queryParams["start-token"] = startToken;
+    if (?projection) $queryParams["projection"] = projection;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -144,7 +144,7 @@ class UrlResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "url/history";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -160,12 +160,12 @@ class UrlResource extends core.Object {
    *    * [shortUrl] The short URL, including the protocol.
    *    * [projection] Additional information to return.
    */
-  core.Future<Url> get(core.String shortUrl, [UrlResourceGetProjection projection = UNSPECIFIED]) {
+  core.Future<Url> get(core.String shortUrl, {UrlResourceGetProjection projection}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    if (UNSPECIFIED != shortUrl) $queryParams["shortUrl"] = shortUrl;
-    if (UNSPECIFIED != projection) $queryParams["projection"] = projection;
+    if (?shortUrl) $queryParams["shortUrl"] = shortUrl;
+    if (?projection) $queryParams["projection"] = projection;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -176,7 +176,7 @@ class UrlResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "url";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -189,18 +189,18 @@ class UrlResource extends core.Object {
 // Enum UrlResource.List.Projection
 class UrlResourceListProjection extends core.Object implements core.Hashable {
   /** Returns short URL click counts. */
-  static final UrlResourceListProjection ANALYTICS_CLICKS = const UrlResourceListProjection._internal("ANALYTICS_CLICKS", 0);
+  const UrlResourceListProjection ANALYTICS_CLICKS = const UrlResourceListProjection._internal("ANALYTICS_CLICKS", 0);
   /** Returns short URL click counts. */
-  static final UrlResourceListProjection FULL = const UrlResourceListProjection._internal("FULL", 1);
+  const UrlResourceListProjection FULL = const UrlResourceListProjection._internal("FULL", 1);
 
   /** All values of this enumeration */
-  static final core.List<UrlResourceListProjection> values = const <UrlResourceListProjection>[
+  const core.List<UrlResourceListProjection> values = const <UrlResourceListProjection>[
     ANALYTICS_CLICKS,
     FULL,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <UrlResourceListProjection>{ 
+  const _valuesMap = const <UrlResourceListProjection>{ 
     "ANALYTICS_CLICKS": ANALYTICS_CLICKS,
     "FULL": FULL,
   };
@@ -220,21 +220,21 @@ class UrlResourceListProjection extends core.Object implements core.Hashable {
 // Enum UrlResource.Get.Projection
 class UrlResourceGetProjection extends core.Object implements core.Hashable {
   /** Returns only click counts. */
-  static final UrlResourceGetProjection ANALYTICS_CLICKS = const UrlResourceGetProjection._internal("ANALYTICS_CLICKS", 0);
+  const UrlResourceGetProjection ANALYTICS_CLICKS = const UrlResourceGetProjection._internal("ANALYTICS_CLICKS", 0);
   /** Returns only top string counts. */
-  static final UrlResourceGetProjection ANALYTICS_TOP_STRINGS = const UrlResourceGetProjection._internal("ANALYTICS_TOP_STRINGS", 1);
+  const UrlResourceGetProjection ANALYTICS_TOP_STRINGS = const UrlResourceGetProjection._internal("ANALYTICS_TOP_STRINGS", 1);
   /** Returns the creation timestamp and all available analytics. */
-  static final UrlResourceGetProjection FULL = const UrlResourceGetProjection._internal("FULL", 2);
+  const UrlResourceGetProjection FULL = const UrlResourceGetProjection._internal("FULL", 2);
 
   /** All values of this enumeration */
-  static final core.List<UrlResourceGetProjection> values = const <UrlResourceGetProjection>[
+  const core.List<UrlResourceGetProjection> values = const <UrlResourceGetProjection>[
     ANALYTICS_CLICKS,
     ANALYTICS_TOP_STRINGS,
     FULL,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <UrlResourceGetProjection>{ 
+  const _valuesMap = const <UrlResourceGetProjection>{ 
     "ANALYTICS_CLICKS": ANALYTICS_CLICKS,
     "ANALYTICS_TOP_STRINGS": ANALYTICS_TOP_STRINGS,
     "FULL": FULL,
@@ -484,15 +484,15 @@ class UrlHistory extends IdentityHash {
 // Enum UrlshortenerApi.Alt
 class UrlshortenerApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/json */
-  static final UrlshortenerApiAlt JSON = const UrlshortenerApiAlt._internal("json", 0);
+  const UrlshortenerApiAlt JSON = const UrlshortenerApiAlt._internal("json", 0);
 
   /** All values of this enumeration */
-  static final core.List<UrlshortenerApiAlt> values = const <UrlshortenerApiAlt>[
+  const core.List<UrlshortenerApiAlt> values = const <UrlshortenerApiAlt>[
     JSON,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <UrlshortenerApiAlt>{ 
+  const _valuesMap = const <UrlshortenerApiAlt>{ 
     "json": JSON,
   };
 

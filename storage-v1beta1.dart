@@ -17,7 +17,7 @@
 #import('dart:json');
 
 #import('utils.dart');
-#import('http.dart');
+#import('http.dart', prefix:'http');
 
 // API StorageApi
 /**
@@ -27,20 +27,20 @@ class StorageApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
   final core.String baseUrl;
   /** How we should identify ourselves to the service. */
-  Authenticator authenticator;
+  http.Authenticator authenticator;
   /** The client library version */
   final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
   final core.String applicationName;
-  StorageApi get _$service() => this;
+  StorageApi get _$service => this;
   ObjectAccessControlsResource _objectAccessControls;
-  ObjectAccessControlsResource get objectAccessControls() => _objectAccessControls;
+  ObjectAccessControlsResource get objectAccessControls => _objectAccessControls;
   BucketAccessControlsResource _bucketAccessControls;
-  BucketAccessControlsResource get bucketAccessControls() => _bucketAccessControls;
+  BucketAccessControlsResource get bucketAccessControls => _bucketAccessControls;
   ObjectsResource _objects;
-  ObjectsResource get objects() => _objects;
+  ObjectsResource get objects => _objects;
   BucketsResource _buckets;
-  BucketsResource get buckets() => _buckets;
+  BucketsResource get buckets => _buckets;
   
   /** Returns response with indentations and line breaks. */
   core.bool prettyPrint;
@@ -73,17 +73,17 @@ class StorageApi extends core.Object {
   StorageApiAlt alt;
 
 
-  StorageApi([this.baseUrl = "https://www.googleapis.com/storage/v1beta1/", applicationName, this.authenticator]) :
+  StorageApi({this.baseUrl:"https://www.googleapis.com/storage/v1beta1/", applicationName, this.authenticator}) :
       this.applicationName = (applicationName == null) ? null : applicationName
-          .replaceAll(const core.RegExp(@'\s+'), '_')
-          .replaceAll(const core.RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+          .replaceAll(const core.RegExp(r'\s+'), '_')
+          .replaceAll(const core.RegExp(r'[^-_.,0-9a-zA-Z]'), '')
   { 
     _objectAccessControls = new ObjectAccessControlsResource._internal(this);
     _bucketAccessControls = new BucketAccessControlsResource._internal(this);
     _objects = new ObjectsResource._internal(this);
     _buckets = new BucketsResource._internal(this);
   }
-  core.String get userAgent() {
+  core.String get userAgent {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}storage/v1beta1/20120806 google-api-dart-client/${clientVersion}";
   }
@@ -131,7 +131,7 @@ class ObjectAccessControlsResource extends core.Object {
     final $body = JSON.stringify(ObjectAccessControl.serialize(content));
     final $path = "b/{bucket}/o/{object}/acl";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -166,7 +166,7 @@ class ObjectAccessControlsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "b/{bucket}/o/{object}/acl/{entity}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -198,7 +198,7 @@ class ObjectAccessControlsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "b/{bucket}/o/{object}/acl";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -236,7 +236,7 @@ class ObjectAccessControlsResource extends core.Object {
     final $body = JSON.stringify(ObjectAccessControl.serialize(content));
     final $path = "b/{bucket}/o/{object}/acl/{entity}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PUT", $headers);
+    final $http = new http.Request($url, "PUT", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -274,7 +274,7 @@ class ObjectAccessControlsResource extends core.Object {
     final $body = JSON.stringify(ObjectAccessControl.serialize(content));
     final $path = "b/{bucket}/o/{object}/acl/{entity}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PATCH", $headers);
+    final $http = new http.Request($url, "PATCH", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -309,7 +309,7 @@ class ObjectAccessControlsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "b/{bucket}/o/{object}/acl/{entity}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "DELETE", $headers);
+    final $http = new http.Request($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -349,7 +349,7 @@ class BucketAccessControlsResource extends core.Object {
     final $body = JSON.stringify(BucketAccessControl.serialize(content));
     final $path = "b/{bucket}/acl";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -382,7 +382,7 @@ class BucketAccessControlsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "b/{bucket}/acl/{entity}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -412,7 +412,7 @@ class BucketAccessControlsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "b/{bucket}/acl";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -448,7 +448,7 @@ class BucketAccessControlsResource extends core.Object {
     final $body = JSON.stringify(BucketAccessControl.serialize(content));
     final $path = "b/{bucket}/acl/{entity}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PUT", $headers);
+    final $http = new http.Request($url, "PUT", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -484,7 +484,7 @@ class BucketAccessControlsResource extends core.Object {
     final $body = JSON.stringify(BucketAccessControl.serialize(content));
     final $path = "b/{bucket}/acl/{entity}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PATCH", $headers);
+    final $http = new http.Request($url, "PATCH", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -517,7 +517,7 @@ class BucketAccessControlsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "b/{bucket}/acl/{entity}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "DELETE", $headers);
+    final $http = new http.Request($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -545,13 +545,13 @@ class ObjectsResource extends core.Object {
    *    * [projection] Set of properties to return. Defaults to no_acl, unless the object resource specifies the acl
    *        property, when it defaults to full.
    */
-  core.Future<Object> insert(core.String bucket, Object content, [core.String name = UNSPECIFIED, ObjectsResourceInsertProjection projection = UNSPECIFIED]) {
+  core.Future<Object> insert(core.String bucket, Object content, {core.String name, ObjectsResourceInsertProjection projection}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["bucket"] = bucket;
-    if (UNSPECIFIED != name) $queryParams["name"] = name;
-    if (UNSPECIFIED != projection) $queryParams["projection"] = projection;
+    if (?name) $queryParams["name"] = name;
+    if (?projection) $queryParams["projection"] = projection;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -564,7 +564,7 @@ class ObjectsResource extends core.Object {
     final $body = JSON.stringify(Object.serialize(content));
     final $path = "b/{bucket}/o";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -581,13 +581,13 @@ class ObjectsResource extends core.Object {
    *    * [object] Name of the object.
    *    * [projection] Set of properties to return. Defaults to no_acl.
    */
-  core.Future<Object> get(core.String bucket, core.String object, [ObjectsResourceGetProjection projection = UNSPECIFIED]) {
+  core.Future<Object> get(core.String bucket, core.String object, {ObjectsResourceGetProjection projection}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["bucket"] = bucket;
     $pathParams["object"] = object;
-    if (UNSPECIFIED != projection) $queryParams["projection"] = projection;
+    if (?projection) $queryParams["projection"] = projection;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -598,7 +598,7 @@ class ObjectsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "b/{bucket}/o/{object}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -624,16 +624,16 @@ class ObjectsResource extends core.Object {
    *        delimiter will have their name, truncated after the delimiter, returned in prefixes.
    *        Duplicate prefixes are omitted.
    */
-  core.Future<Objects> list(core.String bucket, [core.int maxResults = UNSPECIFIED, ObjectsResourceListProjection projection = UNSPECIFIED, core.String prefix = UNSPECIFIED, core.String pageToken = UNSPECIFIED, core.String delimiter = UNSPECIFIED]) {
+  core.Future<Objects> list(core.String bucket, {core.int maxResults, ObjectsResourceListProjection projection, core.String prefix, core.String pageToken, core.String delimiter}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["bucket"] = bucket;
-    if (UNSPECIFIED != maxResults) $queryParams["max-results"] = maxResults;
-    if (UNSPECIFIED != projection) $queryParams["projection"] = projection;
-    if (UNSPECIFIED != prefix) $queryParams["prefix"] = prefix;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != delimiter) $queryParams["delimiter"] = delimiter;
+    if (?maxResults) $queryParams["max-results"] = maxResults;
+    if (?projection) $queryParams["projection"] = projection;
+    if (?prefix) $queryParams["prefix"] = prefix;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?delimiter) $queryParams["delimiter"] = delimiter;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -644,7 +644,7 @@ class ObjectsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "b/{bucket}/o";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -662,13 +662,13 @@ class ObjectsResource extends core.Object {
    *    * [object] Name of the object.
    *    * [projection] Set of properties to return. Defaults to full.
    */
-  core.Future<Object> update(core.String bucket, core.String object, Object content, [ObjectsResourceUpdateProjection projection = UNSPECIFIED]) {
+  core.Future<Object> update(core.String bucket, core.String object, Object content, {ObjectsResourceUpdateProjection projection}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["bucket"] = bucket;
     $pathParams["object"] = object;
-    if (UNSPECIFIED != projection) $queryParams["projection"] = projection;
+    if (?projection) $queryParams["projection"] = projection;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -681,7 +681,7 @@ class ObjectsResource extends core.Object {
     final $body = JSON.stringify(Object.serialize(content));
     final $path = "b/{bucket}/o/{object}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PUT", $headers);
+    final $http = new http.Request($url, "PUT", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -699,13 +699,13 @@ class ObjectsResource extends core.Object {
    *    * [object] Name of the object.
    *    * [projection] Set of properties to return. Defaults to full.
    */
-  core.Future<Object> patch(core.String bucket, core.String object, Object content, [ObjectsResourcePatchProjection projection = UNSPECIFIED]) {
+  core.Future<Object> patch(core.String bucket, core.String object, Object content, {ObjectsResourcePatchProjection projection}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["bucket"] = bucket;
     $pathParams["object"] = object;
-    if (UNSPECIFIED != projection) $queryParams["projection"] = projection;
+    if (?projection) $queryParams["projection"] = projection;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -718,7 +718,7 @@ class ObjectsResource extends core.Object {
     final $body = JSON.stringify(Object.serialize(content));
     final $path = "b/{bucket}/o/{object}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PATCH", $headers);
+    final $http = new http.Request($url, "PATCH", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -750,7 +750,7 @@ class ObjectsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "b/{bucket}/o/{object}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "DELETE", $headers);
+    final $http = new http.Request($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -763,18 +763,18 @@ class ObjectsResource extends core.Object {
 // Enum ObjectsResource.Insert.Projection
 class ObjectsResourceInsertProjection extends core.Object implements core.Hashable {
   /** Include all properties. */
-  static final ObjectsResourceInsertProjection FULL = const ObjectsResourceInsertProjection._internal("full", 0);
+  const ObjectsResourceInsertProjection FULL = const ObjectsResourceInsertProjection._internal("full", 0);
   /** Omit the acl property. */
-  static final ObjectsResourceInsertProjection NO_ACL = const ObjectsResourceInsertProjection._internal("no_acl", 1);
+  const ObjectsResourceInsertProjection NO_ACL = const ObjectsResourceInsertProjection._internal("no_acl", 1);
 
   /** All values of this enumeration */
-  static final core.List<ObjectsResourceInsertProjection> values = const <ObjectsResourceInsertProjection>[
+  const core.List<ObjectsResourceInsertProjection> values = const <ObjectsResourceInsertProjection>[
     FULL,
     NO_ACL,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <ObjectsResourceInsertProjection>{ 
+  const _valuesMap = const <ObjectsResourceInsertProjection>{ 
     "full": FULL,
     "no_acl": NO_ACL,
   };
@@ -794,18 +794,18 @@ class ObjectsResourceInsertProjection extends core.Object implements core.Hashab
 // Enum ObjectsResource.Get.Projection
 class ObjectsResourceGetProjection extends core.Object implements core.Hashable {
   /** Include all properties. */
-  static final ObjectsResourceGetProjection FULL = const ObjectsResourceGetProjection._internal("full", 0);
+  const ObjectsResourceGetProjection FULL = const ObjectsResourceGetProjection._internal("full", 0);
   /** Omit the acl property. */
-  static final ObjectsResourceGetProjection NO_ACL = const ObjectsResourceGetProjection._internal("no_acl", 1);
+  const ObjectsResourceGetProjection NO_ACL = const ObjectsResourceGetProjection._internal("no_acl", 1);
 
   /** All values of this enumeration */
-  static final core.List<ObjectsResourceGetProjection> values = const <ObjectsResourceGetProjection>[
+  const core.List<ObjectsResourceGetProjection> values = const <ObjectsResourceGetProjection>[
     FULL,
     NO_ACL,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <ObjectsResourceGetProjection>{ 
+  const _valuesMap = const <ObjectsResourceGetProjection>{ 
     "full": FULL,
     "no_acl": NO_ACL,
   };
@@ -825,18 +825,18 @@ class ObjectsResourceGetProjection extends core.Object implements core.Hashable 
 // Enum ObjectsResource.List.Projection
 class ObjectsResourceListProjection extends core.Object implements core.Hashable {
   /** Include all properties. */
-  static final ObjectsResourceListProjection FULL = const ObjectsResourceListProjection._internal("full", 0);
+  const ObjectsResourceListProjection FULL = const ObjectsResourceListProjection._internal("full", 0);
   /** Omit the acl property. */
-  static final ObjectsResourceListProjection NO_ACL = const ObjectsResourceListProjection._internal("no_acl", 1);
+  const ObjectsResourceListProjection NO_ACL = const ObjectsResourceListProjection._internal("no_acl", 1);
 
   /** All values of this enumeration */
-  static final core.List<ObjectsResourceListProjection> values = const <ObjectsResourceListProjection>[
+  const core.List<ObjectsResourceListProjection> values = const <ObjectsResourceListProjection>[
     FULL,
     NO_ACL,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <ObjectsResourceListProjection>{ 
+  const _valuesMap = const <ObjectsResourceListProjection>{ 
     "full": FULL,
     "no_acl": NO_ACL,
   };
@@ -856,18 +856,18 @@ class ObjectsResourceListProjection extends core.Object implements core.Hashable
 // Enum ObjectsResource.Update.Projection
 class ObjectsResourceUpdateProjection extends core.Object implements core.Hashable {
   /** Include all properties. */
-  static final ObjectsResourceUpdateProjection FULL = const ObjectsResourceUpdateProjection._internal("full", 0);
+  const ObjectsResourceUpdateProjection FULL = const ObjectsResourceUpdateProjection._internal("full", 0);
   /** Omit the acl property. */
-  static final ObjectsResourceUpdateProjection NO_ACL = const ObjectsResourceUpdateProjection._internal("no_acl", 1);
+  const ObjectsResourceUpdateProjection NO_ACL = const ObjectsResourceUpdateProjection._internal("no_acl", 1);
 
   /** All values of this enumeration */
-  static final core.List<ObjectsResourceUpdateProjection> values = const <ObjectsResourceUpdateProjection>[
+  const core.List<ObjectsResourceUpdateProjection> values = const <ObjectsResourceUpdateProjection>[
     FULL,
     NO_ACL,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <ObjectsResourceUpdateProjection>{ 
+  const _valuesMap = const <ObjectsResourceUpdateProjection>{ 
     "full": FULL,
     "no_acl": NO_ACL,
   };
@@ -887,18 +887,18 @@ class ObjectsResourceUpdateProjection extends core.Object implements core.Hashab
 // Enum ObjectsResource.Patch.Projection
 class ObjectsResourcePatchProjection extends core.Object implements core.Hashable {
   /** Include all properties. */
-  static final ObjectsResourcePatchProjection FULL = const ObjectsResourcePatchProjection._internal("full", 0);
+  const ObjectsResourcePatchProjection FULL = const ObjectsResourcePatchProjection._internal("full", 0);
   /** Omit the acl property. */
-  static final ObjectsResourcePatchProjection NO_ACL = const ObjectsResourcePatchProjection._internal("no_acl", 1);
+  const ObjectsResourcePatchProjection NO_ACL = const ObjectsResourcePatchProjection._internal("no_acl", 1);
 
   /** All values of this enumeration */
-  static final core.List<ObjectsResourcePatchProjection> values = const <ObjectsResourcePatchProjection>[
+  const core.List<ObjectsResourcePatchProjection> values = const <ObjectsResourcePatchProjection>[
     FULL,
     NO_ACL,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <ObjectsResourcePatchProjection>{ 
+  const _valuesMap = const <ObjectsResourcePatchProjection>{ 
     "full": FULL,
     "no_acl": NO_ACL,
   };
@@ -929,11 +929,11 @@ class BucketsResource extends core.Object {
    *    * [projection] Set of properties to return. Defaults to no_acl, unless the bucket resource specifies acl or
    *        defaultObjectAcl properties, when it defaults to full.
    */
-  core.Future<Bucket> insert(Bucket content, [BucketsResourceInsertProjection projection = UNSPECIFIED]) {
+  core.Future<Bucket> insert(Bucket content, {BucketsResourceInsertProjection projection}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    if (UNSPECIFIED != projection) $queryParams["projection"] = projection;
+    if (?projection) $queryParams["projection"] = projection;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -946,7 +946,7 @@ class BucketsResource extends core.Object {
     final $body = JSON.stringify(Bucket.serialize(content));
     final $path = "b";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -962,12 +962,12 @@ class BucketsResource extends core.Object {
    *    * [bucket] Name of a bucket.
    *    * [projection] Set of properties to return. Defaults to no_acl.
    */
-  core.Future<Bucket> get(core.String bucket, [BucketsResourceGetProjection projection = UNSPECIFIED]) {
+  core.Future<Bucket> get(core.String bucket, {BucketsResourceGetProjection projection}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["bucket"] = bucket;
-    if (UNSPECIFIED != projection) $queryParams["projection"] = projection;
+    if (?projection) $queryParams["projection"] = projection;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -978,7 +978,7 @@ class BucketsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "b/{bucket}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -998,14 +998,14 @@ class BucketsResource extends core.Object {
    *    * [pageToken] A previously-returned page token representing part of the larger set of results to view.
    *    * [projection] Set of properties to return. Defaults to no_acl.
    */
-  core.Future<Buckets> list(core.String projectId, [core.int maxResults = UNSPECIFIED, core.String pageToken = UNSPECIFIED, BucketsResourceListProjection projection = UNSPECIFIED]) {
+  core.Future<Buckets> list(core.String projectId, {core.int maxResults, core.String pageToken, BucketsResourceListProjection projection}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    if (UNSPECIFIED != projectId) $queryParams["projectId"] = projectId;
-    if (UNSPECIFIED != maxResults) $queryParams["max-results"] = maxResults;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != projection) $queryParams["projection"] = projection;
+    if (?projectId) $queryParams["projectId"] = projectId;
+    if (?maxResults) $queryParams["max-results"] = maxResults;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?projection) $queryParams["projection"] = projection;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -1016,7 +1016,7 @@ class BucketsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "b";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1033,12 +1033,12 @@ class BucketsResource extends core.Object {
    *    * [bucket] Name of a bucket.
    *    * [projection] Set of properties to return. Defaults to full.
    */
-  core.Future<Bucket> update(core.String bucket, Bucket content, [BucketsResourceUpdateProjection projection = UNSPECIFIED]) {
+  core.Future<Bucket> update(core.String bucket, Bucket content, {BucketsResourceUpdateProjection projection}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["bucket"] = bucket;
-    if (UNSPECIFIED != projection) $queryParams["projection"] = projection;
+    if (?projection) $queryParams["projection"] = projection;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -1051,7 +1051,7 @@ class BucketsResource extends core.Object {
     final $body = JSON.stringify(Bucket.serialize(content));
     final $path = "b/{bucket}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PUT", $headers);
+    final $http = new http.Request($url, "PUT", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1068,12 +1068,12 @@ class BucketsResource extends core.Object {
    *    * [bucket] Name of a bucket.
    *    * [projection] Set of properties to return. Defaults to full.
    */
-  core.Future<Bucket> patch(core.String bucket, Bucket content, [BucketsResourcePatchProjection projection = UNSPECIFIED]) {
+  core.Future<Bucket> patch(core.String bucket, Bucket content, {BucketsResourcePatchProjection projection}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["bucket"] = bucket;
-    if (UNSPECIFIED != projection) $queryParams["projection"] = projection;
+    if (?projection) $queryParams["projection"] = projection;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -1086,7 +1086,7 @@ class BucketsResource extends core.Object {
     final $body = JSON.stringify(Bucket.serialize(content));
     final $path = "b/{bucket}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PATCH", $headers);
+    final $http = new http.Request($url, "PATCH", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1116,7 +1116,7 @@ class BucketsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "b/{bucket}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "DELETE", $headers);
+    final $http = new http.Request($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -1129,18 +1129,18 @@ class BucketsResource extends core.Object {
 // Enum BucketsResource.Insert.Projection
 class BucketsResourceInsertProjection extends core.Object implements core.Hashable {
   /** Include all properties. */
-  static final BucketsResourceInsertProjection FULL = const BucketsResourceInsertProjection._internal("full", 0);
+  const BucketsResourceInsertProjection FULL = const BucketsResourceInsertProjection._internal("full", 0);
   /** Omit acl and defaultObjectAcl properties. */
-  static final BucketsResourceInsertProjection NO_ACL = const BucketsResourceInsertProjection._internal("no_acl", 1);
+  const BucketsResourceInsertProjection NO_ACL = const BucketsResourceInsertProjection._internal("no_acl", 1);
 
   /** All values of this enumeration */
-  static final core.List<BucketsResourceInsertProjection> values = const <BucketsResourceInsertProjection>[
+  const core.List<BucketsResourceInsertProjection> values = const <BucketsResourceInsertProjection>[
     FULL,
     NO_ACL,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <BucketsResourceInsertProjection>{ 
+  const _valuesMap = const <BucketsResourceInsertProjection>{ 
     "full": FULL,
     "no_acl": NO_ACL,
   };
@@ -1160,18 +1160,18 @@ class BucketsResourceInsertProjection extends core.Object implements core.Hashab
 // Enum BucketsResource.Get.Projection
 class BucketsResourceGetProjection extends core.Object implements core.Hashable {
   /** Include all properties. */
-  static final BucketsResourceGetProjection FULL = const BucketsResourceGetProjection._internal("full", 0);
+  const BucketsResourceGetProjection FULL = const BucketsResourceGetProjection._internal("full", 0);
   /** Omit acl and defaultObjectAcl properties. */
-  static final BucketsResourceGetProjection NO_ACL = const BucketsResourceGetProjection._internal("no_acl", 1);
+  const BucketsResourceGetProjection NO_ACL = const BucketsResourceGetProjection._internal("no_acl", 1);
 
   /** All values of this enumeration */
-  static final core.List<BucketsResourceGetProjection> values = const <BucketsResourceGetProjection>[
+  const core.List<BucketsResourceGetProjection> values = const <BucketsResourceGetProjection>[
     FULL,
     NO_ACL,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <BucketsResourceGetProjection>{ 
+  const _valuesMap = const <BucketsResourceGetProjection>{ 
     "full": FULL,
     "no_acl": NO_ACL,
   };
@@ -1191,18 +1191,18 @@ class BucketsResourceGetProjection extends core.Object implements core.Hashable 
 // Enum BucketsResource.List.Projection
 class BucketsResourceListProjection extends core.Object implements core.Hashable {
   /** Include all properties. */
-  static final BucketsResourceListProjection FULL = const BucketsResourceListProjection._internal("full", 0);
+  const BucketsResourceListProjection FULL = const BucketsResourceListProjection._internal("full", 0);
   /** Omit acl and defaultObjectAcl properties. */
-  static final BucketsResourceListProjection NO_ACL = const BucketsResourceListProjection._internal("no_acl", 1);
+  const BucketsResourceListProjection NO_ACL = const BucketsResourceListProjection._internal("no_acl", 1);
 
   /** All values of this enumeration */
-  static final core.List<BucketsResourceListProjection> values = const <BucketsResourceListProjection>[
+  const core.List<BucketsResourceListProjection> values = const <BucketsResourceListProjection>[
     FULL,
     NO_ACL,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <BucketsResourceListProjection>{ 
+  const _valuesMap = const <BucketsResourceListProjection>{ 
     "full": FULL,
     "no_acl": NO_ACL,
   };
@@ -1222,18 +1222,18 @@ class BucketsResourceListProjection extends core.Object implements core.Hashable
 // Enum BucketsResource.Update.Projection
 class BucketsResourceUpdateProjection extends core.Object implements core.Hashable {
   /** Include all properties. */
-  static final BucketsResourceUpdateProjection FULL = const BucketsResourceUpdateProjection._internal("full", 0);
+  const BucketsResourceUpdateProjection FULL = const BucketsResourceUpdateProjection._internal("full", 0);
   /** Omit acl and defaultObjectAcl properties. */
-  static final BucketsResourceUpdateProjection NO_ACL = const BucketsResourceUpdateProjection._internal("no_acl", 1);
+  const BucketsResourceUpdateProjection NO_ACL = const BucketsResourceUpdateProjection._internal("no_acl", 1);
 
   /** All values of this enumeration */
-  static final core.List<BucketsResourceUpdateProjection> values = const <BucketsResourceUpdateProjection>[
+  const core.List<BucketsResourceUpdateProjection> values = const <BucketsResourceUpdateProjection>[
     FULL,
     NO_ACL,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <BucketsResourceUpdateProjection>{ 
+  const _valuesMap = const <BucketsResourceUpdateProjection>{ 
     "full": FULL,
     "no_acl": NO_ACL,
   };
@@ -1253,18 +1253,18 @@ class BucketsResourceUpdateProjection extends core.Object implements core.Hashab
 // Enum BucketsResource.Patch.Projection
 class BucketsResourcePatchProjection extends core.Object implements core.Hashable {
   /** Include all properties. */
-  static final BucketsResourcePatchProjection FULL = const BucketsResourcePatchProjection._internal("full", 0);
+  const BucketsResourcePatchProjection FULL = const BucketsResourcePatchProjection._internal("full", 0);
   /** Omit acl and defaultObjectAcl properties. */
-  static final BucketsResourcePatchProjection NO_ACL = const BucketsResourcePatchProjection._internal("no_acl", 1);
+  const BucketsResourcePatchProjection NO_ACL = const BucketsResourcePatchProjection._internal("no_acl", 1);
 
   /** All values of this enumeration */
-  static final core.List<BucketsResourcePatchProjection> values = const <BucketsResourcePatchProjection>[
+  const core.List<BucketsResourcePatchProjection> values = const <BucketsResourcePatchProjection>[
     FULL,
     NO_ACL,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <BucketsResourcePatchProjection>{ 
+  const _valuesMap = const <BucketsResourcePatchProjection>{ 
     "full": FULL,
     "no_acl": NO_ACL,
   };
@@ -1858,15 +1858,15 @@ class Objects extends IdentityHash {
 // Enum StorageApi.Alt
 class StorageApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/json */
-  static final StorageApiAlt JSON = const StorageApiAlt._internal("json", 0);
+  const StorageApiAlt JSON = const StorageApiAlt._internal("json", 0);
 
   /** All values of this enumeration */
-  static final core.List<StorageApiAlt> values = const <StorageApiAlt>[
+  const core.List<StorageApiAlt> values = const <StorageApiAlt>[
     JSON,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <StorageApiAlt>{ 
+  const _valuesMap = const <StorageApiAlt>{ 
     "json": JSON,
   };
 

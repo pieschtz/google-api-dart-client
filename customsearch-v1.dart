@@ -17,7 +17,7 @@
 #import('dart:json');
 
 #import('utils.dart');
-#import('http.dart');
+#import('http.dart', prefix:'http');
 
 // API CustomsearchApi
 /**
@@ -27,14 +27,14 @@ class CustomsearchApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
   final core.String baseUrl;
   /** How we should identify ourselves to the service. */
-  Authenticator authenticator;
+  http.Authenticator authenticator;
   /** The client library version */
   final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
   final core.String applicationName;
-  CustomsearchApi get _$service() => this;
+  CustomsearchApi get _$service => this;
   CseResource _cse;
-  CseResource get cse() => _cse;
+  CseResource get cse => _cse;
   
   /** Returns response with indentations and line breaks. */
   core.bool prettyPrint;
@@ -67,16 +67,16 @@ class CustomsearchApi extends core.Object {
   CustomsearchApiAlt alt;
 
 
-  CustomsearchApi([this.baseUrl = "https://www.googleapis.com/customsearch/", applicationName, this.authenticator]) :
+  CustomsearchApi({this.baseUrl:"https://www.googleapis.com/customsearch/", applicationName, this.authenticator}) :
       this.applicationName = (applicationName == null) ? null : applicationName
-          .replaceAll(const core.RegExp(@'\s+'), '_')
-          .replaceAll(const core.RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+          .replaceAll(const core.RegExp(r'\s+'), '_')
+          .replaceAll(const core.RegExp(r'[^-_.,0-9a-zA-Z]'), '')
   { 
     _cse = new CseResource._internal(this);
   }
-  core.String get userAgent() {
+  core.String get userAgent {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
-    return "${uaPrefix}customsearch/v1/20120718 google-api-dart-client/${clientVersion}";
+    return "${uaPrefix}customsearch/v1/20120904 google-api-dart-client/${clientVersion}";
   }
 
 }
@@ -132,42 +132,42 @@ class CseResource extends core.Object {
    *    * [cx] The custom search engine ID to scope this search query
    *    * [siteSearchFilter] Controls whether to include or exclude results from the site named in the as_sitesearch parameter
    */
-  core.Future<Search> list(core.String q, [core.String sort = UNSPECIFIED, core.String orTerms = UNSPECIFIED, core.String highRange = UNSPECIFIED, core.int num = UNSPECIFIED, core.String cr = UNSPECIFIED, CseResourceListImgType imgType = UNSPECIFIED, core.String gl = UNSPECIFIED, core.String relatedSite = UNSPECIFIED, CseResourceListSearchType searchType = UNSPECIFIED, core.String fileType = UNSPECIFIED, core.int start = UNSPECIFIED, CseResourceListImgDominantColor imgDominantColor = UNSPECIFIED, CseResourceListLr lr = UNSPECIFIED, core.String siteSearch = UNSPECIFIED, core.String cref = UNSPECIFIED, core.String dateRestrict = UNSPECIFIED, CseResourceListSafe safe = UNSPECIFIED, core.String c2coff = UNSPECIFIED, core.String googlehost = UNSPECIFIED, core.String hq = UNSPECIFIED, core.String exactTerms = UNSPECIFIED, core.String hl = UNSPECIFIED, core.String lowRange = UNSPECIFIED, CseResourceListImgSize imgSize = UNSPECIFIED, CseResourceListImgColorType imgColorType = UNSPECIFIED, core.String rights = UNSPECIFIED, core.String excludeTerms = UNSPECIFIED, CseResourceListFilter filter = UNSPECIFIED, core.String linkSite = UNSPECIFIED, core.String cx = UNSPECIFIED, CseResourceListSiteSearchFilter siteSearchFilter = UNSPECIFIED]) {
+  core.Future<Search> list(core.String q, {core.String sort, core.String orTerms, core.String highRange, core.int num, core.String cr, CseResourceListImgType imgType, core.String gl, core.String relatedSite, CseResourceListSearchType searchType, core.String fileType, core.int start, CseResourceListImgDominantColor imgDominantColor, CseResourceListLr lr, core.String siteSearch, core.String cref, core.String dateRestrict, CseResourceListSafe safe, core.String c2coff, core.String googlehost, core.String hq, core.String exactTerms, core.String hl, core.String lowRange, CseResourceListImgSize imgSize, CseResourceListImgColorType imgColorType, core.String rights, core.String excludeTerms, CseResourceListFilter filter, core.String linkSite, core.String cx, CseResourceListSiteSearchFilter siteSearchFilter}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    if (UNSPECIFIED != q) $queryParams["q"] = q;
-    if (UNSPECIFIED != sort) $queryParams["sort"] = sort;
-    if (UNSPECIFIED != orTerms) $queryParams["orTerms"] = orTerms;
-    if (UNSPECIFIED != highRange) $queryParams["highRange"] = highRange;
-    if (UNSPECIFIED != num) $queryParams["num"] = num;
-    if (UNSPECIFIED != cr) $queryParams["cr"] = cr;
-    if (UNSPECIFIED != imgType) $queryParams["imgType"] = imgType;
-    if (UNSPECIFIED != gl) $queryParams["gl"] = gl;
-    if (UNSPECIFIED != relatedSite) $queryParams["relatedSite"] = relatedSite;
-    if (UNSPECIFIED != searchType) $queryParams["searchType"] = searchType;
-    if (UNSPECIFIED != fileType) $queryParams["fileType"] = fileType;
-    if (UNSPECIFIED != start) $queryParams["start"] = start;
-    if (UNSPECIFIED != imgDominantColor) $queryParams["imgDominantColor"] = imgDominantColor;
-    if (UNSPECIFIED != lr) $queryParams["lr"] = lr;
-    if (UNSPECIFIED != siteSearch) $queryParams["siteSearch"] = siteSearch;
-    if (UNSPECIFIED != cref) $queryParams["cref"] = cref;
-    if (UNSPECIFIED != dateRestrict) $queryParams["dateRestrict"] = dateRestrict;
-    if (UNSPECIFIED != safe) $queryParams["safe"] = safe;
-    if (UNSPECIFIED != c2coff) $queryParams["c2coff"] = c2coff;
-    if (UNSPECIFIED != googlehost) $queryParams["googlehost"] = googlehost;
-    if (UNSPECIFIED != hq) $queryParams["hq"] = hq;
-    if (UNSPECIFIED != exactTerms) $queryParams["exactTerms"] = exactTerms;
-    if (UNSPECIFIED != hl) $queryParams["hl"] = hl;
-    if (UNSPECIFIED != lowRange) $queryParams["lowRange"] = lowRange;
-    if (UNSPECIFIED != imgSize) $queryParams["imgSize"] = imgSize;
-    if (UNSPECIFIED != imgColorType) $queryParams["imgColorType"] = imgColorType;
-    if (UNSPECIFIED != rights) $queryParams["rights"] = rights;
-    if (UNSPECIFIED != excludeTerms) $queryParams["excludeTerms"] = excludeTerms;
-    if (UNSPECIFIED != filter) $queryParams["filter"] = filter;
-    if (UNSPECIFIED != linkSite) $queryParams["linkSite"] = linkSite;
-    if (UNSPECIFIED != cx) $queryParams["cx"] = cx;
-    if (UNSPECIFIED != siteSearchFilter) $queryParams["siteSearchFilter"] = siteSearchFilter;
+    if (?q) $queryParams["q"] = q;
+    if (?sort) $queryParams["sort"] = sort;
+    if (?orTerms) $queryParams["orTerms"] = orTerms;
+    if (?highRange) $queryParams["highRange"] = highRange;
+    if (?num) $queryParams["num"] = num;
+    if (?cr) $queryParams["cr"] = cr;
+    if (?imgType) $queryParams["imgType"] = imgType;
+    if (?gl) $queryParams["gl"] = gl;
+    if (?relatedSite) $queryParams["relatedSite"] = relatedSite;
+    if (?searchType) $queryParams["searchType"] = searchType;
+    if (?fileType) $queryParams["fileType"] = fileType;
+    if (?start) $queryParams["start"] = start;
+    if (?imgDominantColor) $queryParams["imgDominantColor"] = imgDominantColor;
+    if (?lr) $queryParams["lr"] = lr;
+    if (?siteSearch) $queryParams["siteSearch"] = siteSearch;
+    if (?cref) $queryParams["cref"] = cref;
+    if (?dateRestrict) $queryParams["dateRestrict"] = dateRestrict;
+    if (?safe) $queryParams["safe"] = safe;
+    if (?c2coff) $queryParams["c2coff"] = c2coff;
+    if (?googlehost) $queryParams["googlehost"] = googlehost;
+    if (?hq) $queryParams["hq"] = hq;
+    if (?exactTerms) $queryParams["exactTerms"] = exactTerms;
+    if (?hl) $queryParams["hl"] = hl;
+    if (?lowRange) $queryParams["lowRange"] = lowRange;
+    if (?imgSize) $queryParams["imgSize"] = imgSize;
+    if (?imgColorType) $queryParams["imgColorType"] = imgColorType;
+    if (?rights) $queryParams["rights"] = rights;
+    if (?excludeTerms) $queryParams["excludeTerms"] = excludeTerms;
+    if (?filter) $queryParams["filter"] = filter;
+    if (?linkSite) $queryParams["linkSite"] = linkSite;
+    if (?cx) $queryParams["cx"] = cx;
+    if (?siteSearchFilter) $queryParams["siteSearchFilter"] = siteSearchFilter;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -178,7 +178,7 @@ class CseResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "v1";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -191,18 +191,18 @@ class CseResource extends core.Object {
 // Enum CseResource.List.ImgType
 class CseResourceListImgType extends core.Object implements core.Hashable {
   /** clipart */
-  static final CseResourceListImgType CLIPART = const CseResourceListImgType._internal("clipart", 0);
+  const CseResourceListImgType CLIPART = const CseResourceListImgType._internal("clipart", 0);
   /** face */
-  static final CseResourceListImgType FACE = const CseResourceListImgType._internal("face", 1);
+  const CseResourceListImgType FACE = const CseResourceListImgType._internal("face", 1);
   /** lineart */
-  static final CseResourceListImgType LINEART = const CseResourceListImgType._internal("lineart", 2);
+  const CseResourceListImgType LINEART = const CseResourceListImgType._internal("lineart", 2);
   /** news */
-  static final CseResourceListImgType NEWS = const CseResourceListImgType._internal("news", 3);
+  const CseResourceListImgType NEWS = const CseResourceListImgType._internal("news", 3);
   /** photo */
-  static final CseResourceListImgType PHOTO = const CseResourceListImgType._internal("photo", 4);
+  const CseResourceListImgType PHOTO = const CseResourceListImgType._internal("photo", 4);
 
   /** All values of this enumeration */
-  static final core.List<CseResourceListImgType> values = const <CseResourceListImgType>[
+  const core.List<CseResourceListImgType> values = const <CseResourceListImgType>[
     CLIPART,
     FACE,
     LINEART,
@@ -211,7 +211,7 @@ class CseResourceListImgType extends core.Object implements core.Hashable {
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <CseResourceListImgType>{ 
+  const _valuesMap = const <CseResourceListImgType>{ 
     "clipart": CLIPART,
     "face": FACE,
     "lineart": LINEART,
@@ -234,15 +234,15 @@ class CseResourceListImgType extends core.Object implements core.Hashable {
 // Enum CseResource.List.SearchType
 class CseResourceListSearchType extends core.Object implements core.Hashable {
   /** custom image search */
-  static final CseResourceListSearchType IMAGE = const CseResourceListSearchType._internal("image", 0);
+  const CseResourceListSearchType IMAGE = const CseResourceListSearchType._internal("image", 0);
 
   /** All values of this enumeration */
-  static final core.List<CseResourceListSearchType> values = const <CseResourceListSearchType>[
+  const core.List<CseResourceListSearchType> values = const <CseResourceListSearchType>[
     IMAGE,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <CseResourceListSearchType>{ 
+  const _valuesMap = const <CseResourceListSearchType>{ 
     "image": IMAGE,
   };
 
@@ -261,28 +261,28 @@ class CseResourceListSearchType extends core.Object implements core.Hashable {
 // Enum CseResource.List.ImgDominantColor
 class CseResourceListImgDominantColor extends core.Object implements core.Hashable {
   /** black */
-  static final CseResourceListImgDominantColor BLACK = const CseResourceListImgDominantColor._internal("black", 0);
+  const CseResourceListImgDominantColor BLACK = const CseResourceListImgDominantColor._internal("black", 0);
   /** blue */
-  static final CseResourceListImgDominantColor BLUE = const CseResourceListImgDominantColor._internal("blue", 1);
+  const CseResourceListImgDominantColor BLUE = const CseResourceListImgDominantColor._internal("blue", 1);
   /** brown */
-  static final CseResourceListImgDominantColor BROWN = const CseResourceListImgDominantColor._internal("brown", 2);
+  const CseResourceListImgDominantColor BROWN = const CseResourceListImgDominantColor._internal("brown", 2);
   /** gray */
-  static final CseResourceListImgDominantColor GRAY = const CseResourceListImgDominantColor._internal("gray", 3);
+  const CseResourceListImgDominantColor GRAY = const CseResourceListImgDominantColor._internal("gray", 3);
   /** green */
-  static final CseResourceListImgDominantColor GREEN = const CseResourceListImgDominantColor._internal("green", 4);
+  const CseResourceListImgDominantColor GREEN = const CseResourceListImgDominantColor._internal("green", 4);
   /** pink */
-  static final CseResourceListImgDominantColor PINK = const CseResourceListImgDominantColor._internal("pink", 5);
+  const CseResourceListImgDominantColor PINK = const CseResourceListImgDominantColor._internal("pink", 5);
   /** purple */
-  static final CseResourceListImgDominantColor PURPLE = const CseResourceListImgDominantColor._internal("purple", 6);
+  const CseResourceListImgDominantColor PURPLE = const CseResourceListImgDominantColor._internal("purple", 6);
   /** teal */
-  static final CseResourceListImgDominantColor TEAL = const CseResourceListImgDominantColor._internal("teal", 7);
+  const CseResourceListImgDominantColor TEAL = const CseResourceListImgDominantColor._internal("teal", 7);
   /** white */
-  static final CseResourceListImgDominantColor WHITE = const CseResourceListImgDominantColor._internal("white", 8);
+  const CseResourceListImgDominantColor WHITE = const CseResourceListImgDominantColor._internal("white", 8);
   /** yellow */
-  static final CseResourceListImgDominantColor YELLOW = const CseResourceListImgDominantColor._internal("yellow", 9);
+  const CseResourceListImgDominantColor YELLOW = const CseResourceListImgDominantColor._internal("yellow", 9);
 
   /** All values of this enumeration */
-  static final core.List<CseResourceListImgDominantColor> values = const <CseResourceListImgDominantColor>[
+  const core.List<CseResourceListImgDominantColor> values = const <CseResourceListImgDominantColor>[
     BLACK,
     BLUE,
     BROWN,
@@ -296,7 +296,7 @@ class CseResourceListImgDominantColor extends core.Object implements core.Hashab
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <CseResourceListImgDominantColor>{ 
+  const _valuesMap = const <CseResourceListImgDominantColor>{ 
     "black": BLACK,
     "blue": BLUE,
     "brown": BROWN,
@@ -324,78 +324,78 @@ class CseResourceListImgDominantColor extends core.Object implements core.Hashab
 // Enum CseResource.List.Lr
 class CseResourceListLr extends core.Object implements core.Hashable {
   /** Arabic */
-  static final CseResourceListLr LANG_AR = const CseResourceListLr._internal("lang_ar", 0);
+  const CseResourceListLr LANG_AR = const CseResourceListLr._internal("lang_ar", 0);
   /** Bulgarian */
-  static final CseResourceListLr LANG_BG = const CseResourceListLr._internal("lang_bg", 1);
+  const CseResourceListLr LANG_BG = const CseResourceListLr._internal("lang_bg", 1);
   /** Catalan */
-  static final CseResourceListLr LANG_CA = const CseResourceListLr._internal("lang_ca", 2);
+  const CseResourceListLr LANG_CA = const CseResourceListLr._internal("lang_ca", 2);
   /** Czech */
-  static final CseResourceListLr LANG_CS = const CseResourceListLr._internal("lang_cs", 3);
+  const CseResourceListLr LANG_CS = const CseResourceListLr._internal("lang_cs", 3);
   /** Danish */
-  static final CseResourceListLr LANG_DA = const CseResourceListLr._internal("lang_da", 4);
+  const CseResourceListLr LANG_DA = const CseResourceListLr._internal("lang_da", 4);
   /** German */
-  static final CseResourceListLr LANG_DE = const CseResourceListLr._internal("lang_de", 5);
+  const CseResourceListLr LANG_DE = const CseResourceListLr._internal("lang_de", 5);
   /** Greek */
-  static final CseResourceListLr LANG_EL = const CseResourceListLr._internal("lang_el", 6);
+  const CseResourceListLr LANG_EL = const CseResourceListLr._internal("lang_el", 6);
   /** English */
-  static final CseResourceListLr LANG_EN = const CseResourceListLr._internal("lang_en", 7);
+  const CseResourceListLr LANG_EN = const CseResourceListLr._internal("lang_en", 7);
   /** Spanish */
-  static final CseResourceListLr LANG_ES = const CseResourceListLr._internal("lang_es", 8);
+  const CseResourceListLr LANG_ES = const CseResourceListLr._internal("lang_es", 8);
   /** Estonian */
-  static final CseResourceListLr LANG_ET = const CseResourceListLr._internal("lang_et", 9);
+  const CseResourceListLr LANG_ET = const CseResourceListLr._internal("lang_et", 9);
   /** Finnish */
-  static final CseResourceListLr LANG_FI = const CseResourceListLr._internal("lang_fi", 10);
+  const CseResourceListLr LANG_FI = const CseResourceListLr._internal("lang_fi", 10);
   /** French */
-  static final CseResourceListLr LANG_FR = const CseResourceListLr._internal("lang_fr", 11);
+  const CseResourceListLr LANG_FR = const CseResourceListLr._internal("lang_fr", 11);
   /** Croatian */
-  static final CseResourceListLr LANG_HR = const CseResourceListLr._internal("lang_hr", 12);
+  const CseResourceListLr LANG_HR = const CseResourceListLr._internal("lang_hr", 12);
   /** Hungarian */
-  static final CseResourceListLr LANG_HU = const CseResourceListLr._internal("lang_hu", 13);
+  const CseResourceListLr LANG_HU = const CseResourceListLr._internal("lang_hu", 13);
   /** Indonesian */
-  static final CseResourceListLr LANG_ID = const CseResourceListLr._internal("lang_id", 14);
+  const CseResourceListLr LANG_ID = const CseResourceListLr._internal("lang_id", 14);
   /** Icelandic */
-  static final CseResourceListLr LANG_IS = const CseResourceListLr._internal("lang_is", 15);
+  const CseResourceListLr LANG_IS = const CseResourceListLr._internal("lang_is", 15);
   /** Italian */
-  static final CseResourceListLr LANG_IT = const CseResourceListLr._internal("lang_it", 16);
+  const CseResourceListLr LANG_IT = const CseResourceListLr._internal("lang_it", 16);
   /** Hebrew */
-  static final CseResourceListLr LANG_IW = const CseResourceListLr._internal("lang_iw", 17);
+  const CseResourceListLr LANG_IW = const CseResourceListLr._internal("lang_iw", 17);
   /** Japanese */
-  static final CseResourceListLr LANG_JA = const CseResourceListLr._internal("lang_ja", 18);
+  const CseResourceListLr LANG_JA = const CseResourceListLr._internal("lang_ja", 18);
   /** Korean */
-  static final CseResourceListLr LANG_KO = const CseResourceListLr._internal("lang_ko", 19);
+  const CseResourceListLr LANG_KO = const CseResourceListLr._internal("lang_ko", 19);
   /** Lithuanian */
-  static final CseResourceListLr LANG_LT = const CseResourceListLr._internal("lang_lt", 20);
+  const CseResourceListLr LANG_LT = const CseResourceListLr._internal("lang_lt", 20);
   /** Latvian */
-  static final CseResourceListLr LANG_LV = const CseResourceListLr._internal("lang_lv", 21);
+  const CseResourceListLr LANG_LV = const CseResourceListLr._internal("lang_lv", 21);
   /** Dutch */
-  static final CseResourceListLr LANG_NL = const CseResourceListLr._internal("lang_nl", 22);
+  const CseResourceListLr LANG_NL = const CseResourceListLr._internal("lang_nl", 22);
   /** Norwegian */
-  static final CseResourceListLr LANG_NO = const CseResourceListLr._internal("lang_no", 23);
+  const CseResourceListLr LANG_NO = const CseResourceListLr._internal("lang_no", 23);
   /** Polish */
-  static final CseResourceListLr LANG_PL = const CseResourceListLr._internal("lang_pl", 24);
+  const CseResourceListLr LANG_PL = const CseResourceListLr._internal("lang_pl", 24);
   /** Portuguese */
-  static final CseResourceListLr LANG_PT = const CseResourceListLr._internal("lang_pt", 25);
+  const CseResourceListLr LANG_PT = const CseResourceListLr._internal("lang_pt", 25);
   /** Romanian */
-  static final CseResourceListLr LANG_RO = const CseResourceListLr._internal("lang_ro", 26);
+  const CseResourceListLr LANG_RO = const CseResourceListLr._internal("lang_ro", 26);
   /** Russian */
-  static final CseResourceListLr LANG_RU = const CseResourceListLr._internal("lang_ru", 27);
+  const CseResourceListLr LANG_RU = const CseResourceListLr._internal("lang_ru", 27);
   /** Slovak */
-  static final CseResourceListLr LANG_SK = const CseResourceListLr._internal("lang_sk", 28);
+  const CseResourceListLr LANG_SK = const CseResourceListLr._internal("lang_sk", 28);
   /** Slovenian */
-  static final CseResourceListLr LANG_SL = const CseResourceListLr._internal("lang_sl", 29);
+  const CseResourceListLr LANG_SL = const CseResourceListLr._internal("lang_sl", 29);
   /** Serbian */
-  static final CseResourceListLr LANG_SR = const CseResourceListLr._internal("lang_sr", 30);
+  const CseResourceListLr LANG_SR = const CseResourceListLr._internal("lang_sr", 30);
   /** Swedish */
-  static final CseResourceListLr LANG_SV = const CseResourceListLr._internal("lang_sv", 31);
+  const CseResourceListLr LANG_SV = const CseResourceListLr._internal("lang_sv", 31);
   /** Turkish */
-  static final CseResourceListLr LANG_TR = const CseResourceListLr._internal("lang_tr", 32);
+  const CseResourceListLr LANG_TR = const CseResourceListLr._internal("lang_tr", 32);
   /** Chinese (Simplified) */
-  static final CseResourceListLr LANG_ZH_CN = const CseResourceListLr._internal("lang_zh-CN", 33);
+  const CseResourceListLr LANG_ZH_CN = const CseResourceListLr._internal("lang_zh-CN", 33);
   /** Chinese (Traditional) */
-  static final CseResourceListLr LANG_ZH_TW = const CseResourceListLr._internal("lang_zh-TW", 34);
+  const CseResourceListLr LANG_ZH_TW = const CseResourceListLr._internal("lang_zh-TW", 34);
 
   /** All values of this enumeration */
-  static final core.List<CseResourceListLr> values = const <CseResourceListLr>[
+  const core.List<CseResourceListLr> values = const <CseResourceListLr>[
     LANG_AR,
     LANG_BG,
     LANG_CA,
@@ -434,7 +434,7 @@ class CseResourceListLr extends core.Object implements core.Hashable {
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <CseResourceListLr>{ 
+  const _valuesMap = const <CseResourceListLr>{ 
     "lang_ar": LANG_AR,
     "lang_bg": LANG_BG,
     "lang_ca": LANG_CA,
@@ -487,21 +487,21 @@ class CseResourceListLr extends core.Object implements core.Hashable {
 // Enum CseResource.List.Safe
 class CseResourceListSafe extends core.Object implements core.Hashable {
   /** Enables highest level of safe search filtering. */
-  static final CseResourceListSafe HIGH = const CseResourceListSafe._internal("high", 0);
+  const CseResourceListSafe HIGH = const CseResourceListSafe._internal("high", 0);
   /** Enables moderate safe search filtering. */
-  static final CseResourceListSafe MEDIUM = const CseResourceListSafe._internal("medium", 1);
+  const CseResourceListSafe MEDIUM = const CseResourceListSafe._internal("medium", 1);
   /** Disables safe search filtering. */
-  static final CseResourceListSafe OFF = const CseResourceListSafe._internal("off", 2);
+  const CseResourceListSafe OFF = const CseResourceListSafe._internal("off", 2);
 
   /** All values of this enumeration */
-  static final core.List<CseResourceListSafe> values = const <CseResourceListSafe>[
+  const core.List<CseResourceListSafe> values = const <CseResourceListSafe>[
     HIGH,
     MEDIUM,
     OFF,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <CseResourceListSafe>{ 
+  const _valuesMap = const <CseResourceListSafe>{ 
     "high": HIGH,
     "medium": MEDIUM,
     "off": OFF,
@@ -522,22 +522,22 @@ class CseResourceListSafe extends core.Object implements core.Hashable {
 // Enum CseResource.List.ImgSize
 class CseResourceListImgSize extends core.Object implements core.Hashable {
   /** huge */
-  static final CseResourceListImgSize HUGE = const CseResourceListImgSize._internal("huge", 0);
+  const CseResourceListImgSize HUGE = const CseResourceListImgSize._internal("huge", 0);
   /** icon */
-  static final CseResourceListImgSize ICON = const CseResourceListImgSize._internal("icon", 1);
+  const CseResourceListImgSize ICON = const CseResourceListImgSize._internal("icon", 1);
   /** large */
-  static final CseResourceListImgSize LARGE = const CseResourceListImgSize._internal("large", 2);
+  const CseResourceListImgSize LARGE = const CseResourceListImgSize._internal("large", 2);
   /** medium */
-  static final CseResourceListImgSize MEDIUM = const CseResourceListImgSize._internal("medium", 3);
+  const CseResourceListImgSize MEDIUM = const CseResourceListImgSize._internal("medium", 3);
   /** small */
-  static final CseResourceListImgSize SMALL = const CseResourceListImgSize._internal("small", 4);
+  const CseResourceListImgSize SMALL = const CseResourceListImgSize._internal("small", 4);
   /** xlarge */
-  static final CseResourceListImgSize XLARGE = const CseResourceListImgSize._internal("xlarge", 5);
+  const CseResourceListImgSize XLARGE = const CseResourceListImgSize._internal("xlarge", 5);
   /** xxlarge */
-  static final CseResourceListImgSize XXLARGE = const CseResourceListImgSize._internal("xxlarge", 6);
+  const CseResourceListImgSize XXLARGE = const CseResourceListImgSize._internal("xxlarge", 6);
 
   /** All values of this enumeration */
-  static final core.List<CseResourceListImgSize> values = const <CseResourceListImgSize>[
+  const core.List<CseResourceListImgSize> values = const <CseResourceListImgSize>[
     HUGE,
     ICON,
     LARGE,
@@ -548,7 +548,7 @@ class CseResourceListImgSize extends core.Object implements core.Hashable {
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <CseResourceListImgSize>{ 
+  const _valuesMap = const <CseResourceListImgSize>{ 
     "huge": HUGE,
     "icon": ICON,
     "large": LARGE,
@@ -573,21 +573,21 @@ class CseResourceListImgSize extends core.Object implements core.Hashable {
 // Enum CseResource.List.ImgColorType
 class CseResourceListImgColorType extends core.Object implements core.Hashable {
   /** color */
-  static final CseResourceListImgColorType COLOR = const CseResourceListImgColorType._internal("color", 0);
+  const CseResourceListImgColorType COLOR = const CseResourceListImgColorType._internal("color", 0);
   /** gray */
-  static final CseResourceListImgColorType GRAY = const CseResourceListImgColorType._internal("gray", 1);
+  const CseResourceListImgColorType GRAY = const CseResourceListImgColorType._internal("gray", 1);
   /** mono */
-  static final CseResourceListImgColorType MONO = const CseResourceListImgColorType._internal("mono", 2);
+  const CseResourceListImgColorType MONO = const CseResourceListImgColorType._internal("mono", 2);
 
   /** All values of this enumeration */
-  static final core.List<CseResourceListImgColorType> values = const <CseResourceListImgColorType>[
+  const core.List<CseResourceListImgColorType> values = const <CseResourceListImgColorType>[
     COLOR,
     GRAY,
     MONO,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <CseResourceListImgColorType>{ 
+  const _valuesMap = const <CseResourceListImgColorType>{ 
     "color": COLOR,
     "gray": GRAY,
     "mono": MONO,
@@ -608,18 +608,18 @@ class CseResourceListImgColorType extends core.Object implements core.Hashable {
 // Enum CseResource.List.Filter
 class CseResourceListFilter extends core.Object implements core.Hashable {
   /** Turns off duplicate content filter. */
-  static final CseResourceListFilter VALUE_0 = const CseResourceListFilter._internal("0", 0);
+  const CseResourceListFilter VALUE_0 = const CseResourceListFilter._internal("0", 0);
   /** Turns on duplicate content filter. */
-  static final CseResourceListFilter VALUE_1 = const CseResourceListFilter._internal("1", 1);
+  const CseResourceListFilter VALUE_1 = const CseResourceListFilter._internal("1", 1);
 
   /** All values of this enumeration */
-  static final core.List<CseResourceListFilter> values = const <CseResourceListFilter>[
+  const core.List<CseResourceListFilter> values = const <CseResourceListFilter>[
     VALUE_0,
     VALUE_1,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <CseResourceListFilter>{ 
+  const _valuesMap = const <CseResourceListFilter>{ 
     "0": VALUE_0,
     "1": VALUE_1,
   };
@@ -639,18 +639,18 @@ class CseResourceListFilter extends core.Object implements core.Hashable {
 // Enum CseResource.List.SiteSearchFilter
 class CseResourceListSiteSearchFilter extends core.Object implements core.Hashable {
   /** exclude */
-  static final CseResourceListSiteSearchFilter E = const CseResourceListSiteSearchFilter._internal("e", 0);
+  const CseResourceListSiteSearchFilter E = const CseResourceListSiteSearchFilter._internal("e", 0);
   /** include */
-  static final CseResourceListSiteSearchFilter I = const CseResourceListSiteSearchFilter._internal("i", 1);
+  const CseResourceListSiteSearchFilter I = const CseResourceListSiteSearchFilter._internal("i", 1);
 
   /** All values of this enumeration */
-  static final core.List<CseResourceListSiteSearchFilter> values = const <CseResourceListSiteSearchFilter>[
+  const core.List<CseResourceListSiteSearchFilter> values = const <CseResourceListSiteSearchFilter>[
     E,
     I,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <CseResourceListSiteSearchFilter>{ 
+  const _valuesMap = const <CseResourceListSiteSearchFilter>{ 
     "e": E,
     "i": I,
   };
@@ -1361,18 +1361,18 @@ class SearchUrl extends IdentityHash {
 // Enum CustomsearchApi.Alt
 class CustomsearchApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/atom+xml */
-  static final CustomsearchApiAlt ATOM = const CustomsearchApiAlt._internal("atom", 0);
+  const CustomsearchApiAlt ATOM = const CustomsearchApiAlt._internal("atom", 0);
   /** Responses with Content-Type of application/json */
-  static final CustomsearchApiAlt JSON = const CustomsearchApiAlt._internal("json", 1);
+  const CustomsearchApiAlt JSON = const CustomsearchApiAlt._internal("json", 1);
 
   /** All values of this enumeration */
-  static final core.List<CustomsearchApiAlt> values = const <CustomsearchApiAlt>[
+  const core.List<CustomsearchApiAlt> values = const <CustomsearchApiAlt>[
     ATOM,
     JSON,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <CustomsearchApiAlt>{ 
+  const _valuesMap = const <CustomsearchApiAlt>{ 
     "atom": ATOM,
     "json": JSON,
   };

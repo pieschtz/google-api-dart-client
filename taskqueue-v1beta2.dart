@@ -17,7 +17,7 @@
 #import('dart:json');
 
 #import('utils.dart');
-#import('http.dart');
+#import('http.dart', prefix:'http');
 
 // API TaskqueueApi
 /**
@@ -27,16 +27,16 @@ class TaskqueueApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
   final core.String baseUrl;
   /** How we should identify ourselves to the service. */
-  Authenticator authenticator;
+  http.Authenticator authenticator;
   /** The client library version */
   final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
   final core.String applicationName;
-  TaskqueueApi get _$service() => this;
+  TaskqueueApi get _$service => this;
   TaskqueuesResource _taskqueues;
-  TaskqueuesResource get taskqueues() => _taskqueues;
+  TaskqueuesResource get taskqueues => _taskqueues;
   TasksResource _tasks;
-  TasksResource get tasks() => _tasks;
+  TasksResource get tasks => _tasks;
   
   /** Returns response with indentations and line breaks. */
   core.bool prettyPrint;
@@ -69,15 +69,15 @@ class TaskqueueApi extends core.Object {
   TaskqueueApiAlt alt;
 
 
-  TaskqueueApi([this.baseUrl = "https://www.googleapis.com/taskqueue/v1beta2/projects/", applicationName, this.authenticator]) :
+  TaskqueueApi({this.baseUrl:"https://www.googleapis.com/taskqueue/v1beta2/projects/", applicationName, this.authenticator}) :
       this.applicationName = (applicationName == null) ? null : applicationName
-          .replaceAll(const core.RegExp(@'\s+'), '_')
-          .replaceAll(const core.RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+          .replaceAll(const core.RegExp(r'\s+'), '_')
+          .replaceAll(const core.RegExp(r'[^-_.,0-9a-zA-Z]'), '')
   { 
     _taskqueues = new TaskqueuesResource._internal(this);
     _tasks = new TasksResource._internal(this);
   }
-  core.String get userAgent() {
+  core.String get userAgent {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}taskqueue/v1beta2/20120501 google-api-dart-client/${clientVersion}";
   }
@@ -104,13 +104,13 @@ class TaskqueuesResource extends core.Object {
    *    * [taskqueue] The id of the taskqueue to get the properties of.
    *    * [getStats] Whether to get stats. Optional.
    */
-  core.Future<TaskQueue> get(core.String project, core.String taskqueue, [core.bool getStats = UNSPECIFIED]) {
+  core.Future<TaskQueue> get(core.String project, core.String taskqueue, {core.bool getStats}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["project"] = project;
     $pathParams["taskqueue"] = taskqueue;
-    if (UNSPECIFIED != getStats) $queryParams["getStats"] = getStats;
+    if (?getStats) $queryParams["getStats"] = getStats;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -121,7 +121,7 @@ class TaskqueuesResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{project}/taskqueues/{taskqueue}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -163,7 +163,7 @@ class TasksResource extends core.Object {
     final $body = JSON.stringify(Task.serialize(content));
     final $path = "{project}/taskqueues/{taskqueue}/tasks";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -197,7 +197,7 @@ class TasksResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{project}/taskqueues/{taskqueue}/tasks/{task}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -229,7 +229,7 @@ class TasksResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{project}/taskqueues/{taskqueue}/tasks";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -255,7 +255,7 @@ class TasksResource extends core.Object {
     $pathParams["project"] = project;
     $pathParams["taskqueue"] = taskqueue;
     $pathParams["task"] = task;
-    if (UNSPECIFIED != newLeaseSeconds) $queryParams["newLeaseSeconds"] = newLeaseSeconds;
+    if (?newLeaseSeconds) $queryParams["newLeaseSeconds"] = newLeaseSeconds;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -268,7 +268,7 @@ class TasksResource extends core.Object {
     final $body = JSON.stringify(Task.serialize(content));
     final $path = "{project}/taskqueues/{taskqueue}/tasks/{task}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -294,7 +294,7 @@ class TasksResource extends core.Object {
     $pathParams["project"] = project;
     $pathParams["taskqueue"] = taskqueue;
     $pathParams["task"] = task;
-    if (UNSPECIFIED != newLeaseSeconds) $queryParams["newLeaseSeconds"] = newLeaseSeconds;
+    if (?newLeaseSeconds) $queryParams["newLeaseSeconds"] = newLeaseSeconds;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -307,7 +307,7 @@ class TasksResource extends core.Object {
     final $body = JSON.stringify(Task.serialize(content));
     final $path = "{project}/taskqueues/{taskqueue}/tasks/{task}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PATCH", $headers);
+    final $http = new http.Request($url, "PATCH", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -341,7 +341,7 @@ class TasksResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{project}/taskqueues/{taskqueue}/tasks/{task}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "DELETE", $headers);
+    final $http = new http.Request($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -363,16 +363,16 @@ class TasksResource extends core.Object {
    *        group_by_tag is true and tag is not specified the tag will be that of the oldest task by
    *        eta, i.e. the first available tag
    */
-  core.Future<Tasks> lease(core.String project, core.String taskqueue, core.int numTasks, core.int leaseSecs, [core.bool groupByTag = UNSPECIFIED, core.String tag = UNSPECIFIED]) {
+  core.Future<Tasks> lease(core.String project, core.String taskqueue, core.int numTasks, core.int leaseSecs, {core.bool groupByTag, core.String tag}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["project"] = project;
     $pathParams["taskqueue"] = taskqueue;
-    if (UNSPECIFIED != numTasks) $queryParams["numTasks"] = numTasks;
-    if (UNSPECIFIED != leaseSecs) $queryParams["leaseSecs"] = leaseSecs;
-    if (UNSPECIFIED != groupByTag) $queryParams["groupByTag"] = groupByTag;
-    if (UNSPECIFIED != tag) $queryParams["tag"] = tag;
+    if (?numTasks) $queryParams["numTasks"] = numTasks;
+    if (?leaseSecs) $queryParams["leaseSecs"] = leaseSecs;
+    if (?groupByTag) $queryParams["groupByTag"] = groupByTag;
+    if (?tag) $queryParams["tag"] = tag;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -383,7 +383,7 @@ class TasksResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{project}/taskqueues/{taskqueue}/tasks/lease";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -630,15 +630,15 @@ class Tasks2 extends IdentityHash {
 // Enum TaskqueueApi.Alt
 class TaskqueueApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/json */
-  static final TaskqueueApiAlt JSON = const TaskqueueApiAlt._internal("json", 0);
+  const TaskqueueApiAlt JSON = const TaskqueueApiAlt._internal("json", 0);
 
   /** All values of this enumeration */
-  static final core.List<TaskqueueApiAlt> values = const <TaskqueueApiAlt>[
+  const core.List<TaskqueueApiAlt> values = const <TaskqueueApiAlt>[
     JSON,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <TaskqueueApiAlt>{ 
+  const _valuesMap = const <TaskqueueApiAlt>{ 
     "json": JSON,
   };
 

@@ -17,7 +17,7 @@
 #import('dart:json');
 
 #import('utils.dart');
-#import('http.dart');
+#import('http.dart', prefix:'http');
 
 // API LicensingApi
 /**
@@ -27,14 +27,14 @@ class LicensingApi extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
   final core.String baseUrl;
   /** How we should identify ourselves to the service. */
-  Authenticator authenticator;
+  http.Authenticator authenticator;
   /** The client library version */
   final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
   final core.String applicationName;
-  LicensingApi get _$service() => this;
+  LicensingApi get _$service => this;
   LicenseAssignmentsResource _licenseAssignments;
-  LicenseAssignmentsResource get licenseAssignments() => _licenseAssignments;
+  LicenseAssignmentsResource get licenseAssignments => _licenseAssignments;
   
   /** Returns response with indentations and line breaks. */
   core.bool prettyPrint;
@@ -67,14 +67,14 @@ class LicensingApi extends core.Object {
   LicensingApiAlt alt;
 
 
-  LicensingApi([this.baseUrl = "https://www.googleapis.com/apps/licensing/v1/product/", applicationName, this.authenticator]) :
+  LicensingApi({this.baseUrl:"https://www.googleapis.com/apps/licensing/v1/product/", applicationName, this.authenticator}) :
       this.applicationName = (applicationName == null) ? null : applicationName
-          .replaceAll(const core.RegExp(@'\s+'), '_')
-          .replaceAll(const core.RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+          .replaceAll(const core.RegExp(r'\s+'), '_')
+          .replaceAll(const core.RegExp(r'[^-_.,0-9a-zA-Z]'), '')
   { 
     _licenseAssignments = new LicenseAssignmentsResource._internal(this);
   }
-  core.String get userAgent() {
+  core.String get userAgent {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}licensing/v1/20120724 google-api-dart-client/${clientVersion}";
   }
@@ -113,7 +113,7 @@ class LicenseAssignmentsResource extends core.Object {
     final $body = JSON.stringify(LicenseAssignmentInsert.serialize(content));
     final $path = "{productId}/sku/{skuId}/user";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -147,7 +147,7 @@ class LicenseAssignmentsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{productId}/sku/{skuId}/user/{userId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -169,15 +169,15 @@ class LicenseAssignmentsResource extends core.Object {
   Minimum: 1.
   Maximum: 1000.
    */
-  core.Future<LicenseAssignmentList> listForProductAndSku(core.String productId, core.String skuId, core.String customerId, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
+  core.Future<LicenseAssignmentList> listForProductAndSku(core.String productId, core.String skuId, core.String customerId, {core.String pageToken, core.int maxResults}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["productId"] = productId;
     $pathParams["skuId"] = skuId;
-    if (UNSPECIFIED != customerId) $queryParams["customerId"] = customerId;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
+    if (?customerId) $queryParams["customerId"] = customerId;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -188,7 +188,7 @@ class LicenseAssignmentsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{productId}/sku/{skuId}/users";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -209,14 +209,14 @@ class LicenseAssignmentsResource extends core.Object {
   Minimum: 1.
   Maximum: 1000.
    */
-  core.Future<LicenseAssignmentList> listForProduct(core.String productId, core.String customerId, [core.String pageToken = UNSPECIFIED, core.int maxResults = UNSPECIFIED]) {
+  core.Future<LicenseAssignmentList> listForProduct(core.String productId, core.String customerId, {core.String pageToken, core.int maxResults}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
     $pathParams["productId"] = productId;
-    if (UNSPECIFIED != customerId) $queryParams["customerId"] = customerId;
-    if (UNSPECIFIED != pageToken) $queryParams["pageToken"] = pageToken;
-    if (UNSPECIFIED != maxResults) $queryParams["maxResults"] = maxResults;
+    if (?customerId) $queryParams["customerId"] = customerId;
+    if (?pageToken) $queryParams["pageToken"] = pageToken;
+    if (?maxResults) $queryParams["maxResults"] = maxResults;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -227,7 +227,7 @@ class LicenseAssignmentsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{productId}/users";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -264,7 +264,7 @@ class LicenseAssignmentsResource extends core.Object {
     final $body = JSON.stringify(LicenseAssignment.serialize(content));
     final $path = "{productId}/sku/{skuId}/user/{userId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PUT", $headers);
+    final $http = new http.Request($url, "PUT", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -301,7 +301,7 @@ class LicenseAssignmentsResource extends core.Object {
     final $body = JSON.stringify(LicenseAssignment.serialize(content));
     final $path = "{productId}/sku/{skuId}/user/{userId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "PATCH", $headers);
+    final $http = new http.Request($url, "PATCH", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -335,7 +335,7 @@ class LicenseAssignmentsResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "{productId}/sku/{skuId}/user/{userId}";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "DELETE", $headers);
+    final $http = new http.Request($url, "DELETE", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -457,15 +457,15 @@ class LicenseAssignmentList extends IdentityHash {
 // Enum LicensingApi.Alt
 class LicensingApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/json */
-  static final LicensingApiAlt JSON = const LicensingApiAlt._internal("json", 0);
+  const LicensingApiAlt JSON = const LicensingApiAlt._internal("json", 0);
 
   /** All values of this enumeration */
-  static final core.List<LicensingApiAlt> values = const <LicensingApiAlt>[
+  const core.List<LicensingApiAlt> values = const <LicensingApiAlt>[
     JSON,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <LicensingApiAlt>{ 
+  const _valuesMap = const <LicensingApiAlt>{ 
     "json": JSON,
   };
 

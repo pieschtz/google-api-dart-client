@@ -100,12 +100,6 @@ class UrlPattern {
   }
 }
 
-class _Unspecified {
-  const _Unspecified._internal();
-}
-/** A sentinel to be used as a default parameter value. */
-final UNSPECIFIED = const _Unspecified._internal();
-
 /// Returns a random unsigned 32-bit integer. 
 int random() {
   final ary = new Uint32Array(1);

@@ -14,24 +14,24 @@
 
 #library('http');
 
-#import('dart:html');
+#import('dart:html', prefix:'html');
 
-/** An Authenticator adds credentials to an HttpRequest. */
+/** An Authenticator adds credentials to a Request. */
 interface Authenticator {
   /**
-   * Adds credentials to an [HttpRequest].
-   * This method may mutate [request] and return it, or return a new HttpRequest.
+   * Adds credentials to an [Request].
+   * This method may mutate [request] and return it, or return a new Request.
    */
-  Future<HttpRequest> authenticate(HttpRequest request);
+  Future<Request> authenticate(HttpRequest request);
 }
 
-/** A simple HTTP client request, wrapping XMLHttpRequest. */
-class HttpRequest {
+/** A simple HTTP client request, wrapping html.HttpRequest. */
+class Request {
   final String url;
   final String method;
   final Map<String, String> headers;
 
-  HttpRequest(String this.url, String this.method, [headers = const {}]) : this.headers = new Map.from(headers);
+  Request(String this.url, String this.method, [headers = const {}]) : this.headers = new Map.from(headers);
 
   /**
    * Issues this request.
@@ -40,13 +40,13 @@ class HttpRequest {
    */
   Future<String> request([String body]) {
     final completer = new Completer<String>();
-    final req = new XMLHttpRequest();
+    final req = new html.HttpRequest();
     req.open(method, url, true, null, null);
     headers.forEach(req.setRequestHeader);
-    req.on.error.add((Event event) {
+    req.on.error.add((html.Event event) {
       completer.completeException(new NetworkException());
     });
-    req.on.load.add((Event event) {
+    req.on.load.add((html.Event event) {
       if (req.status >= 400) {
         completer.completeException(new HttpException(req.status));
       } else {

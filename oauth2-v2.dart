@@ -17,24 +17,24 @@
 #import('dart:json');
 
 #import('utils.dart');
-#import('http.dart');
+#import('http.dart', prefix:'http');
 
 // API Oauth2Api
 /**
- * OAuth2 API
+ * Lets you access OAuth2 protocol related APIs.
  */
 class Oauth2Api extends core.Object {
   /** The API root, such as [:https://www.googleapis.com:] */
   final core.String baseUrl;
   /** How we should identify ourselves to the service. */
-  Authenticator authenticator;
+  http.Authenticator authenticator;
   /** The client library version */
   final core.String clientVersion = "0.1";
   /** The application name, used in the user-agent header */
   final core.String applicationName;
-  Oauth2Api get _$service() => this;
+  Oauth2Api get _$service => this;
   UserinfoResource _userinfo;
-  UserinfoResource get userinfo() => _userinfo;
+  UserinfoResource get userinfo => _userinfo;
   
   /** Returns response with indentations and line breaks. */
   core.bool prettyPrint;
@@ -67,14 +67,14 @@ class Oauth2Api extends core.Object {
   Oauth2ApiAlt alt;
 
 
-  Oauth2Api([this.baseUrl = "https://www.googleapis.com/", applicationName, this.authenticator]) :
+  Oauth2Api({this.baseUrl:"https://www.googleapis.com/", applicationName, this.authenticator}) :
       this.applicationName = (applicationName == null) ? null : applicationName
-          .replaceAll(const core.RegExp(@'\s+'), '_')
-          .replaceAll(const core.RegExp(@'[^-_.,0-9a-zA-Z]'), '')
+          .replaceAll(const core.RegExp(r'\s+'), '_')
+          .replaceAll(const core.RegExp(r'[^-_.,0-9a-zA-Z]'), '')
   { 
     _userinfo = new UserinfoResource._internal(this);
   }
-  core.String get userAgent() {
+  core.String get userAgent {
     var uaPrefix = (applicationName == null) ? "" : "$applicationName ";
     return "${uaPrefix}oauth2/v2/20120806 google-api-dart-client/${clientVersion}";
   }
@@ -85,12 +85,12 @@ class Oauth2Api extends core.Object {
    *    * [accessToken]
    *    * [idToken]
    */
-  core.Future<Tokeninfo> tokeninfo([core.String accessToken = UNSPECIFIED, core.String idToken = UNSPECIFIED]) {
+  core.Future<Tokeninfo> tokeninfo({core.String accessToken, core.String idToken}) {
     final $queryParams = {};
     final $headers = {};
     final $pathParams = {};
-    if (UNSPECIFIED != accessToken) $queryParams["access_token"] = accessToken;
-    if (UNSPECIFIED != idToken) $queryParams["id_token"] = idToken;
+    if (?accessToken) $queryParams["access_token"] = accessToken;
+    if (?idToken) $queryParams["id_token"] = idToken;
     if (_$service.prettyPrint != null) $queryParams["prettyPrint"] = _$service.prettyPrint;
     if (_$service.fields != null) $queryParams["fields"] = _$service.fields;
     if (_$service.quotaUser != null) $queryParams["quotaUser"] = _$service.quotaUser;
@@ -101,7 +101,7 @@ class Oauth2Api extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "oauth2/v2/tokeninfo";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "POST", $headers);
+    final $http = new http.Request($url, "POST", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -109,6 +109,9 @@ class Oauth2Api extends core.Object {
         .chain((final $req) => $req.request())
         .transform((final $text) => Tokeninfo.parse(JSON.parse($text)));
   }
+
+  /** OAuth2 scope: Know who you are on Google */
+  static final core.String PLUS_ME_SCOPE = "https://www.googleapis.com/auth/plus.me";
 
   /** OAuth2 scope: View your email address */
   static final core.String USERINFO_EMAIL_SCOPE = "https://www.googleapis.com/auth/userinfo.email";
@@ -144,7 +147,7 @@ class UserinfoResource extends core.Object {
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "oauth2/v2/userinfo";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -190,7 +193,7 @@ class UserinfoV2ResourceUserinfoV2MeResourceResourceResourceResource extends cor
     $headers["X-JavaScript-User-Agent"] = _$service.userAgent;
     final $path = "userinfo/v2/me";
     final $url = new UrlPattern("${_$service.baseUrl}${$path}").generate($pathParams, $queryParams);
-    final $http = new HttpRequest($url, "GET", $headers);
+    final $http = new http.Request($url, "GET", $headers);
     final $authenticatedHttp = (_$service.authenticator == null)
         ? new core.Future.immediate($http)
         : _$service.authenticator.authenticate($http);
@@ -340,15 +343,15 @@ class Userinfo extends IdentityHash {
 // Enum Oauth2Api.Alt
 class Oauth2ApiAlt extends core.Object implements core.Hashable {
   /** Responses with Content-Type of application/json */
-  static final Oauth2ApiAlt JSON = const Oauth2ApiAlt._internal("json", 0);
+  const Oauth2ApiAlt JSON = const Oauth2ApiAlt._internal("json", 0);
 
   /** All values of this enumeration */
-  static final core.List<Oauth2ApiAlt> values = const <Oauth2ApiAlt>[
+  const core.List<Oauth2ApiAlt> values = const <Oauth2ApiAlt>[
     JSON,
   ];
 
   /** Map from string representation to enumeration value */
-  static final _valuesMap = const <Oauth2ApiAlt>{ 
+  const _valuesMap = const <Oauth2ApiAlt>{ 
     "json": JSON,
   };
 
